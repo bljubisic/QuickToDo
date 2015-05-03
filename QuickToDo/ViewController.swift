@@ -7,9 +7,12 @@
 //
 
 import UIKit
+import CloudKit
 
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
+
+
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, InviteProtocol {
 
     
     @IBOutlet weak var itemsTable: UITableView!
@@ -19,6 +22,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var hintButton1: UIButton?
     var hintButton2: UIButton?
     let dataManager: QuickToDoDataManager = QuickToDoDataManager.sharedInstance
+    var iCloudIdVar: String = String()
 
     @IBAction func removeUsed(sender: UIButton) {
         dataManager.removeUsedItems()
@@ -41,14 +45,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     @IBAction func selectedItem(sender: AnyObject) {
-        /*
-        CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
-        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
-        if (indexPath != nil)
-        {
-            ...
-        }
-        */
         
         var buttonPosition: CGPoint = sender.convertPoint(CGPoint.zeroPoint, toView: self.itemsTable)
         var indexPath: NSIndexPath = self.itemsTable.indexPathForRowAtPoint(buttonPosition)!
@@ -56,7 +52,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         var row: Int = indexPath.row
         
         if(row <= items.count-1) {
-            var tmpCell: ViewTableViewCell = itemsTable.cellForRowAtIndexPath(indexPath) as ViewTableViewCell
+            var tmpCell: ViewTableViewCell = itemsTable.cellForRowAtIndexPath(indexPath) as! ViewTableViewCell
             var item: ItemObject = items[row]
             if(item.completed == 1) {
                 item.completed = 0
@@ -73,22 +69,49 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    func openAlertView(record: CKRecord) {
+        
+        let alertController = UIAlertController(title: "Title", message: "Message", preferredStyle: .Alert)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
+            println(action)
+        }
+        alertController.addAction(cancelAction)
+        
+        let destroyAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default) { (action) in
+            println(action)
+        }
+        alertController.addAction(destroyAction)
+        
+        self.presentViewController(alertController, animated: true) {
+            // ...
+        }
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         //dataManager.removeItems()
+        
+        var container: CKContainer = CKContainer.defaultContainer()
+        
+        container.requestApplicationPermission(.PermissionUserDiscoverability, completionHandler: {status, error in
+            
+        })
         
         items = dataManager.getItems()
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
-        
-        /* [[NSNotificationCenter defaultCenter] addObserver:self
-            selector:@selector(someMethod:)
-        name:UIApplicationDidBecomeActiveNotification object:nil]; */
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationBecameActive:", name: UIApplicationDidBecomeActiveNotification, object: nil)
+        
+        container.fetchUserRecordIDWithCompletionHandler({recordID, error in
+            
+            self.registerForInvitations(recordID)
+            })
         
         let numberOfSections = self.itemsTable.numberOfSections()
         let numberOfRows = self.itemsTable.numberOfRowsInSection(numberOfSections-1)
@@ -106,7 +129,56 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         var usedItems: [ItemObject] = dataManager.getNotCompletedItems()
         
         UIApplication.sharedApplication().applicationIconBadgeNumber = usedItems.count
+        
+        dataManager.delegate = self
 
+    }
+    
+    func registerForInvitations(recordID: CKRecordID) {
+        
+        var container: CKContainer = CKContainer.defaultContainer()
+        
+        var publicDatabase = container.publicCloudDatabase
+        
+        let predicate = NSPredicate(format: "receiver = '\(recordID.recordName)'")
+        
+        let subscription = CKSubscription(recordType: "Invitations",
+            predicate: predicate,
+            options: .FiresOnRecordCreation)
+        
+        let notificationInfo = CKNotificationInfo()
+        
+        notificationInfo.alertBody = "Invitation received!!"
+        notificationInfo.shouldBadge = true
+        
+        subscription.notificationInfo = notificationInfo
+        
+        publicDatabase?.saveSubscription(subscription,
+            completionHandler: ({returnRecord, error in
+                if let err = error {
+                    println("subscription failed %@",
+                        err.localizedDescription)
+                } else {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.notifyUser("Success",
+                            message: "Subscription set up successfully")
+                    }
+                }
+            }))
+    }
+    
+    func notifyUser(title: String, message: String) -> Void
+    {
+        let alert = UIAlertController(title: title,
+            message: message,
+            preferredStyle: UIAlertControllerStyle.Alert)
+        
+        let cancelAction = UIAlertAction(title: "OK",
+            style: .Cancel, handler: nil)
+        
+        alert.addAction(cancelAction)
+        self.presentViewController(alert, animated: true,
+            completion: nil)
     }
     
     func applicationBecameActive(notification: NSNotification) {
@@ -157,7 +229,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         var row: Int = indexPath.row
         
         if(row <= items.count-1) {
-            var tmpCell: ViewTableViewCell = itemsTable.cellForRowAtIndexPath(indexPath) as ViewTableViewCell
+            var tmpCell: ViewTableViewCell = itemsTable.cellForRowAtIndexPath(indexPath) as! ViewTableViewCell
             var item: ItemObject = items[row]
             var badgeNumber: Int = UIApplication.sharedApplication().applicationIconBadgeNumber
             if(item.completed == 1) {
@@ -182,7 +254,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         var row: Int = indexPath.row
         
         if(self.items.count == 0 || row > self.items.count - 1) {
-            var tmpCell: InputTableViewCell = tableView.dequeueReusableCellWithIdentifier("EnterCell")as InputTableViewCell
+            var tmpCell: InputTableViewCell = tableView.dequeueReusableCellWithIdentifier("EnterCell")as! InputTableViewCell
             textView = tmpCell.inputTextField
             hintButton1 = tmpCell.addButton1
             hintButton2 = tmpCell.addButton2
@@ -210,7 +282,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
         }
         else {
-            var tmpCell: ViewTableViewCell = tableView.dequeueReusableCellWithIdentifier("ViewCell") as ViewTableViewCell
+            var tmpCell: ViewTableViewCell = tableView.dequeueReusableCellWithIdentifier("ViewCell") as! ViewTableViewCell
             tmpCell.listItem.text = self.items[row].word as String
             if(self.items[row].completed == 1) {
                 tmpCell.usedButton.selected = true
@@ -270,6 +342,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         dataManager.addItem(itemObject)
         
+        
+        
         items.append(itemObject)
         
         
@@ -297,7 +371,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return itemsCount + 1
     }
     
-    func tableView(tableView: UITableView!, heightForRowAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         
         var row: Int = indexPath.row
         
@@ -312,6 +386,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         
     }
+    
+    @IBAction func prepareForUnwind(segue: UIStoryboardSegue) {
+        
+        var configViewController: ConfigViewController = segue.sourceViewController as! ConfigViewController
+        
+        self.iCloudIdVar = configViewController.iCloudIdVar
+        
+        //move all items to CloudKit
+        
+    }
+    
+    /*
+    -(IBAction)prepareForUnwind:(UIStoryboardSegue *)segue {
+    } */
     
     
     
