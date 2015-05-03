@@ -47,7 +47,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
         var row: Int = indexPath.row
         
         if(row <= items.count-1) {
-            var tmpCell: TodayTableViewCellSum = itemsTable.cellForRowAtIndexPath(indexPath) as TodayTableViewCellSum
+            var tmpCell: TodayTableViewCellSum = itemsTable.cellForRowAtIndexPath(indexPath) as! TodayTableViewCellSum
             var item: ItemObject = items[row]
             if(item.completed == 1) {
                 item.completed = 0
@@ -88,7 +88,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
         var row: Int = indexPath.row
         
         if(row <= items.count-1) {
-            var tmpCell: TodayTableViewCellSum = tableView.cellForRowAtIndexPath(indexPath) as TodayTableViewCellSum
+            var tmpCell: TodayTableViewCellSum = tableView.cellForRowAtIndexPath(indexPath) as! TodayTableViewCellSum
             var item: ItemObject = items[row]
             if(item.completed == 1) {
                 item.completed = 0
@@ -110,7 +110,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
         
         var row: Int = indexPath.row
         
-        var tmpCell: TodayTableViewCellSum = tableView.dequeueReusableCellWithIdentifier("TodayCell") as TodayTableViewCellSum
+        var tmpCell: TodayTableViewCellSum = tableView.dequeueReusableCellWithIdentifier("TodayCell") as! TodayTableViewCellSum
         tmpCell.itemName.text = self.items[row].word as String
         /*
         if(self.items[row].completed == 1) {
@@ -133,7 +133,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
         }
     }
     
-    func tableView(tableView: UITableView!, heightForRowAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         
         return 50.0
         
