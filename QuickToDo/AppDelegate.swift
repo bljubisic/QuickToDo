@@ -8,18 +8,63 @@
 
 import UIKit
 import CoreData
+import CloudKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    
+    let dataManager: QuickToDoDataManager = QuickToDoDataManager.sharedInstance
+    let configManager: ConfigManager = ConfigManager.sharedInstance
+    
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        
+        let settings = UIUserNotificationSettings(forTypes:
+            .Alert | .Badge | .Sound, categories: nil)
+        
+        configManager.readKeyStore()
+        
+        application.registerUserNotificationSettings(settings)
+        application.registerForRemoteNotifications()
+        
+        dataManager.subscribeOnInvitations()
+        
+        
         return true
     }
-
+    
+    func showAlertInvitationOnMainViewController(record: CKRecord) {
+        
+    }
+    
+    
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        
+        let viewController: ViewController =
+        self.window?.rootViewController as! ViewController
+        
+        let notification: CKNotification =
+        CKNotification(fromRemoteNotificationDictionary: userInfo)
+        
+        if (notification.notificationType ==
+            CKNotificationType.Query) {
+                
+                let queryNotification =
+                notification as! CKQueryNotification
+                
+                let recordID = queryNotification.recordID
+                
+                dataManager.ckFetchRecord(recordID)
+                
+                //viewController.fetchRecord(recordID)
+        }
+    }
+    
+    
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
@@ -48,7 +93,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     lazy var applicationDocumentsDirectory: NSURL = {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "com.persukibo.QuickToDo" in the application's documents Application Support directory.
         let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-        return urls[urls.count-1] as NSURL
+        return urls[urls.count-1] as! NSURL
     }()
 
     lazy var managedObjectModel: NSManagedObjectModel = {
