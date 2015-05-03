@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		E40CCF8319F4406B004CF859 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40CCF8219F4406B004CF859 /* Entity.swift */; };
 		E410086B1A2D0ECD00D6731A /* QuickToDoDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E410086A1A2D0ECD00D6731A /* QuickToDoDataManager.swift */; };
+		E4258A8D1ABD7E1B002B8EB1 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4258A8C1ABD7E1B002B8EB1 /* CloudKit.framework */; };
+		E4723EDA1ACB2F2800239A68 /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4723ED91ACB2F2800239A68 /* ConfigManager.swift */; };
 		E48BC55D1A9D0254003C2262 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01819E7EA63003A89F7 /* Images.xcassets */; };
 		E48C9AC71A3261DE007041DD /* ItemObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C9AC61A3261DE007041DD /* ItemObject.swift */; };
 		E48CDA101A1C728C00C24F26 /* ViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48CDA0F1A1C728C00C24F26 /* ViewTableViewCell.swift */; };
@@ -25,6 +27,9 @@
 		E4C6E01C19E7EA63003A89F7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01A19E7EA63003A89F7 /* LaunchScreen.xib */; };
 		E4C6E02819E7EA63003A89F7 /* QuickToDoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C6E02719E7EA63003A89F7 /* QuickToDoTests.swift */; };
 		E4E030411A0D908F002993CF /* InputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E030401A0D908F002993CF /* InputTableViewCell.swift */; };
+		E4E77BBE1AE316B700AADF16 /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4723ED91ACB2F2800239A68 /* ConfigManager.swift */; };
+		E4EBBBCD1AB62F39002DA67A /* ConfigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4EBBBCC1AB62F39002DA67A /* ConfigViewController.swift */; };
+		E4F014C81AC8887B00264AD5 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = E4F014C71AC8887B00264AD5 /* Config.plist */; };
 		E4F1DD1C1A991BD000F86D95 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */; };
 		E4F1DD211A991BD000F86D95 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F1DD201A991BD000F86D95 /* TodayViewController.swift */; };
 		E4F1DD231A991BD000F86D95 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4F1DD221A991BD000F86D95 /* MainInterface.storyboard */; };
@@ -68,6 +73,8 @@
 		E40CCF8219F4406B004CF859 /* Entity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
 		E410086A1A2D0ECD00D6731A /* QuickToDoDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickToDoDataManager.swift; sourceTree = "<group>"; };
 		E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
+		E4258A8C1ABD7E1B002B8EB1 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		E4723ED91ACB2F2800239A68 /* ConfigManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigManager.swift; sourceTree = "<group>"; };
 		E48C9AC61A3261DE007041DD /* ItemObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemObject.swift; sourceTree = "<group>"; };
 		E48CDA0F1A1C728C00C24F26 /* ViewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewTableViewCell.swift; sourceTree = "<group>"; };
 		E49DE6C71A9922400063F5D5 /* Quick ToDo Sum.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Quick ToDo Sum.entitlements"; sourceTree = "<group>"; };
@@ -85,6 +92,8 @@
 		E4C6E02719E7EA63003A89F7 /* QuickToDoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoTests.swift; sourceTree = "<group>"; };
 		E4C6E03119E7EE90003A89F7 /* QuickToDoPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = QuickToDoPlayground.playground; sourceTree = "<group>"; };
 		E4E030401A0D908F002993CF /* InputTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputTableViewCell.swift; sourceTree = "<group>"; };
+		E4EBBBCC1AB62F39002DA67A /* ConfigViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigViewController.swift; sourceTree = "<group>"; };
+		E4F014C71AC8887B00264AD5 /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Config.plist; sourceTree = "<group>"; };
 		E4F1DD1B1A991BD000F86D95 /* Quick ToDo Sum.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Quick ToDo Sum.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4F1DD1F1A991BD000F86D95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E4F1DD201A991BD000F86D95 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
@@ -98,6 +107,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4F9A3791A5C146900CC0573 /* CoreData.framework in Frameworks */,
+				E4258A8D1ABD7E1B002B8EB1 /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,6 +132,7 @@
 		E41B97AB1A8D3E9F00BF8F51 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E4258A8C1ABD7E1B002B8EB1 /* CloudKit.framework */,
 				E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */,
 			);
 			name = Frameworks;
@@ -157,9 +168,11 @@
 				E4E030401A0D908F002993CF /* InputTableViewCell.swift */,
 				E48CDA0F1A1C728C00C24F26 /* ViewTableViewCell.swift */,
 				E4C6E01319E7EA63003A89F7 /* ViewController.swift */,
+				E4EBBBCC1AB62F39002DA67A /* ConfigViewController.swift */,
 				E48C9AC61A3261DE007041DD /* ItemObject.swift */,
 				E40CCF8219F4406B004CF859 /* Entity.swift */,
 				E410086A1A2D0ECD00D6731A /* QuickToDoDataManager.swift */,
+				E4723ED91ACB2F2800239A68 /* ConfigManager.swift */,
 				E4C6E00C19E7EA62003A89F7 /* Supporting Files */,
 				E4C6E03119E7EE90003A89F7 /* QuickToDoPlayground.playground */,
 			);
@@ -174,6 +187,7 @@
 				E4C6E01A19E7EA63003A89F7 /* LaunchScreen.xib */,
 				E4C6E01019E7EA63003A89F7 /* QuickToDo.xcdatamodeld */,
 				E4C6E00D19E7EA62003A89F7 /* Info.plist */,
+				E4F014C71AC8887B00264AD5 /* Config.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -336,6 +350,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4F014C81AC8887B00264AD5 /* Config.plist in Resources */,
 				E4C6E01719E7EA63003A89F7 /* Main.storyboard in Resources */,
 				E4C6E01C19E7EA63003A89F7 /* LaunchScreen.xib in Resources */,
 				E4C6E01919E7EA63003A89F7 /* Images.xcassets in Resources */,
@@ -368,11 +383,13 @@
 				E4E030411A0D908F002993CF /* InputTableViewCell.swift in Sources */,
 				E48C9AC71A3261DE007041DD /* ItemObject.swift in Sources */,
 				E40CCF8319F4406B004CF859 /* Entity.swift in Sources */,
+				E4723EDA1ACB2F2800239A68 /* ConfigManager.swift in Sources */,
 				E48CDA101A1C728C00C24F26 /* ViewTableViewCell.swift in Sources */,
 				E4C6E01419E7EA63003A89F7 /* ViewController.swift in Sources */,
 				E4C6E00F19E7EA63003A89F7 /* AppDelegate.swift in Sources */,
 				E410086B1A2D0ECD00D6731A /* QuickToDoDataManager.swift in Sources */,
 				E4C6E01219E7EA63003A89F7 /* QuickToDo.xcdatamodeld in Sources */,
+				E4EBBBCD1AB62F39002DA67A /* ConfigViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,6 +410,7 @@
 				E49DE6CA1A9922690063F5D5 /* ItemObject.swift in Sources */,
 				E49DE6C81A9922600063F5D5 /* QuickToDoDataManager.swift in Sources */,
 				E49DE6C91A9922640063F5D5 /* Entity.swift in Sources */,
+				E4E77BBE1AE316B700AADF16 /* ConfigManager.swift in Sources */,
 				E49DE6CD1A9A71F40063F5D5 /* TodayTableViewCellSum.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
