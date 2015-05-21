@@ -17,6 +17,8 @@ class ConfigManager: NSObject {
     var sharingEnabled: Int = 0
     var sharingList: [String] = [String] ()
     var selfRecordId: String = String()
+    var configDictionary: [String: Int] = [String: Int]()
+    
     var keyStore: NSUbiquitousKeyValueStore = NSUbiquitousKeyValueStore.defaultStore()
     
     var plistItems: NSMutableDictionary = NSMutableDictionary()
@@ -28,25 +30,36 @@ class ConfigManager: NSObject {
         return sharedInstanceConfigManager
     }
     
-    override init() {
+    func readKeyStore() {
         
+        let container: CKContainer = CKContainer.defaultContainer()
         
-    }
-    
-    func readKeyStore() -> [String: Int] {
+        container.accountStatusWithCompletionHandler({accountStatus, error in
+            
+            if(accountStatus == CKAccountStatus.Available) {
+                if(self.keyStore.objectForKey("sharingEnabled") != nil) {
+                    self.sharingEnabled = self.keyStore.objectForKey("sharingEnabled") as! Int
+                }
+                self.selfRecordId = String()
+                
+                container.fetchUserRecordIDWithCompletionHandler({ (recordId: CKRecordID!, error: NSError!) -> Void in
+                    self.selfRecordId = recordId.recordName
+                    
+                })
+                
+                
+                //(keyStore.objectForKey("selfRecordId")) ? (keyStore.objectForKey("selfRecordId") as! String) : :
+                
+                self.configDictionary = ["sharingEnabled": self.sharingEnabled]
+                //return tmpDict
+            }
+            else {
+                self.sharingEnabled = 0
+            }
+            
+        })
         
-        sharingEnabled = keyStore.objectForKey("sharingEnabled") as! Int
-        selfRecordId = String()
-        
-        if(keyStore.objectForKey("selfRecordId") != nil) {
-            selfRecordId = keyStore.objectForKey("selfRecordId") as! String
-        }
-        
-        
-        //(keyStore.objectForKey("selfRecordId")) ? (keyStore.objectForKey("selfRecordId") as! String) : :
-        
-        var tmpDict: [String: Int] = ["sharingEnabled": sharingEnabled]
-        return tmpDict
+
         
     }
     
