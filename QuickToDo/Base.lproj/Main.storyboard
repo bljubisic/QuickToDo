@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14D105g" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14E17e" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -296,7 +296,7 @@
                         <subviews>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="u5V-ZP-Ifo">
                                 <rect key="frame" x="16" y="28" width="51" height="31"/>
-                                <color key="onTintColor" red="1" green="0.0015948744830000001" blue="0.093226445640000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="onTintColor" red="0.14712691729999999" green="0.91751512099999999" blue="0.40385355290000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
                                     <action selector="changeShareSwitch:" destination="wzX-pp-0dh" eventType="valueChanged" id="VKn-hS-U9r"/>
                                 </connections>
@@ -313,7 +313,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="r3w-mR-rRY" kind="unwind" unwindAction="prepareForUnwind:" id="vDU-Dg-X7J"/>
+                                    <segue destination="r3w-mR-rRY" kind="unwind" identifier="unwindFromConfig" unwindAction="prepareForUnwind:" id="vDU-Dg-X7J"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Se2-ux-RuL">
@@ -364,7 +364,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" red="1" green="0.7171408178169435" blue="0.73093340615568025" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="1" green="0.81293031983845365" blue="0.79872753803753604" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="86L-bh-EcW" firstAttribute="leading" secondItem="ZvD-5h-rJ0" secondAttribute="leading" constant="8" id="0xr-Bb-OoX"/>
                                     <constraint firstItem="vT5-zD-Vkg" firstAttribute="top" secondItem="7yF-DP-kcG" secondAttribute="top" id="18b-ah-ef7"/>
@@ -383,6 +383,18 @@
                                     <constraint firstAttribute="trailing" secondItem="7yF-DP-kcG" secondAttribute="trailing" constant="8" id="teM-P1-isy"/>
                                     <constraint firstItem="vT5-zD-Vkg" firstAttribute="leading" secondItem="4z9-xH-loi" secondAttribute="leading" id="uEY-3o-u7s"/>
                                 </constraints>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JfR-c1-Xir">
+                                <rect key="frame" x="9" y="67" width="295" height="169"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="SharingWith..." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zjc-Vw-Kge">
+                                        <rect key="frame" x="8" y="8" width="116" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="1" green="0.81293031979999997" blue="0.79872753799999996" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -419,6 +431,7 @@
                         <outlet property="iCloudName" destination="4z9-xH-loi" id="U5h-G0-YVN"/>
                         <outlet property="sendInvitationButton" destination="Se2-ux-RuL" id="Ek3-Ty-CDk"/>
                         <outlet property="shareSwitch" destination="u5V-ZP-Ifo" id="feM-rl-s0e"/>
+                        <outlet property="showInviteList" destination="JfR-c1-Xir" id="gwb-nR-tBw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zew-eD-zzn" userLabel="First Responder" sceneMemberID="firstResponder"/>
