@@ -22,6 +22,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var hintButton1: UIButton?
     var hintButton2: UIButton?
     let dataManager: QuickToDoDataManager = QuickToDoDataManager.sharedInstance
+    let configManager: ConfigManager = ConfigManager.sharedInstance
+    
     var iCloudIdVar: String = String()
 
     @IBAction func removeUsed(sender: UIButton) {
@@ -69,6 +71,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    func tableReload() {
+        items = dataManager.getItems()
+        self.itemsTable.reloadData()
+        
+    }
+    
     func openAlertView(record: CKRecord) {
         
         let alertController = UIAlertController(title: "Title", message: "Message", preferredStyle: .Alert)
@@ -96,10 +104,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         var container: CKContainer = CKContainer.defaultContainer()
         
-        container.requestApplicationPermission(.PermissionUserDiscoverability, completionHandler: {status, error in
-            
-        })
-        
         items = dataManager.getItems()
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
@@ -108,10 +112,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationBecameActive:", name: UIApplicationDidBecomeActiveNotification, object: nil)
         
-        container.fetchUserRecordIDWithCompletionHandler({recordID, error in
-            
-            self.registerForInvitations(recordID)
+        if(configManager.sharingEnabled > 0) {
+            container.requestApplicationPermission(.PermissionUserDiscoverability, completionHandler: {status, error in
+                
             })
+            container.fetchUserRecordIDWithCompletionHandler({recordID, error in
+                self.registerForInvitations(recordID)
+            })
+        }
         
         let numberOfSections = self.itemsTable.numberOfSections()
         let numberOfRows = self.itemsTable.numberOfRowsInSection(numberOfSections-1)
