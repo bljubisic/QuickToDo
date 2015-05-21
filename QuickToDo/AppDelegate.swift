@@ -60,6 +60,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
                 dataManager.ckFetchRecord(recordID)
                 
+                
+                
+                //viewController.itemsTable.reloadData()
+                
                 //viewController.fetchRecord(recordID)
         }
     }
