@@ -18,9 +18,12 @@ class ConfigViewController: UIViewController {
     @IBOutlet weak var sendInvitationButton: UIButton!
     @IBOutlet weak var shareSwitch: UISwitch!
     @IBOutlet weak var findView: UIView!
+    @IBOutlet weak var showInviteList: UIView!
     
     var iCloudIdVar: String = String()
     var myICloudVar: String = String()
+    var iCloudNameVar: String = String()
+    
     var shareSwitchVar: Bool = false
     let dataManager: QuickToDoDataManager = QuickToDoDataManager.sharedInstance
     let configManager: ConfigManager = ConfigManager.sharedInstance
@@ -32,14 +35,18 @@ class ConfigViewController: UIViewController {
         
         if (configManager.sharingEnabled == 1) {
             shareSwitchVar = true
+            self.findView.hidden = false
+            dataManager.ckFetchInvitations(showInviteList)
         }
         else {
             shareSwitchVar = false
+            self.findView.hidden = true
         }
         
         shareSwitch.setOn(shareSwitchVar, animated: true)
         
         // find self recordId
+        
         
         var container: CKContainer = CKContainer.defaultContainer()
         container.fetchUserRecordIDWithCompletionHandler({ (recordId: CKRecordID!, error: NSError!) -> Void in
@@ -93,7 +100,7 @@ class ConfigViewController: UIViewController {
         
         
         if(self.iCloudIdVar != "") {
-            dataManager.inviteToShare(self.iCloudIdVar)
+            dataManager.inviteToShare(self.iCloudIdVar, receiverName: self.iCloudNameVar)
             dataManager.subscribeOnResponse()
             
         }
@@ -112,6 +119,13 @@ class ConfigViewController: UIViewController {
         configManager.writeKeyStore()
         //dataManager.shareEverythingForRecordId(self.myICloudVar)
             
+        self.performSegueWithIdentifier("unwindFromConfig", sender: self)
+        
+        
+    }
+    
+    func showInviteList(name: String) {
+        self.showInviteList.hidden = false
         
         
         
@@ -129,15 +143,27 @@ class ConfigViewController: UIViewController {
 
         container.discoverUserInfoWithEmailAddress(iCloudName, completionHandler:{ (userInfo: CKDiscoveredUserInfo!, error: NSError!) -> Void in
             
-            self.iCloudId.text = userInfo.userRecordID.recordName
-            self.iCloudIdVar = userInfo.userRecordID.recordName
-            self.iCloudName.text = userInfo.firstName
-            self.iCloudLastname.text = userInfo.lastName
-            spinner.stopAnimating()
-            self.iCloudEmail.leftView = nil
-            
-            self.sendInvitationButton.enabled = true
-            
+            if(userInfo != nil) {
+                let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
+                dispatch_async(dispatch_get_global_queue(priority, 0)) {
+                    // do some task
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.iCloudId.text = userInfo.userRecordID.recordName
+                        self.iCloudIdVar = userInfo.userRecordID.recordName
+                        self.iCloudName.text = userInfo.firstName
+                        self.iCloudLastname.text = userInfo.lastName
+                        self.iCloudNameVar = userInfo.firstName + " " + userInfo.lastName
+                        spinner.stopAnimating()
+                        self.iCloudEmail.leftView = nil
+                        
+                        self.sendInvitationButton.enabled = true
+                    }
+                }
+
+            }
+            else {
+                self.iCloudId.text = "Nothing found"
+            }
         })
         
         
