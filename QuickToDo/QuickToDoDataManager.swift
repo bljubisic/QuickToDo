@@ -13,6 +13,8 @@ import CloudKit
 protocol InviteProtocol {
     
     func openAlertView(record: CKRecord)
+    func tableReload()
+    
     
 }
 
@@ -26,6 +28,8 @@ class QuickToDoDataManager: NSObject {
     var delegate: InviteProtocol?
     
     let configManager: ConfigManager = ConfigManager.sharedInstance
+    
+    var returnRecords: [CKRecord] = [CKRecord]()
     
     lazy var applicationDocumentsDirectory: NSURL? = {
         return NSFileManager.defaultManager().containerURLForSecurityApplicationGroupIdentifier("group.persukibo.QuickToDoSharingDefaults") ?? nil
@@ -161,6 +165,8 @@ class QuickToDoDataManager: NSObject {
                         if(self.managedObjectContext!.save(nil)) {
                         
                         }
+                        
+                        
                     
                     } else {
                         var entity = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
@@ -170,7 +176,7 @@ class QuickToDoDataManager: NSObject {
                         addItem.word = word as String
                         addItem.used = record.objectForKey("used") as! Int
                         addItem.completed = record.objectForKey("completed") as! Int
-                        addItem.lastused = record.objectForKey("lastUsed") as! NSDate
+                        //addItem.lastused = record.objectForKey("lastUsed") as! NSDate
                     
                         // if configManager have sharingEnabled add this item to public database as well.
                     
@@ -179,6 +185,9 @@ class QuickToDoDataManager: NSObject {
                         }
                     
                     }
+                    
+                    self.delegate?.tableReload()
+                
                 }
                 else if(record.recordType == "Invitations") {
                     
@@ -193,7 +202,30 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    func inviteToShare(receiverICloud: String) {
+    func ckFetchInvitations(show: String -> Void) {
+        
+        let container = CKContainer.defaultContainer()
+        
+        var tmpRecord: CKRecord = CKRecord(recordType: "Invitations")
+        let predicate: NSPredicate = NSPredicate(format: "sender = %@", configManager.selfRecordId)
+        let query: CKQuery = CKQuery(recordType: "Invitations", predicate: predicate)
+        let publicDatabase = container.publicCloudDatabase
+        
+        publicDatabase.performQuery(query, inZoneWithID: nil, completionHandler: { results, error in
+            if(error == nil) {
+                if(results.count > 0) {
+                    let record: CKRecord = results[0] as! CKRecord
+                    let name: String = record.objectForKey("sendername") as! String
+                    show(name)
+                }
+            }
+            //var tmpIndex = index - 1
+            //self.ckCheckRecord(tmpIndex, itemsToCheck: itemsToCheck, publicDatabase: publicDatabase)
+        })
+        
+    }
+    
+    func inviteToShare(receiverICloud: String, receiverName: String) {
         
         var container: CKContainer = CKContainer.defaultContainer()
         //var record: CKRecord = CKRecord(recordType: "Invitations")
@@ -201,9 +233,9 @@ class QuickToDoDataManager: NSObject {
         
         var newRecord: CKRecord = CKRecord(recordType: "Invitations")
         newRecord.setObject(receiverICloud, forKey: "receiver")
-        newRecord.setObject(0, forKey: "completed")
+        newRecord.setObject(0, forKey: "confirmed")
         newRecord.setObject(configManager.selfRecordId, forKey: "sender")
-        
+        newRecord.setObject(receiverName, forKey: "sendername")
         publicDatabase.saveRecord(newRecord, completionHandler:
             ({returnRecord, error in
                 if let err = error {
@@ -331,11 +363,23 @@ class QuickToDoDataManager: NSObject {
         if(mutableFetchResults.count > 0) {
             for result in mutableFetchResults {
                 result.used = 0
+                
+                var itemObject: ItemObject = ItemObject()
+                itemObject.word = result.word
+                itemObject.completed = Int(result.completed)
+                itemObject.used = Int(result.used)
+                itemObject.count = Int(result.count)
+                
                 if((managedObjectContext?.save(nil)) != nil) {
                     
                 }
+                if(configManager.sharingEnabled > 0) {
+                    self.ckFindItem(itemObject, operation: "remove")
+                }
             }
         }
+        
+
         
     }
     
@@ -430,7 +474,50 @@ class QuickToDoDataManager: NSObject {
             itemsForSaving.append(newRecord)
             
         }
-        self.saveRecursively(itemsForSaving.count, itemsForSaving: itemsForSaving, publicDatabase: publicDatabase)
+        var returnRecords: [CKRecord] = [CKRecord]()
+        
+        self.ckCheckRecord(itemsForSaving.count, itemsToCheck: itemsForSaving, publicDatabase: publicDatabase)
+        //self.saveRecursively(itemsForSaving.count, itemsForSaving: itemsForSaving, publicDatabase: publicDatabase)
+        
+    }
+    
+    private func ckAddRecord(record: CKRecord) {
+        let container: CKContainer = CKContainer.defaultContainer()
+        let record: CKRecord = CKRecord(recordType: "Items")
+        let publicDatabase: CKDatabase = container.publicCloudDatabase
+        
+        publicDatabase.saveRecord(record, completionHandler: ({returnRecord, error in
+            if let err = error {
+                println(err)
+            } else {
+                println("Saved record \(index)")
+                
+            }
+        }))
+        
+    }
+    
+    private func ckCheckRecord(index: Int, itemsToCheck: [CKRecord], publicDatabase: CKDatabase) {
+        
+        
+        if (index > 0) {
+            var tmpRecord: CKRecord = itemsToCheck[index-1]
+            let predicate: NSPredicate = NSPredicate(format: "name = %@ and icloudmail = %@", tmpRecord.objectForKey("name") as! String, configManager.selfRecordId)
+            let query: CKQuery = CKQuery(recordType: "Items", predicate: predicate)
+            publicDatabase.performQuery(query, inZoneWithID: nil, completionHandler: { results, error in
+                if(error == nil) {
+                    if results.count == 0 {
+                        self.returnRecords.append(tmpRecord)
+                    }
+                }
+                var tmpIndex = index - 1
+                self.ckCheckRecord(tmpIndex, itemsToCheck: itemsToCheck, publicDatabase: publicDatabase)
+                })
+            
+        } else if (index == 0) {
+            println("Finished checking!")
+            self.saveRecursively(returnRecords.count, itemsForSaving: self.returnRecords, publicDatabase: publicDatabase)
+        }
         
     }
     
@@ -491,19 +578,30 @@ class QuickToDoDataManager: NSObject {
         }
         
         if(configManager.sharingEnabled > 0) {
-            ckFindItem(itemObject)
+            ckFindItem(itemObject, operation: "complete")
         }
         
     }
     
-    func ckFindItem(itemObject: ItemObject) {
+    func ckFindItem(itemObject: ItemObject, operation: String) {
         
         
         
         let container: CKContainer = CKContainer.defaultContainer()
         //var record: CKRecord = CKRecord(recordType: "Items")
         let publicDatabase: CKDatabase = container.publicCloudDatabase
-        let predicate: NSPredicate = NSPredicate(format: "icloudmail = %@ and completed = %d and name = %@ and used = %d", configManager.selfRecordId, ((itemObject.completed == 0) ? 1:0), itemObject.word, itemObject.used)
+        
+        var completed = 0
+        if(itemObject.completed == 0 && operation == "complete") {
+            completed = 1
+        }
+        else if(itemObject.completed > 0 && operation == "complete") {
+            completed = 0
+        }
+        else {
+            completed = itemObject.completed
+        }
+        let predicate: NSPredicate = NSPredicate(format: "icloudmail = %@ and completed = %d and name = %@", configManager.selfRecordId, completed, itemObject.word)
         
         let query: CKQuery = CKQuery(recordType: "Items", predicate: predicate)
         
