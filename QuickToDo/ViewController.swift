@@ -79,21 +79,80 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func openAlertView(record: CKRecord) {
         
-        let alertController = UIAlertController(title: "Title", message: "Message", preferredStyle: .Alert)
+        let sender = record.objectForKey("sender") as! String
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
-            println(action)
+        if(sender == configManager.selfRecordId) {
+            let sendername = record.objectForKey("sendername") as! String
+            
+            let message = "Your invitation has been accepted!"
+            
+            let alertController = UIAlertController(title: "Invitation", message: message, preferredStyle: .Alert)
+            
+            let destroyAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default) { (action) in
+                var invitation = InvitationObject()
+                
+                invitation.sender = sender
+                invitation.receiver = record.objectForKey("receiver") as! String
+                invitation.confirmed = 1
+                invitation.sendername = sendername
+                
+                self.dataManager.cdAddInvitation(invitation)
+                
+                // update invitation on CloudKit
+                self.dataManager.ckUpdateInvitation(invitation)
+                
+                self.dataManager.subscribeOnItems(invitation.receiver)
+                
+                // add subscription on items with sender id
+                
+                
+            }
+            alertController.addAction(destroyAction)
+            
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
         }
-        alertController.addAction(cancelAction)
+        else {
+            let sendername = record.objectForKey("sendername") as! String
+            
+            let message = "\(sendername) has invited you to share a list"
+            
+            let alertController = UIAlertController(title: "Invitation", message: message, preferredStyle: .Alert)
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
+                println(action)
+            }
+            alertController.addAction(cancelAction)
+            
+            let destroyAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default) { (action) in
+                var invitation = InvitationObject()
+                
+                invitation.sender = sender
+                invitation.receiver = record.objectForKey("receiver") as! String
+                invitation.confirmed = 1
+                invitation.sendername = sendername
+                
+                self.dataManager.cdAddInvitation(invitation)
+                
+                // update invitation on CloudKit
+                self.dataManager.ckUpdateInvitation(invitation)
+                
+                self.dataManager.subscribeOnItems(sender)
+                
+                // add subscription on items with sender id
+                
+                
+            }
+            alertController.addAction(destroyAction)
+            
+            self.presentViewController(alertController, animated: true) {
+                // ...
+            }
+            
+        }
         
-        let destroyAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default) { (action) in
-            println(action)
-        }
-        alertController.addAction(destroyAction)
-        
-        self.presentViewController(alertController, animated: true) {
-            // ...
-        }
+
         
     }
     
