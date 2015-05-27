@@ -19,6 +19,9 @@ class ConfigViewController: UIViewController {
     @IBOutlet weak var shareSwitch: UISwitch!
     @IBOutlet weak var findView: UIView!
     @IBOutlet weak var showInviteList: UIView!
+    @IBOutlet weak var cancelSubscription: UIButton!
+    @IBOutlet weak var nameSubscription: UILabel!
+    
     
     var iCloudIdVar: String = String()
     var myICloudVar: String = String()
@@ -100,14 +103,26 @@ class ConfigViewController: UIViewController {
         
         
         if(self.iCloudIdVar != "") {
+            var invitation = InvitationObject()
+            
+            invitation.sender = self.iCloudIdVar
+            invitation.receiver = self.iCloudId.text!
+            invitation.confirmed = 0
+            invitation.sendername = self.iCloudName.text! + " " + self.iCloudLastname.text!
+            
+            dataManager.cdAddInvitation(invitation)
+            
             dataManager.inviteToShare(self.iCloudIdVar, receiverName: self.iCloudNameVar)
+            
             dataManager.subscribeOnResponse()
+            dataManager.subscribeOnInvitations()
             
         }
         if(shareSwitchVar) {
             configManager.plistItems.setValue(1, forKey: "sharingEnabled")
             configManager.sharingEnabled = 1
             dataManager.shareEverythingForRecordId(self.myICloudVar)
+            dataManager.subscribeOnInvitations()
             dataManager.subscribeOnItems(self.myICloudVar)
         }
         else {
@@ -125,7 +140,15 @@ class ConfigViewController: UIViewController {
     }
     
     func showInviteList(name: String) {
-        self.showInviteList.hidden = false
+        
+        let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
+        dispatch_async(dispatch_get_main_queue(), {
+            
+            self.showInviteList.hidden = false
+            self.nameSubscription.text = name
+            
+            
+        })
         
         
         
@@ -169,6 +192,8 @@ class ConfigViewController: UIViewController {
         
     }
 
+    @IBAction func cancelSubscriptionAction(sender: AnyObject) {
+    }
     /*
     // MARK: - Navigation
 
