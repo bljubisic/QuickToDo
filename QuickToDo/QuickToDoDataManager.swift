@@ -207,8 +207,13 @@ class QuickToDoDataManager: NSObject {
         let container = CKContainer.defaultContainer()
         
         var tmpRecord: CKRecord = CKRecord(recordType: "Invitations")
-        let predicate: NSPredicate = NSPredicate(format: "sender = %@", configManager.selfRecordId)
+        
+        //let compoundPredicate: NSCompoundPredicate = NSCompoundPredicate(type: .OrPredicateType, subpredicates: [NSPredicate(format: "receiver = %@", configManager.selfRecordId)])
+        
+        let predicate = NSPredicate(format:"receiver = %@", configManager.selfRecordId)
+        
         let query: CKQuery = CKQuery(recordType: "Invitations", predicate: predicate)
+        
         let publicDatabase = container.publicCloudDatabase
         
         publicDatabase.performQuery(query, inZoneWithID: nil, completionHandler: { results, error in
@@ -309,6 +314,7 @@ class QuickToDoDataManager: NSObject {
             }))
         
     }
+    
     
     func subscribeOnItems(icloudmail: String) {
         
@@ -640,6 +646,52 @@ class QuickToDoDataManager: NSObject {
         })
     }
     
+    func ckUpdateInvitation(updatedInvitation: InvitationObject) {
+        
+        let container: CKContainer = CKContainer.defaultContainer()
+        //var record: CKRecord = CKRecord(recordType: "Items")
+        let publicDatabase: CKDatabase = container.publicCloudDatabase
+        
+        let predicate: NSPredicate = NSPredicate(format: "sender = %@ and receiver = %@", updatedInvitation.sender, updatedInvitation.receiver)
+        
+        let query: CKQuery = CKQuery(recordType: "Invitations", predicate: predicate)
+        
+        publicDatabase.performQuery(query, inZoneWithID: nil, completionHandler: { results, error in
+            if(error == nil) {
+                let records: [CKRecord] = results as! [CKRecord]
+                var modifiedRecords: [CKRecord] = [CKRecord]()
+                
+                for record in records {
+                    record.setObject(updatedInvitation.sender, forKey:"sender")
+                    record.setObject(updatedInvitation.receiver, forKey:"receiver")
+                    record.setObject(updatedInvitation.confirmed, forKey:"confirmed")
+                    record.setObject(updatedInvitation.sendername, forKey:"sendername")
+                    modifiedRecords.append(record)
+                }
+                let updateOperation = CKModifyRecordsOperation(recordsToSave: modifiedRecords, recordIDsToDelete: nil)
+                updateOperation.perRecordCompletionBlock = { record, error in
+                    if error != nil {
+                        println("Unable to delete record: \(record). Error: \(error)")
+                    }
+                }
+                updateOperation.modifyRecordsCompletionBlock = { _, deleted, error in
+                    if error != nil {
+                        if error.code == CKErrorCode.PartialFailure.rawValue {
+                            println("There was a problem completing the operation. The following records had problems: \(error.userInfo?[CKPartialErrorsByItemIDKey])")
+                        }
+                        //callback?(success: false)
+                    }
+                    //callback?(success: true)
+                }
+                publicDatabase.addOperation(updateOperation)
+                
+                
+            }
+            
+        })
+        
+    }
+    
     func addItem(item: ItemObject) {
         
         //var delegate = UIApplication.sharedApplication().delegate as AppDelegate
@@ -794,6 +846,81 @@ class QuickToDoDataManager: NSObject {
         return result
     }
     
+    func cdAddInvitation(newInvitation: InvitationObject) {
+        
+        var invitation = NSEntityDescription.entityForName("Invitation", inManagedObjectContext: self.managedObjectContext!)
+        
+        var addItem = NSManagedObject(entity: invitation!, insertIntoManagedObjectContext: self.managedObjectContext) as! Invitation
+        
+        addItem.receiver = newInvitation.receiver as String
+        addItem.sender = newInvitation.sender as String
+        addItem.confirmed = newInvitation.confirmed
+        addItem.sendername = newInvitation.sendername as String
+        
+        if(managedObjectContext!.save(nil)) {
+            
+        }
+        
+    }
     
+    func cdGetInvitation() -> InvitationObject {
+        
+        var result: InvitationObject = InvitationObject()
+        
+        var item = NSEntityDescription.entityForName("Invitation", inManagedObjectContext: self.managedObjectContext!)
+        var request = NSFetchRequest()
+        
+        request.entity = item
+        
+        var predicate = NSPredicate(value: true)
+        request.predicate = predicate
+        
+        //var itemObject: ItemObject = ItemObject()
+        var mutableFetchResults: [Invitation] = managedObjectContext?.executeFetchRequest(request, error: nil) as! [Invitation]
+        
+        if(mutableFetchResults.count > 0) {
+            var item: Invitation = mutableFetchResults[0]
+            
+            result.sender = item.sender
+            result.receiver = item.receiver
+            result.confirmed = item.confirmed.integerValue
+            result.sendername = item.sendername
+            
+        }
+        
+        return result
+        
+    }
+    
+    func cdUpdateInvitation(updatedInvitation: InvitationObject) {
+        
+        var entity = NSEntityDescription.entityForName("Invitation", inManagedObjectContext: self.managedObjectContext!)
+        
+        var request: NSFetchRequest = NSFetchRequest()
+        request.entity = entity
+        
+        var predicate: NSPredicate = NSPredicate(value: true)
+        request.predicate = predicate
+        
+        var mutableFetchResults: [Invitation] = managedObjectContext!.executeFetchRequest(request, error: nil) as! [Invitation]
+        
+        if mutableFetchResults.count > 0 {
+            var item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedObjectContext) as! Invitation
+            
+            item = mutableFetchResults.last!
+            
+            item.sender = updatedInvitation.sender
+            item.receiver = updatedInvitation.receiver
+            item.confirmed = updatedInvitation.confirmed
+            item.sendername = updatedInvitation.sendername
+            
+            
+            if(managedObjectContext!.save(nil)) {
+                
+            }
+            
+        }
+        
+    }
    
 }
