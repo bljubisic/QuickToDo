@@ -26,6 +26,10 @@
 		E4C6E01919E7EA63003A89F7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01819E7EA63003A89F7 /* Images.xcassets */; };
 		E4C6E01C19E7EA63003A89F7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01A19E7EA63003A89F7 /* LaunchScreen.xib */; };
 		E4C6E02819E7EA63003A89F7 /* QuickToDoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C6E02719E7EA63003A89F7 /* QuickToDoTests.swift */; };
+		E4D43E581B14FF9000ACA8B3 /* Invitation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D43E571B14FF9000ACA8B3 /* Invitation.swift */; };
+		E4D43E5A1B14FFD400ACA8B3 /* InvitationObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D43E591B14FFD400ACA8B3 /* InvitationObject.swift */; };
+		E4D43E5B1B15009C00ACA8B3 /* InvitationObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D43E591B14FFD400ACA8B3 /* InvitationObject.swift */; };
+		E4D43E5C1B1500A300ACA8B3 /* Invitation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D43E571B14FF9000ACA8B3 /* Invitation.swift */; };
 		E4E030411A0D908F002993CF /* InputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E030401A0D908F002993CF /* InputTableViewCell.swift */; };
 		E4E77BBE1AE316B700AADF16 /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4723ED91ACB2F2800239A68 /* ConfigManager.swift */; };
 		E4EBBBCD1AB62F39002DA67A /* ConfigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4EBBBCC1AB62F39002DA67A /* ConfigViewController.swift */; };
@@ -91,6 +95,8 @@
 		E4C6E02619E7EA63003A89F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E4C6E02719E7EA63003A89F7 /* QuickToDoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoTests.swift; sourceTree = "<group>"; };
 		E4C6E03119E7EE90003A89F7 /* QuickToDoPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = QuickToDoPlayground.playground; sourceTree = "<group>"; };
+		E4D43E571B14FF9000ACA8B3 /* Invitation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Invitation.swift; sourceTree = "<group>"; };
+		E4D43E591B14FFD400ACA8B3 /* InvitationObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InvitationObject.swift; sourceTree = "<group>"; };
 		E4E030401A0D908F002993CF /* InputTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputTableViewCell.swift; sourceTree = "<group>"; };
 		E4EBBBCC1AB62F39002DA67A /* ConfigViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigViewController.swift; sourceTree = "<group>"; };
 		E4F014C71AC8887B00264AD5 /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Config.plist; sourceTree = "<group>"; };
@@ -171,6 +177,8 @@
 				E4EBBBCC1AB62F39002DA67A /* ConfigViewController.swift */,
 				E48C9AC61A3261DE007041DD /* ItemObject.swift */,
 				E40CCF8219F4406B004CF859 /* Entity.swift */,
+				E4D43E571B14FF9000ACA8B3 /* Invitation.swift */,
+				E4D43E591B14FFD400ACA8B3 /* InvitationObject.swift */,
 				E410086A1A2D0ECD00D6731A /* QuickToDoDataManager.swift */,
 				E4723ED91ACB2F2800239A68 /* ConfigManager.swift */,
 				E4C6E00C19E7EA62003A89F7 /* Supporting Files */,
@@ -385,9 +393,11 @@
 				E40CCF8319F4406B004CF859 /* Entity.swift in Sources */,
 				E4723EDA1ACB2F2800239A68 /* ConfigManager.swift in Sources */,
 				E48CDA101A1C728C00C24F26 /* ViewTableViewCell.swift in Sources */,
+				E4D43E5A1B14FFD400ACA8B3 /* InvitationObject.swift in Sources */,
 				E4C6E01419E7EA63003A89F7 /* ViewController.swift in Sources */,
 				E4C6E00F19E7EA63003A89F7 /* AppDelegate.swift in Sources */,
 				E410086B1A2D0ECD00D6731A /* QuickToDoDataManager.swift in Sources */,
+				E4D43E581B14FF9000ACA8B3 /* Invitation.swift in Sources */,
 				E4C6E01219E7EA63003A89F7 /* QuickToDo.xcdatamodeld in Sources */,
 				E4EBBBCD1AB62F39002DA67A /* ConfigViewController.swift in Sources */,
 			);
@@ -410,8 +420,10 @@
 				E49DE6CA1A9922690063F5D5 /* ItemObject.swift in Sources */,
 				E49DE6C81A9922600063F5D5 /* QuickToDoDataManager.swift in Sources */,
 				E49DE6C91A9922640063F5D5 /* Entity.swift in Sources */,
+				E4D43E5B1B15009C00ACA8B3 /* InvitationObject.swift in Sources */,
 				E4E77BBE1AE316B700AADF16 /* ConfigManager.swift in Sources */,
 				E49DE6CD1A9A71F40063F5D5 /* TodayTableViewCellSum.swift in Sources */,
+				E4D43E5C1B1500A300ACA8B3 /* Invitation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -539,7 +551,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = QuickToDo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -553,11 +565,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = QuickToDo/QuickToDo.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = QuickToDo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
