@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerUserNotificationSettings(settings)
         application.registerForRemoteNotifications()
         
-        dataManager.subscribeOnInvitations()
+        //dataManager.subscribeOnInvitations()
         
         
         return true
