@@ -16,6 +16,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
     
     var items: [ItemObject] = [ItemObject]()
     let dataManager: QuickToDoDataManager = QuickToDoDataManager.sharedInstance
+    let configManager: ConfigManager = ConfigManager.sharedInstance
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +25,8 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
         items = dataManager.getNotCompletedItems()
         var itemsAll: [ItemObject] = dataManager.getItems()
         
+        configManager.readKeyStore()
+        //configManager.readConfigPlist()
         
         self.itemsTable.dataSource = self
         self.itemsTable.delegate = self
