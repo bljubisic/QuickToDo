@@ -39,7 +39,7 @@ class ConfigViewController: UIViewController {
         if (configManager.sharingEnabled == 1) {
             shareSwitchVar = true
             self.findView.hidden = false
-            dataManager.ckFetchInvitations(showInviteList)
+            dataManager.cdGetInvitation(showInviteList)
         }
         else {
             shareSwitchVar = false
@@ -53,8 +53,13 @@ class ConfigViewController: UIViewController {
         
         var container: CKContainer = CKContainer.defaultContainer()
         container.fetchUserRecordIDWithCompletionHandler({ (recordId: CKRecordID!, error: NSError!) -> Void in
-            self.myICloudVar = recordId.recordName
-            self.configManager.selfRecordId = recordId.recordName
+            if let unwrappedRecordId = recordId {
+                self.myICloudVar = unwrappedRecordId.recordName
+                self.configManager.selfRecordId = unwrappedRecordId.recordName
+            } else {
+                println("The optional is nil!")
+            }
+            
             
         })
 
@@ -71,6 +76,7 @@ class ConfigViewController: UIViewController {
         if(shareSwitchVar) {
             self.findView.alpha = 1.0
             findView.hidden = true
+            self.showInviteList.hidden = true
             UIView.animateWithDuration(0.25, animations: {
                 self.findView.alpha = 0.0
                 }, completion: {
@@ -139,16 +145,24 @@ class ConfigViewController: UIViewController {
         
     }
     
-    func showInviteList(name: String) {
+    func showInviteList(invitation: InvitationObject) {
         
-        let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
-        dispatch_async(dispatch_get_main_queue(), {
+        if(invitation.sendername != "") {
+            let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
+            dispatch_async(dispatch_get_main_queue(), {
             
-            self.showInviteList.hidden = false
-            self.nameSubscription.text = name
+                self.showInviteList.hidden = false
+                self.findView.hidden = true
+                self.nameSubscription.text = invitation.sendername
+                if(invitation.confirmed > 0) {
+                    self.cancelSubscription.setImage(UIImage(named: "shareConfirmedButton"), forState: UIControlState.Normal)
+                }
             
             
-        })
+            })
+        } else {
+            self.showInviteList.hidden = true
+        }
         
         
         
@@ -193,7 +207,35 @@ class ConfigViewController: UIViewController {
     }
 
     @IBAction func cancelSubscriptionAction(sender: AnyObject) {
+        
+        let invitation = dataManager.cdGetConfirmedInvitation()
+        
+        dataManager.cdRemoveInvitation()
+        
+        dataManager.ckRemoveInvitationSubscription(invitation.sender, receiver: invitation.receiver)
+        
+        self.showInviteList.alpha = 1.0
+        //findView.hidden = true
+        UIView.animateWithDuration(0.25, animations: {
+            self.showInviteList.alpha = 0.0
+            }, completion: {
+                (value: Bool) in
+                println(">>> Animation done.")
+        })
+        showInviteList.hidden = true
+        
+        self.findView.alpha = 0.0
+        
+        UIView.animateWithDuration(0.25, animations: {
+            self.findView.alpha = 1.0
+            }, completion: {
+                (value: Bool) in
+                println(">>> Animation done.")
+        })
+        findView.hidden = false
     }
+    
+    
     /*
     // MARK: - Navigation
 
