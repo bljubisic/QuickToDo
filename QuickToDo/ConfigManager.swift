@@ -32,7 +32,7 @@ class ConfigManager: NSObject {
     
     func readKeyStore() {
         
-        let container: CKContainer = CKContainer.defaultContainer()
+        let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         
         container.accountStatusWithCompletionHandler({accountStatus, error in
             
@@ -43,7 +43,13 @@ class ConfigManager: NSObject {
                 self.selfRecordId = String()
                 
                 container.fetchUserRecordIDWithCompletionHandler({ (recordId: CKRecordID!, error: NSError!) -> Void in
-                    self.selfRecordId = recordId.recordName
+                    
+                    if let unwrappedRecordId = recordId {
+                        self.selfRecordId = unwrappedRecordId.recordName
+                    } else {
+                        println("The optional is nil!")
+                    }
+                    //self.selfRecordId = recordId.recordName
                     
                 })
                 
