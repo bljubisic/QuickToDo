@@ -58,7 +58,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
                 let recordID = queryNotification.recordID
                 
-                dataManager.ckFetchRecord(recordID)
+                dataManager.ckFetchRecord(queryNotification)
                 
                 
                 
