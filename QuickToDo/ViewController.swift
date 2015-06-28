@@ -176,7 +176,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 
             })
             container.fetchUserRecordIDWithCompletionHandler({recordID, error in
-                self.registerForInvitations(recordID)
+                if let unwrappedRecordId = recordID {
+                    self.registerForInvitations(unwrappedRecordId)
+                } else {
+                    println("The optional is nil!")
+                }
+                
             })
         }
         
