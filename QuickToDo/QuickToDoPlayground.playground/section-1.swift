@@ -1,23 +1,32 @@
+import UIKit
 
-var text: String = String()
 
-text = "test"
+typealias Position = CGPoint
+typealias Distance = CGFloat
 
-text += " new"
 
-var testArray: [String] = [String]()
+typealias Region = Position -> Bool
 
-testArray.append(text)
+func circle(radius: Distance) -> Region {
+    return { point in
+        sqrt(point.x * point.x + point.y * point.y) <= radius
+    }
+}
 
-var testDict: [String: String] = [String: String]()
 
-var key: String = "Key"
+let reg = circle(10)
 
-testDict[key] = text
+reg(Position(x: 9, y: 1))
 
-println(testDict[key])
 
-var textNew = "key \(key)"
+let testVar: String? = nil
+
+let nextVar = testVar?.uppercaseString
+
+
+let newVar = nextVar?.lowercaseString
+
+
 
 
 
