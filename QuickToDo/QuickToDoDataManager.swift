@@ -120,11 +120,13 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    func ckFetchRecord(recordID: CKRecordID) {
+    func ckFetchRecord(queryNotification: CKQueryNotification) {
 
-        let container: CKContainer = CKContainer.defaultContainer()
+        let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         //var record: CKRecord = CKRecord(recordType: "Items")
         let publicDatabase: CKDatabase = container.publicCloudDatabase
+        
+        let recordID = queryNotification.recordID
         
         //let query: CKQuery = CKQuery(recordType: "Items", predicate: predicate)
         
@@ -191,8 +193,20 @@ class QuickToDoDataManager: NSObject {
                 }
                 else if(record.recordType == "Invitations") {
                     
-                    self.delegate?.openAlertView(record)
-                    
+                    if(queryNotification.queryNotificationReason == CKQueryNotificationReason.RecordDeleted) {
+                        // remove invitation fro core data
+                        // remove invitation from cloudkit
+                        // remove notifications
+                        
+                        let invitation = self.cdGetConfirmedInvitation()
+                        
+                        self.cdRemoveInvitation()
+                        
+                        self.ckRemoveInvitationSubscription(invitation.sender, receiver: invitation.receiver)
+                        
+                    } else {
+                        self.delegate?.openAlertView(record)
+                    }
                 }
                 
                 
@@ -204,7 +218,7 @@ class QuickToDoDataManager: NSObject {
     
     func ckFetchInvitations(show: String -> Void) {
         
-        let container = CKContainer.defaultContainer()
+        let container = CKContainer(identifier: "iCloud.QuickToDo")
         
         var tmpRecord: CKRecord = CKRecord(recordType: "Invitations")
         
@@ -232,7 +246,7 @@ class QuickToDoDataManager: NSObject {
     
     func inviteToShare(receiverICloud: String, receiverName: String) {
         
-        var container: CKContainer = CKContainer.defaultContainer()
+        var container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         //var record: CKRecord = CKRecord(recordType: "Invitations")
         var publicDatabase: CKDatabase = container.publicCloudDatabase
         
@@ -255,7 +269,7 @@ class QuickToDoDataManager: NSObject {
     
     func subscribeOnResponse() {
         
-        let container: CKContainer = CKContainer.defaultContainer()
+        let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         
         let publicDatabase = container.publicCloudDatabase
         
@@ -264,6 +278,8 @@ class QuickToDoDataManager: NSObject {
         let subscription = CKSubscription(recordType: "Invitations",
             predicate: predicate,
             options: CKSubscriptionOptions.FiresOnRecordCreation | CKSubscriptionOptions.FiresOnRecordUpdate)
+        
+        
         
         let notificationInfo = CKNotificationInfo()
         
@@ -286,7 +302,7 @@ class QuickToDoDataManager: NSObject {
     
     func subscribeOnInvitations() {
         
-        let container: CKContainer = CKContainer.defaultContainer()
+        let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         
         let publicDatabase = container.publicCloudDatabase
         
@@ -295,6 +311,8 @@ class QuickToDoDataManager: NSObject {
         let subscription = CKSubscription(recordType: "Invitations",
             predicate: predicate,
             options: CKSubscriptionOptions.FiresOnRecordCreation | CKSubscriptionOptions.FiresOnRecordUpdate)
+        
+        
         
         let notificationInfo = CKNotificationInfo()
         
@@ -318,17 +336,18 @@ class QuickToDoDataManager: NSObject {
     
     func subscribeOnItems(icloudmail: String) {
         
-        let container: CKContainer = CKContainer.defaultContainer()
+        let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         
         let publicDatabase = container.publicCloudDatabase
         
         let predicate = NSPredicate(format: "icloudmail = %@", icloudmail)
         
-        let subscription = CKSubscription(recordType: "Items",
+        var subscription = CKSubscription(recordType: "Items",
             predicate: predicate,
             options: CKSubscriptionOptions.FiresOnRecordCreation | CKSubscriptionOptions.FiresOnRecordUpdate)
         
         let notificationInfo = CKNotificationInfo()
+        
         
         notificationInfo.alertBody = "A new Item was added"
         notificationInfo.shouldBadge = true
@@ -425,7 +444,7 @@ class QuickToDoDataManager: NSObject {
     
     func ckRemoveAllRecords(recordId: String) {
         
-        let container: CKContainer = CKContainer.defaultContainer()
+        let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         //var record: CKRecord = CKRecord(recordType: "Items")
         let publicDatabase: CKDatabase = container.publicCloudDatabase
         let predicate: NSPredicate = NSPredicate(format: "icloudmail = %@", recordId)
@@ -465,7 +484,7 @@ class QuickToDoDataManager: NSObject {
     func shareEverythingForRecordId(recordId: String) {
         
         var items: [ItemObject] = self.getItems()
-        var container: CKContainer = CKContainer.defaultContainer()
+        var container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         var record: CKRecord = CKRecord(recordType: "Items")
         var publicDatabase: CKDatabase = container.publicCloudDatabase
         
@@ -488,7 +507,7 @@ class QuickToDoDataManager: NSObject {
     }
     
     private func ckAddRecord(record: CKRecord) {
-        let container: CKContainer = CKContainer.defaultContainer()
+        let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         let record: CKRecord = CKRecord(recordType: "Items")
         let publicDatabase: CKDatabase = container.publicCloudDatabase
         
@@ -583,9 +602,9 @@ class QuickToDoDataManager: NSObject {
             
         }
         
-        if(configManager.sharingEnabled > 0) {
+        //if(configManager.sharingEnabled > 0) {
             ckFindItem(itemObject, operation: "complete")
-        }
+        //}
         
     }
     
@@ -593,7 +612,8 @@ class QuickToDoDataManager: NSObject {
         
         
         
-        let container: CKContainer = CKContainer.defaultContainer()
+        let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
+        
         //var record: CKRecord = CKRecord(recordType: "Items")
         let publicDatabase: CKDatabase = container.publicCloudDatabase
         
@@ -607,9 +627,35 @@ class QuickToDoDataManager: NSObject {
         else {
             completed = itemObject.completed
         }
-        let predicate: NSPredicate = NSPredicate(format: "icloudmail = %@ and completed = %d and name = %@", configManager.selfRecordId, completed, itemObject.word)
         
-        let query: CKQuery = CKQuery(recordType: "Items", predicate: predicate)
+        let icloudids = self.cdGetConfirmedInvitation()
+        var senderVar = ""
+        var receiverVar = ""
+        
+        
+        switch (icloudids.sender, icloudids.receiver) {
+        case let (.Some(sender), .Some(receiver)):
+            senderVar = sender
+            receiverVar = receiver
+        case let (.Some(sender), .None):
+            senderVar = sender
+        case let (.None, .Some(receiver)):
+            receiverVar = receiver
+        case let (.None, .None):
+            println("No invitation")
+        }
+        
+        var predicateFirst: NSPredicate = NSPredicate()
+        var predicateSecond: NSPredicate = NSPredicate()
+        
+        if(senderVar != "" && receiverVar != "") {
+            predicateFirst = NSPredicate(format: "icloudmail = %@ and completed = %d and name = %@", senderVar, completed, itemObject.word)
+            predicateSecond = NSPredicate(format: "icloudmail = %@ and completed = %d and name = %@", receiverVar, completed, itemObject.word)
+        } else {
+            predicateFirst = NSPredicate(format: "icloudmail = %@ and completed = %d and name = %@", configManager.selfRecordId, completed, itemObject.word)
+        }
+        
+        var query: CKQuery = CKQuery(recordType: "Items", predicate: predicateFirst)
         
         publicDatabase.performQuery(query, inZoneWithID: nil, completionHandler: { results, error in
             if(error == nil) {
@@ -644,11 +690,49 @@ class QuickToDoDataManager: NSObject {
             }
             
         })
+        
+        if(receiverVar != "") {
+            query = CKQuery(recordType: "Items", predicate: predicateSecond)
+        
+            publicDatabase.performQuery(query, inZoneWithID: nil, completionHandler: { results, error in
+                if(error == nil) {
+                    let records: [CKRecord] = results as! [CKRecord]
+                    var modifiedRecords: [CKRecord] = [CKRecord]()
+                
+                    for record in records {
+                        record.setObject(itemObject.word, forKey:"name")
+                        record.setObject(itemObject.used, forKey:"used")
+                        record.setObject(itemObject.completed, forKey:"completed")
+                        record.setObject(self.configManager.selfRecordId, forKey:"icloudmail")
+                        modifiedRecords.append(record)
+                    }
+                    let updateOperation = CKModifyRecordsOperation(recordsToSave: modifiedRecords, recordIDsToDelete: nil)
+                    updateOperation.perRecordCompletionBlock = { record, error in
+                        if error != nil {
+                            println("Unable to delete record: \(record). Error: \(error)")
+                        }
+                    }
+                    updateOperation.modifyRecordsCompletionBlock = { _, deleted, error in
+                        if error != nil {
+                            if error.code == CKErrorCode.PartialFailure.rawValue {
+                                println("There was a problem completing the operation. The following records had problems: \(error.userInfo?[CKPartialErrorsByItemIDKey])")
+                            }
+                            //callback?(success: false)
+                        }
+                        //callback?(success: true)
+                    }
+                    publicDatabase.addOperation(updateOperation)
+                
+                
+                }
+            
+            })
+        }
     }
     
     func ckUpdateInvitation(updatedInvitation: InvitationObject) {
         
-        let container: CKContainer = CKContainer.defaultContainer()
+        let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         //var record: CKRecord = CKRecord(recordType: "Items")
         let publicDatabase: CKDatabase = container.publicCloudDatabase
         
@@ -709,7 +793,7 @@ class QuickToDoDataManager: NSObject {
         // if configManager have sharingEnabled add this item to public database as well.
         
         if (configManager.sharingEnabled == 1) {
-            var container: CKContainer = CKContainer.defaultContainer()
+            var container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
             var record: CKRecord = CKRecord(recordType: "Items")
             var publicDatabase: CKDatabase = container.publicCloudDatabase
             
@@ -863,7 +947,7 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    func cdGetInvitation() -> InvitationObject {
+    func cdGetInvitation(show: InvitationObject -> Void) {
         
         var result: InvitationObject = InvitationObject()
         
@@ -872,23 +956,23 @@ class QuickToDoDataManager: NSObject {
         
         request.entity = item
         
-        var predicate = NSPredicate(value: true)
+        //var itemObject: ItemObject = ItemObject()
+        var predicate = NSPredicate(format: "sender = %@ or receiver = %@", self.configManager.selfRecordId, self.configManager.selfRecordId)
         request.predicate = predicate
         
-        //var itemObject: ItemObject = ItemObject()
-        var mutableFetchResults: [Invitation] = managedObjectContext?.executeFetchRequest(request, error: nil) as! [Invitation]
-        
-        if(mutableFetchResults.count > 0) {
-            var item: Invitation = mutableFetchResults[0]
-            
-            result.sender = item.sender
-            result.receiver = item.receiver
-            result.confirmed = item.confirmed.integerValue
-            result.sendername = item.sendername
+        if let invitations = managedObjectContext?.executeFetchRequest(request, error: nil) as? [NSManagedObject] {
+            println("number of invitations found: \(invitations.count)")
+            for invitation in invitations {
+                if let item = invitation as? Invitation {
+                    result.sender = item.sender
+                    result.receiver = item.receiver
+                    result.confirmed = item.confirmed.integerValue
+                    result.sendername = item.sendername
+                }
+            }
             
         }
-        
-        return result
+        show(result)
         
     }
     
@@ -920,6 +1004,139 @@ class QuickToDoDataManager: NSObject {
             }
             
         }
+        
+    }
+    
+    func cdGetConfirmedInvitation() -> (sender: String?, receiver: String?) {
+        
+        var entity = NSEntityDescription.entityForName("Invitation", inManagedObjectContext: self.managedObjectContext!)
+        
+        var request: NSFetchRequest = NSFetchRequest()
+        request.entity = entity
+        
+        var predicate: NSPredicate = NSPredicate(format: "confirmed = 1")
+        request.predicate = predicate
+        
+        var mutableFetchResults: [Invitation] = managedObjectContext!.executeFetchRequest(request, error: nil) as! [Invitation]
+        var results: [String] = [String]()
+        
+        if mutableFetchResults.count > 0 {
+            var invitation: Invitation = mutableFetchResults[0] as Invitation
+            
+            return (invitation.sender, invitation.receiver)
+            
+            
+        }
+        return(nil, nil)
+    }
+    
+    func cdRemoveInvitation() {
+        var entity = NSEntityDescription.entityForName("Invitation", inManagedObjectContext: self.managedObjectContext!)
+        
+        var request: NSFetchRequest = NSFetchRequest()
+        request.entity = entity
+        
+        var predicate: NSPredicate = NSPredicate(format: "confirmed = 1")
+        request.predicate = predicate
+        
+        var mutableFetchResults: [Invitation] = managedObjectContext!.executeFetchRequest(request, error: nil) as! [Invitation]
+        var results: [String] = [String]()
+        
+        while(mutableFetchResults.count > 0) {
+            var item = mutableFetchResults.last
+            mutableFetchResults.removeLast()
+            managedObjectContext?.deleteObject(item!)
+            
+        }
+        
+    }
+    
+    func ckRemoveInvitation(sender: String?, receiver: String?) {
+        let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
+        //var record: CKRecord = CKRecord(recordType: "Items")
+        let publicDatabase: CKDatabase = container.publicCloudDatabase
+        
+        let predicate: NSPredicate = NSPredicate(format: "sender = %@ and receiver = %@", sender!, receiver!)
+        
+        let query: CKQuery = CKQuery(recordType: "Invitations", predicate: predicate)
+        
+        publicDatabase.performQuery(query, inZoneWithID: nil, completionHandler: { results, error in
+            if(error == nil) {
+                let records: [CKRecord] = results as! [CKRecord]
+                var modifiedRecords: [CKRecord] = [CKRecord]()
+                
+                for record in records {
+                    let recordId = record.recordID
+                    
+                    publicDatabase.deleteRecordWithID(record.recordID,
+                        completionHandler: ({returnRecord, error in
+                            if let err = error {
+                                println("Error deleting")
+                            } else {
+                                println("Success delete")
+                                //remove subscription
+                                publicDatabase.fetchAllSubscriptionsWithCompletionHandler({subscriptions, error in
+                                    var subscriptionsIdsToDelete: [String] = [String]()
+                                    for subscriptionObject in subscriptions {
+                                        var subscription: CKSubscription = subscriptionObject as! CKSubscription
+                                        if(subscription.recordType == "Items") {
+                                            subscriptionsIdsToDelete.append(subscription.subscriptionID)
+                                        }
+                                    }
+                                    let subscriptionDeleteOperation = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: subscriptionsIdsToDelete)
+                                    subscriptionDeleteOperation.modifySubscriptionsCompletionBlock = { _, deleted, error in
+                                        if error != nil {
+                                            if error.code == CKErrorCode.PartialFailure.rawValue {
+                                                println("There was a problem completing the operation. The following records had problems: \(error.userInfo?[CKPartialErrorsByItemIDKey])")
+                                            }
+                                            //callback?(success: false)
+                                        } else {
+                                            self.subscribeOnItems(self.configManager.selfRecordId)
+                                        }
+                                        //callback?(success: true)
+                                    }
+                                    publicDatabase.addOperation(subscriptionDeleteOperation)
+                                    
+                                })
+                            }
+                        }))
+                }
+                
+                
+            }
+            
+        })
+        
+    }
+    
+    func ckRemoveInvitationSubscription(sender: String?, receiver: String?) {
+        let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
+        //var record: CKRecord = CKRecord(recordType: "Items")
+        let publicDatabase: CKDatabase = container.publicCloudDatabase
+        
+        publicDatabase.fetchAllSubscriptionsWithCompletionHandler({subscriptions, error in
+            var subscriptionsIdsToDelete: [String] = [String]()
+            for subscriptionObject in subscriptions {
+                var subscription: CKSubscription = subscriptionObject as! CKSubscription
+                if(subscription.recordType == "Items") {
+                    subscriptionsIdsToDelete.append(subscription.subscriptionID)
+                }
+            }
+            let subscriptionDeleteOperation = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: subscriptionsIdsToDelete)
+            subscriptionDeleteOperation.modifySubscriptionsCompletionBlock = { _, deleted, error in
+                if error != nil {
+                    if error.code == CKErrorCode.PartialFailure.rawValue {
+                        println("There was a problem completing the operation. The following records had problems: \(error.userInfo?[CKPartialErrorsByItemIDKey])")
+                    }
+                    //callback?(success: false)
+                } else {
+                    self.subscribeOnItems(self.configManager.selfRecordId)
+                }
+                //callback?(success: true)
+            }
+            publicDatabase.addOperation(subscriptionDeleteOperation)
+            
+        })
         
     }
    
