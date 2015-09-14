@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14E26a" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14E46" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Entity" representedClassName="Entity" syncable="YES">
         <attribute name="completed" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="count" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
@@ -10,11 +10,12 @@
     <entity name="Invitation" representedClassName="Invitation" syncable="YES">
         <attribute name="confirmed" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="receiver" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="receivername" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sender" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sendername" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
         <element name="Entity" positionX="-63" positionY="-18" width="128" height="120"/>
-        <element name="Invitation" positionX="-63" positionY="18" width="128" height="105"/>
+        <element name="Invitation" positionX="-63" positionY="18" width="128" height="120"/>
     </elements>
 </model>
