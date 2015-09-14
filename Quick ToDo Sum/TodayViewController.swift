@@ -44,14 +44,14 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
 
     @IBAction func completeItem(sender: UIButton) {
         
-        var buttonPosition: CGPoint = sender.convertPoint(CGPoint.zeroPoint, toView: self.itemsTable)
-        var indexPath: NSIndexPath = self.itemsTable.indexPathForRowAtPoint(buttonPosition)!
+        let buttonPosition: CGPoint = sender.convertPoint(CGPoint.zero, toView: self.itemsTable)
+        let indexPath: NSIndexPath = self.itemsTable.indexPathForRowAtPoint(buttonPosition)!
         
-        var row: Int = indexPath.row
+        let row: Int = indexPath.row
         
         if(row <= items.count-1) {
-            var tmpCell: TodayTableViewCellSum = itemsTable.cellForRowAtIndexPath(indexPath) as! TodayTableViewCellSum
-            var item: ItemObject = items[row]
+            //var tmpCell: TodayTableViewCellSum = itemsTable.cellForRowAtIndexPath(indexPath) as! TodayTableViewCellSum
+            let item: ItemObject = items[row]
             if(item.completed == 1) {
                 item.completed = 0
                 //tmpCell.completedButton.selected = false
@@ -62,7 +62,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
             self.items.removeAtIndex(row)
             self.itemsTable.reloadData()
             dataManager.updateItem(item)
-            var itemsAll: [ItemObject] = dataManager.getItems()
+            let itemsAll: [ItemObject] = dataManager.getItems()
             
             self.widgetLabel.text = "All: \(itemsAll.count), to do:\(items.count)"
         }
@@ -70,7 +70,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
         
     }
     
-    func widgetPerformUpdateWithCompletionHandler(completionHandler: ((NCUpdateResult) -> Void)!) {
+    func widgetPerformUpdateWithCompletionHandler(completionHandler: ((NCUpdateResult) -> Void)) {
         // Perform any setup necessary in order to update the view.
 
         // If an error is encountered, use NCUpdateResult.Failed
@@ -78,7 +78,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
         // If there's an update, use NCUpdateResult.NewData
 
         items = dataManager.getNotCompletedItems()
-        var itemsAll: [ItemObject] = dataManager.getItems()
+        let itemsAll: [ItemObject] = dataManager.getItems()
         
         self.widgetLabel.text = "All: \(itemsAll.count), to do:\(items.count)"
         self.itemsTable.reloadData()
@@ -88,11 +88,11 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        var row: Int = indexPath.row
+        let row: Int = indexPath.row
         
         if(row <= items.count-1) {
-            var tmpCell: TodayTableViewCellSum = tableView.cellForRowAtIndexPath(indexPath) as! TodayTableViewCellSum
-            var item: ItemObject = items[row]
+            //var tmpCell: TodayTableViewCellSum = tableView.cellForRowAtIndexPath(indexPath) as! TodayTableViewCellSum
+            let item: ItemObject = items[row]
             if(item.completed == 1) {
                 item.completed = 0
                 //tmpCell.completedButton.selected = false
@@ -103,7 +103,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
             self.items.removeAtIndex(row)
             self.itemsTable.reloadData()
             dataManager.updateItem(item)
-            var itemsAll: [ItemObject] = dataManager.getItems()
+            let itemsAll: [ItemObject] = dataManager.getItems()
             
             self.widgetLabel.text = "All: \(itemsAll.count), to do:\(items.count)"
         }
@@ -111,9 +111,9 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        var row: Int = indexPath.row
+        let row: Int = indexPath.row
         
-        var tmpCell: TodayTableViewCellSum = tableView.dequeueReusableCellWithIdentifier("TodayCell") as! TodayTableViewCellSum
+        let tmpCell: TodayTableViewCellSum = tableView.dequeueReusableCellWithIdentifier("TodayCell") as! TodayTableViewCellSum
         tmpCell.itemName.text = self.items[row].word as String
         /*
         if(self.items[row].completed == 1) {
@@ -127,7 +127,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var itemsCount: Int = self.items.count
+        let itemsCount: Int = self.items.count
         
         if(itemsCount > 3) {
             return 3
