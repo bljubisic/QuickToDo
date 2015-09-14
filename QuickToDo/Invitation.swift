@@ -17,5 +17,6 @@ class Invitation: NSManagedObject {
     @NSManaged var sender: String
     @NSManaged var confirmed: NSNumber
     @NSManaged var sendername: String
-
+    @NSManaged var receivername: String
+    
 }
