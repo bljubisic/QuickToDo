@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         let settings = UIUserNotificationSettings(forTypes:
-            .Alert | .Badge | .Sound, categories: nil)
+            [UIUserNotificationType.Alert , UIUserNotificationType.Badge, UIUserNotificationType.Sound], categories: nil)
         
         configManager.readKeyStore()
         
@@ -44,11 +44,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         
-        let viewController: ViewController =
-        self.window?.rootViewController as! ViewController
+        
+        let tmpUserInfo: [String: NSObject] = userInfo as! [String: NSObject]
         
         let notification: CKNotification =
-        CKNotification(fromRemoteNotificationDictionary: userInfo)
+        CKNotification(fromRemoteNotificationDictionary: tmpUserInfo)
         
         if (notification.notificationType ==
             CKNotificationType.Query) {
@@ -56,7 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 let queryNotification =
                 notification as! CKQueryNotification
                 
-                let recordID = queryNotification.recordID
+                //let recordID = queryNotification.recordID
                 
                 dataManager.ckFetchRecord(queryNotification)
                 
@@ -97,7 +97,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     lazy var applicationDocumentsDirectory: NSURL = {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "com.persukibo.QuickToDo" in the application's documents Application Support directory.
         let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-        return urls[urls.count-1] as! NSURL
+        return urls[urls.count-1] as NSURL
     }()
 
     lazy var managedObjectModel: NSManagedObjectModel = {
@@ -113,7 +113,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("QuickToDo.sqlite")
         var error: NSError? = nil
         var failureReason = "There was an error creating or loading the application's saved data."
-        if coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil, error: &error) == nil {
+        do {
+            try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
             coordinator = nil
             // Report any error we got.
             let dict = NSMutableDictionary()
@@ -125,6 +126,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             //NSLog("Unresolved error \(error), \(error!.userInfo)")
             abort()
+        } catch _ {
+            
         }
         
         return coordinator
@@ -145,12 +148,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func saveContext () {
         if let moc = self.managedObjectContext {
-            var error: NSError? = nil
-            if moc.hasChanges && !moc.save(&error) {
-                // Replace this implementation with code to handle the error appropriately.
-                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                NSLog("Unresolved error \(error), \(error!.userInfo)")
-                abort()
+            if moc.hasChanges  {
+                do {
+                    try moc.save()
+                } catch {
+                    NSLog("Unresolved error \(error)")
+                    abort()
+                }
             }
         }
     }
