@@ -17,6 +17,7 @@ class ConfigManager: NSObject {
     var sharingEnabled: Int = 0
     var sharingList: [String] = [String] ()
     var selfRecordId: String = String()
+    var selfName: String = String()
     var configDictionary: [String: Int] = [String: Int]()
     
     var keyStore: NSUbiquitousKeyValueStore = NSUbiquitousKeyValueStore.defaultStore()
@@ -41,17 +42,26 @@ class ConfigManager: NSObject {
                     self.sharingEnabled = self.keyStore.objectForKey("sharingEnabled") as! Int
                 }
                 self.selfRecordId = String()
-                
-                container.fetchUserRecordIDWithCompletionHandler({ (recordId: CKRecordID!, error: NSError!) -> Void in
+                do {
                     
-                    if let unwrappedRecordId = recordId {
-                        self.selfRecordId = unwrappedRecordId.recordName
-                    } else {
-                        println("The optional is nil!")
-                    }
-                    //self.selfRecordId = recordId.recordName
+                    container.fetchUserRecordIDWithCompletionHandler({ (recordId: CKRecordID?, error: NSError?) -> Void in
                     
-                })
+                        if let unwrappedRecordId = recordId {
+                            self.selfRecordId = unwrappedRecordId.recordName
+                            container.discoverUserInfoWithUserRecordID(unwrappedRecordId, completionHandler: { (userInfo: CKDiscoveredUserInfo? , error: NSError? ) -> Void in
+                                if let unwrappedUserInfo = userInfo {
+                                    self.selfName = unwrappedUserInfo.firstName! + " " + unwrappedUserInfo.lastName!
+                                } else {
+                                    self.selfName = "Not Found"
+                                }
+                            })
+                        } else {
+                            print("The optional is nil!")
+                        }
+                        //self.selfRecordId = recordId.recordName
+                    
+                    })
+                }
                 
                 
                 //(keyStore.objectForKey("selfRecordId")) ? (keyStore.objectForKey("selfRecordId") as! String) : :
@@ -83,31 +93,37 @@ class ConfigManager: NSObject {
         // getting path to GameData.plist
         let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true) as NSArray
         let documentsDirectory = paths[0] as! String
-        let path = documentsDirectory.stringByAppendingPathComponent("Config.plist")
+        let path = documentsDirectory.stringByAppendingString("Config.plist")
         let fileManager = NSFileManager.defaultManager()
         //check if file exists
         if(!fileManager.fileExistsAtPath(path)) {
             // If it doesn't, copy it from the default file in the Bundle
             if let bundlePath = NSBundle.mainBundle().pathForResource("Config", ofType: "plist") {
                 let resultDictionary = NSMutableDictionary(contentsOfFile: bundlePath)
-                println("Bundle Config.plist file is --> \(resultDictionary?.description)")
-                fileManager.copyItemAtPath(bundlePath, toPath: path, error: nil)
-                println("copy")
+                print("Bundle Config.plist file is --> \(resultDictionary?.description)")
+                do {
+                    
+                    try fileManager.copyItemAtPath(bundlePath, toPath: path)
+                } catch _ {
+                    
+                }
+                print("copy")
             } else {
-                println("Config.plist not found. Please, make sure it is part of the bundle.")
+                print("Config.plist not found. Please, make sure it is part of the bundle.")
             }
         } else {
-            println("Config.plist already exits at path.")
+            print("Config.plist already exits at path.")
             // use this to delete file from documents directory
             //fileManager.removeItemAtPath(path, error: nil)
         }
         let resultDictionary = NSMutableDictionary(contentsOfFile: path)
-        println("Loaded Config.plist file is --> \(resultDictionary?.description)")
-        var myDict = NSMutableDictionary(contentsOfFile: path)
-        plistItems = myDict!
+        print("Loaded Config.plist file is --> \(resultDictionary?.description)")
+        let myDict = NSMutableDictionary(contentsOfFile: path)
+        //plistItems = myDict!
         
         if let dict = myDict {
             //loading values
+            plistItems = dict
             sharingEnabled = dict.objectForKey("sharingEnabled")! as! Int
             
             selfRecordId = String()
@@ -121,7 +137,7 @@ class ConfigManager: NSObject {
             //sharingList = (dict["sharingList"] as? [String])!
             //...
         } else {
-            println("WARNING: Couldn't create dictionary from GameData.plist! Default values will be used!")
+            print("WARNING: Couldn't create dictionary from GameData.plist! Default values will be used!")
         }
         
     }
@@ -131,7 +147,7 @@ class ConfigManager: NSObject {
         let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true) as NSArray
         let documentsDirectory = paths.objectAtIndex(0) as! NSString
         let path = documentsDirectory.stringByAppendingPathComponent("Config.plist")
-        var dict: NSMutableDictionary = ["XInitializerItem": "DoNotEverChangeMe"]
+        let dict: NSMutableDictionary = ["XInitializerItem": "DoNotEverChangeMe"]
         //saving values
         dict.setObject(sharingEnabled, forKey: "sharingEnabled")
         dict.setObject(self.selfRecordId, forKey: "selfRecordId")
@@ -141,7 +157,7 @@ class ConfigManager: NSObject {
         //writing to GameData.plist
         dict.writeToFile(path, atomically: false)
         let resultDictionary = NSMutableDictionary(contentsOfFile: path)
-        println("Saved Config.plist file is --> \(resultDictionary?.description)")
+        print("Saved Config.plist file is --> \(resultDictionary?.description)")
 
         
     }
