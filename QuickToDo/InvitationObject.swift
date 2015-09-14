@@ -14,5 +14,5 @@ class InvitationObject: NSObject {
     var sender: String = ""
     var confirmed: Int = 0
     var sendername: String = ""
-    
+    var receivername: String = ""
 }
