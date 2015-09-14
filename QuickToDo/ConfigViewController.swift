@@ -21,6 +21,7 @@ class ConfigViewController: UIViewController {
     @IBOutlet weak var showInviteList: UIView!
     @IBOutlet weak var cancelSubscription: UIButton!
     @IBOutlet weak var nameSubscription: UILabel!
+    @IBOutlet weak var receiverSubscription: UILabel!
     
     
     var iCloudIdVar: String = String()
@@ -51,17 +52,21 @@ class ConfigViewController: UIViewController {
         // find self recordId
         
         
-        var container: CKContainer = CKContainer.defaultContainer()
-        container.fetchUserRecordIDWithCompletionHandler({ (recordId: CKRecordID!, error: NSError!) -> Void in
+        let container: CKContainer = CKContainer.defaultContainer()
+        
+        
+        
+        container.fetchUserRecordIDWithCompletionHandler({ (recordId: CKRecordID?, error: NSError?) -> Void in
             if let unwrappedRecordId = recordId {
                 self.myICloudVar = unwrappedRecordId.recordName
                 self.configManager.selfRecordId = unwrappedRecordId.recordName
             } else {
-                println("The optional is nil!")
+                print("The optional is nil!")
             }
             
             
         })
+        
 
         // Do any additional setup after loading the view.
     }
@@ -81,7 +86,7 @@ class ConfigViewController: UIViewController {
                 self.findView.alpha = 0.0
                 }, completion: {
                     (value: Bool) in
-                    println(">>> Animation done.")
+                    print(">>> Animation done.")
             })
             shareSwitchVar = false
         }
@@ -95,7 +100,7 @@ class ConfigViewController: UIViewController {
                 self.findView.alpha = 1.0
                 }, completion: {
                     (value: Bool) in
-                    println(">>> Animation done.")
+                    print(">>> Animation done.")
             })
             shareSwitchVar = true
         }
@@ -109,12 +114,13 @@ class ConfigViewController: UIViewController {
         
         
         if(self.iCloudIdVar != "") {
-            var invitation = InvitationObject()
+            let invitation = InvitationObject()
             
-            invitation.sender = self.iCloudIdVar
+            invitation.sender = self.myICloudVar
             invitation.receiver = self.iCloudId.text!
             invitation.confirmed = 0
-            invitation.sendername = self.iCloudName.text! + " " + self.iCloudLastname.text!
+            invitation.sendername = self.configManager.selfName
+            invitation.receivername = self.iCloudName.text!
             
             dataManager.cdAddInvitation(invitation)
             
@@ -148,7 +154,7 @@ class ConfigViewController: UIViewController {
     func showInviteList(invitation: InvitationObject) {
         
         if(invitation.sendername != "") {
-            let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
+            _ = DISPATCH_QUEUE_PRIORITY_DEFAULT
             dispatch_async(dispatch_get_main_queue(), {
             
                 self.showInviteList.hidden = false
@@ -161,45 +167,67 @@ class ConfigViewController: UIViewController {
             
             })
         } else {
-            self.showInviteList.hidden = true
+            dataManager.ckFetchInvitations(showInviteListFromCloudKit)
+            //self.showInviteList.hidden = true
         }
         
         
         
     }
     
+    func showInviteListFromCloudKit(sender: String) -> Void {
+        
+        if(sender != "") {
+            _ = DISPATCH_QUEUE_PRIORITY_DEFAULT
+            dispatch_async(dispatch_get_main_queue(), {
+                
+                self.showInviteList.hidden = false
+                self.findView.hidden = true
+                self.nameSubscription.text = sender
+
+                
+                
+            })
+        } else {
+            self.showInviteList.hidden = true
+        }
+        
+    }
+    
     @IBAction func findICloudContact(sender: AnyObject) {
         
-        var iCloudName: String = iCloudEmail.text
-        var container: CKContainer = CKContainer.defaultContainer()
+        let iCloudName: String = iCloudEmail.text!
+        let container: CKContainer = CKContainer.defaultContainer()
         
-        var spinner: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        let spinner: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         
         iCloudEmail.leftView = spinner
         spinner.startAnimating()
 
-        container.discoverUserInfoWithEmailAddress(iCloudName, completionHandler:{ (userInfo: CKDiscoveredUserInfo!, error: NSError!) -> Void in
+        container.discoverUserInfoWithEmailAddress(iCloudName, completionHandler:{ (userInfo: CKDiscoveredUserInfo?, error: NSError?) -> Void in
             
             if(userInfo != nil) {
                 let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
                 dispatch_async(dispatch_get_global_queue(priority, 0)) {
                     // do some task
                     dispatch_async(dispatch_get_main_queue()) {
-                        self.iCloudId.text = userInfo.userRecordID.recordName
-                        self.iCloudIdVar = userInfo.userRecordID.recordName
-                        self.iCloudName.text = userInfo.firstName
-                        self.iCloudLastname.text = userInfo.lastName
-                        self.iCloudNameVar = userInfo.firstName + " " + userInfo.lastName
-                        spinner.stopAnimating()
-                        self.iCloudEmail.leftView = nil
+                        if let tmpUserInfo = userInfo {
+                            self.iCloudId.text = tmpUserInfo.userRecordID!.recordName
+                            self.iCloudIdVar = tmpUserInfo.userRecordID!.recordName
+                            self.iCloudName.text = tmpUserInfo.displayContact?.givenName
+                            self.iCloudLastname.text = tmpUserInfo.displayContact?.familyName
+                            self.iCloudNameVar = (tmpUserInfo.displayContact?.givenName)! + " " + (tmpUserInfo.displayContact?.familyName)!
+                            spinner.stopAnimating()
+                            self.iCloudEmail.leftView = nil
                         
-                        self.sendInvitationButton.enabled = true
+                            self.sendInvitationButton.enabled = true
+                        }
                     }
                 }
 
             }
             else {
-                self.iCloudId.text = "Nothing found"
+                self.iCloudName.text = "Nothing found"
             }
         })
         
@@ -220,7 +248,7 @@ class ConfigViewController: UIViewController {
             self.showInviteList.alpha = 0.0
             }, completion: {
                 (value: Bool) in
-                println(">>> Animation done.")
+                print(">>> Animation done.")
         })
         showInviteList.hidden = true
         
@@ -230,7 +258,7 @@ class ConfigViewController: UIViewController {
             self.findView.alpha = 1.0
             }, completion: {
                 (value: Bool) in
-                println(">>> Animation done.")
+                print(">>> Animation done.")
         })
         findView.hidden = false
     }
