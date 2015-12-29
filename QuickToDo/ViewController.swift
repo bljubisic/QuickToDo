@@ -17,6 +17,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBOutlet weak var itemsTable: UITableView!
     var items: [ItemObject] = [ItemObject]()
+    var itemsMap: [String: ItemObject] = [String: ItemObject]()
 
     var textView: UITextField?
     var hintButton1: UIButton?
@@ -38,12 +39,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             if(tmpItem.completed > 0) {
                 self.items.removeAtIndex(i-1)
+                self.itemsMap.removeValueForKey(tmpItem.word as String)
                 //println(self.items.count)
                 deleteIndexPath.append(NSIndexPath(forRow: i, inSection: 0))
             }
             i--
         } while(i > 0)
-        items = dataManager.getItems()
+        itemsMap = dataManager.getItems()
+        items = [ItemObject](itemsMap.values)
         itemsTable.deleteRowsAtIndexPaths(deleteIndexPath, withRowAnimation: UITableViewRowAnimation.Fade)
         itemsTable.reloadData()
     }
@@ -67,14 +70,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
             self.itemsTable.reloadData()
             dataManager.updateItem(item)
-            let usedItems: [ItemObject] = dataManager.getNotCompletedItems()
+            let usedItems: [String: ItemObject] = dataManager.getNotCompletedItems()
             
             UIApplication.sharedApplication().applicationIconBadgeNumber = usedItems.count
         }
     }
     
     func tableReload() {
-        items = dataManager.getItems()
+        itemsMap = dataManager.getItems()
+        items = [ItemObject](itemsMap.values)
         self.itemsTable.reloadData()
         
     }
@@ -160,6 +164,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
+    func updateTableView(newItems: [String: ItemObject]) -> Void {
+        items = [ItemObject]()
+        
+        for key in newItems.keys {
+            if let itemObject = newItems[key] {
+                items.append(itemObject)
+            }
+        }
+        self.itemsTable.reloadData()
+        
+        
+    }
+    /*
+    override func viewWillAppear(animated: Bool) {
+        self.dataManager.getAllItemsFromCloud(updateTableView)
+        
+    }
+    */
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -167,7 +189,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         let container: CKContainer = CKContainer.defaultContainer()
         
-        items = dataManager.getItems()
+        itemsMap = dataManager.getItems()
+        items = [ItemObject](itemsMap.values)
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
         
@@ -203,7 +226,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.itemsTable.tableFooterView = tblView
         self.itemsTable.backgroundColor = UIColor.clearColor()
         
-        let usedItems: [ItemObject] = dataManager.getNotCompletedItems()
+        let usedItems: [String: ItemObject] = dataManager.getNotCompletedItems()
         
         UIApplication.sharedApplication().applicationIconBadgeNumber = usedItems.count
         
@@ -260,11 +283,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func applicationBecameActive(notification: NSNotification) {
         
-        let usedItems: [ItemObject] = dataManager.getNotCompletedItems()
+        let usedItems: [String: ItemObject] = dataManager.getNotCompletedItems()
         
         UIApplication.sharedApplication().applicationIconBadgeNumber = usedItems.count
         
-        self.items = dataManager.getItems()
+        self.itemsMap = dataManager.getItems()
+        self.items = [ItemObject](itemsMap.values)
         
         self.itemsTable.reloadData()
     }
@@ -409,41 +433,47 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func textFieldDone(textFieldSender: UITextField) {
-        let item: String = textFieldSender.text!
         
-        let itemObject: ItemObject = ItemObject()
-        itemObject.word = item
-        itemObject.used = 1
-        itemObject.count = 1
-        itemObject.lasUsed = NSDate()
+        if let textFieldText = textFieldSender.text {
+            if(textFieldText != "") {
+                let item: String = textFieldText
+            
+                let itemObject: ItemObject = ItemObject()
+                itemObject.word = item
+                itemObject.used = 1
+                itemObject.count = 1
+                itemObject.lasUsed = NSDate()
         
-        dataManager.addItem(itemObject)
+                dataManager.addItem(itemObject)
         
         
         
-        items.append(itemObject)
+                items.append(itemObject)
         
         
-        self.itemsTable.reloadData()
+                self.itemsTable.reloadData()
         
-        let numberOfSections = self.itemsTable.numberOfSections
-        let numberOfRows = self.itemsTable.numberOfRowsInSection(numberOfSections-1)
+                let numberOfSections = self.itemsTable.numberOfSections
+                let numberOfRows = self.itemsTable.numberOfRowsInSection(numberOfSections-1)
         
-        if numberOfRows > 0 {
-            print(numberOfSections)
-            let indexPath = NSIndexPath(forRow: numberOfRows-1, inSection: (numberOfSections-1))
-            self.itemsTable.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
+                if numberOfRows > 0 {
+                    print(numberOfSections)
+                    let indexPath = NSIndexPath(forRow: numberOfRows-1, inSection: (numberOfSections-1))
+                    self.itemsTable.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
+                }
+        
+                let usedItems: [String: ItemObject] = dataManager.getNotCompletedItems()
+        
+                UIApplication.sharedApplication().applicationIconBadgeNumber = usedItems.count
+            }
         }
-        
-        let usedItems: [ItemObject] = dataManager.getNotCompletedItems()
-        
-        UIApplication.sharedApplication().applicationIconBadgeNumber = usedItems.count
-        
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         let itemsCount: Int = self.items.count
+        
+        print("Number of items: \(itemsCount + 1)")
         
         return itemsCount + 1
     }
