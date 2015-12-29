@@ -75,7 +75,7 @@ class QuickToDoDataManager: NSObject {
         if coordinator == nil {
             return nil
         }
-        var managedObjectContext = NSManagedObjectContext()
+        var managedObjectContext = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.MainQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
         return managedObjectContext
         }()
@@ -87,6 +87,9 @@ class QuickToDoDataManager: NSObject {
     
     
     var items: NSMutableArray = NSMutableArray()
+    
+    var itemsMap: [String: ItemObject] = [String: ItemObject]()
+
     
     func removeItems() {
         
@@ -114,8 +117,8 @@ class QuickToDoDataManager: NSObject {
         do {
             mutableFetchResults = try managedObjectContext!.executeFetchRequest(request)
             while(mutableFetchResults.count > 0) {
-                let item: Entity? = mutableFetchResults.last as? Entity
-                mutableFetchResults.removeLast()
+                let item: Entity? = mutableFetchResults.removeLast() as? Entity
+                print("item removed : \(item?.word)")
                 managedObjectContext?.deleteObject(item!)
             
             }
@@ -416,7 +419,7 @@ class QuickToDoDataManager: NSObject {
                     itemObject.completed = Int(result.completed)
                     itemObject.used = Int(result.used)
                     itemObject.count = Int(result.count)
-                
+                    print("item removed : \(itemObject.word)")
                     try managedObjectContext?.save()
                 
                     if(configManager.sharingEnabled > 0) {
@@ -425,7 +428,7 @@ class QuickToDoDataManager: NSObject {
                 }
             }
         } catch _ {
-            
+            print("Error")
         }
         
 
@@ -514,14 +517,14 @@ class QuickToDoDataManager: NSObject {
     
     func shareEverythingForRecordId(recordId: String) {
         
-        let items: [ItemObject] = self.getItems()
+        let items: [String: ItemObject] = self.getItems()
         let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         //let record: CKRecord = CKRecord(recordType: "Items")
         let publicDatabase: CKDatabase = container.publicCloudDatabase
         
         var itemsForSaving: [CKRecord] = [CKRecord]()
         
-        for item in items {
+        for item in items.values {
             let newRecord: CKRecord = CKRecord(recordType: "Items")
             newRecord.setObject(item.word, forKey: "name")
             newRecord.setObject(item.completed, forKey: "completed")
@@ -558,7 +561,7 @@ class QuickToDoDataManager: NSObject {
         
         if (index > 0) {
             let tmpRecord: CKRecord = itemsToCheck[index-1]
-            let predicate: NSPredicate = NSPredicate(format: "name = %@ and icloudmail = %@", tmpRecord.objectForKey("name") as! String, configManager.selfRecordId)
+            let predicate: NSPredicate = NSPredicate(format: "name = %@ and icloudmail = %@ and used = 1", tmpRecord.objectForKey("name") as! String, configManager.selfRecordId)
             let query: CKQuery = CKQuery(recordType: "Items", predicate: predicate)
             publicDatabase.performQuery(query, inZoneWithID: nil, completionHandler: { results, error in
                 if(error == nil) {
@@ -685,10 +688,10 @@ class QuickToDoDataManager: NSObject {
         var predicateSecond: NSPredicate = NSPredicate()
         
         if(senderVar != "" && receiverVar != "") {
-            predicateFirst = NSPredicate(format: "icloudmail = %@ and completed = %d and name = %@", senderVar, completed, itemObject.word)
-            predicateSecond = NSPredicate(format: "icloudmail = %@ and completed = %d and name = %@", receiverVar, completed, itemObject.word)
+            predicateFirst = NSPredicate(format: "icloudmail = %@ and completed = %d and name = %@ and used = 1", senderVar, completed, itemObject.word)
+            predicateSecond = NSPredicate(format: "icloudmail = %@ and completed = %d and name = %@ and used = 1", receiverVar, completed, itemObject.word)
         } else {
-            predicateFirst = NSPredicate(format: "icloudmail = %@ and completed = %d and name = %@", configManager.selfRecordId, completed, itemObject.word)
+            predicateFirst = NSPredicate(format: "icloudmail = %@ and completed = %d and name = %@ and used = 1", configManager.selfRecordId, completed, itemObject.word)
         }
         
         var query: CKQuery = CKQuery(recordType: "Items", predicate: predicateFirst)
@@ -814,6 +817,27 @@ class QuickToDoDataManager: NSObject {
         
     }
     
+    func addItemOnlyCoreData(item: ItemObject) {
+        objc_sync_enter(item)
+        
+        let entity = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+        
+        let addItem = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.managedObjectContext) as! Entity
+        
+        addItem.word = item.word as String
+        addItem.used = item.used
+        addItem.completed = item.completed
+        addItem.lastused = item.lasUsed
+        
+        do {
+            
+            try managedObjectContext!.save()
+        } catch _ {
+            
+        }
+        objc_sync_exit(item)
+    }
+    
     func addItem(item: ItemObject) {
         
         //var delegate = UIApplication.sharedApplication().delegate as AppDelegate
@@ -862,8 +886,8 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    func getNotCompletedItems() -> [ItemObject] {
-        var result: [ItemObject] = [ItemObject]()
+    func getNotCompletedItems() -> [String: ItemObject] {
+        var result: [String: ItemObject] = [String: ItemObject]()
         
         
         //var delegate = UIApplication.sharedApplication().delegate as AppDelegate
@@ -897,7 +921,7 @@ class QuickToDoDataManager: NSObject {
                     itemObject.lasUsed = item.lastused
                     itemObject.count = item.count.integerValue
                 
-                    result.append(itemObject)
+                    result[itemObject.word as String] = itemObject
                 }
             }
         
@@ -908,8 +932,8 @@ class QuickToDoDataManager: NSObject {
         return result
     }
     
-    func getItems() -> [ItemObject] {
-        var result: [ItemObject] = [ItemObject]()
+    func getItems() -> [String: ItemObject] {
+        var result: [String: ItemObject] = [String: ItemObject]()
 
         
         //var delegate = UIApplication.sharedApplication().delegate as AppDelegate
@@ -943,7 +967,7 @@ class QuickToDoDataManager: NSObject {
                     itemObject.lasUsed = item.lastused
                     itemObject.count = item.count.integerValue
                 
-                    result.append(itemObject)
+                    result[itemObject.word as String] = itemObject
                 }
             }
         
@@ -1015,6 +1039,43 @@ class QuickToDoDataManager: NSObject {
         }
         
     }
+    
+    
+    func cdGetInvitationFake() -> InvitationObject {
+        
+        let result: InvitationObject = InvitationObject()
+        
+        let item = NSEntityDescription.entityForName("Invitation", inManagedObjectContext: self.managedObjectContext!)
+        let request = NSFetchRequest()
+        
+        request.entity = item
+        
+        //var itemObject: ItemObject = ItemObject()
+        let predicate = NSPredicate(format: "sender = %@ or receiver = %@", self.configManager.selfRecordId, self.configManager.selfRecordId)
+        request.predicate = predicate
+        
+        let invitations: [NSManagedObject]
+        
+        do {
+            
+            invitations = try managedObjectContext?.executeFetchRequest(request) as! [NSManagedObject]
+            print("number of invitations found: \(invitations.count)")
+            for invitation in invitations {
+                if let item = invitation as? Invitation {
+                    result.sender = item.sender
+                    result.receiver = item.receiver
+                    result.confirmed = item.confirmed.integerValue
+                    result.sendername = item.sendername
+                }
+            }
+            
+        } catch _ {
+            
+        }
+        return result
+        
+    }
+    
     
     func cdGetInvitation(show: InvitationObject -> Void) {
         
@@ -1123,8 +1184,8 @@ class QuickToDoDataManager: NSObject {
         let request: NSFetchRequest = NSFetchRequest()
         request.entity = entity
         
-        let predicate: NSPredicate = NSPredicate(format: "confirmed = 1")
-        request.predicate = predicate
+        //let predicate: NSPredicate = NSPredicate(format: "confirmed = 1")
+        //request.predicate = predicate
         
         var mutableFetchResults: [Invitation]
         
@@ -1150,9 +1211,15 @@ class QuickToDoDataManager: NSObject {
         //var record: CKRecord = CKRecord(recordType: "Items")
         let publicDatabase: CKDatabase = container.publicCloudDatabase
         
-        let predicate: NSPredicate = NSPredicate(format: "sender = %@ and receiver = %@", sender!, receiver!)
+        let predicate: NSPredicate
         
-        let query: CKQuery = CKQuery(recordType: "Invitations", predicate: predicate)
+        if let unwrapedSender = sender {
+            predicate = NSPredicate(format: "sender = %@", unwrapedSender)
+        } else {
+            predicate = NSPredicate(value: false)
+        }
+        
+        let query = CKQuery(recordType: "Invitations", predicate: predicate)
         
         publicDatabase.performQuery(query, inZoneWithID: nil, completionHandler: { results, error in
             if(error == nil) {
@@ -1281,5 +1348,95 @@ class QuickToDoDataManager: NSObject {
         return result
         
     }
+    
+    func getAllItemsFromCloud(updateTable: [String: ItemObject] -> Void) {
+        
+        //var newSelfItems: [ItemObject] = [ItemObject]()
+        //var newSubItems: [ItemObject] = [ItemObject]()
+        //var newItems: [ItemObject] = [ItemObject]()
+        
+        // get self cloud id
+        //let selfCloudId: String = self.configManager.selfRecordId
+        
+        let icloudids = self.cdGetConfirmedInvitation()
+        var senderVar = ""
+        var receiverVar = ""
+        
+        
+        switch (icloudids.sender, icloudids.receiver) {
+        case let (.Some(sender), .Some(receiver)):
+            senderVar = sender
+            receiverVar = receiver
+            ckGetAllItems(senderVar, completion: updateTable)
+            ckGetAllItems(receiverVar, completion: updateTable)
+        case let (.Some(sender), .None):
+            senderVar = sender
+        case let (.None, .Some(receiver)):
+            receiverVar = receiver
+        case (.None, .None):
+            print("No invitation")
+        }
+        
+        
+        
+        // get all items from that cloud id
+        // get shared cloud id
+        // get all items for that cloud id
+        // merge two arrays
+        // call updateTable
+        
+    }
+    
+    func ckGetAllItems(cloudID: String, completion: [String: ItemObject] -> Void) -> Void {
+        var result: [String: ItemObject] = [String: ItemObject]()
+        
+        let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
+        //var record: CKRecord = CKRecord(recordType: "Items")
+        let publicDatabase: CKDatabase = container.publicCloudDatabase
+        
+        let predicate: NSPredicate = NSPredicate(format: "icloudmail = %@ AND used = 1", cloudID)
+        
+        let query: CKQuery = CKQuery(recordType: "Items", predicate: predicate)
+        
+        publicDatabase.performQuery(query, inZoneWithID: nil, completionHandler: { results, error in
+            if(error == nil) {
+                let records: [CKRecord] = (results as [CKRecord]?)!
+                //var modifiedRecords: [CKRecord] = [CKRecord]()
+                
+                for record in records {
+                    let tmpItem: ItemObject = ItemObject()
+                    
+                    tmpItem.word = record.objectForKey("name") as! String
+                    tmpItem.completed = record.objectForKey("completed") as! Int
+                    tmpItem.used = record.objectForKey("used") as! Int
+                    
+                    result[tmpItem.word as String] = tmpItem
+                    
+                }
+                let localItems = self.getItems()
+                for itemKey in localItems.keys {
+                    result.removeValueForKey(itemKey)
+                    
+                }
+                
+                self.ckReceivedItems(result, completion: completion)
+            }
+        
+        } )
+    }
+    
+    func ckReceivedItems(items: [String: ItemObject], completion: [String: ItemObject] -> Void) -> Void {
+        objc_sync_enter(itemsMap)
+        for item in items.keys {
+            itemsMap[item] = items[item]
+            if let tmpItem = items[item] {
+                self.addItemOnlyCoreData(tmpItem)
+            }
+        }
+        objc_sync_exit(itemsMap)
+        completion(itemsMap)
+        
+    }
+
    
 }
