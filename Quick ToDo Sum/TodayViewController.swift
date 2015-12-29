@@ -15,6 +15,8 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
     @IBOutlet weak var itemsTable: UITableView!
     
     var items: [ItemObject] = [ItemObject]()
+    var itemsMap: [String: ItemObject] = [String: ItemObject]()
+    
     let dataManager: QuickToDoDataManager = QuickToDoDataManager.sharedInstance
     let configManager: ConfigManager = ConfigManager.sharedInstance
     
@@ -22,8 +24,9 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
         super.viewDidLoad()
         // Do any additional setup after loading the view from its nib.
         
-        items = dataManager.getNotCompletedItems()
-        var itemsAll: [ItemObject] = dataManager.getItems()
+        itemsMap = dataManager.getNotCompletedItems()
+        let itemsAll: [String: ItemObject] = dataManager.getItems()
+        //let itemsAll: [ItemObject] = [ItemObject](itemsAllMap.values)
         
         configManager.readKeyStore()
         //configManager.readConfigPlist()
@@ -62,7 +65,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
             self.items.removeAtIndex(row)
             self.itemsTable.reloadData()
             dataManager.updateItem(item)
-            let itemsAll: [ItemObject] = dataManager.getItems()
+            let itemsAll: [String: ItemObject] = dataManager.getItems()
             
             self.widgetLabel.text = "All: \(itemsAll.count), to do:\(items.count)"
         }
@@ -77,8 +80,10 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
         // If there's no update required, use NCUpdateResult.NoData
         // If there's an update, use NCUpdateResult.NewData
 
-        items = dataManager.getNotCompletedItems()
-        let itemsAll: [ItemObject] = dataManager.getItems()
+        itemsMap = dataManager.getNotCompletedItems()
+        items = [ItemObject](itemsMap.values)
+        
+        let itemsAll: [String: ItemObject] = dataManager.getItems()
         
         self.widgetLabel.text = "All: \(itemsAll.count), to do:\(items.count)"
         self.itemsTable.reloadData()
@@ -103,7 +108,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
             self.items.removeAtIndex(row)
             self.itemsTable.reloadData()
             dataManager.updateItem(item)
-            let itemsAll: [ItemObject] = dataManager.getItems()
+            let itemsAll: [String: ItemObject] = dataManager.getItems()
             
             self.widgetLabel.text = "All: \(itemsAll.count), to do:\(items.count)"
         }
