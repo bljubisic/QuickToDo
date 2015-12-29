@@ -50,6 +50,22 @@ var res: result
 
 var suc = result.success()
 
+var i = 0
+
+var itemsMap: [String: String] = ["test": "nesto", "smt": "tst"]
+
+var keys = [String](itemsMap.keys)
+
+keys.count
+
+keys[0]
+
+
+
+
+
+
+
 
 
 
