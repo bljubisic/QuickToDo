@@ -151,14 +151,18 @@ class ConfigViewController: UIViewController {
         
     }
     
+    func showNothing(_ : InvitationObject) {
+        
+    }
+    
     func showInviteList(invitation: InvitationObject) {
         
         if(invitation.sendername != "") {
             _ = DISPATCH_QUEUE_PRIORITY_DEFAULT
             dispatch_async(dispatch_get_main_queue(), {
-            
+                //self.showInviteList.frame.origin.y = 97
                 self.showInviteList.hidden = false
-                self.findView.hidden = true
+                self.findView.hidden = true 
                 self.nameSubscription.text = invitation.sendername
                 if(invitation.confirmed > 0) {
                     self.cancelSubscription.setImage(UIImage(named: "shareConfirmedButton"), forState: UIControlState.Normal)
@@ -236,9 +240,11 @@ class ConfigViewController: UIViewController {
 
     @IBAction func cancelSubscriptionAction(sender: AnyObject) {
         
-        let invitation = dataManager.cdGetConfirmedInvitation()
+        let invitation = dataManager.cdGetInvitationFake()
         
         dataManager.cdRemoveInvitation()
+        
+        dataManager.ckRemoveInvitation(invitation.sender, receiver: invitation.receiver)
         
         dataManager.ckRemoveInvitationSubscription(invitation.sender, receiver: invitation.receiver)
         
