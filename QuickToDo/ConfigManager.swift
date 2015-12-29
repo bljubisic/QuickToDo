@@ -50,7 +50,7 @@ class ConfigManager: NSObject {
                             self.selfRecordId = unwrappedRecordId.recordName
                             container.discoverUserInfoWithUserRecordID(unwrappedRecordId, completionHandler: { (userInfo: CKDiscoveredUserInfo? , error: NSError? ) -> Void in
                                 if let unwrappedUserInfo = userInfo {
-                                    self.selfName = unwrappedUserInfo.firstName! + " " + unwrappedUserInfo.lastName!
+                                    self.selfName = unwrappedUserInfo.displayContact!.givenName + " " + unwrappedUserInfo.displayContact!.familyName
                                 } else {
                                     self.selfName = "Not Found"
                                 }
