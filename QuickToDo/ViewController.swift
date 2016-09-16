@@ -35,15 +35,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         //println(self.items.count)
         var i = items.count
         repeat {
-            let tmpItem: ItemObject = items[i-1]
+            if(items.count > 0) {
+                let tmpItem: ItemObject = items[i-1]
             
-            if(tmpItem.completed > 0) {
-                self.items.removeAtIndex(i-1)
-                self.itemsMap.removeValueForKey(tmpItem.word as String)
-                //println(self.items.count)
-                deleteIndexPath.append(NSIndexPath(forRow: i, inSection: 0))
+                if(tmpItem.completed > 0) {
+                    self.items.removeAtIndex(i-1)
+                    self.itemsMap.removeValueForKey(tmpItem.word as String)
+                    //println(self.items.count)
+                    deleteIndexPath.append(NSIndexPath(forRow: i, inSection: 0))
+                }
+                i -= 1
             }
-            i--
         } while(i > 0)
         itemsMap = dataManager.getItems()
         items = [ItemObject](itemsMap.values)
@@ -192,11 +194,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         itemsMap = dataManager.getItems()
         items = [ItemObject](itemsMap.values)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationBecameActive:", name: UIApplicationDidBecomeActiveNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.applicationBecameActive(_:)), name: UIApplicationDidBecomeActiveNotification, object: nil)
         
         if(configManager.sharingEnabled > 0) {
             container.requestApplicationPermission(CKApplicationPermissions.UserDiscoverability, completionHandler: {status, error in
@@ -336,11 +338,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             if(item.completed == 1) {
                 item.completed = 0
                 tmpCell.usedButton.selected = false
-                badgeNumber++
+                badgeNumber += 1
             } else {
                 item.completed = 1
                 tmpCell.usedButton.selected = true
-                badgeNumber--
+                badgeNumber -= 1
             }
             self.itemsTable.reloadData()
             dataManager.updateItem(item)
@@ -364,8 +366,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             hintButton1?.enabled = false
             hintButton2?.enabled = false
             
-            hintButton1?.addTarget(self, action: "hintButtonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
-            hintButton2?.addTarget(self, action: "hintButtonTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+            hintButton1?.addTarget(self, action: #selector(ViewController.hintButtonTapped(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+            hintButton2?.addTarget(self, action: #selector(ViewController.hintButtonTapped(_:)), forControlEvents: UIControlEvents.TouchUpInside)
             
             //textView?.backgroundColor = UIColor.orangeColor()
             textView?.layer.cornerRadius=8.0
@@ -374,9 +376,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             textView?.layer.borderWidth = 1.0
             
-            textView?.addTarget(self, action: "textFieldDidChange:", forControlEvents: UIControlEvents.EditingChanged)
+            textView?.addTarget(self, action: #selector(ViewController.textFieldDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
             
-            textView?.addTarget(self, action: "textFieldDone:", forControlEvents: UIControlEvents.EditingDidEndOnExit)
+            textView?.addTarget(self, action: #selector(ViewController.textFieldDone(_:)), forControlEvents: UIControlEvents.EditingDidEndOnExit)
             textView?.delegate = self
             
             cell = tmpCell

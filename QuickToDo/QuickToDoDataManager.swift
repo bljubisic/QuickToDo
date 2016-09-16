@@ -463,7 +463,7 @@ class QuickToDoDataManager: NSObject {
             if(mutableFetchResult.count > 0) {
                 let len: Int = (mutableFetchResult.count > 2) ? 2 : mutableFetchResult.count
             
-                for var i = 0; i < len; i++ {
+                for i in 0 ..< len {
                     let item: Entity = mutableFetchResult[i]
                     result.append(item.word)
                 }
@@ -912,7 +912,7 @@ class QuickToDoDataManager: NSObject {
             mutableFetchResults = try managedObjectContext!.executeFetchRequest(request) as! [Entity]
         
             if mutableFetchResults.count > 0 {
-                for(var i = 0; i < mutableFetchResults.count; i++) {
+                for i in 0 ..< mutableFetchResults.count {
                     let item: Entity = mutableFetchResults[i]
                     let itemObject: ItemObject = ItemObject()
                     itemObject.word = item.word
@@ -958,7 +958,7 @@ class QuickToDoDataManager: NSObject {
             mutableFetchResults = try managedObjectContext!.executeFetchRequest(request) as! [Entity]
         
             if mutableFetchResults.count > 0 {
-                for(var i = 0; i < mutableFetchResults.count; i++) {
+                for i in 0 ..< mutableFetchResults.count {
                     let item: Entity = mutableFetchResults[i]
                     let itemObject: ItemObject = ItemObject()
                     itemObject.word = item.word
@@ -1327,7 +1327,7 @@ class QuickToDoDataManager: NSObject {
             mutableFetchResults = try managedObjectContext!.executeFetchRequest(request) as! [Entity]
             
             if mutableFetchResults.count > 0 {
-                for(var i = 0; i < mutableFetchResults.count; i++) {
+                for i in 0 ..< mutableFetchResults.count {
                     let item: Entity = mutableFetchResults[i]
                     let itemObject: ItemObject = ItemObject()
                     itemObject.word = item.word
