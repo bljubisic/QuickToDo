@@ -8,6 +8,8 @@
 
 import UIKit
 import CloudKit
+import ReactiveCocoa
+
 
 
 
@@ -380,6 +382,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             textView?.addTarget(self, action: #selector(ViewController.textFieldDone(_:)), forControlEvents: UIControlEvents.EditingDidEndOnExit)
             textView?.delegate = self
+            
+            let itemDataSignal = textView?.rac_textSignal()
             
             cell = tmpCell
             
