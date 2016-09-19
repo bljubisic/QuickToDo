@@ -7,12 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0B58BE6B1D25385800203F60 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B58BE661D25312A00203F60 /* RxSwift.framework */; };
-		0B58BE6C1D25385800203F60 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0B58BE661D25312A00203F60 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		0B58BE6E1D25385D00203F60 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B58BE681D25313100203F60 /* RxCocoa.framework */; };
-		0B58BE6F1D25385D00203F60 /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0B58BE681D25313100203F60 /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		0D42907575EEFD4A510AAF6A /* Pods_Quick_ToDo_Sum.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2DDE4E5CF9B9FC928561F9E /* Pods_Quick_ToDo_Sum.framework */; };
-		37A40DADF05AD14E3AF1120C /* Pods_QuickToDo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6AE49C314BAFC180E1A6E1B /* Pods_QuickToDo.framework */; };
+		0B89D0A51D902E3000759320 /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B89D0A31D902E3000759320 /* ReactiveCocoa.framework */; };
+		0B89D0A61D902E3000759320 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B89D0A41D902E3000759320 /* Result.framework */; };
+		0B89D0AD1D902FA900759320 /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B89D0A31D902E3000759320 /* ReactiveCocoa.framework */; };
+		0B89D0AE1D902FA900759320 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B89D0A41D902E3000759320 /* Result.framework */; };
 		E40CCF8319F4406B004CF859 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40CCF8219F4406B004CF859 /* Entity.swift */; };
 		E410086B1A2D0ECD00D6731A /* QuickToDoDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E410086A1A2D0ECD00D6731A /* QuickToDoDataManager.swift */; };
 		E4258A8D1ABD7E1B002B8EB1 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4258A8C1ABD7E1B002B8EB1 /* CloudKit.framework */; };
@@ -72,8 +70,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				0B58BE6F1D25385D00203F60 /* RxCocoa.framework in Embed Frameworks */,
-				0B58BE6C1D25385800203F60 /* RxSwift.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -92,12 +88,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0B58BE661D25312A00203F60 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = "Pods/../build/Debug-iphoneos/RxSwift/RxSwift.framework"; sourceTree = "<group>"; };
-		0B58BE681D25313100203F60 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = "Pods/../build/Debug-iphoneos/RxCocoa/RxCocoa.framework"; sourceTree = "<group>"; };
+		0B89D0A31D902E3000759320 /* ReactiveCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveCocoa.framework; path = Carthage/Build/iOS/ReactiveCocoa.framework; sourceTree = "<group>"; };
+		0B89D0A41D902E3000759320 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
+		0B89D0A81D902F3800759320 /* ReactiveCocoa.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = ReactiveCocoa.framework.dSYM; path = Carthage/Build/iOS/ReactiveCocoa.framework.dSYM; sourceTree = "<group>"; };
+		0B89D0A91D902F3800759320 /* Result.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Result.framework.dSYM; path = Carthage/Build/iOS/Result.framework.dSYM; sourceTree = "<group>"; };
 		4A0C7FE410308620E326995E /* Pods-QuickToDo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickToDo.release.xcconfig"; path = "Pods/Target Support Files/Pods-QuickToDo/Pods-QuickToDo.release.xcconfig"; sourceTree = "<group>"; };
 		8B503DFDDBDF2C77573EC90D /* Pods-Quick ToDo Sum.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Quick ToDo Sum.release.xcconfig"; path = "Pods/Target Support Files/Pods-Quick ToDo Sum/Pods-Quick ToDo Sum.release.xcconfig"; sourceTree = "<group>"; };
-		A2DDE4E5CF9B9FC928561F9E /* Pods_Quick_ToDo_Sum.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Quick_ToDo_Sum.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B6AE49C314BAFC180E1A6E1B /* Pods_QuickToDo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QuickToDo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4AC3CBD0EA0CF60AC35D7E5 /* Pods-Quick ToDo Sum.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Quick ToDo Sum.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Quick ToDo Sum/Pods-Quick ToDo Sum.debug.xcconfig"; sourceTree = "<group>"; };
 		DF775C1667C26D1419297C73 /* Pods-QuickToDo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickToDo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-QuickToDo/Pods-QuickToDo.debug.xcconfig"; sourceTree = "<group>"; };
 		E404A39F1A8EBA34008D32A5 /* QuickToDo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = QuickToDo.entitlements; sourceTree = "<group>"; };
@@ -139,11 +135,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0B58BE6E1D25385D00203F60 /* RxCocoa.framework in Frameworks */,
-				0B58BE6B1D25385800203F60 /* RxSwift.framework in Frameworks */,
+				0B89D0AD1D902FA900759320 /* ReactiveCocoa.framework in Frameworks */,
+				0B89D0AE1D902FA900759320 /* Result.framework in Frameworks */,
 				E4F9A3791A5C146900CC0573 /* CoreData.framework in Frameworks */,
 				E4258A8D1ABD7E1B002B8EB1 /* CloudKit.framework in Frameworks */,
-				37A40DADF05AD14E3AF1120C /* Pods_QuickToDo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,9 +153,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B89D0A51D902E3000759320 /* ReactiveCocoa.framework in Frameworks */,
+				0B89D0A61D902E3000759320 /* Result.framework in Frameworks */,
 				E4F1DD1C1A991BD000F86D95 /* NotificationCenter.framework in Frameworks */,
 				E44BE8301B199DBE00CEB6FC /* CloudKit.framework in Frameworks */,
-				0D42907575EEFD4A510AAF6A /* Pods_Quick_ToDo_Sum.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,12 +177,10 @@
 		E41B97AB1A8D3E9F00BF8F51 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0B58BE681D25313100203F60 /* RxCocoa.framework */,
-				0B58BE661D25312A00203F60 /* RxSwift.framework */,
+				0B89D0A31D902E3000759320 /* ReactiveCocoa.framework */,
+				0B89D0A41D902E3000759320 /* Result.framework */,
 				E4258A8C1ABD7E1B002B8EB1 /* CloudKit.framework */,
 				E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */,
-				B6AE49C314BAFC180E1A6E1B /* Pods_QuickToDo.framework */,
-				A2DDE4E5CF9B9FC928561F9E /* Pods_Quick_ToDo_Sum.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -194,6 +188,8 @@
 		E4C6E00019E7EA62003A89F7 = {
 			isa = PBXGroup;
 			children = (
+				0B89D0A81D902F3800759320 /* ReactiveCocoa.framework.dSYM */,
+				0B89D0A91D902F3800759320 /* Result.framework.dSYM */,
 				E4F9A3781A5C146900CC0573 /* CoreData.framework */,
 				E4C6E00B19E7EA62003A89F7 /* QuickToDo */,
 				E4C6E02419E7EA63003A89F7 /* QuickToDoTests */,
@@ -292,14 +288,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E4C6E02B19E7EA63003A89F7 /* Build configuration list for PBXNativeTarget "QuickToDo" */;
 			buildPhases = (
-				17C750A477CD444A61B5BD7F /* [CP] Check Pods Manifest.lock */,
 				E4C6E00519E7EA62003A89F7 /* Sources */,
 				E4C6E00619E7EA62003A89F7 /* Frameworks */,
 				E4C6E00719E7EA62003A89F7 /* Resources */,
 				E41B97BB1A8D3E9F00BF8F51 /* Embed App Extensions */,
-				AA2D4FC4E082211826241AE2 /* [CP] Embed Pods Frameworks */,
-				63628E4054D04FED6611669D /* [CP] Copy Pods Resources */,
 				0B58BE6D1D25385800203F60 /* Embed Frameworks */,
+				0B89D0AF1D902FB000759320 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -333,12 +327,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E4F1DD271A991BD100F86D95 /* Build configuration list for PBXNativeTarget "Quick ToDo Sum" */;
 			buildPhases = (
-				1A1D2B4B77B6F29B31FA0342 /* [CP] Check Pods Manifest.lock */,
 				E4F1DD171A991BD000F86D95 /* Sources */,
 				E4F1DD181A991BD000F86D95 /* Frameworks */,
 				E4F1DD191A991BD000F86D95 /* Resources */,
-				C9448A331F49188DF7A7AD23 /* [CP] Embed Pods Frameworks */,
-				5F122E1A69E34ABCD5E26B77 /* [CP] Copy Pods Resources */,
+				0B89D0AC1D902F6500759320 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -440,95 +432,35 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		17C750A477CD444A61B5BD7F /* [CP] Check Pods Manifest.lock */ = {
+		0B89D0AC1D902F6500759320 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Result.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/ReactiveCocoa.framework",
 			);
-			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
-		1A1D2B4B77B6F29B31FA0342 /* [CP] Check Pods Manifest.lock */ = {
+		0B89D0AF1D902FB000759320 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Result.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/ReactiveCocoa.framework",
 			);
-			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		5F122E1A69E34ABCD5E26B77 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Quick ToDo Sum/Pods-Quick ToDo Sum-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		63628E4054D04FED6611669D /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-QuickToDo/Pods-QuickToDo-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		AA2D4FC4E082211826241AE2 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-QuickToDo/Pods-QuickToDo-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C9448A331F49188DF7A7AD23 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Quick ToDo Sum/Pods-Quick ToDo Sum-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -703,7 +635,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = "$(inherited)";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)/**";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)/**",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = QuickToDo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -725,7 +660,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = "$(inherited)";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = QuickToDo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -782,6 +720,10 @@
 				CODE_SIGN_ENTITLEMENTS = "Quick ToDo Sum/Quick ToDo Sum.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -805,6 +747,10 @@
 				CODE_SIGN_ENTITLEMENTS = "Quick ToDo Sum/Quick ToDo Sum.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = "Quick ToDo Sum/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
