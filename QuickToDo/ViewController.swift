@@ -378,7 +378,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             textView?.layer.borderWidth = 1.0
             
-            textView?.addTarget(self, action: #selector(ViewController.textFieldDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
+            //textView?.addTarget(self, action: #selector(ViewController.textFieldDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
             
             textView?.addTarget(self, action: #selector(ViewController.textFieldDone(_:)), forControlEvents: UIControlEvents.EditingDidEndOnExit)
             textView?.delegate = self
@@ -439,35 +439,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let text: String? = buttonTapped.titleLabel?.text
         
         textView?.text = text
-    }
-    
-    func textFieldDidChange(textFieldSender: UITextField) {
-        
-        let text: String = textFieldSender.text!
-        var hints: [String] = [String]()
-        
-        if(text != "") {
-            hints = dataManager.getHints(text)
-        }
-        
-        if(hints.count > 1) {
-            hintButton1?.setTitle(hints[0], forState: UIControlState.Normal)
-            hintButton2?.setTitle(hints[1], forState: UIControlState.Normal)
-            hintButton1?.enabled = true
-            hintButton2?.enabled = true
-        }
-        else if (hints.count == 1) {
-            hintButton1?.setTitle(hints[0], forState: UIControlState.Normal)
-            hintButton2?.setTitle("", forState: UIControlState.Normal)
-            hintButton1?.enabled = true
-        }
-        else if(hints.count == 0) {
-            hintButton1?.setTitle("", forState: UIControlState.Normal)
-            hintButton2?.setTitle("", forState: UIControlState.Normal)
-            hintButton1?.enabled = false
-            hintButton2?.enabled = false
-        }
-        
     }
     
     func textFieldDone(textFieldSender: UITextField) {
