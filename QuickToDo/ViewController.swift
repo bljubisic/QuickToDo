@@ -383,7 +383,39 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             textView?.addTarget(self, action: #selector(ViewController.textFieldDone(_:)), forControlEvents: UIControlEvents.EditingDidEndOnExit)
             textView?.delegate = self
             
-            let itemDataSignal = textView?.rac_textSignal()
+            let textSignal = textView?.rac_textSignal().map{ (value: AnyObject!) -> AnyObject in
+                if let text: String = (value as! String) {
+                    let hints = QuickToDoDataManager.sharedInstance.getHints(text)
+                    if(hints.count == 2 && hints[0] == hints[1]) {
+                        return [hints[0]]
+                    }
+                    else {
+                        return hints
+                    }
+                }
+            }
+            
+            textSignal?.subscribeNext{ [unowned self] (hints) in
+                if let hintsArray: [String] = (hints as! [String]) {
+                    if(hintsArray.count > 1) {
+                        self.hintButton1?.setTitle(hintsArray[0], forState: UIControlState.Normal)
+                        self.hintButton2?.setTitle(hintsArray[1], forState: UIControlState.Normal)
+                        self.hintButton1?.enabled = true
+                        self.hintButton2?.enabled = true
+                    }
+                    else if (hintsArray.count == 1) {
+                        self.hintButton1?.setTitle(hintsArray[0], forState: UIControlState.Normal)
+                        self.hintButton2?.setTitle("", forState: UIControlState.Normal)
+                        self.hintButton1?.enabled = true
+                    }
+                    else if(hintsArray.count == 0) {
+                        self.hintButton1?.setTitle("", forState: UIControlState.Normal)
+                        self.hintButton2?.setTitle("", forState: UIControlState.Normal)
+                        self.hintButton1?.enabled = false
+                        self.hintButton2?.enabled = false
+                    }
+                }
+            }
             
             cell = tmpCell
             
@@ -411,9 +443,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func textFieldDidChange(textFieldSender: UITextField) {
         
-        let text: String = textFieldSender.text!
-        var hints: [String] = [String]()
-        
+        //let text: String = textFieldSender.text!
+        //var hints: [String] = [String]()
+        /*
         if(text != "") {
             hints = dataManager.getHints(text)
         }
@@ -435,7 +467,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             hintButton1?.enabled = false
             hintButton2?.enabled = false
         }
-        
+        */
     }
     
     func textFieldDone(textFieldSender: UITextField) {
