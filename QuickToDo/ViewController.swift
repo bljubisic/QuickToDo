@@ -29,7 +29,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         var deleteIndexPath: [NSIndexPath] = [NSIndexPath]()
         //println(self.items.count)
         var i = items.count
-        do {
+        repeat {
             let tmpItem: ItemObject = items[i-1]
             
             if(tmpItem.completed > 0) {
@@ -46,14 +46,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBAction func selectedItem(sender: AnyObject) {
         
-        var buttonPosition: CGPoint = sender.convertPoint(CGPoint.zeroPoint, toView: self.itemsTable)
-        var indexPath: NSIndexPath = self.itemsTable.indexPathForRowAtPoint(buttonPosition)!
+        let buttonPosition: CGPoint = sender.convertPoint(CGPoint.zero, toView: self.itemsTable)
+        let indexPath: NSIndexPath = self.itemsTable.indexPathForRowAtPoint(buttonPosition)!
         
-        var row: Int = indexPath.row
+        let row: Int = indexPath.row
         
         if(row <= items.count-1) {
-            var tmpCell: ViewTableViewCell = itemsTable.cellForRowAtIndexPath(indexPath) as! ViewTableViewCell
-            var item: ItemObject = items[row]
+            let tmpCell: ViewTableViewCell = itemsTable.cellForRowAtIndexPath(indexPath) as! ViewTableViewCell
+            let item: ItemObject = items[row]
             if(item.completed == 1) {
                 item.completed = 0
                 tmpCell.usedButton.selected = false
@@ -63,7 +63,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
             self.itemsTable.reloadData()
             dataManager.updateItem(item)
-            var usedItems: [ItemObject] = dataManager.getNotCompletedItems()
+            let usedItems: [ItemObject] = dataManager.getNotCompletedItems()
             
             UIApplication.sharedApplication().applicationIconBadgeNumber = usedItems.count
         }
@@ -74,12 +74,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let alertController = UIAlertController(title: "Title", message: "Message", preferredStyle: .Alert)
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
-            println(action)
+            print(action)
         }
         alertController.addAction(cancelAction)
         
         let destroyAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default) { (action) in
-            println(action)
+            print(action)
         }
         alertController.addAction(destroyAction)
         
@@ -96,7 +96,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         var container: CKContainer = CKContainer.defaultContainer()
         
-        container.requestApplicationPermission(.PermissionUserDiscoverability, completionHandler: {status, error in
+        container.requestApplicationPermission(.UserDiscoverability, completionHandler: {status, error in
             
         })
         
@@ -113,11 +113,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.registerForInvitations(recordID)
             })
         
-        let numberOfSections = self.itemsTable.numberOfSections()
+        let numberOfSections = self.itemsTable.numberOfSections
         let numberOfRows = self.itemsTable.numberOfRowsInSection(numberOfSections-1)
         
         if numberOfRows > 0 {
-            println(numberOfSections)
+            print(numberOfSections)
             let indexPath = NSIndexPath(forRow: numberOfRows-1, inSection: (numberOfSections-1))
             self.itemsTable.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
         }
@@ -153,10 +153,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         subscription.notificationInfo = notificationInfo
         
-        publicDatabase?.saveSubscription(subscription,
+        publicDatabase.saveSubscription(subscription,
             completionHandler: ({returnRecord, error in
                 if let err = error {
-                    println("subscription failed %@",
+                    print("subscription failed %@",
                         err.localizedDescription)
                 } else {
                     dispatch_async(dispatch_get_main_queue()) {
@@ -183,7 +183,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func applicationBecameActive(notification: NSNotification) {
         
-        var usedItems: [ItemObject] = dataManager.getNotCompletedItems()
+        let usedItems: [ItemObject] = dataManager.getNotCompletedItems()
         
         UIApplication.sharedApplication().applicationIconBadgeNumber = usedItems.count
         
@@ -207,7 +207,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         self.itemsTable.contentInset = contentInsets
         
-        var index: NSIndexPath = NSIndexPath(forRow: items.count, inSection: 0)
+        let index: NSIndexPath = NSIndexPath(forRow: items.count, inSection: 0)
         
         self.itemsTable.scrollToRowAtIndexPath(index, atScrollPosition: UITableViewScrollPosition.Top, animated: true)
 
@@ -226,11 +226,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        var row: Int = indexPath.row
+        let row: Int = indexPath.row
         
         if(row <= items.count-1) {
-            var tmpCell: ViewTableViewCell = itemsTable.cellForRowAtIndexPath(indexPath) as! ViewTableViewCell
-            var item: ItemObject = items[row]
+            let tmpCell: ViewTableViewCell = itemsTable.cellForRowAtIndexPath(indexPath) as! ViewTableViewCell
+            let item: ItemObject = items[row]
             var badgeNumber: Int = UIApplication.sharedApplication().applicationIconBadgeNumber
             if(item.completed == 1) {
                 item.completed = 0
@@ -251,10 +251,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         var cell: UITableViewCell!
         
-        var row: Int = indexPath.row
+        let row: Int = indexPath.row
         
         if(self.items.count == 0 || row > self.items.count - 1) {
-            var tmpCell: InputTableViewCell = tableView.dequeueReusableCellWithIdentifier("EnterCell")as! InputTableViewCell
+            let tmpCell: InputTableViewCell = tableView.dequeueReusableCellWithIdentifier("EnterCell")as! InputTableViewCell
             textView = tmpCell.inputTextField
             hintButton1 = tmpCell.addButton1
             hintButton2 = tmpCell.addButton2
@@ -282,7 +282,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
         }
         else {
-            var tmpCell: ViewTableViewCell = tableView.dequeueReusableCellWithIdentifier("ViewCell") as! ViewTableViewCell
+            let tmpCell: ViewTableViewCell = tableView.dequeueReusableCellWithIdentifier("ViewCell") as! ViewTableViewCell
             tmpCell.listItem.text = self.items[row].word as String
             if(self.items[row].completed == 1) {
                 tmpCell.usedButton.selected = true
@@ -297,14 +297,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func hintButtonTapped(buttonTapped: UIButton) {
-        var text: String? = buttonTapped.titleLabel?.text
+        let text: String? = buttonTapped.titleLabel?.text
         
         textView?.text = text
     }
     
     func textFieldDidChange(textFieldSender: UITextField) {
         
-        var text: String = textFieldSender.text
+        let text: String = textFieldSender.text
         var hints: [String] = [String]()
         
         if(text != "") {
@@ -332,9 +332,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func textFieldDone(textFieldSender: UITextField) {
-        var item: String = textFieldSender.text
+        let item: String = textFieldSender.text
         
-        var itemObject: ItemObject = ItemObject()
+        let itemObject: ItemObject = ItemObject()
         itemObject.word = item
         itemObject.used = 1
         itemObject.count = 1
@@ -349,16 +349,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         self.itemsTable.reloadData()
         
-        let numberOfSections = self.itemsTable.numberOfSections()
+        let numberOfSections = self.itemsTable.numberOfSections
         let numberOfRows = self.itemsTable.numberOfRowsInSection(numberOfSections-1)
         
         if numberOfRows > 0 {
-            println(numberOfSections)
+            print(numberOfSections)
             let indexPath = NSIndexPath(forRow: numberOfRows-1, inSection: (numberOfSections-1))
             self.itemsTable.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Bottom, animated: true)
         }
         
-        var usedItems: [ItemObject] = dataManager.getNotCompletedItems()
+        let usedItems: [ItemObject] = dataManager.getNotCompletedItems()
         
         UIApplication.sharedApplication().applicationIconBadgeNumber = usedItems.count
         
@@ -366,14 +366,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        var itemsCount: Int = self.items.count
+        let itemsCount: Int = self.items.count
         
         return itemsCount + 1
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         
-        var row: Int = indexPath.row
+        let row: Int = indexPath.row
         
         if (row == 0 && row > self.items.count - 1) {
             return 108.0
@@ -389,7 +389,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBAction func prepareForUnwind(segue: UIStoryboardSegue) {
         
-        var configViewController: ConfigViewController = segue.sourceViewController as! ConfigViewController
+        let configViewController: ConfigViewController = segue.sourceViewController as! ConfigViewController
         
         self.iCloudIdVar = configViewController.iCloudIdVar
         

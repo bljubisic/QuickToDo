@@ -41,8 +41,8 @@ class ConfigViewController: UIViewController {
         
         // find self recordId
         
-        var container: CKContainer = CKContainer.defaultContainer()
-        container.fetchUserRecordIDWithCompletionHandler({ (recordId: CKRecordID!, error: NSError!) -> Void in
+        let container: CKContainer = CKContainer.defaultContainer()
+        container.fetchUserRecordIDWithCompletionHandler({ (recordId: CKRecordID?, error: NSError?) -> Void in
             self.myICloudVar = recordId.recordName
             self.configManager.selfRecordId = recordId.recordName
             
@@ -65,7 +65,7 @@ class ConfigViewController: UIViewController {
                 self.findView.alpha = 0.0
                 }, completion: {
                     (value: Bool) in
-                    println(">>> Animation done.")
+                    print(">>> Animation done.")
             })
             shareSwitchVar = false
         }
@@ -79,7 +79,7 @@ class ConfigViewController: UIViewController {
                 self.findView.alpha = 1.0
                 }, completion: {
                     (value: Bool) in
-                    println(">>> Animation done.")
+                    print(">>> Animation done.")
             })
             shareSwitchVar = true
         }
@@ -119,15 +119,15 @@ class ConfigViewController: UIViewController {
     
     @IBAction func findICloudContact(sender: AnyObject) {
         
-        var iCloudName: String = iCloudEmail.text
-        var container: CKContainer = CKContainer.defaultContainer()
+        let iCloudName: String = iCloudEmail.text
+        let container: CKContainer = CKContainer.defaultContainer()
         
-        var spinner: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        let spinner: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         
         iCloudEmail.leftView = spinner
         spinner.startAnimating()
 
-        container.discoverUserInfoWithEmailAddress(iCloudName, completionHandler:{ (userInfo: CKDiscoveredUserInfo!, error: NSError!) -> Void in
+        container.discoverUserInfoWithEmailAddress(iCloudName, completionHandler:{ (userInfo: CKDiscoveredUserInfo?, error: NSError?) -> Void in
             
             self.iCloudId.text = userInfo.userRecordID.recordName
             self.iCloudIdVar = userInfo.userRecordID.recordName

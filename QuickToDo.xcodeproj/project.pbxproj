@@ -292,6 +292,7 @@
 		E4C6E00119E7EA62003A89F7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0730;
 				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "Bratislav Ljubisic";

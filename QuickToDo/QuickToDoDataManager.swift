@@ -44,7 +44,10 @@ class QuickToDoDataManager: NSObject {
         let url = self.applicationDocumentsDirectory!.URLByAppendingPathComponent("QuickToDo.sqlite")
         var error: NSError? = nil
         var failureReason = "There was an error creating or loading the application's saved data."
-        if coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil, error: &error) == nil {
+        do {
+            try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+        } catch var error1 as NSError {
+            error = error1
             coordinator = nil
             // Report any error we got.
             let dict = NSMutableDictionary()
@@ -56,6 +59,8 @@ class QuickToDoDataManager: NSObject {
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             //NSLog("Unresolved error \(error), \(error!.userInfo)")
             abort()
+        } catch {
+            fatalError()
         }
         
         return coordinator
@@ -87,26 +92,32 @@ class QuickToDoDataManager: NSObject {
         
         //var context: NSManagedObjectContext? = delegate.managedObjectContext
         
-        var entityName: String = "Entity"
+        let entityName: String = "Entity"
         
-        var item = NSEntityDescription.entityForName(entityName, inManagedObjectContext: self.managedObjectContext!)
-        var request:NSFetchRequest = NSFetchRequest()
+        let item = NSEntityDescription.entityForName(entityName, inManagedObjectContext: self.managedObjectContext!)
+        let request:NSFetchRequest = NSFetchRequest()
         
         request.entity = item
-        var sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "lastused", ascending: false)
-        var sortDescriptors: [NSSortDescriptor] = [sortDescriptor]
+        let sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "lastused", ascending: false)
+        let sortDescriptors: [NSSortDescriptor] = [sortDescriptor]
         
         request.sortDescriptors = sortDescriptors
         
-        var predicate: NSPredicate? = NSPredicate(format:"used = 1")
+        let predicate: NSPredicate? = NSPredicate(format:"used = 1")
         request.predicate = predicate
         
         var error: NSError? = NSError()
         
-        var mutableFetchResults = managedObjectContext!.executeFetchRequest(request, error: &error)
+        var mutableFetchResults: [AnyObject]?
+        do {
+            mutableFetchResults = try managedObjectContext!.executeFetchRequest(request)
+        } catch let error1 as NSError {
+            error = error1
+            mutableFetchResults = nil
+        }
         
         while(mutableFetchResults?.count > 0) {
-            var item: Entity? = mutableFetchResults?.last as? Entity
+            let item: Entity? = mutableFetchResults?.last as? Entity
             mutableFetchResults?.removeLast()
             managedObjectContext?.deleteObject(item!)
             
@@ -134,18 +145,18 @@ class QuickToDoDataManager: NSObject {
 
                     let word: String = record.objectForKey("name") as! String
                 
-                    var entity = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+                    let entity = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
                 
-                    var request: NSFetchRequest = NSFetchRequest()
+                    let request: NSFetchRequest = NSFetchRequest()
                     request.entity = entity
                 
-                    var sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "lastused", ascending: false)
+                    let sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "lastused", ascending: false)
                     var sortDescriptors: [NSSortDescriptor] = [sortDescriptor]
                 
-                    var predicate: NSPredicate = NSPredicate(format: "word = %@", word)
+                    let predicate: NSPredicate = NSPredicate(format: "word = %@", word)
                     request.predicate = predicate
                 
-                    var mutableFetchResults: [Entity] = self.managedObjectContext!.executeFetchRequest(request, error: nil) as! [Entity]
+                    let mutableFetchResults: [Entity] = (try! self.managedObjectContext!.executeFetchRequest(request)) as! [Entity]
                 
                     if mutableFetchResults.count > 0 {
                         var item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.managedObjectContext) as! Entity
@@ -158,14 +169,14 @@ class QuickToDoDataManager: NSObject {
                         item.completed = record.objectForKey("completed") as! Int
                     
                     
-                        if(self.managedObjectContext!.save(nil)) {
+                        if(self.managedObjectContext!.save()) {
                         
                         }
                     
                     } else {
-                        var entity = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+                        let entity = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
                     
-                        var addItem = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.managedObjectContext) as! Entity
+                        let addItem = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.managedObjectContext) as! Entity
                     
                         addItem.word = word as String
                         addItem.used = record.objectForKey("used") as! Int
@@ -174,7 +185,7 @@ class QuickToDoDataManager: NSObject {
                     
                         // if configManager have sharingEnabled add this item to public database as well.
                     
-                        if(self.managedObjectContext!.save(nil)) {
+                        if(self.managedObjectContext!.save()) {
                         
                         }
                     
@@ -195,11 +206,11 @@ class QuickToDoDataManager: NSObject {
     
     func inviteToShare(receiverICloud: String) {
         
-        var container: CKContainer = CKContainer.defaultContainer()
+        let container: CKContainer = CKContainer.defaultContainer()
         //var record: CKRecord = CKRecord(recordType: "Invitations")
-        var publicDatabase: CKDatabase = container.publicCloudDatabase
+        let publicDatabase: CKDatabase = container.publicCloudDatabase
         
-        var newRecord: CKRecord = CKRecord(recordType: "Invitations")
+        let newRecord: CKRecord = CKRecord(recordType: "Invitations")
         newRecord.setObject(receiverICloud, forKey: "receiver")
         newRecord.setObject(0, forKey: "completed")
         newRecord.setObject(configManager.selfRecordId, forKey: "sender")
@@ -207,9 +218,9 @@ class QuickToDoDataManager: NSObject {
         publicDatabase.saveRecord(newRecord, completionHandler:
             ({returnRecord, error in
                 if let err = error {
-                    println(err)
+                    print(err)
                 } else {
-                    println("Saved record \(index)")
+                    print("Saved record \(index)")
                     
                 }
             }))
@@ -226,7 +237,7 @@ class QuickToDoDataManager: NSObject {
         
         let subscription = CKSubscription(recordType: "Invitations",
             predicate: predicate,
-            options: CKSubscriptionOptions.FiresOnRecordCreation | CKSubscriptionOptions.FiresOnRecordUpdate)
+            options: [CKSubscriptionOptions.FiresOnRecordCreation, CKSubscriptionOptions.FiresOnRecordUpdate])
         
         let notificationInfo = CKNotificationInfo()
         
@@ -235,13 +246,13 @@ class QuickToDoDataManager: NSObject {
         
         subscription.notificationInfo = notificationInfo
         
-        publicDatabase?.saveSubscription(subscription,
+        publicDatabase.saveSubscription(subscription,
             completionHandler: ({returnRecord, error in
                 if let err = error {
-                    println("subscription failed %@",
+                    print("subscription failed %@",
                         err.localizedDescription)
                 } else {
-                    println("Success!!!")
+                    print("Success!!!")
                 }
             }))
         
@@ -257,7 +268,7 @@ class QuickToDoDataManager: NSObject {
         
         let subscription = CKSubscription(recordType: "Invitations",
             predicate: predicate,
-            options: CKSubscriptionOptions.FiresOnRecordCreation | CKSubscriptionOptions.FiresOnRecordUpdate)
+            options: [CKSubscriptionOptions.FiresOnRecordCreation, CKSubscriptionOptions.FiresOnRecordUpdate])
         
         let notificationInfo = CKNotificationInfo()
         
@@ -266,13 +277,13 @@ class QuickToDoDataManager: NSObject {
         
         subscription.notificationInfo = notificationInfo
         
-        publicDatabase?.saveSubscription(subscription,
+        publicDatabase.saveSubscription(subscription,
             completionHandler: ({returnRecord, error in
                 if let err = error {
-                    println("subscription failed %@",
+                    print("subscription failed %@",
                         err.localizedDescription)
                 } else {
-                    println("Success!!!")
+                    print("Success!!!")
                 }
             }))
         
@@ -288,7 +299,7 @@ class QuickToDoDataManager: NSObject {
         
         let subscription = CKSubscription(recordType: "Items",
             predicate: predicate,
-            options: CKSubscriptionOptions.FiresOnRecordCreation | CKSubscriptionOptions.FiresOnRecordUpdate)
+            options: [CKSubscriptionOptions.FiresOnRecordCreation, CKSubscriptionOptions.FiresOnRecordUpdate])
         
         let notificationInfo = CKNotificationInfo()
         
@@ -297,13 +308,13 @@ class QuickToDoDataManager: NSObject {
         
         subscription.notificationInfo = notificationInfo
         
-        publicDatabase?.saveSubscription(subscription,
+        publicDatabase.saveSubscription(subscription,
             completionHandler: ({returnRecord, error in
                 if let err = error {
-                    println("subscription failed %@",
+                    print("subscription failed %@",
                         err.localizedDescription)
                 } else {
-                    println("Success!!!")
+                    print("Success!!!")
                 }
             }))
     }
@@ -314,24 +325,24 @@ class QuickToDoDataManager: NSObject {
         //var delegate: AppDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         //var context:NSManagedObjectContext = delegate.managedObjectContext!
         
-        var item = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
-        var request: NSFetchRequest = NSFetchRequest()
+        let item = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+        let request: NSFetchRequest = NSFetchRequest()
         
         request.entity = item
         
-        var sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "lastused", ascending: false)
-        var sortDescriptors: [NSSortDescriptor] = [sortDescriptor]
+        let sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "lastused", ascending: false)
+        let sortDescriptors: [NSSortDescriptor] = [sortDescriptor]
         request.sortDescriptors = sortDescriptors
         
-        var predicate: NSPredicate? = NSPredicate(format:"used = 1 and completed = 1")
+        let predicate: NSPredicate? = NSPredicate(format:"used = 1 and completed = 1")
         request.predicate = predicate
         
-        var mutableFetchResults: [Entity] = managedObjectContext?.executeFetchRequest(request, error: nil) as! [Entity]
+        let mutableFetchResults: [Entity] = (try! managedObjectContext?.executeFetchRequest(request)) as! [Entity]
         
         if(mutableFetchResults.count > 0) {
             for result in mutableFetchResults {
                 result.used = 0
-                if((managedObjectContext?.save(nil)) != nil) {
+                if((managedObjectContext?.save()) != nil) {
                     
                 }
             }
@@ -346,25 +357,25 @@ class QuickToDoDataManager: NSObject {
         
         var result: [String] = [String]()
         
-        var item = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
-        var request: NSFetchRequest = NSFetchRequest()
+        let item = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+        let request: NSFetchRequest = NSFetchRequest()
         
         request.entity = item
         
-        var sortDescriptor = NSSortDescriptor(key: "lastused", ascending: false)
-        var sortDescriptorNew = NSSortDescriptor(key: "count", ascending: false)
-        var sortDescriptors: [NSSortDescriptor] = [sortDescriptor, sortDescriptorNew]
+        let sortDescriptor = NSSortDescriptor(key: "lastused", ascending: false)
+        let sortDescriptorNew = NSSortDescriptor(key: "count", ascending: false)
+        let sortDescriptors: [NSSortDescriptor] = [sortDescriptor, sortDescriptorNew]
         request.sortDescriptors = sortDescriptors
         
-        var predicate: NSPredicate? = NSPredicate(format: "word beginswith \"\(text)\"")
+        let predicate: NSPredicate? = NSPredicate(format: "word beginswith \"\(text)\"")
         request.predicate = predicate
         
-        var mutableFetchResult: [Entity] = managedObjectContext?.executeFetchRequest(request, error: nil) as! [Entity]
+        var mutableFetchResult: [Entity] = (try! managedObjectContext?.executeFetchRequest(request)) as! [Entity]
         if(mutableFetchResult.count > 0) {
-            var len: Int = (mutableFetchResult.count > 2) ? 2 : mutableFetchResult.count
+            let len: Int = (mutableFetchResult.count > 2) ? 2 : mutableFetchResult.count
             
             for var i = 0; i < len; i++ {
-                var item: Entity = mutableFetchResult[i]
+                let item: Entity = mutableFetchResult[i]
                 result.append(item.word)
             }
         }
@@ -392,13 +403,13 @@ class QuickToDoDataManager: NSObject {
                 let deleteOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: recordsForDelete)
                 deleteOperation.perRecordCompletionBlock = { record, error in
                     if error != nil {
-                        println("Unable to delete record: \(record). Error: \(error)")
+                        print("Unable to delete record: \(record). Error: \(error)")
                     }
                 }
                 deleteOperation.modifyRecordsCompletionBlock = { _, deleted, error in
                     if error != nil {
                         if error.code == CKErrorCode.PartialFailure.rawValue {
-                            println("There was a problem completing the operation. The following records had problems: \(error.userInfo?[CKPartialErrorsByItemIDKey])")
+                            print("There was a problem completing the operation. The following records had problems: \(error.userInfo?[CKPartialErrorsByItemIDKey])")
                         }
                         //callback?(success: false)
                     }
@@ -414,15 +425,15 @@ class QuickToDoDataManager: NSObject {
     
     func shareEverythingForRecordId(recordId: String) {
         
-        var items: [ItemObject] = self.getItems()
-        var container: CKContainer = CKContainer.defaultContainer()
+        let items: [ItemObject] = self.getItems()
+        let container: CKContainer = CKContainer.defaultContainer()
         var record: CKRecord = CKRecord(recordType: "Items")
-        var publicDatabase: CKDatabase = container.publicCloudDatabase
+        let publicDatabase: CKDatabase = container.publicCloudDatabase
         
         var itemsForSaving: [CKRecord] = [CKRecord]()
         
         for item in items {
-            var newRecord: CKRecord = CKRecord(recordType: "Items")
+            let newRecord: CKRecord = CKRecord(recordType: "Items")
             newRecord.setObject(item.word, forKey: "name")
             newRecord.setObject(item.completed, forKey: "completed")
             newRecord.setObject(recordId, forKey: "icloudmail")
@@ -436,23 +447,23 @@ class QuickToDoDataManager: NSObject {
     
     private func saveRecursively(index: Int, itemsForSaving: [CKRecord], publicDatabase: CKDatabase) {
         if (index > 0) {
-            var tmpRecord: CKRecord = itemsForSaving[index-1]
-            var name: String = tmpRecord.objectForKey("name") as! String
-            println("name: \(name) for index: \(index)")
+            let tmpRecord: CKRecord = itemsForSaving[index-1]
+            let name: String = tmpRecord.objectForKey("name") as! String
+            print("name: \(name) for index: \(index)")
             publicDatabase.saveRecord(tmpRecord, completionHandler:
                 ({returnRecord, error in
                     if let err = error {
-                        println(err)
+                        print(err)
                     } else {
-                        println("Saved record \(index)")
+                        print("Saved record \(index)")
 
                     }
-                    var tmpIndex = index - 1
+                    let tmpIndex = index - 1
                     self.saveRecursively(tmpIndex, itemsForSaving: itemsForSaving, publicDatabase: publicDatabase)
                 }))
             
         } else if (index == 0) {
-            println("Finished saving!")
+            print("Finished saving!")
         }
     }
     
@@ -461,18 +472,18 @@ class QuickToDoDataManager: NSObject {
         //var delegate = UIApplication.sharedApplication().delegate as AppDelegate
         //var context:NSManagedObjectContext = delegate.managedObjectContext!
         
-        var entity = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+        let entity = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
         
-        var request: NSFetchRequest = NSFetchRequest()
+        let request: NSFetchRequest = NSFetchRequest()
         request.entity = entity
         
-        var sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "lastused", ascending: false)
+        let sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "lastused", ascending: false)
         var sortDescriptors: [NSSortDescriptor] = [sortDescriptor]
         
-        var predicate: NSPredicate = NSPredicate(format: "word = \"\(itemObject.word)\"")
+        let predicate: NSPredicate = NSPredicate(format: "word = \"\(itemObject.word)\"")
         request.predicate = predicate
         
-        var mutableFetchResults: [Entity] = managedObjectContext!.executeFetchRequest(request, error: nil) as! [Entity]
+        let mutableFetchResults: [Entity] = (try! managedObjectContext!.executeFetchRequest(request)) as! [Entity]
         
         if mutableFetchResults.count > 0 {
             var item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedObjectContext) as! Entity
@@ -484,7 +495,7 @@ class QuickToDoDataManager: NSObject {
             item.completed = itemObject.completed
         
             
-            if(managedObjectContext!.save(nil)) {
+            if(managedObjectContext!.save()) {
                 
             }
             
@@ -522,13 +533,13 @@ class QuickToDoDataManager: NSObject {
                 let updateOperation = CKModifyRecordsOperation(recordsToSave: modifiedRecords, recordIDsToDelete: nil)
                 updateOperation.perRecordCompletionBlock = { record, error in
                     if error != nil {
-                        println("Unable to delete record: \(record). Error: \(error)")
+                        print("Unable to delete record: \(record). Error: \(error)")
                     }
                 }
                 updateOperation.modifyRecordsCompletionBlock = { _, deleted, error in
                     if error != nil {
                         if error.code == CKErrorCode.PartialFailure.rawValue {
-                            println("There was a problem completing the operation. The following records had problems: \(error.userInfo?[CKPartialErrorsByItemIDKey])")
+                            print("There was a problem completing the operation. The following records had problems: \(error.userInfo?[CKPartialErrorsByItemIDKey])")
                         }
                         //callback?(success: false)
                     }
@@ -547,9 +558,9 @@ class QuickToDoDataManager: NSObject {
         //var delegate = UIApplication.sharedApplication().delegate as AppDelegate
         //var context: NSManagedObjectContext = delegate.managedObjectContext!
         
-        var entity = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+        let entity = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
         
-        var addItem = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.managedObjectContext) as! Entity
+        let addItem = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.managedObjectContext) as! Entity
         
         addItem.word = item.word as String
         addItem.used = item.used
@@ -559,11 +570,11 @@ class QuickToDoDataManager: NSObject {
         // if configManager have sharingEnabled add this item to public database as well.
         
         if (configManager.sharingEnabled == 1) {
-            var container: CKContainer = CKContainer.defaultContainer()
+            let container: CKContainer = CKContainer.defaultContainer()
             var record: CKRecord = CKRecord(recordType: "Items")
-            var publicDatabase: CKDatabase = container.publicCloudDatabase
+            let publicDatabase: CKDatabase = container.publicCloudDatabase
             
-            var newRecord: CKRecord = CKRecord(recordType: "Items")
+            let newRecord: CKRecord = CKRecord(recordType: "Items")
             newRecord.setObject(item.word, forKey: "name")
             newRecord.setObject(item.completed, forKey: "completed")
             newRecord.setObject(configManager.selfRecordId, forKey: "icloudmail")
@@ -572,16 +583,16 @@ class QuickToDoDataManager: NSObject {
             publicDatabase.saveRecord(newRecord, completionHandler:
                 ({returnRecord, error in
                     if let err = error {
-                        println(err)
+                        print(err)
                     } else {
-                        println("Saved record \(index)")
+                        print("Saved record \(index)")
                         
                     }
             }))
         
         }
         
-        if(managedObjectContext!.save(nil)) {
+        if(managedObjectContext!.save()) {
             
         }
         
@@ -594,24 +605,24 @@ class QuickToDoDataManager: NSObject {
         //var delegate = UIApplication.sharedApplication().delegate as AppDelegate
         //var context: NSManagedObjectContext = delegate.managedObjectContext!
         
-        var item = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+        let item = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
         
-        var request: NSFetchRequest = NSFetchRequest()
+        let request: NSFetchRequest = NSFetchRequest()
         request.entity = item
         
-        var sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "lastused", ascending: true)
-        var sortDescriptors: [NSSortDescriptor] = [sortDescriptor]
+        let sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "lastused", ascending: true)
+        let sortDescriptors: [NSSortDescriptor] = [sortDescriptor]
         request.sortDescriptors = sortDescriptors
         
-        var predicate: NSPredicate? = NSPredicate(format: "used = 1 and completed = 0")
+        let predicate: NSPredicate? = NSPredicate(format: "used = 1 and completed = 0")
         request.predicate = predicate
         
-        var mutableFetchResults: [Entity] = managedObjectContext!.executeFetchRequest(request, error: nil) as! [Entity]
+        var mutableFetchResults: [Entity] = (try! managedObjectContext!.executeFetchRequest(request)) as! [Entity]
         
         if mutableFetchResults.count > 0 {
             for(var i = 0; i < mutableFetchResults.count; i++) {
-                var item: Entity = mutableFetchResults[i]
-                var itemObject: ItemObject = ItemObject()
+                let item: Entity = mutableFetchResults[i]
+                let itemObject: ItemObject = ItemObject()
                 itemObject.word = item.word
                 itemObject.used = item.used.integerValue
                 itemObject.completed = item.completed.integerValue
@@ -632,24 +643,24 @@ class QuickToDoDataManager: NSObject {
         //var delegate = UIApplication.sharedApplication().delegate as AppDelegate
         //var context: NSManagedObjectContext = delegate.managedObjectContext!
         
-        var item = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+        let item = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
         
-        var request: NSFetchRequest = NSFetchRequest()
+        let request: NSFetchRequest = NSFetchRequest()
         request.entity = item
         
-        var sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "lastused", ascending: true)
-        var sortDescriptors: [NSSortDescriptor] = [sortDescriptor]
+        let sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "lastused", ascending: true)
+        let sortDescriptors: [NSSortDescriptor] = [sortDescriptor]
         request.sortDescriptors = sortDescriptors
         
-        var predicate: NSPredicate? = NSPredicate(format: "used = 1")
+        let predicate: NSPredicate? = NSPredicate(format: "used = 1")
         request.predicate = predicate
         
-        var mutableFetchResults: [Entity] = managedObjectContext!.executeFetchRequest(request, error: nil) as! [Entity]
+        var mutableFetchResults: [Entity] = (try! managedObjectContext!.executeFetchRequest(request)) as! [Entity]
         
         if mutableFetchResults.count > 0 {
             for(var i = 0; i < mutableFetchResults.count; i++) {
-                var item: Entity = mutableFetchResults[i]
-                var itemObject: ItemObject = ItemObject()
+                let item: Entity = mutableFetchResults[i]
+                let itemObject: ItemObject = ItemObject()
                 itemObject.word = item.word
                 itemObject.used = item.used.integerValue
                 itemObject.completed = item.completed.integerValue
@@ -664,26 +675,26 @@ class QuickToDoDataManager: NSObject {
     }
     
     func getItem(text: String) -> ItemObject {
-        var result: ItemObject = ItemObject()
+        let result: ItemObject = ItemObject()
         
         //var delegate: AppDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         //var context = delegate.managedObjectContext
         
-        var item = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
-        var request = NSFetchRequest()
+        let item = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+        let request = NSFetchRequest()
         
         request.entity = item
-        var sortDescriptor = NSSortDescriptor(key: "lastused", ascending: true)
+        let sortDescriptor = NSSortDescriptor(key: "lastused", ascending: true)
         var sortDescriptors: [NSSortDescriptor] = [sortDescriptor]
         
-        var predicate = NSPredicate(format: "used = 0 and word = \"\(text)\"")
+        let predicate = NSPredicate(format: "used = 0 and word = \"\(text)\"")
         request.predicate = predicate
         
         //var itemObject: ItemObject = ItemObject()
-        var mutableFetchResults: [Entity] = managedObjectContext?.executeFetchRequest(request, error: nil) as! [Entity]
+        var mutableFetchResults: [Entity] = (try! managedObjectContext?.executeFetchRequest(request)) as! [Entity]
         
         if(mutableFetchResults.count > 0) {
-            var item: Entity = mutableFetchResults[0]
+            let item: Entity = mutableFetchResults[0]
             
             result.word = item.word
             result.used = item.used.integerValue
