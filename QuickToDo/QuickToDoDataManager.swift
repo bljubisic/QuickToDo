@@ -12,7 +12,7 @@ import CloudKit
 
 protocol InviteProtocol {
     
-    func openAlertView(record: CKRecord)
+    func openAlertView(_ record: CKRecord)
     func tableReload()
     
     
@@ -31,26 +31,26 @@ class QuickToDoDataManager: NSObject {
     
     var returnRecords: [CKRecord] = [CKRecord]()
     
-    lazy var applicationDocumentsDirectory: NSURL? = {
-        return NSFileManager.defaultManager().containerURLForSecurityApplicationGroupIdentifier("group.persukibo.QuickToDoSharingDefaults") ?? nil
+    lazy var applicationDocumentsDirectory: URL? = {
+        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.persukibo.QuickToDoSharingDefaults") ?? nil
         }()
     
     lazy var managedObjectModel: NSManagedObjectModel = {
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
-        let modelURL = NSBundle.mainBundle().URLForResource("QuickToDo", withExtension: "momd")!
-        return NSManagedObjectModel(contentsOfURL: modelURL)!
+        let modelURL = Bundle.main.url(forResource: "QuickToDo", withExtension: "momd")!
+        return NSManagedObjectModel(contentsOf: modelURL)!
         }()
     
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
         // The persistent store coordinator for the application. This implementation creates and return a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
         // Create the coordinator and store
         var coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
-        let url = self.applicationDocumentsDirectory!.URLByAppendingPathComponent("QuickToDo.sqlite")
+        let url = self.applicationDocumentsDirectory!.appendingPathComponent("QuickToDo.sqlite")
         var error: NSError? = nil
         var failureReason = "There was an error creating or loading the application's saved data."
         do {
             
-            try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+            try coordinator!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: nil)
 
             //error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict as! [NSObject : AnyObject])
             // Replace this with code to handle the error appropriately.
@@ -75,7 +75,7 @@ class QuickToDoDataManager: NSObject {
         if coordinator == nil {
             return nil
         }
-        var managedObjectContext = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.MainQueueConcurrencyType)
+        var managedObjectContext = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.mainQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
         return managedObjectContext
         }()
@@ -100,7 +100,7 @@ class QuickToDoDataManager: NSObject {
         
         let entityName: String = "Entity"
         
-        let item = NSEntityDescription.entityForName(entityName, inManagedObjectContext: self.managedObjectContext!)
+        let item = NSEntityDescription.entity(forEntityName: entityName, in: self.managedObjectContext!)
         let request:NSFetchRequest = NSFetchRequest()
         
         request.entity = item
@@ -115,11 +115,11 @@ class QuickToDoDataManager: NSObject {
         
         //var error: NSError? = NSError()
         do {
-            mutableFetchResults = try managedObjectContext!.executeFetchRequest(request)
+            mutableFetchResults = try managedObjectContext!.fetch(request)
             while(mutableFetchResults.count > 0) {
                 let item: Entity? = mutableFetchResults.removeLast() as? Entity
                 print("item removed : \(item?.word)")
-                managedObjectContext?.deleteObject(item!)
+                managedObjectContext?.delete(item!)
             
             }
         } catch _ {
@@ -130,7 +130,7 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    func ckFetchRecord(queryNotification: CKQueryNotification) {
+    func ckFetchRecord(_ queryNotification: CKQueryNotification) {
 
         let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         //var record: CKRecord = CKRecord(recordType: "Items")
@@ -142,15 +142,15 @@ class QuickToDoDataManager: NSObject {
         
         //publicDatabase.fetchRecordWithID(, completionHandler: <#((CKRecord!, NSError!) -> Void)!##(CKRecord!, NSError!) -> Void#>)
         
-        publicDatabase.fetchRecordWithID(recordID!, completionHandler: { result, error in
+        publicDatabase.fetch(withRecordID: recordID!, completionHandler: { result, error in
             if(error == nil) {
                 let record: CKRecord = (result as CKRecord?)!
                 
                 if(record.recordType == "Items") {
 
-                    let word: String = record.objectForKey("name") as! String
+                    let word: String = record.object(forKey: "name") as! String
                 
-                    let entity = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+                    let entity = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
                 
                     let request: NSFetchRequest = NSFetchRequest()
                     request.entity = entity
@@ -163,17 +163,17 @@ class QuickToDoDataManager: NSObject {
                     var mutableFetchResults: [Entity]
                     
                     do {
-                        mutableFetchResults = try self.managedObjectContext!.executeFetchRequest(request) as! [Entity]
+                        mutableFetchResults = try self.managedObjectContext!.fetch(request) as! [Entity]
                     
                         if mutableFetchResults.count > 0 {
-                            var item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.managedObjectContext) as! Entity
+                            var item = NSManagedObject(entity: entity!, insertInto: self.managedObjectContext) as! Entity
                     
                             item = mutableFetchResults.last!
                     
                     
                             item.word = word
-                            item.used = record.objectForKey("used") as! Int
-                            item.completed = record.objectForKey("completed") as! Int
+                            item.used = NSNumber(record.object(forKey: "used") as! Int)
+                            item.completed = NSNumber(record.object(forKey: "completed") as! Int)
                     
                     
                             try self.managedObjectContext!.save()
@@ -183,14 +183,14 @@ class QuickToDoDataManager: NSObject {
                         
                     
                         } else {
-                            let entity = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+                            let entity = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
                     
                             let
-                            addItem = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.managedObjectContext) as! Entity
+                            addItem = NSManagedObject(entity: entity!, insertInto: self.managedObjectContext) as! Entity
                     
                             addItem.word = word as String
-                            addItem.used = record.objectForKey("used") as! Int
-                            addItem.completed = record.objectForKey("completed") as! Int
+                            addItem.used = NSNumber(record.object(forKey: "used") as! Int)
+                            addItem.completed = NSNumber(record.object(forKey: "completed") as! Int)
                             //addItem.lastused = record.objectForKey("lastUsed") as! NSDate
                     
                             // if configManager have sharingEnabled add this item to public database as well.
@@ -209,7 +209,7 @@ class QuickToDoDataManager: NSObject {
                 }
                 else if(record.recordType == "Invitations") {
                     
-                    if(queryNotification.queryNotificationReason == CKQueryNotificationReason.RecordDeleted) {
+                    if(queryNotification.queryNotificationReason == CKQueryNotificationReason.recordDeleted) {
                         // remove invitation fro core data
                         // remove invitation from cloudkit
                         // remove notifications
@@ -232,7 +232,7 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    func ckFetchInvitations(show: String -> Void) {
+    func ckFetchInvitations(_ show: @escaping (String) -> Void) {
         
         let container = CKContainer(identifier: "iCloud.QuickToDo")
         
@@ -246,11 +246,11 @@ class QuickToDoDataManager: NSObject {
         
         let publicDatabase = container.publicCloudDatabase
         
-        publicDatabase.performQuery(query, inZoneWithID: nil, completionHandler: { results, error in
+        publicDatabase.perform(query, inZoneWith: nil, completionHandler: { results, error in
             if(error == nil) {
                 if(results!.count > 0) {
                     let record: CKRecord = (results?.first as CKRecord?)!
-                    let name: String = record.objectForKey("sendername") as! String
+                    let name: String = record.object(forKey: "sendername") as! String
                     show(name)
                 }
                 else {
@@ -263,20 +263,20 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    func inviteToShare(receiverICloud: String, receiverName: String) {
+    func inviteToShare(_ receiverICloud: String, receiverName: String) {
         
         let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         //var record: CKRecord = CKRecord(recordType: "Invitations")
         let publicDatabase: CKDatabase = container.publicCloudDatabase
         
         let newRecord: CKRecord = CKRecord(recordType: "Invitations")
-        newRecord.setObject(receiverICloud, forKey: "receiver")
-        newRecord.setObject(0, forKey: "confirmed")
-        newRecord.setObject(configManager.selfRecordId, forKey: "sender")
-        newRecord.setObject(configManager.selfName, forKey: "sendername")
-        newRecord.setObject(receiverName, forKey: "receivername")
+        newRecord.setObject(receiverICloud as CKRecordValue?, forKey: "receiver")
+        newRecord.setObject(0 as CKRecordValue?, forKey: "confirmed")
+        newRecord.setObject(configManager.selfRecordId as CKRecordValue?, forKey: "sender")
+        newRecord.setObject(configManager.selfName as CKRecordValue?, forKey: "sendername")
+        newRecord.setObject(receiverName as CKRecordValue?, forKey: "receivername")
         
-        publicDatabase.saveRecord(newRecord, completionHandler:
+        publicDatabase.save(newRecord, completionHandler:
             ({returnRecord, error in
                 if let err = error {
                     print(err)
@@ -298,7 +298,7 @@ class QuickToDoDataManager: NSObject {
         
         let subscription = CKSubscription(recordType: "Invitations",
             predicate: predicate,
-            options: [CKSubscriptionOptions.FiresOnRecordUpdate])
+            options: [CKSubscriptionOptions.firesOnRecordUpdate])
         
         
         
@@ -309,7 +309,7 @@ class QuickToDoDataManager: NSObject {
         
         subscription.notificationInfo = notificationInfo
         
-        publicDatabase.saveSubscription(subscription,
+        publicDatabase.save(subscription,
             completionHandler: ({returnRecord, error in
                 if let err = error {
                     print("subscription failed %@",
@@ -331,7 +331,7 @@ class QuickToDoDataManager: NSObject {
         
         let subscription = CKSubscription(recordType: "Invitations",
             predicate: predicate,
-            options:[ CKSubscriptionOptions.FiresOnRecordCreation, CKSubscriptionOptions.FiresOnRecordUpdate])
+            options:[ CKSubscriptionOptions.firesOnRecordCreation, CKSubscriptionOptions.firesOnRecordUpdate])
         
         
         
@@ -342,7 +342,7 @@ class QuickToDoDataManager: NSObject {
         
         subscription.notificationInfo = notificationInfo
         
-        publicDatabase.saveSubscription(subscription,
+        publicDatabase.save(subscription,
             completionHandler: ({returnRecord, error in
                 if let err = error {
                     print("subscription failed %@",
@@ -355,7 +355,7 @@ class QuickToDoDataManager: NSObject {
     }
     
     
-    func subscribeOnItems(icloudmail: String) {
+    func subscribeOnItems(_ icloudmail: String) {
         
         let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         
@@ -365,7 +365,7 @@ class QuickToDoDataManager: NSObject {
         
         let subscription = CKSubscription(recordType: "Items",
             predicate: predicate,
-            options:[ CKSubscriptionOptions.FiresOnRecordCreation, CKSubscriptionOptions.FiresOnRecordUpdate])
+            options:[ CKSubscriptionOptions.firesOnRecordCreation, CKSubscriptionOptions.firesOnRecordUpdate])
         
         let notificationInfo = CKNotificationInfo()
         
@@ -375,7 +375,7 @@ class QuickToDoDataManager: NSObject {
         
         subscription.notificationInfo = notificationInfo
         
-        publicDatabase.saveSubscription(subscription,
+        publicDatabase.save(subscription,
             completionHandler: ({returnRecord, error in
                 if let err = error {
                     print("subscription failed %@",
@@ -392,7 +392,7 @@ class QuickToDoDataManager: NSObject {
         //var delegate: AppDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         //var context:NSManagedObjectContext = delegate.managedObjectContext!
         
-        let item = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+        let item = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
         let request: NSFetchRequest = NSFetchRequest()
         
         request.entity = item
@@ -408,14 +408,14 @@ class QuickToDoDataManager: NSObject {
         
         do {
             
-            mutableFetchResults = try managedObjectContext?.executeFetchRequest(request) as! [Entity]
+            mutableFetchResults = try managedObjectContext?.fetch(request) as! [Entity]
         
             if(mutableFetchResults.count > 0) {
                 for result in mutableFetchResults {
                     result.used = 0
                 
                     let itemObject: ItemObject = ItemObject()
-                    itemObject.word = result.word
+                    itemObject.word = result.word as NSString
                     itemObject.completed = Int(result.completed)
                     itemObject.used = Int(result.used)
                     itemObject.count = Int(result.count)
@@ -435,14 +435,14 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    func getHints(text: String) -> [String] {
+    func getHints(_ text: String) -> [String] {
         
         //var delegate: AppDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         //var context = delegate.managedObjectContext
         
         var result: [String] = [String]()
         
-        let item = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+        let item = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
         let request: NSFetchRequest = NSFetchRequest()
         
         request.entity = item
@@ -459,7 +459,7 @@ class QuickToDoDataManager: NSObject {
         
         do {
             
-            mutableFetchResult = try managedObjectContext?.executeFetchRequest(request) as! [Entity]
+            mutableFetchResult = try managedObjectContext?.fetch(request) as! [Entity]
             if(mutableFetchResult.count > 0) {
                 let len: Int = (mutableFetchResult.count > 2) ? 2 : mutableFetchResult.count
             
@@ -476,7 +476,7 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    func ckRemoveAllRecords(recordId: String) {
+    func ckRemoveAllRecords(_ recordId: String) {
         
         let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         //var record: CKRecord = CKRecord(recordType: "Items")
@@ -484,13 +484,13 @@ class QuickToDoDataManager: NSObject {
         let predicate: NSPredicate = NSPredicate(format: "icloudmail = %@", recordId)
         let query: CKQuery = CKQuery(recordType: "Items", predicate: predicate)
         
-        publicDatabase.performQuery(query, inZoneWithID: nil, completionHandler: { results, error in
+        publicDatabase.perform(query, inZoneWith: nil, completionHandler: { results, error in
             if(error == nil) {
                 let records: [CKRecord] = (results as [CKRecord]?)!
                 var recordsForDelete: [CKRecordID] = [CKRecordID]()
                 
                 for record in records {
-                    recordsForDelete.insert(record.recordID, atIndex: 0)
+                    recordsForDelete.insert(record.recordID, at: 0)
                 }
                 let deleteOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: recordsForDelete)
                 deleteOperation.perRecordCompletionBlock = { record, error in
@@ -500,14 +500,14 @@ class QuickToDoDataManager: NSObject {
                 }
                 deleteOperation.modifyRecordsCompletionBlock = { _, deleted, error in
                     if error != nil {
-                        if error!.code == CKErrorCode.PartialFailure.rawValue {
+                        if error!.code == CKError.partialFailure.rawValue {
                             print("There was a problem completing the operation")
                         }
                         //callback?(success: false)
                     }
                     //callback?(success: true)
                 }
-                publicDatabase.addOperation(deleteOperation)
+                publicDatabase.add(deleteOperation)
                 
             }
             
@@ -515,7 +515,7 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    func shareEverythingForRecordId(recordId: String) {
+    func shareEverythingForRecordId(_ recordId: String) {
         
         let items: [String: ItemObject] = self.getItems()
         let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
@@ -527,9 +527,9 @@ class QuickToDoDataManager: NSObject {
         for item in items.values {
             let newRecord: CKRecord = CKRecord(recordType: "Items")
             newRecord.setObject(item.word, forKey: "name")
-            newRecord.setObject(item.completed, forKey: "completed")
-            newRecord.setObject(recordId, forKey: "icloudmail")
-            newRecord.setObject(item.used, forKey: "used")
+            newRecord.setObject(item.completed as CKRecordValue?, forKey: "completed")
+            newRecord.setObject(recordId as CKRecordValue?, forKey: "icloudmail")
+            newRecord.setObject(item.used as CKRecordValue?, forKey: "used")
             itemsForSaving.append(newRecord)
             
         }
@@ -540,12 +540,12 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    private func ckAddRecord(record: CKRecord) {
+    fileprivate func ckAddRecord(_ record: CKRecord) {
         let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         let record: CKRecord = CKRecord(recordType: "Items")
         let publicDatabase: CKDatabase = container.publicCloudDatabase
         
-        publicDatabase.saveRecord(record, completionHandler: ({returnRecord, error in
+        publicDatabase.save(record, completionHandler: ({returnRecord, error in
             if let err = error {
                 print(err)
             } else {
@@ -556,14 +556,14 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    private func ckCheckRecord(index: Int, itemsToCheck: [CKRecord], publicDatabase: CKDatabase) {
+    fileprivate func ckCheckRecord(_ index: Int, itemsToCheck: [CKRecord], publicDatabase: CKDatabase) {
         
         
         if (index > 0) {
             let tmpRecord: CKRecord = itemsToCheck[index-1]
-            let predicate: NSPredicate = NSPredicate(format: "name = %@ and icloudmail = %@ and used = 1", tmpRecord.objectForKey("name") as! String, configManager.selfRecordId)
+            let predicate: NSPredicate = NSPredicate(format: "name = %@ and icloudmail = %@ and used = 1", tmpRecord.object(forKey: "name") as! String, configManager.selfRecordId)
             let query: CKQuery = CKQuery(recordType: "Items", predicate: predicate)
-            publicDatabase.performQuery(query, inZoneWithID: nil, completionHandler: { results, error in
+            publicDatabase.perform(query, inZoneWith: nil, completionHandler: { results, error in
                 if(error == nil) {
                     if results!.count == 0 {
                         self.returnRecords.append(tmpRecord)
@@ -580,12 +580,12 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    private func saveRecursively(index: Int, itemsForSaving: [CKRecord], publicDatabase: CKDatabase) {
+    fileprivate func saveRecursively(_ index: Int, itemsForSaving: [CKRecord], publicDatabase: CKDatabase) {
         if (index > 0) {
             let tmpRecord: CKRecord = itemsForSaving[index-1]
-            let name: String = tmpRecord.objectForKey("name") as! String
+            let name: String = tmpRecord.object(forKey: "name") as! String
             print("name: \(name) for index: \(index)")
-            publicDatabase.saveRecord(tmpRecord, completionHandler:
+            publicDatabase.save(tmpRecord, completionHandler:
                 ({returnRecord, error in
                     if let err = error {
                         print(err)
@@ -602,12 +602,12 @@ class QuickToDoDataManager: NSObject {
         }
     }
     
-    func updateItem(itemObject: ItemObject) {
+    func updateItem(_ itemObject: ItemObject) {
 
         //var delegate = UIApplication.sharedApplication().delegate as AppDelegate
         //var context:NSManagedObjectContext = delegate.managedObjectContext!
         
-        let entity = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+        let entity = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
         
         let request: NSFetchRequest = NSFetchRequest()
         request.entity = entity
@@ -622,16 +622,16 @@ class QuickToDoDataManager: NSObject {
         
         do {
             
-            mutableFetchResults = try managedObjectContext!.executeFetchRequest(request) as! [Entity]
+            mutableFetchResults = try managedObjectContext!.fetch(request) as! [Entity]
         
             if mutableFetchResults.count > 0 {
-                var item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedObjectContext) as! Entity
+                var item = NSManagedObject(entity: entity!, insertInto: managedObjectContext) as! Entity
             
                 item = mutableFetchResults.last!
             
                 item.word = itemObject.word as String
-                item.used = itemObject.used
-                item.completed = itemObject.completed
+                item.used = NSNumber(itemObject.used)
+                item.completed = NSNumber(itemObject.completed)
         
             
                 try managedObjectContext!.save()
@@ -647,7 +647,7 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    func ckFindItem(itemObject: ItemObject, operation: String) {
+    func ckFindItem(_ itemObject: ItemObject, operation: String) {
         
         
         
@@ -673,14 +673,14 @@ class QuickToDoDataManager: NSObject {
         
         
         switch (icloudids.sender, icloudids.receiver) {
-        case let (.Some(sender), .Some(receiver)):
+        case let (.some(sender), .some(receiver)):
             senderVar = sender
             receiverVar = receiver
-        case let (.Some(sender), .None):
+        case let (.some(sender), .none):
             senderVar = sender
-        case let (.None, .Some(receiver)):
+        case let (.none, .some(receiver)):
             receiverVar = receiver
-        case (.None, .None):
+        case (.none, .none):
             print("No invitation")
         }
         
@@ -696,16 +696,16 @@ class QuickToDoDataManager: NSObject {
         
         var query: CKQuery = CKQuery(recordType: "Items", predicate: predicateFirst)
         
-        publicDatabase.performQuery(query, inZoneWithID: nil, completionHandler: { results, error in
+        publicDatabase.perform(query, inZoneWith: nil, completionHandler: { results, error in
             if(error == nil) {
                 let records: [CKRecord] = (results as [CKRecord]?)!
                 var modifiedRecords: [CKRecord] = [CKRecord]()
                 
                 for record in records {
                     record.setObject(itemObject.word, forKey:"name")
-                    record.setObject(itemObject.used, forKey:"used")
-                    record.setObject(itemObject.completed, forKey:"completed")
-                    record.setObject(self.configManager.selfRecordId, forKey:"icloudmail")
+                    record.setObject(itemObject.used as CKRecordValue?, forKey:"used")
+                    record.setObject(itemObject.completed as CKRecordValue?, forKey:"completed")
+                    record.setObject(self.configManager.selfRecordId as CKRecordValue?, forKey:"icloudmail")
                     modifiedRecords.append(record)
                 }
                 let updateOperation = CKModifyRecordsOperation(recordsToSave: modifiedRecords, recordIDsToDelete: nil)
@@ -716,14 +716,14 @@ class QuickToDoDataManager: NSObject {
                 }
                 updateOperation.modifyRecordsCompletionBlock = { _, deleted, error in
                     if error != nil {
-                        if error!.code == CKErrorCode.PartialFailure.rawValue {
+                        if error!.code == CKError.partialFailure.rawValue {
                             print("There was a problem completing the operation")
                         }
                         //callback?(success: false)
                     }
                     //callback?(success: true)
                 }
-                publicDatabase.addOperation(updateOperation)
+                publicDatabase.add(updateOperation)
                 
                 
             }
@@ -733,16 +733,16 @@ class QuickToDoDataManager: NSObject {
         if(receiverVar != "") {
             query = CKQuery(recordType: "Items", predicate: predicateSecond)
         
-            publicDatabase.performQuery(query, inZoneWithID: nil, completionHandler: { results, error in
+            publicDatabase.perform(query, inZoneWith: nil, completionHandler: { results, error in
                 if(error == nil) {
                     let records: [CKRecord] = (results as [CKRecord]?)!
                     var modifiedRecords: [CKRecord] = [CKRecord]()
                 
                     for record in records {
                         record.setObject(itemObject.word, forKey:"name")
-                        record.setObject(itemObject.used, forKey:"used")
-                        record.setObject(itemObject.completed, forKey:"completed")
-                        record.setObject(self.configManager.selfRecordId, forKey:"icloudmail")
+                        record.setObject(itemObject.used as CKRecordValue?, forKey:"used")
+                        record.setObject(itemObject.completed as CKRecordValue?, forKey:"completed")
+                        record.setObject(self.configManager.selfRecordId as CKRecordValue?, forKey:"icloudmail")
                         modifiedRecords.append(record)
                     }
                     let updateOperation = CKModifyRecordsOperation(recordsToSave: modifiedRecords, recordIDsToDelete: nil)
@@ -753,14 +753,14 @@ class QuickToDoDataManager: NSObject {
                     }
                     updateOperation.modifyRecordsCompletionBlock = { _, deleted, error in
                         if error != nil {
-                            if error!.code == CKErrorCode.PartialFailure.rawValue {
+                            if error!.code == CKError.partialFailure.rawValue {
                                 print("There was a problem completing the operation.")
                             }
                             //callback?(success: false)
                         }
                         //callback?(success: true)
                     }
-                    publicDatabase.addOperation(updateOperation)
+                    publicDatabase.add(updateOperation)
                 
                 
                 }
@@ -769,7 +769,7 @@ class QuickToDoDataManager: NSObject {
         }
     }
     
-    func ckUpdateInvitation(updatedInvitation: InvitationObject) {
+    func ckUpdateInvitation(_ updatedInvitation: InvitationObject) {
         
         let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         //var record: CKRecord = CKRecord(recordType: "Items")
@@ -779,17 +779,17 @@ class QuickToDoDataManager: NSObject {
         
         let query: CKQuery = CKQuery(recordType: "Invitations", predicate: predicate)
         
-        publicDatabase.performQuery(query, inZoneWithID: nil, completionHandler: { results, error in
+        publicDatabase.perform(query, inZoneWith: nil, completionHandler: { results, error in
             if(error == nil) {
                 let records: [CKRecord] = (results as [CKRecord]?)!
                 var modifiedRecords: [CKRecord] = [CKRecord]()
                 
                 for record in records {
-                    record.setObject(updatedInvitation.sender, forKey:"sender")
-                    record.setObject(updatedInvitation.receiver, forKey:"receiver")
-                    record.setObject(updatedInvitation.confirmed, forKey:"confirmed")
-                    record.setObject(updatedInvitation.sendername, forKey:"sendername")
-                    record.setObject(updatedInvitation.receivername, forKey:"receivername")
+                    record.setObject(updatedInvitation.sender as CKRecordValue?, forKey:"sender")
+                    record.setObject(updatedInvitation.receiver as CKRecordValue?, forKey:"receiver")
+                    record.setObject(updatedInvitation.confirmed as CKRecordValue?, forKey:"confirmed")
+                    record.setObject(updatedInvitation.sendername as CKRecordValue?, forKey:"sendername")
+                    record.setObject(updatedInvitation.receivername as CKRecordValue?, forKey:"receivername")
                     
                     modifiedRecords.append(record)
                 }
@@ -801,14 +801,14 @@ class QuickToDoDataManager: NSObject {
                 }
                 updateOperation.modifyRecordsCompletionBlock = { _, deleted, error in
                     if error != nil {
-                        if error!.code == CKErrorCode.PartialFailure.rawValue {
+                        if error!.code == CKError.partialFailure.rawValue {
                             print("There was a problem completing the operation.")
                         }
                         //callback?(success: false)
                     }
                     //callback?(success: true)
                 }
-                publicDatabase.addOperation(updateOperation)
+                publicDatabase.add(updateOperation)
                 
                 
             }
@@ -817,16 +817,16 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    func addItemOnlyCoreData(item: ItemObject) {
+    func addItemOnlyCoreData(_ item: ItemObject) {
         objc_sync_enter(item)
         
-        let entity = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+        let entity = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
         
-        let addItem = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.managedObjectContext) as! Entity
+        let addItem = NSManagedObject(entity: entity!, insertInto: self.managedObjectContext) as! Entity
         
         addItem.word = item.word as String
-        addItem.used = item.used
-        addItem.completed = item.completed
+        addItem.used = NSNumber(item.used)
+        addItem.completed = NSNumber(item.completed)
         addItem.lastused = item.lasUsed
         
         do {
@@ -838,18 +838,18 @@ class QuickToDoDataManager: NSObject {
         objc_sync_exit(item)
     }
     
-    func addItem(item: ItemObject) {
+    func addItem(_ item: ItemObject) {
         
         //var delegate = UIApplication.sharedApplication().delegate as AppDelegate
         //var context: NSManagedObjectContext = delegate.managedObjectContext!
         
-        let entity = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+        let entity = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
         
-        let addItem = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.managedObjectContext) as! Entity
+        let addItem = NSManagedObject(entity: entity!, insertInto: self.managedObjectContext) as! Entity
         
         addItem.word = item.word as String
-        addItem.used = item.used
-        addItem.completed = item.completed
+        addItem.used = NSNumber(item.used)
+        addItem.completed = NSNumber(item.completed)
         addItem.lastused = item.lasUsed
         
         // if configManager have sharingEnabled add this item to public database as well.
@@ -861,11 +861,11 @@ class QuickToDoDataManager: NSObject {
             
             let newRecord: CKRecord = CKRecord(recordType: "Items")
             newRecord.setObject(item.word, forKey: "name")
-            newRecord.setObject(item.completed, forKey: "completed")
-            newRecord.setObject(configManager.selfRecordId, forKey: "icloudmail")
-            newRecord.setObject(item.used, forKey: "used")
+            newRecord.setObject(item.completed as CKRecordValue?, forKey: "completed")
+            newRecord.setObject(configManager.selfRecordId as CKRecordValue?, forKey: "icloudmail")
+            newRecord.setObject(item.used as CKRecordValue?, forKey: "used")
             
-            publicDatabase.saveRecord(newRecord, completionHandler:
+            publicDatabase.save(newRecord, completionHandler:
                 ({returnRecord, error in
                     if let err = error {
                         print(err)
@@ -893,7 +893,7 @@ class QuickToDoDataManager: NSObject {
         //var delegate = UIApplication.sharedApplication().delegate as AppDelegate
         //var context: NSManagedObjectContext = delegate.managedObjectContext!
         
-        let item = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+        let item = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
         
         let request: NSFetchRequest = NSFetchRequest()
         request.entity = item
@@ -909,17 +909,17 @@ class QuickToDoDataManager: NSObject {
         
         do {
             
-            mutableFetchResults = try managedObjectContext!.executeFetchRequest(request) as! [Entity]
+            mutableFetchResults = try managedObjectContext!.fetch(request) as! [Entity]
         
             if mutableFetchResults.count > 0 {
                 for i in 0 ..< mutableFetchResults.count {
                     let item: Entity = mutableFetchResults[i]
                     let itemObject: ItemObject = ItemObject()
-                    itemObject.word = item.word
-                    itemObject.used = item.used.integerValue
-                    itemObject.completed = item.completed.integerValue
+                    itemObject.word = item.word as NSString
+                    itemObject.used = item.used.intValue
+                    itemObject.completed = item.completed.intValue
                     itemObject.lasUsed = item.lastused
-                    itemObject.count = item.count.integerValue
+                    itemObject.count = item.count.intValue
                 
                     result[itemObject.word as String] = itemObject
                 }
@@ -939,7 +939,7 @@ class QuickToDoDataManager: NSObject {
         //var delegate = UIApplication.sharedApplication().delegate as AppDelegate
         //var context: NSManagedObjectContext = delegate.managedObjectContext!
         
-        let item = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+        let item = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
         
         let request: NSFetchRequest = NSFetchRequest()
         request.entity = item
@@ -955,17 +955,17 @@ class QuickToDoDataManager: NSObject {
         
         do {
             
-            mutableFetchResults = try managedObjectContext!.executeFetchRequest(request) as! [Entity]
+            mutableFetchResults = try managedObjectContext!.fetch(request) as! [Entity]
         
             if mutableFetchResults.count > 0 {
                 for i in 0 ..< mutableFetchResults.count {
                     let item: Entity = mutableFetchResults[i]
                     let itemObject: ItemObject = ItemObject()
-                    itemObject.word = item.word
-                    itemObject.used = item.used.integerValue
-                    itemObject.completed = item.completed.integerValue
+                    itemObject.word = item.word as NSString
+                    itemObject.used = item.used.intValue
+                    itemObject.completed = item.completed.intValue
                     itemObject.lasUsed = item.lastused
-                    itemObject.count = item.count.integerValue
+                    itemObject.count = item.count.intValue
                 
                     result[itemObject.word as String] = itemObject
                 }
@@ -978,13 +978,13 @@ class QuickToDoDataManager: NSObject {
         return result
     }
     
-    func getItem(text: String) -> ItemObject {
+    func getItem(_ text: String) -> ItemObject {
         let result: ItemObject = ItemObject()
         
         //var delegate: AppDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         //var context = delegate.managedObjectContext
         
-        let item = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+        let item = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
         let request = NSFetchRequest()
         
         request.entity = item
@@ -999,16 +999,16 @@ class QuickToDoDataManager: NSObject {
         
         do {
             
-            mutableFetchResults = try managedObjectContext?.executeFetchRequest(request) as! [Entity]
+            mutableFetchResults = try managedObjectContext?.fetch(request) as! [Entity]
         
             if(mutableFetchResults.count > 0) {
                 let item: Entity = mutableFetchResults[0]
             
-                result.word = item.word
-                result.used = item.used.integerValue
-                result.completed = item.completed.integerValue
+                result.word = item.word as NSString
+                result.used = item.used.intValue
+                result.completed = item.completed.intValue
                 result.lasUsed = item.lastused
-                result.count = item.count.integerValue
+                result.count = item.count.intValue
             
             }
         
@@ -1019,15 +1019,15 @@ class QuickToDoDataManager: NSObject {
         return result
     }
     
-    func cdAddInvitation(newInvitation: InvitationObject) {
+    func cdAddInvitation(_ newInvitation: InvitationObject) {
         
-        let invitation = NSEntityDescription.entityForName("Invitation", inManagedObjectContext: self.managedObjectContext!)
+        let invitation = NSEntityDescription.entity(forEntityName: "Invitation", in: self.managedObjectContext!)
         
-        let addItem = NSManagedObject(entity: invitation!, insertIntoManagedObjectContext: self.managedObjectContext) as! Invitation
+        let addItem = NSManagedObject(entity: invitation!, insertInto: self.managedObjectContext) as! Invitation
         
         addItem.receiver = newInvitation.receiver as String
         addItem.sender = newInvitation.sender as String
-        addItem.confirmed = newInvitation.confirmed
+        addItem.confirmed = NSNumber(newInvitation.confirmed)
         addItem.sendername = newInvitation.sendername as String
         addItem.receivername = newInvitation.receivername as String
         
@@ -1045,7 +1045,7 @@ class QuickToDoDataManager: NSObject {
         
         let result: InvitationObject = InvitationObject()
         
-        let item = NSEntityDescription.entityForName("Invitation", inManagedObjectContext: self.managedObjectContext!)
+        let item = NSEntityDescription.entity(forEntityName: "Invitation", in: self.managedObjectContext!)
         let request = NSFetchRequest()
         
         request.entity = item
@@ -1058,13 +1058,13 @@ class QuickToDoDataManager: NSObject {
         
         do {
             
-            invitations = try managedObjectContext?.executeFetchRequest(request) as! [NSManagedObject]
+            invitations = try managedObjectContext?.fetch(request) as! [NSManagedObject]
             print("number of invitations found: \(invitations.count)")
             for invitation in invitations {
                 if let item = invitation as? Invitation {
                     result.sender = item.sender
                     result.receiver = item.receiver
-                    result.confirmed = item.confirmed.integerValue
+                    result.confirmed = item.confirmed.intValue
                     result.sendername = item.sendername
                 }
             }
@@ -1077,11 +1077,11 @@ class QuickToDoDataManager: NSObject {
     }
     
     
-    func cdGetInvitation(show: InvitationObject -> Void) {
+    func cdGetInvitation(_ show: (InvitationObject) -> Void) {
         
         let result: InvitationObject = InvitationObject()
         
-        let item = NSEntityDescription.entityForName("Invitation", inManagedObjectContext: self.managedObjectContext!)
+        let item = NSEntityDescription.entity(forEntityName: "Invitation", in: self.managedObjectContext!)
         let request = NSFetchRequest()
         
         request.entity = item
@@ -1094,13 +1094,13 @@ class QuickToDoDataManager: NSObject {
         
         do {
             
-            invitations = try managedObjectContext?.executeFetchRequest(request) as! [NSManagedObject]
+            invitations = try managedObjectContext?.fetch(request) as! [NSManagedObject]
             print("number of invitations found: \(invitations.count)")
             for invitation in invitations {
                 if let item = invitation as? Invitation {
                     result.sender = item.sender
                     result.receiver = item.receiver
-                    result.confirmed = item.confirmed.integerValue
+                    result.confirmed = item.confirmed.intValue
                     result.sendername = item.sendername
                 }
             }
@@ -1112,9 +1112,9 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    func cdUpdateInvitation(updatedInvitation: InvitationObject) {
+    func cdUpdateInvitation(_ updatedInvitation: InvitationObject) {
         
-        let entity = NSEntityDescription.entityForName("Invitation", inManagedObjectContext: self.managedObjectContext!)
+        let entity = NSEntityDescription.entity(forEntityName: "Invitation", in: self.managedObjectContext!)
         
         let request: NSFetchRequest = NSFetchRequest()
         request.entity = entity
@@ -1126,16 +1126,16 @@ class QuickToDoDataManager: NSObject {
         
         do {
             
-            mutableFetchResults = try managedObjectContext!.executeFetchRequest(request) as! [Invitation]
+            mutableFetchResults = try managedObjectContext!.fetch(request) as! [Invitation]
         
             if mutableFetchResults.count > 0 {
-                var item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedObjectContext) as! Invitation
+                var item = NSManagedObject(entity: entity!, insertInto: managedObjectContext) as! Invitation
             
                 item = mutableFetchResults.last!
             
                 item.sender = updatedInvitation.sender
                 item.receiver = updatedInvitation.receiver
-                item.confirmed = updatedInvitation.confirmed
+                item.confirmed = NSNumber(updatedInvitation.confirmed)
                 item.sendername = updatedInvitation.sendername
             
             
@@ -1150,7 +1150,7 @@ class QuickToDoDataManager: NSObject {
     
     func cdGetConfirmedInvitation() -> (sender: String?, receiver: String?) {
         
-        let entity = NSEntityDescription.entityForName("Invitation", inManagedObjectContext: self.managedObjectContext!)
+        let entity = NSEntityDescription.entity(forEntityName: "Invitation", in: self.managedObjectContext!)
         
         let request: NSFetchRequest = NSFetchRequest()
         request.entity = entity
@@ -1162,7 +1162,7 @@ class QuickToDoDataManager: NSObject {
         
         do {
             
-            mutableFetchResults = try managedObjectContext!.executeFetchRequest(request) as! [Invitation]
+            mutableFetchResults = try managedObjectContext!.fetch(request) as! [Invitation]
             //var results: [String] = [String]()
         
             if mutableFetchResults.count > 0 {
@@ -1179,7 +1179,7 @@ class QuickToDoDataManager: NSObject {
     }
     
     func cdRemoveInvitation() {
-        let entity = NSEntityDescription.entityForName("Invitation", inManagedObjectContext: self.managedObjectContext!)
+        let entity = NSEntityDescription.entity(forEntityName: "Invitation", in: self.managedObjectContext!)
         
         let request: NSFetchRequest = NSFetchRequest()
         request.entity = entity
@@ -1191,13 +1191,13 @@ class QuickToDoDataManager: NSObject {
         
         do {
             
-            mutableFetchResults = try managedObjectContext!.executeFetchRequest(request) as! [Invitation]
+            mutableFetchResults = try managedObjectContext!.fetch(request) as! [Invitation]
             //var results: [String] = [String]()
         
             while(mutableFetchResults.count > 0) {
                 let item = mutableFetchResults.last
                 mutableFetchResults.removeLast()
-                managedObjectContext?.deleteObject(item!)
+                managedObjectContext?.delete(item!)
             
             }
         } catch _ {
@@ -1206,7 +1206,7 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    func ckRemoveInvitation(sender: String?, receiver: String?) {
+    func ckRemoveInvitation(_ sender: String?, receiver: String?) {
         let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         //var record: CKRecord = CKRecord(recordType: "Items")
         let publicDatabase: CKDatabase = container.publicCloudDatabase
@@ -1221,7 +1221,7 @@ class QuickToDoDataManager: NSObject {
         
         let query = CKQuery(recordType: "Invitations", predicate: predicate)
         
-        publicDatabase.performQuery(query, inZoneWithID: nil, completionHandler: { results, error in
+        publicDatabase.perform(query, inZoneWith: nil, completionHandler: { results, error in
             if(error == nil) {
                 let records: [CKRecord] = (results as [CKRecord]?)!
                 //var modifiedRecords: [CKRecord] = [CKRecord]()
@@ -1229,14 +1229,14 @@ class QuickToDoDataManager: NSObject {
                 for record in records {
                     //let recordId = record.recordID
                     
-                    publicDatabase.deleteRecordWithID(record.recordID,
+                    publicDatabase.delete(withRecordID: record.recordID,
                         completionHandler: ({returnRecord, error in
                             if let err = error {
                                 print("Error deleting \(err.description)")
                             } else {
                                 print("Success delete")
                                 //remove subscription
-                                publicDatabase.fetchAllSubscriptionsWithCompletionHandler({subscriptions, error in
+                                publicDatabase.fetchAllSubscriptions(completionHandler: {subscriptions, error in
                                     var subscriptionsIdsToDelete: [String] = [String]()
                                     for subscriptionObject in subscriptions! {
                                         let subscription: CKSubscription = subscriptionObject as CKSubscription
@@ -1247,7 +1247,7 @@ class QuickToDoDataManager: NSObject {
                                     let subscriptionDeleteOperation = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: subscriptionsIdsToDelete)
                                     subscriptionDeleteOperation.modifySubscriptionsCompletionBlock = { _, deleted, error in
                                         if error != nil {
-                                            if error!.code == CKErrorCode.PartialFailure.rawValue {
+                                            if error!.code == CKError.partialFailure.rawValue {
                                                 print("There was a problem completing the operation.")
                                             }
                                             //callback?(success: false)
@@ -1256,7 +1256,7 @@ class QuickToDoDataManager: NSObject {
                                         }
                                         //callback?(success: true)
                                     }
-                                    publicDatabase.addOperation(subscriptionDeleteOperation)
+                                    publicDatabase.add(subscriptionDeleteOperation)
                                     
                                 })
                             }
@@ -1270,12 +1270,12 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    func ckRemoveInvitationSubscription(sender: String?, receiver: String?) {
+    func ckRemoveInvitationSubscription(_ sender: String?, receiver: String?) {
         let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
         //var record: CKRecord = CKRecord(recordType: "Items")
         let publicDatabase: CKDatabase = container.publicCloudDatabase
         
-        publicDatabase.fetchAllSubscriptionsWithCompletionHandler({subscriptions, error in
+        publicDatabase.fetchAllSubscriptions(completionHandler: {subscriptions, error in
             var subscriptionsIdsToDelete: [String] = [String]()
             for subscriptionObject in subscriptions! {
                 let subscription: CKSubscription = subscriptionObject as CKSubscription
@@ -1286,7 +1286,7 @@ class QuickToDoDataManager: NSObject {
             let subscriptionDeleteOperation = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: subscriptionsIdsToDelete)
             subscriptionDeleteOperation.modifySubscriptionsCompletionBlock = { _, deleted, error in
                 if error != nil {
-                    if error!.code == CKErrorCode.PartialFailure.rawValue {
+                    if error!.code == CKError.partialFailure.rawValue {
                         print("There was a problem completing the operation.")
                     }
                     //callback?(success: false)
@@ -1295,7 +1295,7 @@ class QuickToDoDataManager: NSObject {
                 }
                 //callback?(success: true)
             }
-            publicDatabase.addOperation(subscriptionDeleteOperation)
+            publicDatabase.add(subscriptionDeleteOperation)
             
         })
         
@@ -1308,7 +1308,7 @@ class QuickToDoDataManager: NSObject {
         //var delegate = UIApplication.sharedApplication().delegate as AppDelegate
         //var context: NSManagedObjectContext = delegate.managedObjectContext!
         
-        let item = NSEntityDescription.entityForName("Entity", inManagedObjectContext: self.managedObjectContext!)
+        let item = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
         
         let request: NSFetchRequest = NSFetchRequest()
         request.entity = item
@@ -1324,17 +1324,17 @@ class QuickToDoDataManager: NSObject {
         
         do {
             
-            mutableFetchResults = try managedObjectContext!.executeFetchRequest(request) as! [Entity]
+            mutableFetchResults = try managedObjectContext!.fetch(request) as! [Entity]
             
             if mutableFetchResults.count > 0 {
                 for i in 0 ..< mutableFetchResults.count {
                     let item: Entity = mutableFetchResults[i]
                     let itemObject: ItemObject = ItemObject()
-                    itemObject.word = item.word
-                    itemObject.used = item.used.integerValue
-                    itemObject.completed = item.completed.integerValue
+                    itemObject.word = item.word as NSString
+                    itemObject.used = item.used.intValue
+                    itemObject.completed = item.completed.intValue
                     itemObject.lasUsed = item.lastused
-                    itemObject.count = item.count.integerValue
+                    itemObject.count = item.count.intValue
                     
                     result[item.word] = itemObject
                     
@@ -1349,7 +1349,7 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    func getAllItemsFromCloud(updateTable: [String: ItemObject] -> Void) {
+    func getAllItemsFromCloud(_ updateTable: @escaping ([String: ItemObject]) -> Void) {
         
         //var newSelfItems: [ItemObject] = [ItemObject]()
         //var newSubItems: [ItemObject] = [ItemObject]()
@@ -1364,16 +1364,16 @@ class QuickToDoDataManager: NSObject {
         
         
         switch (icloudids.sender, icloudids.receiver) {
-        case let (.Some(sender), .Some(receiver)):
+        case let (.some(sender), .some(receiver)):
             senderVar = sender
             receiverVar = receiver
             ckGetAllItems(senderVar, completion: updateTable)
             ckGetAllItems(receiverVar, completion: updateTable)
-        case let (.Some(sender), .None):
+        case let (.some(sender), .none):
             senderVar = sender
-        case let (.None, .Some(receiver)):
+        case let (.none, .some(receiver)):
             receiverVar = receiver
-        case (.None, .None):
+        case (.none, .none):
             print("No invitation")
         }
         
@@ -1387,7 +1387,7 @@ class QuickToDoDataManager: NSObject {
         
     }
     
-    func ckGetAllItems(cloudID: String, completion: [String: ItemObject] -> Void) -> Void {
+    func ckGetAllItems(_ cloudID: String, completion: @escaping ([String: ItemObject]) -> Void) -> Void {
         var result: [String: ItemObject] = [String: ItemObject]()
         
         let container: CKContainer = CKContainer(identifier: "iCloud.QuickToDo")
@@ -1398,7 +1398,7 @@ class QuickToDoDataManager: NSObject {
         
         let query: CKQuery = CKQuery(recordType: "Items", predicate: predicate)
         
-        publicDatabase.performQuery(query, inZoneWithID: nil, completionHandler: { results, error in
+        publicDatabase.perform(query, inZoneWith: nil, completionHandler: { results, error in
             if(error == nil) {
                 let records: [CKRecord] = (results as [CKRecord]?)!
                 //var modifiedRecords: [CKRecord] = [CKRecord]()
@@ -1406,16 +1406,16 @@ class QuickToDoDataManager: NSObject {
                 for record in records {
                     let tmpItem: ItemObject = ItemObject()
                     
-                    tmpItem.word = record.objectForKey("name") as! String
-                    tmpItem.completed = record.objectForKey("completed") as! Int
-                    tmpItem.used = record.objectForKey("used") as! Int
+                    tmpItem.word = record.object(forKey: "name") as! String as NSString
+                    tmpItem.completed = record.object(forKey: "completed") as! Int
+                    tmpItem.used = record.object(forKey: "used") as! Int
                     
                     result[tmpItem.word as String] = tmpItem
                     
                 }
                 let localItems = self.getItems()
                 for itemKey in localItems.keys {
-                    result.removeValueForKey(itemKey)
+                    result.removeValue(forKey: itemKey)
                     
                 }
                 
@@ -1425,7 +1425,7 @@ class QuickToDoDataManager: NSObject {
         } )
     }
     
-    func ckReceivedItems(items: [String: ItemObject], completion: [String: ItemObject] -> Void) -> Void {
+    func ckReceivedItems(_ items: [String: ItemObject], completion: ([String: ItemObject]) -> Void) -> Void {
         objc_sync_enter(itemsMap)
         for item in items.keys {
             itemsMap[item] = items[item]

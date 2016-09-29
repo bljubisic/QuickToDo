@@ -39,12 +39,12 @@ class ConfigViewController: UIViewController {
         
         if (configManager.sharingEnabled == 1) {
             shareSwitchVar = true
-            self.findView.hidden = false
+            self.findView.isHidden = false
             dataManager.cdGetInvitation(showInviteList)
         }
         else {
             shareSwitchVar = false
-            self.findView.hidden = true
+            self.findView.isHidden = true
         }
         
         shareSwitch.setOn(shareSwitchVar, animated: true)
@@ -52,11 +52,11 @@ class ConfigViewController: UIViewController {
         // find self recordId
         
         
-        let container: CKContainer = CKContainer.defaultContainer()
+        let container: CKContainer = CKContainer.default()
         
         
         
-        container.fetchUserRecordIDWithCompletionHandler({ (recordId: CKRecordID?, error: NSError?) -> Void in
+        container.fetchUserRecordID(completionHandler: { (recordId: CKRecordID?, error: NSError?) -> Void in
             if let unwrappedRecordId = recordId {
                 self.myICloudVar = unwrappedRecordId.recordName
                 self.configManager.selfRecordId = unwrappedRecordId.recordName
@@ -65,7 +65,7 @@ class ConfigViewController: UIViewController {
             }
             
             
-        })
+        } as! (CKRecordID?, Error?) -> Void)
         
 
         // Do any additional setup after loading the view.
@@ -76,13 +76,13 @@ class ConfigViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func changeShareSwitch(sender: AnyObject) {
+    @IBAction func changeShareSwitch(_ sender: AnyObject) {
         
         if(shareSwitchVar) {
             self.findView.alpha = 1.0
-            findView.hidden = true
-            self.showInviteList.hidden = true
-            UIView.animateWithDuration(0.25, animations: {
+            findView.isHidden = true
+            self.showInviteList.isHidden = true
+            UIView.animate(withDuration: 0.25, animations: {
                 self.findView.alpha = 0.0
                 }, completion: {
                     (value: Bool) in
@@ -95,8 +95,8 @@ class ConfigViewController: UIViewController {
             
             
             self.findView.alpha = 0.0
-            findView.hidden = false
-            UIView.animateWithDuration(0.25, animations: {
+            findView.isHidden = false
+            UIView.animate(withDuration: 0.25, animations: {
                 self.findView.alpha = 1.0
                 }, completion: {
                     (value: Bool) in
@@ -109,7 +109,7 @@ class ConfigViewController: UIViewController {
     }
     
     
-    @IBAction func sendInvitation(sender: AnyObject) {
+    @IBAction func sendInvitation(_ sender: AnyObject) {
         
         
         
@@ -146,7 +146,7 @@ class ConfigViewController: UIViewController {
         configManager.writeKeyStore()
         //dataManager.shareEverythingForRecordId(self.myICloudVar)
             
-        self.performSegueWithIdentifier("unwindFromConfig", sender: self)
+        self.performSegue(withIdentifier: "unwindFromConfig", sender: self)
         
         
     }
@@ -155,17 +155,17 @@ class ConfigViewController: UIViewController {
         
     }
     
-    func showInviteList(invitation: InvitationObject) {
+    func showInviteList(_ invitation: InvitationObject) {
         
         if(invitation.sendername != "") {
-            _ = DISPATCH_QUEUE_PRIORITY_DEFAULT
-            dispatch_async(dispatch_get_main_queue(), {
+            _ = DispatchQueue.GlobalQueuePriority.default
+            DispatchQueue.main.async(execute: {
                 //self.showInviteList.frame.origin.y = 97
-                self.showInviteList.hidden = false
-                self.findView.hidden = true 
+                self.showInviteList.isHidden = false
+                self.findView.isHidden = true 
                 self.nameSubscription.text = invitation.sendername
                 if(invitation.confirmed > 0) {
-                    self.cancelSubscription.setImage(UIImage(named: "shareConfirmedButton"), forState: UIControlState.Normal)
+                    self.cancelSubscription.setImage(UIImage(named: "shareConfirmedButton"), for: UIControlState())
                 }
             
             
@@ -179,42 +179,42 @@ class ConfigViewController: UIViewController {
         
     }
     
-    func showInviteListFromCloudKit(sender: String) -> Void {
+    func showInviteListFromCloudKit(_ sender: String) -> Void {
         
         if(sender != "") {
-            _ = DISPATCH_QUEUE_PRIORITY_DEFAULT
-            dispatch_async(dispatch_get_main_queue(), {
+            _ = DispatchQueue.GlobalQueuePriority.default
+            DispatchQueue.main.async(execute: {
                 
-                self.showInviteList.hidden = false
-                self.findView.hidden = true
+                self.showInviteList.isHidden = false
+                self.findView.isHidden = true
                 self.nameSubscription.text = sender
 
                 
                 
             })
         } else {
-            self.showInviteList.hidden = true
+            self.showInviteList.isHidden = true
         }
         
     }
     
-    @IBAction func findICloudContact(sender: AnyObject) {
+    @IBAction func findICloudContact(_ sender: AnyObject) {
         
         let iCloudName: String = iCloudEmail.text!
-        let container: CKContainer = CKContainer.defaultContainer()
+        let container: CKContainer = CKContainer.default()
         
-        let spinner: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        let spinner: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
         
         iCloudEmail.leftView = spinner
         spinner.startAnimating()
 
-        container.discoverUserInfoWithEmailAddress(iCloudName, completionHandler:{ (userInfo: CKDiscoveredUserInfo?, error: NSError?) -> Void in
+        container.discoverUserInfo(withEmailAddress: iCloudName, completionHandler:{ (userInfo: CKDiscoveredUserInfo?, error: NSError?) -> Void in
             
             if(userInfo != nil) {
-                let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
-                dispatch_async(dispatch_get_global_queue(priority, 0)) {
+                let priority = DispatchQueue.GlobalQueuePriority.default
+                DispatchQueue.global(priority: priority).async {
                     // do some task
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         if let tmpUserInfo = userInfo {
                             self.iCloudId.text = tmpUserInfo.userRecordID!.recordName
                             self.iCloudIdVar = tmpUserInfo.userRecordID!.recordName
@@ -224,7 +224,7 @@ class ConfigViewController: UIViewController {
                             spinner.stopAnimating()
                             self.iCloudEmail.leftView = nil
                         
-                            self.sendInvitationButton.enabled = true
+                            self.sendInvitationButton.isEnabled = true
                         }
                     }
                 }
@@ -233,12 +233,12 @@ class ConfigViewController: UIViewController {
             else {
                 self.iCloudName.text = "Nothing found"
             }
-        })
+        } as! (CKDiscoveredUserInfo?, Error?) -> Void)
         
         
     }
 
-    @IBAction func cancelSubscriptionAction(sender: AnyObject) {
+    @IBAction func cancelSubscriptionAction(_ sender: AnyObject) {
         
         let invitation = dataManager.cdGetInvitationFake()
         
@@ -250,23 +250,23 @@ class ConfigViewController: UIViewController {
         
         self.showInviteList.alpha = 1.0
         //findView.hidden = true
-        UIView.animateWithDuration(0.25, animations: {
+        UIView.animate(withDuration: 0.25, animations: {
             self.showInviteList.alpha = 0.0
             }, completion: {
                 (value: Bool) in
                 print(">>> Animation done.")
         })
-        showInviteList.hidden = true
+        showInviteList.isHidden = true
         
         self.findView.alpha = 0.0
         
-        UIView.animateWithDuration(0.25, animations: {
+        UIView.animate(withDuration: 0.25, animations: {
             self.findView.alpha = 1.0
             }, completion: {
                 (value: Bool) in
                 print(">>> Animation done.")
         })
-        findView.hidden = false
+        findView.isHidden = false
     }
     
     

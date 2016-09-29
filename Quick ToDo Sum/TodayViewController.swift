@@ -45,12 +45,12 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
         // Dispose of any resources that can be recreated.
     }
 
-    @IBAction func completeItem(sender: UIButton) {
+    @IBAction func completeItem(_ sender: UIButton) {
         
-        let buttonPosition: CGPoint = sender.convertPoint(CGPoint.zero, toView: self.itemsTable)
-        let indexPath: NSIndexPath = self.itemsTable.indexPathForRowAtPoint(buttonPosition)!
+        let buttonPosition: CGPoint = sender.convert(CGPoint.zero, to: self.itemsTable)
+        let indexPath: IndexPath = self.itemsTable.indexPathForRow(at: buttonPosition)!
         
-        let row: Int = indexPath.row
+        let row: Int = (indexPath as NSIndexPath).row
         
         if(row <= items.count-1) {
             //var tmpCell: TodayTableViewCellSum = itemsTable.cellForRowAtIndexPath(indexPath) as! TodayTableViewCellSum
@@ -62,7 +62,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
                 item.completed = 1
                 //tmpCell.completedButton.selected = true
             }
-            self.items.removeAtIndex(row)
+            self.items.remove(at: row)
             self.itemsTable.reloadData()
             dataManager.updateItem(item)
             let itemsAll: [String: ItemObject] = dataManager.getItems()
@@ -73,7 +73,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
         
     }
     
-    func widgetPerformUpdateWithCompletionHandler(completionHandler: ((NCUpdateResult) -> Void)) {
+    func widgetPerformUpdate(completionHandler: (@escaping (NCUpdateResult) -> Void)) {
         // Perform any setup necessary in order to update the view.
 
         // If an error is encountered, use NCUpdateResult.Failed
@@ -88,12 +88,12 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
         self.widgetLabel.text = "All: \(itemsAll.count), to do:\(items.count)"
         self.itemsTable.reloadData()
         
-        completionHandler(NCUpdateResult.NewData)
+        completionHandler(NCUpdateResult.newData)
         updatePreferredContentSize()
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let row: Int = indexPath.row
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let row: Int = (indexPath as NSIndexPath).row
         
         if(row <= items.count-1) {
             //var tmpCell: TodayTableViewCellSum = tableView.cellForRowAtIndexPath(indexPath) as! TodayTableViewCellSum
@@ -105,7 +105,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
                 item.completed = 1
                 //tmpCell.completedButton.selected = true
             }
-            self.items.removeAtIndex(row)
+            self.items.remove(at: row)
             self.itemsTable.reloadData()
             dataManager.updateItem(item)
             let itemsAll: [String: ItemObject] = dataManager.getItems()
@@ -114,11 +114,11 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
         }
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let row: Int = indexPath.row
+        let row: Int = (indexPath as NSIndexPath).row
         
-        let tmpCell: TodayTableViewCellSum = tableView.dequeueReusableCellWithIdentifier("TodayCell") as! TodayTableViewCellSum
+        let tmpCell: TodayTableViewCellSum = tableView.dequeueReusableCell(withIdentifier: "TodayCell") as! TodayTableViewCellSum
         tmpCell.itemName.text = self.items[row].word as String
         /*
         if(self.items[row].completed == 1) {
@@ -131,7 +131,7 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
         return tmpCell
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let itemsCount: Int = self.items.count
         
         if(itemsCount > 3) {
@@ -141,14 +141,14 @@ class TodayViewController: UIViewController, NCWidgetProviding, UITableViewDeleg
         }
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         return 50.0
         
     }
     
     func updatePreferredContentSize() {
-        preferredContentSize = CGSizeMake(CGFloat(0), CGFloat(tableView(self.itemsTable, numberOfRowsInSection: 0)) * CGFloat(self.itemsTable.rowHeight) + self.itemsTable.sectionFooterHeight + self.widgetLabel.frame.size.height)
+        preferredContentSize = CGSize(width: CGFloat(0), height: CGFloat(tableView(self.itemsTable, numberOfRowsInSection: 0)) * CGFloat(self.itemsTable.rowHeight) + self.itemsTable.sectionFooterHeight + self.widgetLabel.frame.size.height)
     }
     
 }

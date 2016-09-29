@@ -14,6 +14,6 @@ class ItemObject: NSObject {
     var count: Int = 0
     var completed: Int = 0
     var used: Int = 0
-    var lasUsed: NSDate = NSDate()
+    var lasUsed: Date = Date()
     
 }

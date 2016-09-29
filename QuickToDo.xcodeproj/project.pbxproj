@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0B1B50FF1D99769300B8551E /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B1B50FD1D99769300B8551E /* RxCocoa.framework */; };
-		0B1B51001D99769300B8551E /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B1B50FE1D99769300B8551E /* RxSwift.framework */; };
-		0B1B51011D99769D00B8551E /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B1B50FD1D99769300B8551E /* RxCocoa.framework */; };
-		0B1B51021D99769D00B8551E /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B1B50FE1D99769300B8551E /* RxSwift.framework */; };
+		0164DAAB69EAE8A4A6D9FDAE /* Pods_QuickToDo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED800CE93637069B939AA185 /* Pods_QuickToDo.framework */; };
+		91A99DECB03B19010AF390F9 /* Pods_Quick_ToDo_Sum.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8067488EB457441C446FF8A7 /* Pods_Quick_ToDo_Sum.framework */; };
 		E40CCF8319F4406B004CF859 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40CCF8219F4406B004CF859 /* Entity.swift */; };
 		E410086B1A2D0ECD00D6731A /* QuickToDoDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E410086A1A2D0ECD00D6731A /* QuickToDoDataManager.swift */; };
+		E424FF1C1D9DACF200A6D881 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E424FF1A1D9DACF200A6D881 /* RxCocoa.framework */; };
+		E424FF1D1D9DACF200A6D881 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E424FF1B1D9DACF200A6D881 /* RxSwift.framework */; };
+		E424FF1E1D9DAD4F00A6D881 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E424FF1A1D9DACF200A6D881 /* RxCocoa.framework */; };
+		E424FF1F1D9DAD4F00A6D881 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E424FF1B1D9DACF200A6D881 /* RxSwift.framework */; };
 		E4258A8D1ABD7E1B002B8EB1 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4258A8C1ABD7E1B002B8EB1 /* CloudKit.framework */; };
 		E44BE8301B199DBE00CEB6FC /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4258A8C1ABD7E1B002B8EB1 /* CloudKit.framework */; };
 		E4723EDA1ACB2F2800239A68 /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4723ED91ACB2F2800239A68 /* ConfigManager.swift */; };
@@ -88,8 +90,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0B1B50FD1D99769300B8551E /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = "../../Library/Developer/Xcode/DerivedData/QuickToDo-epeyxemhsbfvrqaoxsmunntaaqyp/Build/Products/Debug-iphonesimulator/RxCocoa/RxCocoa.framework"; sourceTree = "<group>"; };
-		0B1B50FE1D99769300B8551E /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = "../../Library/Developer/Xcode/DerivedData/QuickToDo-epeyxemhsbfvrqaoxsmunntaaqyp/Build/Products/Debug-iphonesimulator/RxSwift/RxSwift.framework"; sourceTree = "<group>"; };
 		4A0C7FE410308620E326995E /* Pods-QuickToDo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickToDo.release.xcconfig"; path = "Pods/Target Support Files/Pods-QuickToDo/Pods-QuickToDo.release.xcconfig"; sourceTree = "<group>"; };
 		666866E4967DD8B099AEAC22 /* Pods-Quick ToDo Sum.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Quick ToDo Sum.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Quick ToDo Sum/Pods-Quick ToDo Sum.debug.xcconfig"; sourceTree = "<group>"; };
 		8067488EB457441C446FF8A7 /* Pods_Quick_ToDo_Sum.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Quick_ToDo_Sum.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -99,6 +99,8 @@
 		E40CCF8219F4406B004CF859 /* Entity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
 		E410086A1A2D0ECD00D6731A /* QuickToDoDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickToDoDataManager.swift; sourceTree = "<group>"; };
 		E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
+		E424FF1A1D9DACF200A6D881 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = "../../Library/Developer/Xcode/DerivedData/QuickToDo-hjbjehlvukyztmbjplouuggidbwd/Build/Products/Debug-iphonesimulator/RxCocoa/RxCocoa.framework"; sourceTree = "<group>"; };
+		E424FF1B1D9DACF200A6D881 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = "../../Library/Developer/Xcode/DerivedData/QuickToDo-hjbjehlvukyztmbjplouuggidbwd/Build/Products/Debug-iphonesimulator/RxSwift/RxSwift.framework"; sourceTree = "<group>"; };
 		E4258A8C1ABD7E1B002B8EB1 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		E4723ED91ACB2F2800239A68 /* ConfigManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigManager.swift; sourceTree = "<group>"; };
 		E48C9AC61A3261DE007041DD /* ItemObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemObject.swift; sourceTree = "<group>"; };
@@ -135,10 +137,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0B1B50FF1D99769300B8551E /* RxCocoa.framework in Frameworks */,
-				0B1B51001D99769300B8551E /* RxSwift.framework in Frameworks */,
+				E424FF1C1D9DACF200A6D881 /* RxCocoa.framework in Frameworks */,
+				E424FF1D1D9DACF200A6D881 /* RxSwift.framework in Frameworks */,
 				E4F9A3791A5C146900CC0573 /* CoreData.framework in Frameworks */,
 				E4258A8D1ABD7E1B002B8EB1 /* CloudKit.framework in Frameworks */,
+				0164DAAB69EAE8A4A6D9FDAE /* Pods_QuickToDo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,10 +156,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0B1B51011D99769D00B8551E /* RxCocoa.framework in Frameworks */,
-				0B1B51021D99769D00B8551E /* RxSwift.framework in Frameworks */,
+				E424FF1E1D9DAD4F00A6D881 /* RxCocoa.framework in Frameworks */,
+				E424FF1F1D9DAD4F00A6D881 /* RxSwift.framework in Frameworks */,
 				E4F1DD1C1A991BD000F86D95 /* NotificationCenter.framework in Frameworks */,
 				E44BE8301B199DBE00CEB6FC /* CloudKit.framework in Frameworks */,
+				91A99DECB03B19010AF390F9 /* Pods_Quick_ToDo_Sum.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,8 +181,8 @@
 		E41B97AB1A8D3E9F00BF8F51 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0B1B50FD1D99769300B8551E /* RxCocoa.framework */,
-				0B1B50FE1D99769300B8551E /* RxSwift.framework */,
+				E424FF1A1D9DACF200A6D881 /* RxCocoa.framework */,
+				E424FF1B1D9DACF200A6D881 /* RxSwift.framework */,
 				E4258A8C1ABD7E1B002B8EB1 /* CloudKit.framework */,
 				E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */,
 				ED800CE93637069B939AA185 /* Pods_QuickToDo.framework */,
@@ -358,6 +362,7 @@
 					E4C6E00819E7EA62003A89F7 = {
 						CreatedOnToolsVersion = 6.0.1;
 						DevelopmentTeam = ENT89NLKC9;
+						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -369,11 +374,13 @@
 					};
 					E4C6E02019E7EA63003A89F7 = {
 						CreatedOnToolsVersion = 6.0.1;
+						LastSwiftMigration = 0800;
 						TestTargetID = E4C6E00819E7EA62003A89F7;
 					};
 					E4F1DD1A1A991BD000F86D95 = {
 						CreatedOnToolsVersion = 6.1.1;
 						DevelopmentTeam = ENT89NLKC9;
+						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -699,15 +706,17 @@
 				CODE_SIGN_ENTITLEMENTS = QuickToDo/QuickToDo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = ENT89NLKC9;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = "$(inherited)";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)/**";
 				INFOPLIST_FILE = QuickToDo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -720,17 +729,19 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = QuickToDo/QuickToDo.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				DEVELOPMENT_TEAM = ENT89NLKC9;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = "$(inherited)";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)/**";
 				INFOPLIST_FILE = QuickToDo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -751,6 +762,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.persukibo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuickToDo.app/QuickToDo";
 			};
 			name = Debug;
@@ -767,6 +779,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.persukibo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuickToDo.app/QuickToDo";
 			};
 			name = Release;
@@ -792,6 +805,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -812,6 +826,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

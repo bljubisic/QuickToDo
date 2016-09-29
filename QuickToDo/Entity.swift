@@ -16,7 +16,7 @@ class Entity: NSManagedObject {
 
     @NSManaged var completed: NSNumber
     @NSManaged var count: NSNumber
-    @NSManaged var lastused: NSDate
+    @NSManaged var lastused: Date
     @NSManaged var used: NSNumber
     @NSManaged var word: String
 
