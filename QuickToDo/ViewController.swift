@@ -8,8 +8,8 @@
 
 import UIKit
 import CloudKit
-import RxSwift
 import RxCocoa
+import RxSwift
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, InviteProtocol {
 
@@ -380,37 +380,35 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             textView?.addTarget(self, action: #selector(ViewController.textFieldDone(_:)), for: UIControlEvents.editingDidEndOnExit)
             textView?.delegate = self
             
-            let textSignal = textView?.rx_text.map({ (value: String) -> AnyObject in
-                if let text: String = (value ) {
-                    let hints = QuickToDoDataManager.sharedInstance.getHints(text)
-                    if(hints.count == 2 && hints[0] == hints[1]) {
-                        return [hints[0]]
-                    }
-                    else {
-                        return hints
-                    }
+            let textSignal = textView?.rx.textInput.text.map({ (value: String) -> AnyObject in
+                let hints = QuickToDoDataManager.sharedInstance.getHints(value)
+                if(hints.count == 2 && hints[0] == hints[1]) {
+                    return [hints[0]] as AnyObject
+                }
+                else {
+                    return hints as AnyObject
                 }
             })
             
-            textSignal?.subscribeNext({ [unowned self] (hints) in
-                if let hintsArray: [String] = (hints as! [String]) {
-                    if(hintsArray.count > 1) {
-                        self.hintButton1?.setTitle(hintsArray[0], forState: UIControlState.Normal)
-                        self.hintButton2?.setTitle(hintsArray[1], forState: UIControlState.Normal)
-                        self.hintButton1?.enabled = true
-                        self.hintButton2?.enabled = true
-                    }
-                    else if (hintsArray.count == 1) {
-                        self.hintButton1?.setTitle(hintsArray[0], forState: UIControlState.Normal)
-                        self.hintButton2?.setTitle("", forState: UIControlState.Normal)
-                        self.hintButton1?.enabled = true
-                    }
-                    else if(hintsArray.count == 0) {
-                        self.hintButton1?.setTitle("", forState: UIControlState.Normal)
-                        self.hintButton2?.setTitle("", forState: UIControlState.Normal)
-                        self.hintButton1?.enabled = false
-                        self.hintButton2?.enabled = false
-                    }
+            textSignal?.subscribe(onNext: { [unowned self] (hints) in
+                let hintsArray = hints as! [String]
+                
+                if(hintsArray.count > 1) {
+                    self.hintButton1?.setTitle(hintsArray[0], for: UIControlState.normal)
+                    self.hintButton2?.setTitle(hintsArray[1], for: UIControlState.normal)
+                    self.hintButton1?.isEnabled = true
+                    self.hintButton2?.isEnabled = true
+                }
+                else if (hintsArray.count == 1) {
+                    self.hintButton1?.setTitle(hintsArray[0], for: UIControlState.normal)
+                    self.hintButton2?.setTitle("", for: UIControlState.normal)
+                    self.hintButton1?.isEnabled = true
+                }
+                else if(hintsArray.count == 0) {
+                    self.hintButton1?.setTitle("", for: UIControlState.normal)
+                    self.hintButton2?.setTitle("", for: UIControlState.normal)
+                    self.hintButton1?.isEnabled = false
+                    self.hintButton2?.isEnabled = false
                 }
             })
             
