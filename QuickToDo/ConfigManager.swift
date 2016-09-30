@@ -43,8 +43,33 @@ class ConfigManager: NSObject {
                 }
                 self.selfRecordId = String()
                 do {
-                    
-                    container.fetchUserRecordID(completionHandler: { (recordId: CKRecordID?, error: NSError?) -> Void in
+                    container.fetchUserRecordID(completionHandler: { (recordId: CKRecordID?, error: Error?) in
+                        if let unwrappedRecordId = recordId {
+                            self.selfRecordId = unwrappedRecordId.recordName
+                            container.discoverUserInfo(withUserRecordID: unwrappedRecordId, completionHandler: { (userInfo: CKDiscoveredUserInfo?, error: Error?) in
+                                if let unwrappedUserInfo = userInfo {
+                                    self.selfName = unwrappedUserInfo.displayContact!.givenName + " " + unwrappedUserInfo.displayContact!.familyName
+                                } else {
+                                    self.selfName = "Not Found"
+                                }
+                            })
+                            /*
+                            container.discoverUserInfo(withUserRecordID: unwrappedRecordId, completionHandler: { (userInfo: CKDiscoveredUserInfo? , error: Error? ) -> Void in
+                                if let unwrappedUserInfo = userInfo {
+                                    self.selfName = unwrappedUserInfo.displayContact!.givenName + " " + unwrappedUserInfo.displayContact!.familyName
+                                } else {
+                                    self.selfName = "Not Found"
+                                }
+                            }
+ */
+                        } else {
+                            print("The optional is nil!")
+                        }
+                        //self.selfRecordId = recordId.recordName
+                        
+                        } )
+                    /*
+                    container.fetchUserRecordID(completionHandler: @escaping { (recordId: CKRecordID?, error: NSError?) -> Void in
                     
                         if let unwrappedRecordId = recordId {
                             self.selfRecordId = unwrappedRecordId.recordName
@@ -61,6 +86,7 @@ class ConfigManager: NSObject {
                         //self.selfRecordId = recordId.recordName
                     
                     } as! (CKRecordID?, Error?) -> Void)
+                    */
                 }
                 
                 

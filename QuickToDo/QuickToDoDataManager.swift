@@ -101,7 +101,7 @@ class QuickToDoDataManager: NSObject {
         let entityName: String = "Entity"
         
         let item = NSEntityDescription.entity(forEntityName: entityName, in: self.managedObjectContext!)
-        let request:NSFetchRequest = NSFetchRequest()
+        let request:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Entity")
         
         request.entity = item
         let sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "lastused", ascending: false)
@@ -152,7 +152,7 @@ class QuickToDoDataManager: NSObject {
                 
                     let entity = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
                 
-                    let request: NSFetchRequest = NSFetchRequest()
+                    let request: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
                     request.entity = entity
                 
                     //let sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "lastused", ascending: false)
@@ -172,8 +172,8 @@ class QuickToDoDataManager: NSObject {
                     
                     
                             item.word = word
-                            item.used = NSNumber(record.object(forKey: "used") as! Int)
-                            item.completed = NSNumber(record.object(forKey: "completed") as! Int)
+                            item.used = NSNumber(value: record.object(forKey: "used") as! Int)
+                            item.completed = NSNumber(value: record.object(forKey: "completed") as! Int)
                     
                     
                             try self.managedObjectContext!.save()
@@ -189,8 +189,8 @@ class QuickToDoDataManager: NSObject {
                             addItem = NSManagedObject(entity: entity!, insertInto: self.managedObjectContext) as! Entity
                     
                             addItem.word = word as String
-                            addItem.used = NSNumber(record.object(forKey: "used") as! Int)
-                            addItem.completed = NSNumber(record.object(forKey: "completed") as! Int)
+                            addItem.used = NSNumber(value: record.object(forKey: "used") as! Int)
+                            addItem.completed = NSNumber(value: record.object(forKey: "completed") as! Int)
                             //addItem.lastused = record.objectForKey("lastUsed") as! NSDate
                     
                             // if configManager have sharingEnabled add this item to public database as well.
@@ -281,7 +281,7 @@ class QuickToDoDataManager: NSObject {
                 if let err = error {
                     print(err)
                 } else {
-                    print("Saved record \(index)")
+                    print("Saved record \(self.index)")
                     
                 }
             }))
@@ -393,7 +393,7 @@ class QuickToDoDataManager: NSObject {
         //var context:NSManagedObjectContext = delegate.managedObjectContext!
         
         let item = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
-        let request: NSFetchRequest = NSFetchRequest()
+        let request: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         
         request.entity = item
         
@@ -443,7 +443,7 @@ class QuickToDoDataManager: NSObject {
         var result: [String] = [String]()
         
         let item = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
-        let request: NSFetchRequest = NSFetchRequest()
+        let request: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         
         request.entity = item
         
@@ -500,9 +500,7 @@ class QuickToDoDataManager: NSObject {
                 }
                 deleteOperation.modifyRecordsCompletionBlock = { _, deleted, error in
                     if error != nil {
-                        if error!.code == CKError.partialFailure.rawValue {
-                            print("There was a problem completing the operation")
-                        }
+                        print("There was a problem completing the operation")
                         //callback?(success: false)
                     }
                     //callback?(success: true)
@@ -549,7 +547,7 @@ class QuickToDoDataManager: NSObject {
             if let err = error {
                 print(err)
             } else {
-                print("Saved record \(index)")
+                print("Saved record \(self.index)")
                 
             }
         }))
@@ -609,7 +607,7 @@ class QuickToDoDataManager: NSObject {
         
         let entity = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
         
-        let request: NSFetchRequest = NSFetchRequest()
+        let request: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         request.entity = entity
         
         //var sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "lastused", ascending: false)
@@ -630,8 +628,8 @@ class QuickToDoDataManager: NSObject {
                 item = mutableFetchResults.last!
             
                 item.word = itemObject.word as String
-                item.used = NSNumber(itemObject.used)
-                item.completed = NSNumber(itemObject.completed)
+                item.used = NSNumber(value: itemObject.used)
+                item.completed = NSNumber(value: itemObject.completed)
         
             
                 try managedObjectContext!.save()
@@ -716,9 +714,7 @@ class QuickToDoDataManager: NSObject {
                 }
                 updateOperation.modifyRecordsCompletionBlock = { _, deleted, error in
                     if error != nil {
-                        if error!.code == CKError.partialFailure.rawValue {
-                            print("There was a problem completing the operation")
-                        }
+                        print("There was a problem completing the operation")
                         //callback?(success: false)
                     }
                     //callback?(success: true)
@@ -753,9 +749,7 @@ class QuickToDoDataManager: NSObject {
                     }
                     updateOperation.modifyRecordsCompletionBlock = { _, deleted, error in
                         if error != nil {
-                            if error!.code == CKError.partialFailure.rawValue {
-                                print("There was a problem completing the operation.")
-                            }
+                            print("There was a problem completing the operation")
                             //callback?(success: false)
                         }
                         //callback?(success: true)
@@ -801,9 +795,7 @@ class QuickToDoDataManager: NSObject {
                 }
                 updateOperation.modifyRecordsCompletionBlock = { _, deleted, error in
                     if error != nil {
-                        if error!.code == CKError.partialFailure.rawValue {
-                            print("There was a problem completing the operation.")
-                        }
+                        print("There was a problem completing the operation")
                         //callback?(success: false)
                     }
                     //callback?(success: true)
@@ -825,8 +817,8 @@ class QuickToDoDataManager: NSObject {
         let addItem = NSManagedObject(entity: entity!, insertInto: self.managedObjectContext) as! Entity
         
         addItem.word = item.word as String
-        addItem.used = NSNumber(item.used)
-        addItem.completed = NSNumber(item.completed)
+        addItem.used = NSNumber(value: item.used)
+        addItem.completed = NSNumber(value: item.completed)
         addItem.lastused = item.lasUsed
         
         do {
@@ -848,8 +840,8 @@ class QuickToDoDataManager: NSObject {
         let addItem = NSManagedObject(entity: entity!, insertInto: self.managedObjectContext) as! Entity
         
         addItem.word = item.word as String
-        addItem.used = NSNumber(item.used)
-        addItem.completed = NSNumber(item.completed)
+        addItem.used = NSNumber(value: item.used)
+        addItem.completed = NSNumber(value: item.completed)
         addItem.lastused = item.lasUsed
         
         // if configManager have sharingEnabled add this item to public database as well.
@@ -870,7 +862,7 @@ class QuickToDoDataManager: NSObject {
                     if let err = error {
                         print(err)
                     } else {
-                        print("Saved record \(index)")
+                        print("Saved record \(self.index)")
                         
                     }
             }))
@@ -895,7 +887,7 @@ class QuickToDoDataManager: NSObject {
         
         let item = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
         
-        let request: NSFetchRequest = NSFetchRequest()
+        let request: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         request.entity = item
         
         let sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "lastused", ascending: true)
@@ -941,7 +933,7 @@ class QuickToDoDataManager: NSObject {
         
         let item = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
         
-        let request: NSFetchRequest = NSFetchRequest()
+        let request: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         request.entity = item
         
         let sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "lastused", ascending: true)
@@ -985,7 +977,7 @@ class QuickToDoDataManager: NSObject {
         //var context = delegate.managedObjectContext
         
         let item = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
-        let request = NSFetchRequest()
+        let request: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         
         request.entity = item
         //let sortDescriptor = NSSortDescriptor(key: "lastused", ascending: true)
@@ -1027,7 +1019,7 @@ class QuickToDoDataManager: NSObject {
         
         addItem.receiver = newInvitation.receiver as String
         addItem.sender = newInvitation.sender as String
-        addItem.confirmed = NSNumber(newInvitation.confirmed)
+        addItem.confirmed = NSNumber(value: newInvitation.confirmed)
         addItem.sendername = newInvitation.sendername as String
         addItem.receivername = newInvitation.receivername as String
         
@@ -1046,7 +1038,7 @@ class QuickToDoDataManager: NSObject {
         let result: InvitationObject = InvitationObject()
         
         let item = NSEntityDescription.entity(forEntityName: "Invitation", in: self.managedObjectContext!)
-        let request = NSFetchRequest()
+        let request: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         
         request.entity = item
         
@@ -1082,7 +1074,7 @@ class QuickToDoDataManager: NSObject {
         let result: InvitationObject = InvitationObject()
         
         let item = NSEntityDescription.entity(forEntityName: "Invitation", in: self.managedObjectContext!)
-        let request = NSFetchRequest()
+        let request: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         
         request.entity = item
         
@@ -1116,7 +1108,7 @@ class QuickToDoDataManager: NSObject {
         
         let entity = NSEntityDescription.entity(forEntityName: "Invitation", in: self.managedObjectContext!)
         
-        let request: NSFetchRequest = NSFetchRequest()
+        let request: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         request.entity = entity
         
         let predicate: NSPredicate = NSPredicate(value: true)
@@ -1135,7 +1127,7 @@ class QuickToDoDataManager: NSObject {
             
                 item.sender = updatedInvitation.sender
                 item.receiver = updatedInvitation.receiver
-                item.confirmed = NSNumber(updatedInvitation.confirmed)
+                item.confirmed = NSNumber(value: updatedInvitation.confirmed)
                 item.sendername = updatedInvitation.sendername
             
             
@@ -1152,7 +1144,7 @@ class QuickToDoDataManager: NSObject {
         
         let entity = NSEntityDescription.entity(forEntityName: "Invitation", in: self.managedObjectContext!)
         
-        let request: NSFetchRequest = NSFetchRequest()
+        let request: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         request.entity = entity
         
         let predicate: NSPredicate = NSPredicate(format: "confirmed = 1")
@@ -1181,7 +1173,7 @@ class QuickToDoDataManager: NSObject {
     func cdRemoveInvitation() {
         let entity = NSEntityDescription.entity(forEntityName: "Invitation", in: self.managedObjectContext!)
         
-        let request: NSFetchRequest = NSFetchRequest()
+        let request: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         request.entity = entity
         
         //let predicate: NSPredicate = NSPredicate(format: "confirmed = 1")
@@ -1231,8 +1223,8 @@ class QuickToDoDataManager: NSObject {
                     
                     publicDatabase.delete(withRecordID: record.recordID,
                         completionHandler: ({returnRecord, error in
-                            if let err = error {
-                                print("Error deleting \(err.description)")
+                            if error != nil {
+                                print("Error deleting")
                             } else {
                                 print("Success delete")
                                 //remove subscription
@@ -1247,9 +1239,7 @@ class QuickToDoDataManager: NSObject {
                                     let subscriptionDeleteOperation = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: subscriptionsIdsToDelete)
                                     subscriptionDeleteOperation.modifySubscriptionsCompletionBlock = { _, deleted, error in
                                         if error != nil {
-                                            if error!.code == CKError.partialFailure.rawValue {
-                                                print("There was a problem completing the operation.")
-                                            }
+                                            print("There was a problem completing the operation")
                                             //callback?(success: false)
                                         } else {
                                             self.subscribeOnItems(self.configManager.selfRecordId)
@@ -1286,9 +1276,7 @@ class QuickToDoDataManager: NSObject {
             let subscriptionDeleteOperation = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: subscriptionsIdsToDelete)
             subscriptionDeleteOperation.modifySubscriptionsCompletionBlock = { _, deleted, error in
                 if error != nil {
-                    if error!.code == CKError.partialFailure.rawValue {
-                        print("There was a problem completing the operation.")
-                    }
+                    print("There was a problem completing the operation")
                     //callback?(success: false)
                 } else {
                     self.subscribeOnItems(self.configManager.selfRecordId)
@@ -1310,7 +1298,7 @@ class QuickToDoDataManager: NSObject {
         
         let item = NSEntityDescription.entity(forEntityName: "Entity", in: self.managedObjectContext!)
         
-        let request: NSFetchRequest = NSFetchRequest()
+        let request: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         request.entity = item
         
         let sortDescriptor: NSSortDescriptor = NSSortDescriptor(key: "lastused", ascending: true)

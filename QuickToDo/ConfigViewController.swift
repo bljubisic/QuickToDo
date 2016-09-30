@@ -56,7 +56,7 @@ class ConfigViewController: UIViewController {
         
         
         
-        container.fetchUserRecordID(completionHandler: { (recordId: CKRecordID?, error: NSError?) -> Void in
+        container.fetchUserRecordID(completionHandler: { (recordId: CKRecordID?, error: Error?) in
             if let unwrappedRecordId = recordId {
                 self.myICloudVar = unwrappedRecordId.recordName
                 self.configManager.selfRecordId = unwrappedRecordId.recordName
@@ -65,7 +65,7 @@ class ConfigViewController: UIViewController {
             }
             
             
-        } as! (CKRecordID?, Error?) -> Void)
+        })
         
 
         // Do any additional setup after loading the view.
