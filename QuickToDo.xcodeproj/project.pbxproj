@@ -9,6 +9,17 @@
 /* Begin PBXBuildFile section */
 		0B37FD1E1D9EAD51000F5DF2 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B37FD1C1D9EAD51000F5DF2 /* RxCocoa.framework */; };
 		0B37FD1F1D9EAD51000F5DF2 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B37FD1D1D9EAD51000F5DF2 /* RxSwift.framework */; };
+		0B37FD221DA265F3000F5DF2 /* CloudKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37FD211DA265F3000F5DF2 /* CloudKitManager.swift */; };
+		0B37FD231DA265F3000F5DF2 /* CloudKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B37FD211DA265F3000F5DF2 /* CloudKitManager.swift */; };
+		0B3E30C01DAECAF600C1BF53 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B3E30BE1DAECAF600C1BF53 /* Interface.storyboard */; };
+		0B3E30C21DAECAF600C1BF53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0B3E30C11DAECAF600C1BF53 /* Assets.xcassets */; };
+		0B3E30C91DAECAF700C1BF53 /* QuickToDoWatch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 0B3E30C81DAECAF700C1BF53 /* QuickToDoWatch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0B3E30D01DAECAF700C1BF53 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3E30CF1DAECAF700C1BF53 /* InterfaceController.swift */; };
+		0B3E30D21DAECAF700C1BF53 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3E30D11DAECAF700C1BF53 /* ExtensionDelegate.swift */; };
+		0B3E30D41DAECAF700C1BF53 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3E30D31DAECAF700C1BF53 /* NotificationController.swift */; };
+		0B3E30D61DAECAF700C1BF53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0B3E30D51DAECAF700C1BF53 /* Assets.xcassets */; };
+		0B3E30DA1DAECAF700C1BF53 /* QuickToDoWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 0B3E30BC1DAECAF600C1BF53 /* QuickToDoWatch.app */; };
+		0B3E30E31DAECF0100C1BF53 /* QuickToDoWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 0B3E30BC1DAECAF600C1BF53 /* QuickToDoWatch.app */; };
 		0BC5387C1D9DBD5100E1A05D /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4F9A3781A5C146900CC0573 /* CoreData.framework */; };
 		0BC5387D1D9DBD6100E1A05D /* QuickToDoDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E410086A1A2D0ECD00D6731A /* QuickToDoDataManager.swift */; };
 		33B779F78D065DB854DF1775 /* Pods_QuickToDo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AC9DDCF5D8CEE6B3D93D43C /* Pods_QuickToDo.framework */; };
@@ -48,6 +59,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		0B3E30CA1DAECAF700C1BF53 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E4C6E00119E7EA62003A89F7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0B3E30C71DAECAF700C1BF53;
+			remoteInfo = "QuickToDoWatch Extension";
+		};
+		0B3E30D81DAECAF700C1BF53 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E4C6E00119E7EA62003A89F7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0B3E30BB1DAECAF600C1BF53;
+			remoteInfo = QuickToDoWatch;
+		};
 		E4C6E02219E7EA63003A89F7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E4C6E00119E7EA62003A89F7 /* Project object */;
@@ -65,6 +90,29 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		0B3E30E01DAECAF700C1BF53 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				0B3E30C91DAECAF700C1BF53 /* QuickToDoWatch Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0B3E30E21DAECAF700C1BF53 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				0B3E30DA1DAECAF700C1BF53 /* QuickToDoWatch.app in Embed Watch Content */,
+				0B3E30E31DAECF0100C1BF53 /* QuickToDoWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0B58BE6D1D25385800203F60 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -92,6 +140,20 @@
 		0AC9DDCF5D8CEE6B3D93D43C /* Pods_QuickToDo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QuickToDo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B37FD1C1D9EAD51000F5DF2 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = "../../Library/Developer/Xcode/DerivedData/QuickToDo-epeyxemhsbfvrqaoxsmunntaaqyp/Build/Products/Debug-iphoneos/RxCocoa/RxCocoa.framework"; sourceTree = "<group>"; };
 		0B37FD1D1D9EAD51000F5DF2 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = "../../Library/Developer/Xcode/DerivedData/QuickToDo-epeyxemhsbfvrqaoxsmunntaaqyp/Build/Products/Debug-iphoneos/RxSwift/RxSwift.framework"; sourceTree = "<group>"; };
+		0B37FD201DA17B5D000F5DF2 /* ProtocolPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ProtocolPlayground.playground; sourceTree = "<group>"; };
+		0B37FD211DA265F3000F5DF2 /* CloudKitManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitManager.swift; sourceTree = "<group>"; };
+		0B3E30B91DA6F64800C1BF53 /* FunctionalPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = FunctionalPlayground.playground; sourceTree = "<group>"; };
+		0B3E30BC1DAECAF600C1BF53 /* QuickToDoWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuickToDoWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B3E30BF1DAECAF600C1BF53 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		0B3E30C11DAECAF600C1BF53 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0B3E30C31DAECAF600C1BF53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0B3E30C81DAECAF700C1BF53 /* QuickToDoWatch Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "QuickToDoWatch Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B3E30CE1DAECAF700C1BF53 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
+		0B3E30CF1DAECAF700C1BF53 /* InterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
+		0B3E30D11DAECAF700C1BF53 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
+		0B3E30D31DAECAF700C1BF53 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		0B3E30D51DAECAF700C1BF53 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0B3E30D71DAECAF700C1BF53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3537EA674BFCB5D73B99A04F /* Pods_Quick_ToDo_Sum.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Quick_ToDo_Sum.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A0C7FE410308620E326995E /* Pods-QuickToDo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickToDo.release.xcconfig"; path = "Pods/Target Support Files/Pods-QuickToDo/Pods-QuickToDo.release.xcconfig"; sourceTree = "<group>"; };
 		666866E4967DD8B099AEAC22 /* Pods-Quick ToDo Sum.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Quick ToDo Sum.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Quick ToDo Sum/Pods-Quick ToDo Sum.debug.xcconfig"; sourceTree = "<group>"; };
@@ -132,6 +194,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0B3E30C51DAECAF700C1BF53 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E4C6E00619E7EA62003A89F7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -165,6 +234,37 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0B3E30BD1DAECAF600C1BF53 /* QuickToDoWatch */ = {
+			isa = PBXGroup;
+			children = (
+				0B3E30BE1DAECAF600C1BF53 /* Interface.storyboard */,
+				0B3E30C11DAECAF600C1BF53 /* Assets.xcassets */,
+				0B3E30C31DAECAF600C1BF53 /* Info.plist */,
+			);
+			path = QuickToDoWatch;
+			sourceTree = "<group>";
+		};
+		0B3E30CC1DAECAF700C1BF53 /* QuickToDoWatch Extension */ = {
+			isa = PBXGroup;
+			children = (
+				0B3E30CF1DAECAF700C1BF53 /* InterfaceController.swift */,
+				0B3E30D11DAECAF700C1BF53 /* ExtensionDelegate.swift */,
+				0B3E30D31DAECAF700C1BF53 /* NotificationController.swift */,
+				0B3E30D51DAECAF700C1BF53 /* Assets.xcassets */,
+				0B3E30D71DAECAF700C1BF53 /* Info.plist */,
+				0B3E30CD1DAECAF700C1BF53 /* Supporting Files */,
+			);
+			path = "QuickToDoWatch Extension";
+			sourceTree = "<group>";
+		};
+		0B3E30CD1DAECAF700C1BF53 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				0B3E30CE1DAECAF700C1BF53 /* PushNotificationPayload.apns */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		913757B0EB676E9B4EEF1723 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -196,6 +296,8 @@
 				E4C6E00B19E7EA62003A89F7 /* QuickToDo */,
 				E4C6E02419E7EA63003A89F7 /* QuickToDoTests */,
 				E4F1DD1D1A991BD000F86D95 /* Quick ToDo Sum */,
+				0B3E30BD1DAECAF600C1BF53 /* QuickToDoWatch */,
+				0B3E30CC1DAECAF700C1BF53 /* QuickToDoWatch Extension */,
 				E41B97AB1A8D3E9F00BF8F51 /* Frameworks */,
 				E4C6E00A19E7EA62003A89F7 /* Products */,
 				913757B0EB676E9B4EEF1723 /* Pods */,
@@ -208,6 +310,8 @@
 				E4C6E00919E7EA62003A89F7 /* QuickToDo.app */,
 				E4C6E02119E7EA63003A89F7 /* QuickToDoTests.xctest */,
 				E4F1DD1B1A991BD000F86D95 /* Quick ToDo Sum.appex */,
+				0B3E30BC1DAECAF600C1BF53 /* QuickToDoWatch.app */,
+				0B3E30C81DAECAF700C1BF53 /* QuickToDoWatch Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -215,6 +319,8 @@
 		E4C6E00B19E7EA62003A89F7 /* QuickToDo */ = {
 			isa = PBXGroup;
 			children = (
+				0B3E30B91DA6F64800C1BF53 /* FunctionalPlayground.playground */,
+				0B37FD201DA17B5D000F5DF2 /* ProtocolPlayground.playground */,
 				E49E94B31B6BF25F0015478D /* MyPlayground.playground */,
 				E404A39F1A8EBA34008D32A5 /* QuickToDo.entitlements */,
 				E4C6E00E19E7EA63003A89F7 /* AppDelegate.swift */,
@@ -228,6 +334,7 @@
 				E4D43E591B14FFD400ACA8B3 /* InvitationObject.swift */,
 				E410086A1A2D0ECD00D6731A /* QuickToDoDataManager.swift */,
 				E4723ED91ACB2F2800239A68 /* ConfigManager.swift */,
+				0B37FD211DA265F3000F5DF2 /* CloudKitManager.swift */,
 				E4C6E00C19E7EA62003A89F7 /* Supporting Files */,
 			);
 			path = QuickToDo;
@@ -286,6 +393,40 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		0B3E30BB1DAECAF600C1BF53 /* QuickToDoWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0B3E30E11DAECAF700C1BF53 /* Build configuration list for PBXNativeTarget "QuickToDoWatch" */;
+			buildPhases = (
+				0B3E30BA1DAECAF600C1BF53 /* Resources */,
+				0B3E30E01DAECAF700C1BF53 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0B3E30CB1DAECAF700C1BF53 /* PBXTargetDependency */,
+			);
+			name = QuickToDoWatch;
+			productName = QuickToDoWatch;
+			productReference = 0B3E30BC1DAECAF600C1BF53 /* QuickToDoWatch.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		0B3E30C71DAECAF700C1BF53 /* QuickToDoWatch Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0B3E30DF1DAECAF700C1BF53 /* Build configuration list for PBXNativeTarget "QuickToDoWatch Extension" */;
+			buildPhases = (
+				0B3E30C41DAECAF700C1BF53 /* Sources */,
+				0B3E30C51DAECAF700C1BF53 /* Frameworks */,
+				0B3E30C61DAECAF700C1BF53 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "QuickToDoWatch Extension";
+			productName = "QuickToDoWatch Extension";
+			productReference = 0B3E30C81DAECAF700C1BF53 /* QuickToDoWatch Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
+		};
 		E4C6E00819E7EA62003A89F7 /* QuickToDo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E4C6E02B19E7EA63003A89F7 /* Build configuration list for PBXNativeTarget "QuickToDo" */;
@@ -298,11 +439,13 @@
 				0B58BE6D1D25385800203F60 /* Embed Frameworks */,
 				1ABC988313757B40F0F18A80 /* [CP] Embed Pods Frameworks */,
 				F057D62D176D3C00F34580C6 /* [CP] Copy Pods Resources */,
+				0B3E30E21DAECAF700C1BF53 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				E4F1DD251A991BD000F86D95 /* PBXTargetDependency */,
+				0B3E30D91DAECAF700C1BF53 /* PBXTargetDependency */,
 			);
 			name = QuickToDo;
 			productName = QuickToDo;
@@ -353,14 +496,25 @@
 		E4C6E00119E7EA62003A89F7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0700;
+				LastSwiftUpdateCheck = 0800;
 				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Bratislav Ljubisic";
 				TargetAttributes = {
+					0B3E30BB1DAECAF600C1BF53 = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = ENT89NLKC9;
+						ProvisioningStyle = Manual;
+					};
+					0B3E30C71DAECAF700C1BF53 = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = ENT89NLKC9;
+						ProvisioningStyle = Manual;
+					};
 					E4C6E00819E7EA62003A89F7 = {
 						CreatedOnToolsVersion = 6.0.1;
 						DevelopmentTeam = ENT89NLKC9;
 						LastSwiftMigration = 0800;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -406,11 +560,30 @@
 				E4C6E00819E7EA62003A89F7 /* QuickToDo */,
 				E4C6E02019E7EA63003A89F7 /* QuickToDoTests */,
 				E4F1DD1A1A991BD000F86D95 /* Quick ToDo Sum */,
+				0B3E30BB1DAECAF600C1BF53 /* QuickToDoWatch */,
+				0B3E30C71DAECAF700C1BF53 /* QuickToDoWatch Extension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		0B3E30BA1DAECAF600C1BF53 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0B3E30C21DAECAF600C1BF53 /* Assets.xcassets in Resources */,
+				0B3E30C01DAECAF600C1BF53 /* Interface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0B3E30C61DAECAF700C1BF53 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0B3E30D61DAECAF700C1BF53 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E4C6E00719E7EA62003A89F7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -534,6 +707,16 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0B3E30C41DAECAF700C1BF53 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0B3E30D41DAECAF700C1BF53 /* NotificationController.swift in Sources */,
+				0B3E30D21DAECAF700C1BF53 /* ExtensionDelegate.swift in Sources */,
+				0B3E30D01DAECAF700C1BF53 /* InterfaceController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E4C6E00519E7EA62003A89F7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -550,6 +733,7 @@
 				E4D43E581B14FF9000ACA8B3 /* Invitation.swift in Sources */,
 				E4C6E01219E7EA63003A89F7 /* QuickToDo.xcdatamodeld in Sources */,
 				E4EBBBCD1AB62F39002DA67A /* ConfigViewController.swift in Sources */,
+				0B37FD221DA265F3000F5DF2 /* CloudKitManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -568,6 +752,7 @@
 				E4F1DD211A991BD000F86D95 /* TodayViewController.swift in Sources */,
 				E49DE6CB1A9922750063F5D5 /* QuickToDo.xcdatamodeld in Sources */,
 				E49DE6CA1A9922690063F5D5 /* ItemObject.swift in Sources */,
+				0B37FD231DA265F3000F5DF2 /* CloudKitManager.swift in Sources */,
 				E49DE6C91A9922640063F5D5 /* Entity.swift in Sources */,
 				0BC5387D1D9DBD6100E1A05D /* QuickToDoDataManager.swift in Sources */,
 				E4D43E5B1B15009C00ACA8B3 /* InvitationObject.swift in Sources */,
@@ -580,6 +765,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		0B3E30CB1DAECAF700C1BF53 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0B3E30C71DAECAF700C1BF53 /* QuickToDoWatch Extension */;
+			targetProxy = 0B3E30CA1DAECAF700C1BF53 /* PBXContainerItemProxy */;
+		};
+		0B3E30D91DAECAF700C1BF53 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0B3E30BB1DAECAF600C1BF53 /* QuickToDoWatch */;
+			targetProxy = 0B3E30D81DAECAF700C1BF53 /* PBXContainerItemProxy */;
+		};
 		E4C6E02319E7EA63003A89F7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E4C6E00819E7EA62003A89F7 /* QuickToDo */;
@@ -593,6 +788,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		0B3E30BE1DAECAF600C1BF53 /* Interface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0B3E30BF1DAECAF600C1BF53 /* Base */,
+			);
+			name = Interface.storyboard;
+			sourceTree = "<group>";
+		};
 		E4C6E01519E7EA63003A89F7 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -612,6 +815,112 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		0B3E30DB1DAECAF700C1BF53 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = ENT89NLKC9;
+				IBSC_MODULE = QuickToDoWatch_Extension;
+				INFOPLIST_FILE = QuickToDoWatch/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = QuickToDo.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "b5939656-ac82-474f-8ed9-6645bb41e210";
+				PROVISIONING_PROFILE_SPECIFIER = persukibo;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Debug;
+		};
+		0B3E30DC1DAECAF700C1BF53 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = ENT89NLKC9;
+				IBSC_MODULE = QuickToDoWatch_Extension;
+				INFOPLIST_FILE = QuickToDoWatch/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = QuickToDo.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "b5939656-ac82-474f-8ed9-6645bb41e210";
+				PROVISIONING_PROFILE_SPECIFIER = persukibo;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Release;
+		};
+		0B3E30DD1DAECAF700C1BF53 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = ENT89NLKC9;
+				INFOPLIST_FILE = "QuickToDoWatch Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = QuickToDo.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				PROVISIONING_PROFILE = "b5939656-ac82-474f-8ed9-6645bb41e210";
+				PROVISIONING_PROFILE_SPECIFIER = persukibo;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Debug;
+		};
+		0B3E30DE1DAECAF700C1BF53 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = ENT89NLKC9;
+				INFOPLIST_FILE = "QuickToDoWatch Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = QuickToDo.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				PROVISIONING_PROFILE = "b5939656-ac82-474f-8ed9-6645bb41e210";
+				PROVISIONING_PROFILE_SPECIFIER = persukibo;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Release;
+		};
 		E4C6E02919E7EA63003A89F7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -723,6 +1032,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -842,6 +1152,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		0B3E30DF1DAECAF700C1BF53 /* Build configuration list for PBXNativeTarget "QuickToDoWatch Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0B3E30DD1DAECAF700C1BF53 /* Debug */,
+				0B3E30DE1DAECAF700C1BF53 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0B3E30E11DAECAF700C1BF53 /* Build configuration list for PBXNativeTarget "QuickToDoWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0B3E30DB1DAECAF700C1BF53 /* Debug */,
+				0B3E30DC1DAECAF700C1BF53 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		E4C6E00419E7EA62003A89F7 /* Build configuration list for PBXProject "QuickToDo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
