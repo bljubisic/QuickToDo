@@ -53,40 +53,12 @@ class ConfigManager: NSObject {
                                     self.selfName = "Not Found"
                                 }
                             })
-                            /*
-                            container.discoverUserInfo(withUserRecordID: unwrappedRecordId, completionHandler: { (userInfo: CKDiscoveredUserInfo? , error: Error? ) -> Void in
-                                if let unwrappedUserInfo = userInfo {
-                                    self.selfName = unwrappedUserInfo.displayContact!.givenName + " " + unwrappedUserInfo.displayContact!.familyName
-                                } else {
-                                    self.selfName = "Not Found"
-                                }
-                            }
- */
                         } else {
                             print("The optional is nil!")
                         }
                         //self.selfRecordId = recordId.recordName
                         
                         } )
-                    /*
-                    container.fetchUserRecordID(completionHandler: @escaping { (recordId: CKRecordID?, error: NSError?) -> Void in
-                    
-                        if let unwrappedRecordId = recordId {
-                            self.selfRecordId = unwrappedRecordId.recordName
-                            container.discoverUserInfo(withUserRecordID: unwrappedRecordId, completionHandler: { (userInfo: CKDiscoveredUserInfo? , error: NSError? ) -> Void in
-                                if let unwrappedUserInfo = userInfo {
-                                    self.selfName = unwrappedUserInfo.displayContact!.givenName + " " + unwrappedUserInfo.displayContact!.familyName
-                                } else {
-                                    self.selfName = "Not Found"
-                                }
-                            } as! (CKDiscoveredUserInfo?, Error?) -> Void)
-                        } else {
-                            print("The optional is nil!")
-                        }
-                        //self.selfRecordId = recordId.recordName
-                    
-                    } as! (CKRecordID?, Error?) -> Void)
-                    */
                 }
                 
                 
