@@ -7,34 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E40CCF8319F4406B004CF859 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40CCF8219F4406B004CF859 /* Entity.swift */; };
-		E410086B1A2D0ECD00D6731A /* QuickToDoDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E410086A1A2D0ECD00D6731A /* QuickToDoDataManager.swift */; };
-		E4258A8D1ABD7E1B002B8EB1 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4258A8C1ABD7E1B002B8EB1 /* CloudKit.framework */; };
-		E4723EDA1ACB2F2800239A68 /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4723ED91ACB2F2800239A68 /* ConfigManager.swift */; };
-		E48BC55D1A9D0254003C2262 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01819E7EA63003A89F7 /* Images.xcassets */; };
-		E48C9AC71A3261DE007041DD /* ItemObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C9AC61A3261DE007041DD /* ItemObject.swift */; };
-		E48CDA101A1C728C00C24F26 /* ViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48CDA0F1A1C728C00C24F26 /* ViewTableViewCell.swift */; };
-		E49DE6C81A9922600063F5D5 /* QuickToDoDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E410086A1A2D0ECD00D6731A /* QuickToDoDataManager.swift */; };
-		E49DE6C91A9922640063F5D5 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40CCF8219F4406B004CF859 /* Entity.swift */; };
-		E49DE6CA1A9922690063F5D5 /* ItemObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C9AC61A3261DE007041DD /* ItemObject.swift */; };
-		E49DE6CB1A9922750063F5D5 /* QuickToDo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E4C6E01019E7EA63003A89F7 /* QuickToDo.xcdatamodeld */; };
-		E49DE6CD1A9A71F40063F5D5 /* TodayTableViewCellSum.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49DE6CC1A9A71F40063F5D5 /* TodayTableViewCellSum.swift */; };
-		E4C6E00F19E7EA63003A89F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C6E00E19E7EA63003A89F7 /* AppDelegate.swift */; };
+		1DC9D0A5DE5E0058145980A5 /* Pods_QuickToDoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD8069B17A767C026B526CC5 /* Pods_QuickToDoTests.framework */; };
+		9E03C8C2F1BE11AB3CDF1468 /* Pods_QuickToDo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDAD6B8AE1842746DE469D1A /* Pods_QuickToDo.framework */; };
+		E46FD0E1216403840007FBB7 /* QuickToDoStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46FD0E0216403840007FBB7 /* QuickToDoStorageProtocol.swift */; };
+		E46FD0E3216406220007FBB7 /* QuickToDoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46FD0E2216406220007FBB7 /* QuickToDoModel.swift */; };
+		E4861BC0215FA0010085CFB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4861BBF215FA0010085CFB8 /* AppDelegate.swift */; };
+		E4861BC2215FA3FF0085CFB8 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */; };
+		E48B68DA215D5C3C0062B08C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48B68D9215D5C3C0062B08C /* MainViewController.swift */; };
 		E4C6E01219E7EA63003A89F7 /* QuickToDo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E4C6E01019E7EA63003A89F7 /* QuickToDo.xcdatamodeld */; };
-		E4C6E01419E7EA63003A89F7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C6E01319E7EA63003A89F7 /* ViewController.swift */; };
 		E4C6E01719E7EA63003A89F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01519E7EA63003A89F7 /* Main.storyboard */; };
 		E4C6E01919E7EA63003A89F7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01819E7EA63003A89F7 /* Images.xcassets */; };
 		E4C6E01C19E7EA63003A89F7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01A19E7EA63003A89F7 /* LaunchScreen.xib */; };
-		E4C6E02819E7EA63003A89F7 /* QuickToDoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C6E02719E7EA63003A89F7 /* QuickToDoTests.swift */; };
-		E4E030411A0D908F002993CF /* InputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E030401A0D908F002993CF /* InputTableViewCell.swift */; };
-		E4E77BBE1AE316B700AADF16 /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4723ED91ACB2F2800239A68 /* ConfigManager.swift */; };
-		E4EBBBCD1AB62F39002DA67A /* ConfigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4EBBBCC1AB62F39002DA67A /* ConfigViewController.swift */; };
 		E4F014C81AC8887B00264AD5 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = E4F014C71AC8887B00264AD5 /* Config.plist */; };
-		E4F1DD1C1A991BD000F86D95 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */; };
-		E4F1DD211A991BD000F86D95 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F1DD201A991BD000F86D95 /* TodayViewController.swift */; };
-		E4F1DD231A991BD000F86D95 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4F1DD221A991BD000F86D95 /* MainInterface.storyboard */; };
-		E4F1DD261A991BD000F86D95 /* Quick ToDo Sum.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E4F1DD1B1A991BD000F86D95 /* Quick ToDo Sum.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E4F9A3791A5C146900CC0573 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4F9A3781A5C146900CC0573 /* CoreData.framework */; };
+		E4FBC6DA215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */; };
+		E4FBC6DC215AD63300F1B6E2 /* DataStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,60 +32,33 @@
 			remoteGlobalIDString = E4C6E00819E7EA62003A89F7;
 			remoteInfo = QuickToDo;
 		};
-		E4F1DD241A991BD000F86D95 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E4C6E00119E7EA62003A89F7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E4F1DD1A1A991BD000F86D95;
-			remoteInfo = "Quick ToDo Sum";
-		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		E41B97BB1A8D3E9F00BF8F51 /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				E4F1DD261A991BD000F86D95 /* Quick ToDo Sum.appex in Embed App Extensions */,
-			);
-			name = "Embed App Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
+		2CE05E2F6055C31C0270D475 /* Pods-QuickToDo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickToDo.release.xcconfig"; path = "Pods/Target Support Files/Pods-QuickToDo/Pods-QuickToDo.release.xcconfig"; sourceTree = "<group>"; };
+		339EA3DD8F9162C475035285 /* Pods-QuickToDo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickToDo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-QuickToDo/Pods-QuickToDo.debug.xcconfig"; sourceTree = "<group>"; };
+		3B4C516769C5AEA6EE6C967E /* Pods-QuickToDoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickToDoTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-QuickToDoTests/Pods-QuickToDoTests.debug.xcconfig"; sourceTree = "<group>"; };
+		A97DD8250808A8AD94FBF903 /* Pods-QuickToDoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickToDoTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-QuickToDoTests/Pods-QuickToDoTests.release.xcconfig"; sourceTree = "<group>"; };
+		BDAD6B8AE1842746DE469D1A /* Pods_QuickToDo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QuickToDo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD8069B17A767C026B526CC5 /* Pods_QuickToDoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QuickToDoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E404A39F1A8EBA34008D32A5 /* QuickToDo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = QuickToDo.entitlements; sourceTree = "<group>"; };
-		E40CCF8219F4406B004CF859 /* Entity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
-		E410086A1A2D0ECD00D6731A /* QuickToDoDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickToDoDataManager.swift; sourceTree = "<group>"; };
 		E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
-		E4258A8C1ABD7E1B002B8EB1 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
-		E4723ED91ACB2F2800239A68 /* ConfigManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigManager.swift; sourceTree = "<group>"; };
-		E48C9AC61A3261DE007041DD /* ItemObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemObject.swift; sourceTree = "<group>"; };
-		E48CDA0F1A1C728C00C24F26 /* ViewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewTableViewCell.swift; sourceTree = "<group>"; };
-		E49DE6C71A9922400063F5D5 /* Quick ToDo Sum.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Quick ToDo Sum.entitlements"; sourceTree = "<group>"; };
-		E49DE6CC1A9A71F40063F5D5 /* TodayTableViewCellSum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodayTableViewCellSum.swift; sourceTree = "<group>"; };
+		E46FD0E0216403840007FBB7 /* QuickToDoStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoStorageProtocol.swift; sourceTree = "<group>"; };
+		E46FD0E2216406220007FBB7 /* QuickToDoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoModel.swift; sourceTree = "<group>"; };
+		E4861BBF215FA0010085CFB8 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		E48B68D9215D5C3C0062B08C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		E4C6E00919E7EA62003A89F7 /* QuickToDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuickToDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4C6E00D19E7EA62003A89F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E4C6E00E19E7EA63003A89F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E4C6E01119E7EA63003A89F7 /* QuickToDo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = QuickToDo.xcdatamodel; sourceTree = "<group>"; };
-		E4C6E01319E7EA63003A89F7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		E4C6E01619E7EA63003A89F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E4C6E01819E7EA63003A89F7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E4C6E01B19E7EA63003A89F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		E4C6E02119E7EA63003A89F7 /* QuickToDoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuickToDoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		E4C6E02619E7EA63003A89F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E4C6E02719E7EA63003A89F7 /* QuickToDoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoTests.swift; sourceTree = "<group>"; };
-		E4C6E03119E7EE90003A89F7 /* QuickToDoPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = QuickToDoPlayground.playground; sourceTree = "<group>"; };
-		E4E030401A0D908F002993CF /* InputTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputTableViewCell.swift; sourceTree = "<group>"; };
-		E4EBBBCC1AB62F39002DA67A /* ConfigViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigViewController.swift; sourceTree = "<group>"; };
 		E4F014C71AC8887B00264AD5 /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Config.plist; sourceTree = "<group>"; };
-		E4F1DD1B1A991BD000F86D95 /* Quick ToDo Sum.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Quick ToDo Sum.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E4F1DD1F1A991BD000F86D95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E4F1DD201A991BD000F86D95 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
-		E4F1DD221A991BD000F86D95 /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
 		E4F9A3781A5C146900CC0573 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoModelProtocol.swift; sourceTree = "<group>"; };
+		E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStructures.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,7 +67,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4F9A3791A5C146900CC0573 /* CoreData.framework in Frameworks */,
-				E4258A8D1ABD7E1B002B8EB1 /* CloudKit.framework in Frameworks */,
+				E4861BC2215FA3FF0085CFB8 /* CloudKit.framework in Frameworks */,
+				9E03C8C2F1BE11AB3CDF1468 /* Pods_QuickToDo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,27 +76,59 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E4F1DD181A991BD000F86D95 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E4F1DD1C1A991BD000F86D95 /* NotificationCenter.framework in Frameworks */,
+				1DC9D0A5DE5E0058145980A5 /* Pods_QuickToDoTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		20AA199DE811657804D253DF /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				339EA3DD8F9162C475035285 /* Pods-QuickToDo.debug.xcconfig */,
+				2CE05E2F6055C31C0270D475 /* Pods-QuickToDo.release.xcconfig */,
+				3B4C516769C5AEA6EE6C967E /* Pods-QuickToDoTests.debug.xcconfig */,
+				A97DD8250808A8AD94FBF903 /* Pods-QuickToDoTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		E41B97AB1A8D3E9F00BF8F51 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E4258A8C1ABD7E1B002B8EB1 /* CloudKit.framework */,
+				E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */,
 				E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */,
+				BDAD6B8AE1842746DE469D1A /* Pods_QuickToDo.framework */,
+				CD8069B17A767C026B526CC5 /* Pods_QuickToDoTests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E4AFEE3C215AB04D0001AEDA /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */,
+				E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */,
+				E46FD0E0216403840007FBB7 /* QuickToDoStorageProtocol.swift */,
+				E46FD0E2216406220007FBB7 /* QuickToDoModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E4AFEE3D215AB0560001AEDA /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		E4AFEE3E215AB0620001AEDA /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E48B68D9215D5C3C0062B08C /* MainViewController.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		E4C6E00019E7EA62003A89F7 = {
@@ -143,10 +136,9 @@
 			children = (
 				E4F9A3781A5C146900CC0573 /* CoreData.framework */,
 				E4C6E00B19E7EA62003A89F7 /* QuickToDo */,
-				E4C6E02419E7EA63003A89F7 /* QuickToDoTests */,
-				E4F1DD1D1A991BD000F86D95 /* Quick ToDo Sum */,
 				E41B97AB1A8D3E9F00BF8F51 /* Frameworks */,
 				E4C6E00A19E7EA62003A89F7 /* Products */,
+				20AA199DE811657804D253DF /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -155,7 +147,6 @@
 			children = (
 				E4C6E00919E7EA62003A89F7 /* QuickToDo.app */,
 				E4C6E02119E7EA63003A89F7 /* QuickToDoTests.xctest */,
-				E4F1DD1B1A991BD000F86D95 /* Quick ToDo Sum.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -163,18 +154,12 @@
 		E4C6E00B19E7EA62003A89F7 /* QuickToDo */ = {
 			isa = PBXGroup;
 			children = (
+				E4AFEE3C215AB04D0001AEDA /* Model */,
+				E4AFEE3D215AB0560001AEDA /* ViewModel */,
+				E4AFEE3E215AB0620001AEDA /* View */,
 				E404A39F1A8EBA34008D32A5 /* QuickToDo.entitlements */,
-				E4C6E00E19E7EA63003A89F7 /* AppDelegate.swift */,
-				E4E030401A0D908F002993CF /* InputTableViewCell.swift */,
-				E48CDA0F1A1C728C00C24F26 /* ViewTableViewCell.swift */,
-				E4C6E01319E7EA63003A89F7 /* ViewController.swift */,
-				E4EBBBCC1AB62F39002DA67A /* ConfigViewController.swift */,
-				E48C9AC61A3261DE007041DD /* ItemObject.swift */,
-				E40CCF8219F4406B004CF859 /* Entity.swift */,
-				E410086A1A2D0ECD00D6731A /* QuickToDoDataManager.swift */,
-				E4723ED91ACB2F2800239A68 /* ConfigManager.swift */,
+				E4861BBF215FA0010085CFB8 /* AppDelegate.swift */,
 				E4C6E00C19E7EA62003A89F7 /* Supporting Files */,
-				E4C6E03119E7EE90003A89F7 /* QuickToDoPlayground.playground */,
 			);
 			path = QuickToDo;
 			sourceTree = "<group>";
@@ -192,43 +177,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		E4C6E02419E7EA63003A89F7 /* QuickToDoTests */ = {
-			isa = PBXGroup;
-			children = (
-				E4C6E02719E7EA63003A89F7 /* QuickToDoTests.swift */,
-				E4C6E02519E7EA63003A89F7 /* Supporting Files */,
-			);
-			path = QuickToDoTests;
-			sourceTree = "<group>";
-		};
-		E4C6E02519E7EA63003A89F7 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				E4C6E02619E7EA63003A89F7 /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		E4F1DD1D1A991BD000F86D95 /* Quick ToDo Sum */ = {
-			isa = PBXGroup;
-			children = (
-				E49DE6C71A9922400063F5D5 /* Quick ToDo Sum.entitlements */,
-				E4F1DD201A991BD000F86D95 /* TodayViewController.swift */,
-				E4F1DD221A991BD000F86D95 /* MainInterface.storyboard */,
-				E49DE6CC1A9A71F40063F5D5 /* TodayTableViewCellSum.swift */,
-				E4F1DD1E1A991BD000F86D95 /* Supporting Files */,
-			);
-			path = "Quick ToDo Sum";
-			sourceTree = "<group>";
-		};
-		E4F1DD1E1A991BD000F86D95 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				E4F1DD1F1A991BD000F86D95 /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -236,15 +184,15 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E4C6E02B19E7EA63003A89F7 /* Build configuration list for PBXNativeTarget "QuickToDo" */;
 			buildPhases = (
+				ECD48E670E140165CE3B12B7 /* [CP] Check Pods Manifest.lock */,
 				E4C6E00519E7EA62003A89F7 /* Sources */,
 				E4C6E00619E7EA62003A89F7 /* Frameworks */,
 				E4C6E00719E7EA62003A89F7 /* Resources */,
-				E41B97BB1A8D3E9F00BF8F51 /* Embed App Extensions */,
+				FAAA371ED48B9C6F86F9E61D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				E4F1DD251A991BD000F86D95 /* PBXTargetDependency */,
 			);
 			name = QuickToDo;
 			productName = QuickToDo;
@@ -255,9 +203,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E4C6E02E19E7EA63003A89F7 /* Build configuration list for PBXNativeTarget "QuickToDoTests" */;
 			buildPhases = (
+				D767F50EFF2EB6C3EB9412A2 /* [CP] Check Pods Manifest.lock */,
 				E4C6E01D19E7EA63003A89F7 /* Sources */,
 				E4C6E01E19E7EA63003A89F7 /* Frameworks */,
 				E4C6E01F19E7EA63003A89F7 /* Resources */,
+				ECDB253D1582CCD6AF79480C /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -268,23 +218,6 @@
 			productName = QuickToDoTests;
 			productReference = E4C6E02119E7EA63003A89F7 /* QuickToDoTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		E4F1DD1A1A991BD000F86D95 /* Quick ToDo Sum */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E4F1DD271A991BD100F86D95 /* Build configuration list for PBXNativeTarget "Quick ToDo Sum" */;
-			buildPhases = (
-				E4F1DD171A991BD000F86D95 /* Sources */,
-				E4F1DD181A991BD000F86D95 /* Frameworks */,
-				E4F1DD191A991BD000F86D95 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Quick ToDo Sum";
-			productName = "Quick ToDo Sum";
-			productReference = E4F1DD1B1A991BD000F86D95 /* Quick ToDo Sum.appex */;
-			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -300,8 +233,13 @@
 					E4C6E00819E7EA62003A89F7 = {
 						CreatedOnToolsVersion = 6.0.1;
 						DevelopmentTeam = ENT89NLKC9;
+						LastSwiftMigration = 1000;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 							com.apple.iCloud = {
@@ -312,18 +250,6 @@
 					E4C6E02019E7EA63003A89F7 = {
 						CreatedOnToolsVersion = 6.0.1;
 						TestTargetID = E4C6E00819E7EA62003A89F7;
-					};
-					E4F1DD1A1A991BD000F86D95 = {
-						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = ENT89NLKC9;
-						SystemCapabilities = {
-							com.apple.ApplicationGroups.iOS = {
-								enabled = 1;
-							};
-							com.apple.iCloud = {
-								enabled = 0;
-							};
-						};
 					};
 				};
 			};
@@ -342,7 +268,6 @@
 			targets = (
 				E4C6E00819E7EA62003A89F7 /* QuickToDo */,
 				E4C6E02019E7EA63003A89F7 /* QuickToDoTests */,
-				E4F1DD1A1A991BD000F86D95 /* Quick ToDo Sum */,
 			);
 		};
 /* End PBXProject section */
@@ -366,32 +291,103 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E4F1DD191A991BD000F86D95 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		D767F50EFF2EB6C3EB9412A2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4F1DD231A991BD000F86D95 /* MainInterface.storyboard in Resources */,
-				E48BC55D1A9D0254003C2262 /* Images.xcassets in Resources */,
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-QuickToDoTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
 		};
-/* End PBXResourcesBuildPhase section */
+		ECD48E670E140165CE3B12B7 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-QuickToDo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		ECDB253D1582CCD6AF79480C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-QuickToDoTests/Pods-QuickToDoTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-QuickToDoTests/Pods-QuickToDoTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FAAA371ED48B9C6F86F9E61D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-QuickToDo/Pods-QuickToDo-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-QuickToDo/Pods-QuickToDo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E4C6E00519E7EA62003A89F7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4E030411A0D908F002993CF /* InputTableViewCell.swift in Sources */,
-				E48C9AC71A3261DE007041DD /* ItemObject.swift in Sources */,
-				E40CCF8319F4406B004CF859 /* Entity.swift in Sources */,
-				E4723EDA1ACB2F2800239A68 /* ConfigManager.swift in Sources */,
-				E48CDA101A1C728C00C24F26 /* ViewTableViewCell.swift in Sources */,
-				E4C6E01419E7EA63003A89F7 /* ViewController.swift in Sources */,
-				E4C6E00F19E7EA63003A89F7 /* AppDelegate.swift in Sources */,
-				E410086B1A2D0ECD00D6731A /* QuickToDoDataManager.swift in Sources */,
+				E4FBC6DC215AD63300F1B6E2 /* DataStructures.swift in Sources */,
 				E4C6E01219E7EA63003A89F7 /* QuickToDo.xcdatamodeld in Sources */,
-				E4EBBBCD1AB62F39002DA67A /* ConfigViewController.swift in Sources */,
+				E4FBC6DA215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift in Sources */,
+				E46FD0E1216403840007FBB7 /* QuickToDoStorageProtocol.swift in Sources */,
+				E46FD0E3216406220007FBB7 /* QuickToDoModel.swift in Sources */,
+				E4861BC0215FA0010085CFB8 /* AppDelegate.swift in Sources */,
+				E48B68DA215D5C3C0062B08C /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -399,21 +395,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4C6E02819E7EA63003A89F7 /* QuickToDoTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E4F1DD171A991BD000F86D95 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E4F1DD211A991BD000F86D95 /* TodayViewController.swift in Sources */,
-				E49DE6CB1A9922750063F5D5 /* QuickToDo.xcdatamodeld in Sources */,
-				E49DE6CA1A9922690063F5D5 /* ItemObject.swift in Sources */,
-				E49DE6C81A9922600063F5D5 /* QuickToDoDataManager.swift in Sources */,
-				E49DE6C91A9922640063F5D5 /* Entity.swift in Sources */,
-				E4E77BBE1AE316B700AADF16 /* ConfigManager.swift in Sources */,
-				E49DE6CD1A9A71F40063F5D5 /* TodayTableViewCellSum.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,11 +405,6 @@
 			isa = PBXTargetDependency;
 			target = E4C6E00819E7EA62003A89F7 /* QuickToDo */;
 			targetProxy = E4C6E02219E7EA63003A89F7 /* PBXContainerItemProxy */;
-		};
-		E4F1DD251A991BD000F86D95 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E4F1DD1A1A991BD000F86D95 /* Quick ToDo Sum */;
-			targetProxy = E4F1DD241A991BD000F86D95 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -533,43 +509,62 @@
 		};
 		E4C6E02C19E7EA63003A89F7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 339EA3DD8F9162C475035285 /* Pods-QuickToDo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = QuickToDo/QuickToDo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = ENT89NLKC9;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = QuickToDo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = Persukibo.QuickToDo;
+				PRODUCT_NAME = QuickToDo;
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		E4C6E02D19E7EA63003A89F7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2CE05E2F6055C31C0270D475 /* Pods-QuickToDo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = QuickToDo/QuickToDo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = ENT89NLKC9;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = QuickToDo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = Persukibo.QuickToDo;
+				PRODUCT_NAME = QuickToDo;
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
 		E4C6E02F19E7EA63003A89F7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3B4C516769C5AEA6EE6C967E /* Pods-QuickToDoTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -588,7 +583,9 @@
 		};
 		E4C6E03019E7EA63003A89F7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A97DD8250808A8AD94FBF903 /* Pods-QuickToDoTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -598,40 +595,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuickToDo.app/QuickToDo";
-			};
-			name = Release;
-		};
-		E4F1DD281A991BD100F86D95 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "Quick ToDo Sum/Quick ToDo Sum.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "Quick ToDo Sum/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		E4F1DD291A991BD100F86D95 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "Quick ToDo Sum/Quick ToDo Sum.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				INFOPLIST_FILE = "Quick ToDo Sum/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -661,15 +624,6 @@
 			buildConfigurations = (
 				E4C6E02F19E7EA63003A89F7 /* Debug */,
 				E4C6E03019E7EA63003A89F7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E4F1DD271A991BD100F86D95 /* Build configuration list for PBXNativeTarget "Quick ToDo Sum" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E4F1DD281A991BD100F86D95 /* Debug */,
-				E4F1DD291A991BD100F86D95 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
