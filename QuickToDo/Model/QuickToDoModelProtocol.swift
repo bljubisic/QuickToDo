@@ -10,13 +10,12 @@ import Foundation
 import RxSwift
 
 protocol QuickToDoInputs {
-    func add(_ item: Item) -> (Bool, Error)
-    func new(_ item: Item) -> (Bool, Error)
-    func update(_ item: Item) -> (Bool, Error)
+    func add(_ item: Item) -> (Bool, Error?)
+    func update(_ item: Item) -> (Bool, Error?)
 }
 
 protocol QuickToDoOutputs {
-    
+    var items: Observable<Item>? { get }
 }
 
 protocol QuickToDoProtocol {
