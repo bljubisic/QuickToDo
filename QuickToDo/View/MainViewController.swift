@@ -7,13 +7,30 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
+import SnapKit
 
 class MainViewController: UIViewController {
+    
+    var viewModel: QuickToDoViewModelProtoocol!
+    
+    var itemsTableView: UITableView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        itemsTableView = UITableView();
+        self.view.addSubview(self.itemsTableView)
+        self.itemsTableView.dataSource = self
+        self.itemsTableView.delegate = self
+        self.itemsTableView.register(ItemTableViewCell.self, forCellReuseIdentifier: "itemCell")
+        self.itemsTableView.register(AddItemTableViewCell.self, forCellReuseIdentifier: "addItemCell")
+        self.itemsTableView.snp.makeConstraints { (make) in
+            make.edges.equalTo(self.view).inset(UIEdgeInsets(top: 20, left: 5, bottom: 5, right: 0))
+        }
 
-        // Do any additional setup after loading the view.
+        
     }
     
 
@@ -26,5 +43,19 @@ class MainViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
+
+}
+
+extension MainViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell()
+    }
+}
+
+extension MainViewController: UITableViewDelegate {
 
 }
