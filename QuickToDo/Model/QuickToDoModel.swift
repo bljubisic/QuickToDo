@@ -10,13 +10,33 @@ import Foundation
 import RxSwift
 
 class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
-    var items: Observable<Item>?
+    private let itemsPrivate: PublishSubject<Item> = PublishSubject()
+    private let cloudStatusPrivate: PublishSubject<CloudStatus> = PublishSubject()
+    
+    var items: Observable<Item>? {
+        return itemsPrivate
+    }
+    
+    var cloudStatus: Observable<CloudStatus> {
+        return cloudStatusPrivate
+    }
+    
+    var coreData: QuickToDoCoreDataProtocol
+    
+    init(_ withCoreData: QuickToDoCoreDataProtocol) {
+        coreData = withCoreData
+    }
     
     func add(_ item: Item) -> (Bool, Error?) {
-        return(true, nil)
+        let newItem = self.coreData.inputs.insert(item)
+        self.itemsPrivate.onNext(newItem)
+        return (true, nil)
     }
     
     func update(_ item: Item) -> (Bool, Error?) {
+        let oldItem = self.coreData.inputs.getItemWith(item.name)
+        let newItem = self.coreData.inputs.update(oldItem, withItem: item)
+        self.itemsPrivate.onNext(newItem)
         return(true, nil)
     }
     
