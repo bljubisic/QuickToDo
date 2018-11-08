@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		1DC9D0A5DE5E0058145980A5 /* Pods_QuickToDoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD8069B17A767C026B526CC5 /* Pods_QuickToDoTests.framework */; };
 		9E03C8C2F1BE11AB3CDF1468 /* Pods_QuickToDo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDAD6B8AE1842746DE469D1A /* Pods_QuickToDo.framework */; };
+		E435ECE521680E0300E68960 /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE421680E0300E68960 /* CoreDataModel.swift */; };
+		E435ECE72169327000E68960 /* ManagedObjectTypeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE62169327000E68960 /* ManagedObjectTypeProtocol.swift */; };
+		E435ECE9216932FB00E68960 /* ItemMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE8216932FA00E68960 /* ItemMO.swift */; };
+		E435ECEB21729EB700E68960 /* QuickToDoViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECEA21729EB700E68960 /* QuickToDoViewModelProtocol.swift */; };
+		E435ECEF21890A6A00E68960 /* ItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECEE21890A6A00E68960 /* ItemTableViewCell.swift */; };
+		E435ECF121890A7900E68960 /* AddItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECF021890A7900E68960 /* AddItemTableViewCell.swift */; };
 		E46FD0E1216403840007FBB7 /* QuickToDoStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46FD0E0216403840007FBB7 /* QuickToDoStorageProtocol.swift */; };
 		E46FD0E3216406220007FBB7 /* QuickToDoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46FD0E2216406220007FBB7 /* QuickToDoModel.swift */; };
 		E4861BC0215FA0010085CFB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4861BBF215FA0010085CFB8 /* AppDelegate.swift */; };
@@ -43,6 +49,12 @@
 		CD8069B17A767C026B526CC5 /* Pods_QuickToDoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QuickToDoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E404A39F1A8EBA34008D32A5 /* QuickToDo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = QuickToDo.entitlements; sourceTree = "<group>"; };
 		E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
+		E435ECE421680E0300E68960 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
+		E435ECE62169327000E68960 /* ManagedObjectTypeProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedObjectTypeProtocol.swift; sourceTree = "<group>"; };
+		E435ECE8216932FA00E68960 /* ItemMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemMO.swift; sourceTree = "<group>"; };
+		E435ECEA21729EB700E68960 /* QuickToDoViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoViewModelProtocol.swift; sourceTree = "<group>"; };
+		E435ECEE21890A6A00E68960 /* ItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemTableViewCell.swift; sourceTree = "<group>"; };
+		E435ECF021890A7900E68960 /* AddItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemTableViewCell.swift; sourceTree = "<group>"; };
 		E46FD0E0216403840007FBB7 /* QuickToDoStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoStorageProtocol.swift; sourceTree = "<group>"; };
 		E46FD0E2216406220007FBB7 /* QuickToDoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoModel.swift; sourceTree = "<group>"; };
 		E4861BBF215FA0010085CFB8 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -105,9 +117,20 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		E435ECE321680DD900E68960 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				E435ECE421680E0300E68960 /* CoreDataModel.swift */,
+				E435ECE62169327000E68960 /* ManagedObjectTypeProtocol.swift */,
+				E435ECE8216932FA00E68960 /* ItemMO.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		E4AFEE3C215AB04D0001AEDA /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				E435ECE321680DD900E68960 /* CoreData */,
 				E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */,
 				E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */,
 				E46FD0E0216403840007FBB7 /* QuickToDoStorageProtocol.swift */,
@@ -119,6 +142,7 @@
 		E4AFEE3D215AB0560001AEDA /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				E435ECEA21729EB700E68960 /* QuickToDoViewModelProtocol.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -127,6 +151,8 @@
 			isa = PBXGroup;
 			children = (
 				E48B68D9215D5C3C0062B08C /* MainViewController.swift */,
+				E435ECEE21890A6A00E68960 /* ItemTableViewCell.swift */,
+				E435ECF021890A7900E68960 /* AddItemTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -381,9 +407,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E435ECE9216932FB00E68960 /* ItemMO.swift in Sources */,
 				E4FBC6DC215AD63300F1B6E2 /* DataStructures.swift in Sources */,
 				E4C6E01219E7EA63003A89F7 /* QuickToDo.xcdatamodeld in Sources */,
+				E435ECEB21729EB700E68960 /* QuickToDoViewModelProtocol.swift in Sources */,
+				E435ECEF21890A6A00E68960 /* ItemTableViewCell.swift in Sources */,
+				E435ECF121890A7900E68960 /* AddItemTableViewCell.swift in Sources */,
+				E435ECE521680E0300E68960 /* CoreDataModel.swift in Sources */,
 				E4FBC6DA215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift in Sources */,
+				E435ECE72169327000E68960 /* ManagedObjectTypeProtocol.swift in Sources */,
 				E46FD0E1216403840007FBB7 /* QuickToDoStorageProtocol.swift in Sources */,
 				E46FD0E3216406220007FBB7 /* QuickToDoModel.swift in Sources */,
 				E4861BC0215FA0010085CFB8 /* AppDelegate.swift in Sources */,
