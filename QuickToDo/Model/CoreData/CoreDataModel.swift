@@ -158,5 +158,39 @@ final class CoreDataModel: QuickToDoCoreDataProtocol, QuickToDoCoreDataInputs, Q
         return Item()
     }
     
+    func getHints(for itemName: String, withCompletion: (Item, Item) -> Void) -> Void{
+        var items: [Item] = [Item]()
+        let itemEntity = NSEntityDescription.entity(forEntityName: "Item", in: self.managedObjectContext!)
+        let request: NSFetchRequest<ItemMO> = NSFetchRequest()
+        request.entity = itemEntity
+        
+        let predicate: NSPredicate = NSPredicate(format: "word beginswith \(itemName)")
+        
+        request.predicate = predicate
+        
+        do {
+            let fetchedItems = try self.managedObjectContext!.fetch(request as! NSFetchRequest<NSFetchRequestResult>) as! [ItemMO]
+            for itemMO in fetchedItems {
+                let tmpItem: Item = Item(name: itemMO.word,
+                                         count: itemMO.count,
+                                         uploadedToICloud: itemMO.uploadedToICloud,
+                                         done: itemMO.completed,
+                                         shown: itemMO.used,
+                                         createdAt: itemMO.lastused)
+                items.append(tmpItem)
+            }
+        } catch {
+            //fatalError("Failed to fetch profiles: \(error)")
+            withCompletion(Item(), Item())
+        }
+        if(items.count > 2) {
+            withCompletion(items[0], items[1])
+        } else if(items.count == 1) {
+            withCompletion(items[0], Item())
+        } else {
+            withCompletion(Item(), Item())
+        }
+    }
+    
 }
 
