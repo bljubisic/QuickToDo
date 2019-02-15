@@ -1,0 +1,24 @@
+
+/* Class = "UILabel"; text = "iCloud id"; ObjectID = "2aZ-yn-Msd"; */
+"2aZ-yn-Msd.text" = "iCloud id";
+
+/* Class = "UILabel"; text = "Name"; ObjectID = "4z9-xH-loi"; */
+"4z9-xH-loi.text" = "Name";
+
+/* Class = "UIButton"; normalTitle = "Find"; ObjectID = "7yF-DP-kcG"; */
+"7yF-DP-kcG.normalTitle" = "Find";
+
+/* Class = "UILabel"; text = "Lastname"; ObjectID = "86L-bh-EcW"; */
+"86L-bh-EcW.text" = "Lastname";
+
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "Fua-Qk-Kzs"; */
+"Fua-Qk-Kzs.normalTitle" = "Cancel";
+
+/* Class = "UIButton"; normalTitle = "Done"; ObjectID = "Se2-ux-RuL"; */
+"Se2-ux-RuL.normalTitle" = "Done";
+
+/* Class = "UILabel"; text = "Yes, I want to share my list"; ObjectID = "n2J-BZ-zE1"; */
+"n2J-BZ-zE1.text" = "Yes, I want to share my list";
+
+/* Class = "UITextField"; placeholder = "Enter iCloud email"; ObjectID = "vT5-zD-Vkg"; */
+"vT5-zD-Vkg.placeholder" = "Enter iCloud email";
