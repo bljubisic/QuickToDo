@@ -16,9 +16,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         // Override point for customization after application launch.
-    
+        window = UIWindow(frame: UIScreen.main.bounds)
+        let coreData = CoreDataModel()
+        let model = QuickToDoModel(coreData)
+        let viewModel = QuickToDoViewModel(model)
+        
+        let viewController: MainViewController = MainViewController()
+        viewController.viewModel = viewModel
+        window?.rootViewController = viewController
+        window?.makeKeyAndVisible()
         return true
     }
     
@@ -27,11 +35,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     
-    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
-        
-        let viewController: MainViewController =
-            self.window?.rootViewController as! MainViewController
-        
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+
     }
     
     
@@ -59,7 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         saveContext()
     }
     
-    lazy var persistentContainer: NSPersistentContainer = {
+    var persistentContainer: NSPersistentContainer = {
         /*
          The persistent container for the application. This implementation
          creates and returns a container, having loaded the store for the
