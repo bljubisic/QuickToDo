@@ -19,7 +19,7 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.view.backgroundColor = #colorLiteral(red: 0.4392156899, green: 0.01176470611, blue: 0.1921568662, alpha: 1)
         itemsTableView = UITableView();
         self.view.addSubview(self.itemsTableView)
         self.itemsTableView.dataSource = self
@@ -33,7 +33,6 @@ class MainViewController: UIViewController {
         
     }
     
-
     /*
     // MARK: - Navigation
 
@@ -48,11 +47,38 @@ class MainViewController: UIViewController {
 
 extension MainViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        if self.viewModel.inputs.getItemsSize() > 0 {
+            return self.viewModel.inputs.getItemsSize() + 1
+        } else {
+            return 1
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        if (indexPath.row > self.viewModel.inputs.getItemsSize()) || self.viewModel.inputs.getItemsSize() == 0 {
+            let cellIdentifier = "addItemCell"
+            let cell: AddItemTableViewCell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! AddItemTableViewCell
+            cell.addItemTextBox.rx.text.subscribe(onNext: { (item) in
+                viewModel.inputs.getHints(for: item, withCompletion: { (nameOne, nameTwo) in
+                    cell.firstItemSuggestion.setTitle(nameOne, for: UIControlState.normal)
+                })
+            },
+            onError: { (Error) in
+                print(Error)
+            }) {
+                print("Completed")
+                }.disposed(by: disposeBag)
+            return cell
+        }
+        else {
+            let cellIdentifier = "itemCell"
+            let cell: ItemTableViewCell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! ItemTableViewCell
+            return cell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 98.0
     }
 }
 
