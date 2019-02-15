@@ -12,11 +12,12 @@ import RxSwift
 protocol QuickToDoInputs {
     func add(_ item: Item) -> (Bool, Error?)
     func update(_ item: Item) -> (Bool, Error?)
+    func getHints(for itemName: String) -> Observable<String>
 }
 
 protocol QuickToDoOutputs {
     var coreData: QuickToDoCoreDataProtocol { get }
-    var items: Observable<Item>? { get }
+    var items: Observable<Item> { get }
     var cloudStatus: Observable<CloudStatus> { get }
 }
 
@@ -30,6 +31,7 @@ protocol QuickToDoCoreDataInputs {
     func insert(_ item:Item) -> Item
     func getItemWith(_ itemWord: String) -> Item
     func update(_ item: Item, withItem: Item) -> Item
+    func getHints(for itemName: String, withCompletion: (Item, Item) -> Void) -> Void
 }
 
 protocol QuickToDoCoreDataOutputs {
