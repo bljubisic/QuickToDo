@@ -30,7 +30,7 @@ final class CoreDataModel: QuickToDoCoreDataProtocol, QuickToDoCoreDataInputs, Q
     // MARK: Variables
     
     lazy var applicationDocumentsDirectory: NSURL? = {
-        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.persukibo.QuickToDoSharingDefaults") ?? nil
+        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.QuickToDoSharingDefaults") ?? nil
         }() as NSURL?
     
     lazy var managedObjectModel: NSManagedObjectModel = {
@@ -164,7 +164,7 @@ final class CoreDataModel: QuickToDoCoreDataProtocol, QuickToDoCoreDataInputs, Q
         let request: NSFetchRequest<ItemMO> = NSFetchRequest()
         request.entity = itemEntity
         
-        let predicate: NSPredicate = NSPredicate(format: "word beginswith \(itemName)")
+        let predicate: NSPredicate = NSPredicate(format: "word beginswith \"\(itemName)\"")
         
         request.predicate = predicate
         
