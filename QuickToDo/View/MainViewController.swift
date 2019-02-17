@@ -16,6 +16,8 @@ class MainViewController: UIViewController {
     var viewModel: QuickToDoViewModelProtoocol!
     
     var itemsTableView: UITableView!
+    
+    let disposeBag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,15 +60,44 @@ extension MainViewController: UITableViewDataSource {
         if (indexPath.row > self.viewModel.inputs.getItemsSize()) || self.viewModel.inputs.getItemsSize() == 0 {
             let cellIdentifier = "addItemCell"
             let cell: AddItemTableViewCell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! AddItemTableViewCell
-            cell.addItemTextBox.rx.text.subscribe(onNext: { (item) in
-                viewModel.inputs.getHints(for: item, withCompletion: { (nameOne, nameTwo) in
-                    cell.firstItemSuggestion.setTitle(nameOne, for: UIControlState.normal)
-                })
-            },
-            onError: { (Error) in
-                print(Error)
-            }) {
-                print("Completed")
+            cell.addItemTextBox
+                .rx
+                .text
+                .filter { text in
+                    return (text != nil && text != "")
+                }
+                .subscribe(onNext: { [unowned self] item in
+                    if let itemUnwrapped = item {
+                        print(itemUnwrapped)
+                        self.viewModel.inputs.getHints(for: itemUnwrapped, withCompletion: { (nameOne, nameTwo) in
+                            cell.firstItemSuggestion.setTitle(nameOne, for: UIControlState.normal)
+                        })
+                    }
+                },
+                    onError: { (Error) in
+                    print(Error)
+                },
+                    onCompleted: {
+                    print("")
+                }) {
+                    print("")
+            }.disposed(by: disposeBag)
+            cell.addItemTextBox
+                .rx
+                .controlEvent([.editingDidEndOnExit])
+                .subscribe{ text in
+                    if let word = cell.addItemTextBox.text {
+                        print("Completed")
+                        print(word)
+                        _  = self.viewModel.inputs.add(Item(
+                            name: word,
+                            count: 1,
+                            uploadedToICloud: false,
+                            done: false,
+                            shown: true,
+                            createdAt: Date()
+                        ))
+                    }
                 }.disposed(by: disposeBag)
             return cell
         }
