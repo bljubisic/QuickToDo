@@ -14,7 +14,7 @@ protocol QuickToDoViewModelInputs {
     func update(_ item: Item, withItem: Item) -> (Bool, Error?)
     func getItems() -> (Bool, Error?)
     func getItemsSize() -> Int
-    func getHints(for itemName: String, @escaping withCompletion: (String, String) -> Void) -> Void
+    func getHints(for itemName: String, withCompletion: @escaping (String, String) -> Void) -> Void
 }
 
 protocol QuickToDoViewModelOutputs {
