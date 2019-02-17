@@ -55,10 +55,14 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
         }, onError: { (Error) in
             print(Error)
         }, onCompleted: {
-            withCompletion(items[0], items[1])
+            if(items.count > 1) {
+                withCompletion(items[0], items[1])
+            }
         }) {
-            withCompletion(items[0], items[1])
-            }.disposed(by: disposeBag)
+            if(items.count > 1) {
+                withCompletion(items[0], items[1])
+            }
+        }.disposed(by: disposeBag)
         
     }
     
