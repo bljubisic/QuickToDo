@@ -96,6 +96,7 @@ final class CoreDataModel: QuickToDoCoreDataProtocol, QuickToDoCoreDataInputs, Q
                 itemsPrivate.onNext(tmpItem)
             }
         } catch {
+            print(error)
             //fatalError("Failed to fetch profiles: \(error)")
             return(false, error)
         }
@@ -105,7 +106,6 @@ final class CoreDataModel: QuickToDoCoreDataProtocol, QuickToDoCoreDataInputs, Q
     func insert(_ item:Item) -> Item {
         
         let itemMO: ItemMO = ItemMO.insertIntoContext(moc: self.managedObjectContext!, item: item)
-
         return Item(name: itemMO.word,
                     count: itemMO.count,
                     uploadedToICloud: itemMO.uploadedToICloud,
@@ -158,7 +158,7 @@ final class CoreDataModel: QuickToDoCoreDataProtocol, QuickToDoCoreDataInputs, Q
         return Item()
     }
     
-    func getHints(for itemName: String, withCompletion: (Item, Item) -> Void) -> Void{
+    func getHints(for itemName: String, withCompletion: (Item, Item) -> Void) -> Void {
         var items: [Item] = [Item]()
         let itemEntity = NSEntityDescription.entity(forEntityName: "Item", in: self.managedObjectContext!)
         let request: NSFetchRequest<ItemMO> = NSFetchRequest()
@@ -180,10 +180,11 @@ final class CoreDataModel: QuickToDoCoreDataProtocol, QuickToDoCoreDataInputs, Q
                 items.append(tmpItem)
             }
         } catch {
+            print(error)
             //fatalError("Failed to fetch profiles: \(error)")
             withCompletion(Item(), Item())
         }
-        if(items.count > 2) {
+        if(items.count > 1) {
             withCompletion(items[0], items[1])
         } else if(items.count == 1) {
             withCompletion(items[0], Item())
@@ -191,6 +192,5 @@ final class CoreDataModel: QuickToDoCoreDataProtocol, QuickToDoCoreDataInputs, Q
             withCompletion(Item(), Item())
         }
     }
-    
 }
 

@@ -127,6 +127,13 @@
 			path = CoreData;
 			sourceTree = "<group>";
 		};
+		E4368FFC227EDE0400D6DF79 /* QuickToDoTests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = QuickToDoTests;
+			sourceTree = "<group>";
+		};
 		E4AFEE3C215AB04D0001AEDA /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -160,6 +167,7 @@
 		E4C6E00019E7EA62003A89F7 = {
 			isa = PBXGroup;
 			children = (
+				E4368FFC227EDE0400D6DF79 /* QuickToDoTests */,
 				E4F9A3781A5C146900CC0573 /* CoreData.framework */,
 				E4C6E00B19E7EA62003A89F7 /* QuickToDo */,
 				E41B97AB1A8D3E9F00BF8F51 /* Frameworks */,
@@ -275,7 +283,8 @@
 					};
 					E4C6E02019E7EA63003A89F7 = {
 						CreatedOnToolsVersion = 6.0.1;
-						TestTargetID = E4C6E00819E7EA62003A89F7;
+						DevelopmentTeam = ENT89NLKC9;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -284,6 +293,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -460,7 +470,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		E4C6E02919E7EA63003A89F7 /* Debug */ = {
+		E402001B226DF7EE0047A681 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -478,28 +488,66 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Debug;
+		};
+		E402001C226DF7EE0047A681 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 339EA3DD8F9162C475035285 /* Pods-QuickToDo.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = QuickToDo/QuickToDo.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = ENT89NLKC9;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = QuickToDo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = Persukibo.QuickToDo;
+				PRODUCT_NAME = QuickToDo;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		E402001D226DF7EE0047A681 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3B4C516769C5AEA6EE6C967E /* Pods-QuickToDoTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = ENT89NLKC9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = QuickToDoTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -531,40 +579,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
-		};
-		E4C6E02C19E7EA63003A89F7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 339EA3DD8F9162C475035285 /* Pods-QuickToDo.debug.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = QuickToDo/QuickToDo.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = ENT89NLKC9;
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = QuickToDo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = Persukibo.QuickToDo;
-				PRODUCT_NAME = QuickToDo;
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Debug;
 		};
 		E4C6E02D19E7EA63003A89F7 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -581,7 +602,7 @@
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = QuickToDo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Persukibo.QuickToDo;
 				PRODUCT_NAME = QuickToDo;
@@ -592,33 +613,14 @@
 			};
 			name = Release;
 		};
-		E4C6E02F19E7EA63003A89F7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4C516769C5AEA6EE6C967E /* Pods-QuickToDoTests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = QuickToDoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuickToDo.app/QuickToDo";
-			};
-			name = Debug;
-		};
 		E4C6E03019E7EA63003A89F7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A97DD8250808A8AD94FBF903 /* Pods-QuickToDoTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = ENT89NLKC9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -626,7 +628,7 @@
 				INFOPLIST_FILE = QuickToDoTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuickToDo.app/QuickToDo";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};
@@ -636,8 +638,8 @@
 		E4C6E00419E7EA62003A89F7 /* Build configuration list for PBXProject "QuickToDo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E4C6E02919E7EA63003A89F7 /* Debug */,
 				E4C6E02A19E7EA63003A89F7 /* Release */,
+				E402001B226DF7EE0047A681 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -645,8 +647,8 @@
 		E4C6E02B19E7EA63003A89F7 /* Build configuration list for PBXNativeTarget "QuickToDo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E4C6E02C19E7EA63003A89F7 /* Debug */,
 				E4C6E02D19E7EA63003A89F7 /* Release */,
+				E402001C226DF7EE0047A681 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -654,8 +656,8 @@
 		E4C6E02E19E7EA63003A89F7 /* Build configuration list for PBXNativeTarget "QuickToDoTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E4C6E02F19E7EA63003A89F7 /* Debug */,
 				E4C6E03019E7EA63003A89F7 /* Release */,
+				E402001D226DF7EE0047A681 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

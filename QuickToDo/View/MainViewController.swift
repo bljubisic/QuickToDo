@@ -35,6 +35,13 @@ class MainViewController: UIViewController {
         
     }
     
+    func insert(withModel: QuickToDoProtocol) {
+        let viewModel = QuickToDoViewModel(withModel) {
+                self.itemsTableView.reloadData()
+            }
+        self.viewModel = viewModel
+    }
+    
     /*
     // MARK: - Navigation
 
@@ -49,46 +56,47 @@ class MainViewController: UIViewController {
 
 extension MainViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.viewModel.inputs.getItemsSize() > 0 {
-            return self.viewModel.inputs.getItemsSize() + 1
-        } else {
-            return 1
-        }
+        return self.viewModel.inputs.getItemsSize() + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if (indexPath.row > self.viewModel.inputs.getItemsSize()) || self.viewModel.inputs.getItemsSize() == 0 {
+        let row = indexPath.row
+        
+        if (self.viewModel.inputs.getItemsSize() == 0 || row > self.viewModel.inputs.getItemsSize() - 1) {
             let cellIdentifier = "addItemCell"
             let cell: AddItemTableViewCell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! AddItemTableViewCell
             cell.addItemTextBox
                 .rx
                 .text
                 .filter { text in
-                    return (text != nil && text != "")
+                    return (text != nil)
                 }
-                .subscribe(onNext: { [unowned self] item in
+                .subscribe(onNext: { item in
                     if let itemUnwrapped = item {
-                        print(itemUnwrapped)
+//                        print("item: \(itemUnwrapped)")
                         self.viewModel.inputs.getHints(for: itemUnwrapped, withCompletion: { (nameOne, nameTwo) in
+//                            print(nameOne)
                             cell.firstItemSuggestion.setTitle(nameOne, for: UIControlState.normal)
+//                            print(cell.firstItemSuggestion.isHidden)
                         })
                     }
                 },
                     onError: { (Error) in
                     print(Error)
-                },
-                    onCompleted: {
-                    print("")
                 }) {
-                    print("")
             }.disposed(by: disposeBag)
             cell.addItemTextBox
                 .rx
                 .controlEvent([.editingDidEndOnExit])
+                .filter({ text -> Bool in
+                    return !self.viewModel.outputs.itemsArray.contains(where: { (item) -> Bool in
+                        return item.name == cell.addItemTextBox.text
+                    })
+                })
                 .subscribe{ text in
                     if let word = cell.addItemTextBox.text {
-                        print("Completed")
-                        print(word)
+//                        print("Completed")
+//                        print(word)
                         _  = self.viewModel.inputs.add(Item(
                             name: word,
                             count: 1,
@@ -104,6 +112,16 @@ extension MainViewController: UITableViewDataSource {
         else {
             let cellIdentifier = "itemCell"
             let cell: ItemTableViewCell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! ItemTableViewCell
+            cell.itemName.text = self.viewModel.outputs.itemsArray[row].name
+            let item = self.viewModel.outputs.itemsArray[row]
+//            print("\(item) : \(indexPath.row)" )
+            var imageName = "select"
+            if item.done {
+                imageName = "selected"
+            }
+            if let imageSelected = UIImage(named: imageName) {
+                cell.used.setImage(imageSelected, for: UIControl.State.normal)
+            }
             return cell
         }
     }

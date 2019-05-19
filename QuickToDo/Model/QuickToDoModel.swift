@@ -20,6 +20,7 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
     }
     
     var cloudStatus: Observable<CloudStatus> {
+        _ = self.coreData.inputs.getItems()
         return cloudStatusPrivate
     }
     
@@ -30,6 +31,7 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
     }
     
     func add(_ item: Item) -> (Bool, Error?) {
+//        print("calling insert with: \(item)")
         let newItem = self.coreData.inputs.insert(item)
         self.itemsPrivate.onNext(newItem)
         return (true, nil)
@@ -43,12 +45,18 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
     }
     
     func getHints(for itemName: String) -> Observable<String> {
-        self.coreData.inputs.getHints(for: itemName) { (firstItem, secondItem) in
-            itemHints.onNext(firstItem.name)
-            itemHints.onNext(secondItem.name)
-            itemHints.onCompleted()
-        }
-        return itemHints.asObserver()
+        
+        return Observable.create({ (observer) -> Disposable in
+            self.coreData.inputs.getHints(for: itemName) { (firstItem, secondItem) in
+                print(firstItem, secondItem)
+                observer.onNext(firstItem.name)
+                observer.onNext(secondItem.name)
+                observer.onCompleted()
+            }
+            return Disposables.create()
+        })
+
+            //itemHints.onCompleted()
     }
     
     

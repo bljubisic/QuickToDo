@@ -12,7 +12,7 @@ import RxSwift
 protocol QuickToDoViewModelInputs {
     func add(_ newItem: Item) -> (Bool, Error?)
     func update(_ item: Item, withItem: Item) -> (Bool, Error?)
-    func getItems() -> (Bool, Error?)
+    func getItems(completionBlock: @escaping () -> Void) -> (Bool, Error?)
     func getItemsSize() -> Int
     func getHints(for itemName: String, withCompletion: @escaping (String, String) -> Void) -> Void
 }

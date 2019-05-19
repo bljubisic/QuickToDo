@@ -32,32 +32,34 @@ class AddItemTableViewCell: UITableViewCell {
         
         self.firstItemSuggestion = UIButton()
         self.firstItemSuggestion.setTitle("First Hint", for: UIControl.State.normal)
+        self.firstItemSuggestion.setTitleColor(UIColor.blue, for: .normal)
+        self.firstItemSuggestion.frame = CGRect.init(x: 0, y: 0, width: 80, height: 30)
         self.seccondItemSuggestion = UIButton()
         
-        self.contentView.addSubview(addItemTextBox)
-        self.contentView.addSubview(firstItemSuggestion)
-        self.contentView.addSubview(seccondItemSuggestion)
+        self.contentView.addSubview(self.addItemTextBox)
+        self.contentView.addSubview(self.firstItemSuggestion)
+        self.contentView.addSubview(self.seccondItemSuggestion)
         
 
         self.addItemTextBox.snp.makeConstraints { (make) in
             //make.top.equalTo(contentView).offset(5)
-            make.left.equalTo(contentView).inset(5)
-            make.right.equalTo(contentView).inset(-5)
+            make.left.equalTo(self.contentView).inset(5)
+            make.right.equalTo(self.contentView).inset(-5)
             make.height.equalTo(30)
         }
        
         self.firstItemSuggestion.snp.makeConstraints { (make) in
-            make.top.equalTo(addItemTextBox.snp.bottom).offset(16)
-            make.left.equalTo(contentView).offset(5)
-            make.bottom.equalTo(contentView).offset(-16)
+            make.top.equalTo(self.addItemTextBox.snp.bottom).offset(16)
+            make.left.equalTo(self.contentView).offset(5)
+            make.bottom.equalTo(self.contentView).offset(-16)
             make.height.equalTo(30)
             make.width.equalTo(80)
         }
         
         self.seccondItemSuggestion.snp.makeConstraints { (make) in
-            make.top.equalTo(addItemTextBox.snp.bottom).offset(16)
-            make.right.equalTo(contentView).offset(-5)
-            make.bottom.equalTo(contentView).offset(-16)
+            make.top.equalTo(self.addItemTextBox.snp.bottom).offset(16)
+            make.right.equalTo(self.contentView).offset(-5)
+            make.bottom.equalTo(self.contentView).offset(-16)
             make.height.equalTo(30)
             make.width.equalTo(80)
         }

@@ -18,21 +18,22 @@ class ItemTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.used = UIButton()
+        self.itemName = UILabel()
+        self.contentView.addSubview(used)
+        self.contentView.addSubview(itemName)
         self.used.snp.makeConstraints { (make) in
             make.centerY.equalTo(self.contentView.snp.centerY)
-            make.left.equalTo(self.contentView).inset(0)
+            make.left.equalTo(self.contentView).inset(5)
             make.width.equalTo(35)
             make.height.equalTo(35)
         }
         
-        self.itemName = UILabel()
         self.itemName.snp.makeConstraints { (make) in
-            make.centerY.equalTo(contentView.snp.centerY)
-            make.left.equalTo(self.used).inset(8)
-            make.right.equalTo(contentView).inset(-5)
+            make.centerY.equalTo(self.contentView.snp.centerY)
+            make.left.equalTo(self.used.snp.right).inset(-8)
+            make.right.equalTo(self.contentView).inset(-5)
             make.height.equalTo(20)
         }
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
