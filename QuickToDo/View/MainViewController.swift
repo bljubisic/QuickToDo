@@ -73,11 +73,9 @@ extension MainViewController: UITableViewDataSource {
                 }
                 .subscribe(onNext: { item in
                     if let itemUnwrapped = item {
-//                        print("item: \(itemUnwrapped)")
                         self.viewModel.inputs.getHints(for: itemUnwrapped, withCompletion: { (nameOne, nameTwo) in
-//                            print(nameOne)
-                            cell.firstItemSuggestion.setTitle(nameOne, for: UIControlState.normal)
-//                            print(cell.firstItemSuggestion.isHidden)
+                            cell.firstItemSuggestion.setTitle(nameOne, for: .normal)
+                            cell.seccondItemSuggestion.setTitle(nameTwo, for: .normal)
                         })
                     }
                 },
@@ -87,16 +85,14 @@ extension MainViewController: UITableViewDataSource {
             }.disposed(by: disposeBag)
             cell.addItemTextBox
                 .rx
-                .controlEvent([.editingDidEndOnExit])
+                .controlEvent([.editingDidEndOnExit])   
                 .filter({ text -> Bool in
                     return !self.viewModel.outputs.itemsArray.contains(where: { (item) -> Bool in
-                        return item.name == cell.addItemTextBox.text
+                        return (item.name == cell.addItemTextBox.text || cell.addItemTextBox.text == "")
                     })
                 })
                 .subscribe{ text in
                     if let word = cell.addItemTextBox.text {
-//                        print("Completed")
-//                        print(word)
                         _  = self.viewModel.inputs.add(Item(
                             name: word,
                             count: 1,
@@ -105,6 +101,7 @@ extension MainViewController: UITableViewDataSource {
                             shown: true,
                             createdAt: Date()
                         ))
+                        cell.addItemTextBox.text = ""
                     }
                 }.disposed(by: disposeBag)
             return cell
@@ -127,7 +124,17 @@ extension MainViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 98.0
+        let row = indexPath.row
+        
+        if (row == 0 && row > self.viewModel.inputs.getItemsSize() - 1) {
+            return 78.0
+        }
+        else if(row > self.viewModel.inputs.getItemsSize() - 1){
+            return 78.0
+        }
+        else {
+            return 61.0
+        }
     }
 }
 
