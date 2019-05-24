@@ -55,6 +55,8 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
             }
             return Disposables.create()
         })
+        .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+        .observeOn(MainScheduler.instance)
 
             //itemHints.onCompleted()
     }
