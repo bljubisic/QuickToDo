@@ -32,8 +32,10 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
         return self.model.inputs.add(newItem)
     }
     
-    func update(_ item: Item, withItem: Item) -> (Bool, Error?) {
-        return self.model.inputs.update(item)
+    func update(_ item: Item, withItem: Item, completionBlock: @escaping () -> Void) -> (Bool, Error?) {
+        _ = self.model.inputs.update(item, withItem: withItem)
+        completionBlock()
+        return (true, nil)
     }
     
     func getItems(completionBlock: @escaping () -> Void) -> (Bool, Error?) {
@@ -43,6 +45,12 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
             }) {
                 self.itemsArray.append(newItem)
                 completionBlock()
+            } else {
+                if let index = self.itemsArray.firstIndex(where: { (item) -> Bool in
+                    item.name == newItem.name
+                }) {
+                    self.itemsArray[index] = newItem
+                }
             }
         },
         onError: { (Error) in

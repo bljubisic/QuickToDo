@@ -37,10 +37,10 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
         return (true, nil)
     }
     
-    func update(_ item: Item) -> (Bool, Error?) {
+    func update(_ item: Item, withItem newItem: Item) -> (Bool, Error?) {
         let oldItem = self.coreData.inputs.getItemWith(item.name)
-        let newItem = self.coreData.inputs.update(oldItem, withItem: item)
-        self.itemsPrivate.onNext(newItem)
+        let superNewItem = self.coreData.inputs.update(oldItem, withItem: newItem)
+        self.itemsPrivate.onNext(superNewItem)
         return(true, nil)
     }
     

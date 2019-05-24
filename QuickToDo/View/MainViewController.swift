@@ -119,6 +119,7 @@ extension MainViewController: UITableViewDataSource {
             if let imageSelected = UIImage(named: imageName) {
                 cell.used.setImage(imageSelected, for: UIControl.State.normal)
             }
+            cell.used.addTarget(self, action: #selector(updateItem), for: .touchUpInside)
             return cell
         }
     }
@@ -134,6 +135,34 @@ extension MainViewController: UITableViewDataSource {
         }
         else {
             return 61.0
+        }
+    }
+    
+    @objc func updateItem(sender: AnyObject) {
+        let buttonPosition: CGPoint = sender.convert(CGPoint.zero, to: self.itemsTableView)
+        let indexPath: NSIndexPath = self.itemsTableView.indexPathForRow(at: buttonPosition)! as NSIndexPath
+        
+        let row: Int = indexPath.row
+        
+        if (row <= self.viewModel.outputs.itemsArray.count - 1) {
+            let item = self.viewModel.outputs.itemsArray[row]
+            
+            let newItem: Item = Item.itemDoneLens.set(!item.done, item)
+            _ = self.viewModel.inputs.update(item, withItem: newItem) {
+                self.itemsTableView.reloadData()
+            }
+            
+            /*
+            if(item.used == 1) {
+                item.completed = 0
+                tmpCell.usedButton.selected = false
+            } else {
+                item.completed = 1
+                tmpCell.usedButton.selected = true
+            }
+            self.itemsTable.reloadData()
+            dataManager.updateItem(item)
+            */
         }
     }
 }

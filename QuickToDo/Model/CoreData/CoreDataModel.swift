@@ -121,7 +121,7 @@ final class CoreDataModel: QuickToDoCoreDataProtocol, QuickToDoCoreDataInputs, Q
         let request: NSFetchRequest<ItemMO> = NSFetchRequest()
         request.entity = itemEntity
         
-        let predicate: NSPredicate = NSPredicate(format: "word = \(itemWord)")
+        let predicate: NSPredicate = NSPredicate(format: "word = \"\(itemWord)\"")
         
         request.predicate = predicate
         
