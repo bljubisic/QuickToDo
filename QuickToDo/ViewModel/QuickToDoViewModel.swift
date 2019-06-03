@@ -24,12 +24,31 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
         items = self.model.outputs.items
         cloudStatus = self.model.outputs.cloudStatus
         itemsArray = [Item]()
-        _ = self.getItems(completionBlock: withTableUpdateCompletion)
     }
     
     func add(_ newItem: Item) -> (Bool, Error?) {
 //        print("Calling add with: \(newItem)")
         return self.model.inputs.add(newItem)
+    }
+    
+    private func getFilteredItemsNum(filterImpl done: Bool) -> Observable<Int> {
+        return Observable.create({ (observer) -> Disposable in
+            self.model.outputs.items.subscribe(onNext: { (count) in
+                observer.onNext(self.itemsArray.filter({ (item) -> Bool in
+                    return item.done == done
+                }).count)
+            }).disposed(by: self.disposeBag)
+            return Disposables.create()
+        })
+    }
+    
+    func getItemsNumbers() -> Observable<(Int, Int)> {
+        let doneItemsNum = getFilteredItemsNum(filterImpl: true)
+        let remainItemsNum = getFilteredItemsNum(filterImpl: false)
+        
+        return Observable.combineLatest(doneItemsNum, remainItemsNum) { value1, value2 in
+            return (value1, value2)
+        }
     }
     
     func update(_ item: Item, withItem: Item, completionBlock: @escaping () -> Void) -> (Bool, Error?) {
@@ -39,25 +58,25 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
     }
     
     func getItems(completionBlock: @escaping () -> Void) -> (Bool, Error?) {
-        self.model.outputs.items.subscribe(onNext: { (newItem) in
-            if !self.itemsArray.contains(where: { (item) -> Bool in
-                item.name == newItem.name
-            }) {
-                self.itemsArray.append(newItem)
-                completionBlock()
-            } else {
-                if let index = self.itemsArray.firstIndex(where: { (item) -> Bool in
+        self.model.outputs.items
+            .subscribe(onNext: { (newItem) in
+                if !self.itemsArray.contains(where: { (item) -> Bool in
                     item.name == newItem.name
                 }) {
-                    self.itemsArray[index] = newItem
+                    self.itemsArray.append(newItem)
+                    completionBlock()
+                } else {
+                    if let index = self.itemsArray.firstIndex(where: { (item) -> Bool in
+                        item.name == newItem.name
+                    }) {
+                        self.itemsArray[index] = newItem
+                    }
                 }
-            }
-        },
-        onError: { (Error) in
-            print(Error)
-        }) {
+            }, onError: { (Error) in
+                print(Error)
+            }) {
         }.disposed(by: disposeBag)
-        return (true, nil)
+        return self.model.inputs.getItems()
     }
     
     func getItemsSize() -> Int {
@@ -81,6 +100,16 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
             }
         }.disposed(by: disposeBag)
         
+    }
+    
+    func getItemsArray(withFilter: Bool = false) -> [Item] {
+        if !withFilter {
+            return self.itemsArray
+        } else {
+            return self.itemsArray.filter({ (item) -> Bool in
+                return item.done == true
+            })
+        }
     }
     
     var cloudStatus: Observable<CloudStatus>

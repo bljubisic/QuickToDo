@@ -26,7 +26,7 @@ public final class ItemMO: ManagedObject {
         localItemMO.used = item.shown
         localItemMO.word = item.name
         localItemMO.uploadedToICloud = item.uploadedToICloud
-        
+        _ = moc.saveOrRollback()
         return localItemMO
     }
     

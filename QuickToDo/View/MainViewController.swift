@@ -16,23 +16,72 @@ class MainViewController: UIViewController {
     var viewModel: QuickToDoViewModelProtoocol!
     
     var itemsTableView: UITableView!
+    var topBar: UIView!
+    var selectionButton: UIButton!
+    var itemsNumber: UILabel!
+    var selectorItems: UIButton!
     
     let disposeBag = DisposeBag()
+    
+    private var filterDone = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = #colorLiteral(red: 0.4392156899, green: 0.01176470611, blue: 0.1921568662, alpha: 1)
-        itemsTableView = UITableView();
+        self.view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        
+        itemsTableView = UITableView()
         self.view.addSubview(self.itemsTableView)
         self.itemsTableView.dataSource = self
         self.itemsTableView.delegate = self
         self.itemsTableView.register(ItemTableViewCell.self, forCellReuseIdentifier: "itemCell")
         self.itemsTableView.register(AddItemTableViewCell.self, forCellReuseIdentifier: "addItemCell")
         self.itemsTableView.snp.makeConstraints { (make) in
-            make.edges.equalTo(self.view).inset(UIEdgeInsets(top: 20, left: 5, bottom: 5, right: 0))
+            make.edges.equalTo(self.view).inset(UIEdgeInsets(top: 105, left: 5, bottom: 5, right: -5))
         }
-
+        _ = self.viewModel.inputs.getItems() {
+            self.itemsTableView.reloadData()
+        }
         
+        self.topBar = UIView()
+        self.topBar.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        self.view.addSubview(self.topBar)
+        self.topBar.snp.makeConstraints { (make) in
+            make.top.equalTo(self.view.snp.top).inset(35)
+            make.bottom.equalTo(self.itemsTableView.snp.top).inset(-1)
+            make.left.equalTo(self.view.snp.left)
+            make.right.equalTo(self.view.snp.right)
+        }
+        
+        self.itemsNumber = UILabel()
+        self.topBar.addSubview(self.itemsNumber)
+        self.itemsNumber.snp.makeConstraints { (make) in
+            make.top.equalTo(self.topBar.snp.top).inset(10)
+            make.bottom.equalTo(self.topBar.snp.bottom).inset(-10)
+            make.left.equalTo(self.topBar.snp.left).inset(10)
+        }
+        
+        self.selectorItems = UIButton()
+        self.selectorItems.setTitleColor(UIColor.blue, for: .normal)
+        self.selectorItems.setTitle("Show only remaining", for: .normal)
+        self.selectorItems.setTitle("Show all", for: .selected)
+        self.topBar.addSubview(self.selectorItems)
+        self.selectorItems.snp.makeConstraints { (make) in
+            make.top.equalTo(self.topBar.snp.top).inset(10)
+            make.bottom.equalTo(self.topBar.snp.bottom).inset(-10)
+            make.right.equalTo(self.topBar.snp.right).inset(10)
+        }
+        
+        self.viewModel.inputs.getItemsNumbers().subscribe(onNext: { (arg0) in
+            
+            let (done, remain) = arg0
+            self.itemsNumber.text = "\(done)/\(remain)"
+        }).disposed(by: disposeBag)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+
+
     }
     
     func insert(withModel: QuickToDoProtocol) {
@@ -40,6 +89,34 @@ class MainViewController: UIViewController {
                 self.itemsTableView.reloadData()
             }
         self.viewModel = viewModel
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        
+        var contentInsets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if(UIInterfaceOrientation.portrait.isPortrait) {
+                contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.height + 30, right: 0.0)
+            } else {
+                contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.width, right: 0.0)
+            }
+        }
+        
+        
+        self.itemsTableView.contentInset = contentInsets
+        
+        let index: IndexPath = IndexPath(row: self.viewModel.inputs.getItemsSize(), section: 0)
+        
+        self.itemsTableView.scrollToRow(at: index, at: UITableView.ScrollPosition.top, animated: true)
+        
+        
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification ) {
+        self.itemsTableView.contentInset = UIEdgeInsets.zero;
+        self.itemsTableView.scrollIndicatorInsets = UIEdgeInsets.zero;
+        
     }
     
     /*
@@ -109,7 +186,7 @@ extension MainViewController: UITableViewDataSource {
         else {
             let cellIdentifier = "itemCell"
             let cell: ItemTableViewCell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! ItemTableViewCell
-            cell.itemName.text = self.viewModel.outputs.itemsArray[row].name
+            cell.itemName.text = self.viewModel.inputs.getItemsArray(withFilter: filterDone)[row].name
             let item = self.viewModel.outputs.itemsArray[row]
 //            print("\(item) : \(indexPath.row)" )
             var imageName = "select"

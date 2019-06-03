@@ -13,6 +13,7 @@ protocol QuickToDoInputs {
     func add(_ item: Item) -> (Bool, Error?)
     func update(_ item: Item, withItem: Item) -> (Bool, Error?)
     func getHints(for itemName: String) -> Observable<String>
+    func getItems() -> (Bool, Error?)
 }
 
 protocol QuickToDoOutputs {

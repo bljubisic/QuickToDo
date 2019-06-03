@@ -14,13 +14,13 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
     private let itemsPrivate: PublishSubject<Item> = PublishSubject()
     private let cloudStatusPrivate: PublishSubject<CloudStatus> = PublishSubject()
     private let itemHints: PublishSubject<String> = PublishSubject()
+    private let disposeBag = DisposeBag()
     
     var items: Observable<Item> {
         return itemsPrivate
     }
     
     var cloudStatus: Observable<CloudStatus> {
-        _ = self.coreData.inputs.getItems()
         return cloudStatusPrivate
     }
     
@@ -28,6 +28,15 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
     
     init(_ withCoreData: QuickToDoCoreDataProtocol) {
         coreData = withCoreData
+    }
+    
+    func getItems() -> (Bool, Error?) {
+        self.coreData.outputs.items.subscribe({ (item) in
+            if let itemElement = item.element {
+                self.itemsPrivate.onNext(itemElement)
+            }
+        }).disposed(by: disposeBag)
+        return self.coreData.inputs.getItems()
     }
     
     func add(_ item: Item) -> (Bool, Error?) {
@@ -60,7 +69,6 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
 
             //itemHints.onCompleted()
     }
-    
     
     var inputs: QuickToDoInputs { return self }
     
