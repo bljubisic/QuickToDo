@@ -59,7 +59,7 @@ class MainViewController: UIViewController {
             make.bottom.equalTo(self.topBar.snp.bottom).inset(-10)
             make.left.equalTo(self.topBar.snp.left).inset(10)
         }
-        
+        self.itemsNumber.text = "\(self.viewModel.outputs.doneItemsNum)/\(self.viewModel.outputs.totalItemsNum)"
         self.selectorItems = UIButton()
         self.selectorItems.setTitleColor(UIColor.blue, for: .normal)
         self.selectorItems.setTitle("Show only remaining", for: .normal)
@@ -70,9 +70,10 @@ class MainViewController: UIViewController {
             make.bottom.equalTo(self.topBar.snp.bottom).inset(-10)
             make.right.equalTo(self.topBar.snp.right).inset(10)
         }
+        self.selectorItems.addTarget(self, action: #selector(updateShowItems), for: .touchUpInside)
         
         self.viewModel.inputs.getItemsNumbers().subscribe(onNext: { (arg0) in
-            
+
             let (done, remain) = arg0
             self.itemsNumber.text = "\(done)/\(remain)"
         }).disposed(by: disposeBag)
@@ -82,6 +83,10 @@ class MainViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
 
 
+    }
+    
+    @objc func updateShowItems(sender: AnyObject) -> Void {
+        print("Update show items")
     }
     
     func insert(withModel: QuickToDoProtocol) {

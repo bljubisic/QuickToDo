@@ -35,7 +35,7 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
         return Observable.create({ (observer) -> Disposable in
             self.model.outputs.items.subscribe(onNext: { (count) in
                 observer.onNext(self.itemsArray.filter({ (item) -> Bool in
-                    return item.done == done
+                    return ((done) ? (item.done == done) : true)
                 }).count)
             }).disposed(by: self.disposeBag)
             return Disposables.create()
@@ -119,6 +119,20 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
     var itemsArray: [Item]
     
     let disposeBag = DisposeBag()
+    
+    var doneItemsNum: Int {
+        get {
+            return self.itemsArray.filter({ (item) -> Bool in
+                return item.done == true
+            }).count
+        }
+    }
+    
+    var totalItemsNum: Int {
+        get {
+            return self.itemsArray.count
+        }
+    }
     
     
 }
