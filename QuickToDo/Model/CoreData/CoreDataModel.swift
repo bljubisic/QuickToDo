@@ -80,25 +80,20 @@ final class CoreDataModel: QuickToDoCoreDataProtocol, QuickToDoCoreDataInputs, Q
     
     func getItems() -> (Bool, Error?) {
         
-        let itemEntity = NSEntityDescription.entity(forEntityName: "Item", in: self.managedObjectContext!)
-        let request: NSFetchRequest<ItemMO> = NSFetchRequest()
-        request.entity = itemEntity
-        
-        do {
-            let fetchedItems = try self.managedObjectContext!.fetch(request as! NSFetchRequest<NSFetchRequestResult>) as! [ItemMO]
-            for itemMO in fetchedItems {
-                let tmpItem: Item = Item(name: itemMO.word,
-                                         count: itemMO.count,
-                                         uploadedToICloud: itemMO.uploadedToICloud,
-                                         done: itemMO.completed,
-                                         shown: itemMO.used,
-                                         createdAt: itemMO.lastused)
-                itemsPrivate.onNext(tmpItem)
-            }
-        } catch {
-            print(error)
-            //fatalError("Failed to fetch profiles: \(error)")
-            return(false, error)
+        guard let moc = self.managedObjectContext else {
+            return (false, nil)
+        }
+        let fetchedItems =  ItemMO.fetchInContext(context: moc) { request in
+            request.returnsObjectsAsFaults = false
+        }
+        for itemMO in fetchedItems {
+            let tmpItem: Item = Item(name: itemMO.word,
+                                     count: itemMO.count,
+                                     uploadedToICloud: itemMO.uploadedToICloud,
+                                     done: itemMO.completed,
+                                     shown: itemMO.used,
+                                     createdAt: itemMO.lastused)
+            itemsPrivate.onNext(tmpItem)
         }
         return (true, nil)
     }
@@ -117,26 +112,23 @@ final class CoreDataModel: QuickToDoCoreDataProtocol, QuickToDoCoreDataInputs, Q
     
     func getItemWith(_ itemWord: String) -> Item {
         let item = Item()
-        let itemEntity = NSEntityDescription.entity(forEntityName: "Item", in: self.managedObjectContext!)
-        let request: NSFetchRequest<ItemMO> = NSFetchRequest()
-        request.entity = itemEntity
         
         let predicate: NSPredicate = NSPredicate(format: "word = \"\(itemWord)\"")
         
-        request.predicate = predicate
-        
-        do {
-            let fetchedItems = try self.managedObjectContext!.fetch(request as! NSFetchRequest<NSFetchRequestResult>) as! [ItemMO]
-            for itemMO in fetchedItems {
-                return Item(name: itemMO.word,
-                            count: itemMO.count,
-                            uploadedToICloud: itemMO.uploadedToICloud,
-                            done: itemMO.completed,
-                            shown: itemMO.used,
-                            createdAt: itemMO.lastused)
+        guard let moc = self.managedObjectContext else {
+            return item
+        }
+        let fetchedItems =  ItemMO.fetchInContext(context: moc) { request in
+            request.predicate = predicate
+            request.returnsObjectsAsFaults = false
             }
-        } catch {
-            fatalError("Failed to fetch profiles: \(error)")
+        for itemMO in fetchedItems {
+            return Item(name: itemMO.word,
+                        count: itemMO.count,
+                        uploadedToICloud: itemMO.uploadedToICloud,
+                        done: itemMO.completed,
+                        shown: itemMO.used,
+                        createdAt: itemMO.lastused)
         }
         return item
         
@@ -160,29 +152,24 @@ final class CoreDataModel: QuickToDoCoreDataProtocol, QuickToDoCoreDataInputs, Q
     
     func getHints(for itemName: String, withCompletion: (Item, Item) -> Void) -> Void {
         var items: [Item] = [Item]()
-        let itemEntity = NSEntityDescription.entity(forEntityName: "Item", in: self.managedObjectContext!)
-        let request: NSFetchRequest<ItemMO> = NSFetchRequest()
-        request.entity = itemEntity
         
         let predicate: NSPredicate = NSPredicate(format: "word beginswith \"\(itemName)\"")
         
-        request.predicate = predicate
-        
-        do {
-            let fetchedItems = try self.managedObjectContext!.fetch(request as! NSFetchRequest<NSFetchRequestResult>) as! [ItemMO]
-            for itemMO in fetchedItems {
-                let tmpItem: Item = Item(name: itemMO.word,
-                                         count: itemMO.count,
-                                         uploadedToICloud: itemMO.uploadedToICloud,
-                                         done: itemMO.completed,
-                                         shown: itemMO.used,
-                                         createdAt: itemMO.lastused)
-                items.append(tmpItem)
-            }
-        } catch {
-            print(error)
-            //fatalError("Failed to fetch profiles: \(error)")
-            withCompletion(Item(), Item())
+        guard let moc = self.managedObjectContext else {
+            return
+        }
+        let fetchedItems = ItemMO.fetchInContext(context: moc) { request in
+            request.predicate = predicate
+            request.returnsObjectsAsFaults = false
+        }
+        for itemMO in fetchedItems {
+            let tmpItem: Item = Item(name: itemMO.word,
+                                     count: itemMO.count,
+                                     uploadedToICloud: itemMO.uploadedToICloud,
+                                     done: itemMO.completed,
+                                     shown: itemMO.used,
+                                     createdAt: itemMO.lastused)
+            items.append(tmpItem)
         }
         if(items.count > 1) {
             withCompletion(items[0], items[1])
