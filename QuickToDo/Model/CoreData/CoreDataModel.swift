@@ -10,18 +10,18 @@ import Foundation
 import CoreData
 import RxSwift
 
-final class CoreDataModel: QuickToDoCoreDataProtocol, QuickToDoCoreDataInputs, QuickToDoCoreDataOutputs {
+final class CoreDataModel: QuickToDoStorageProtocol, QuickToDoStorageInputs, QuickToDoStorageOutputs {
     
     
     private var itemsPrivate: PublishSubject<Item>
     
     var items: Observable<Item> {
-        return itemsPrivate
+        return itemsPrivate.subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
     }
     
-    var inputs: QuickToDoCoreDataInputs { return self }
+    var inputs: QuickToDoStorageInputs { return self }
     
-    var outputs: QuickToDoCoreDataOutputs { return self }
+    var outputs: QuickToDoStorageOutputs { return self }
     
     init() {
         itemsPrivate = PublishSubject()
@@ -92,7 +92,8 @@ final class CoreDataModel: QuickToDoCoreDataProtocol, QuickToDoCoreDataInputs, Q
                                      uploadedToICloud: itemMO.uploadedToICloud,
                                      done: itemMO.completed,
                                      shown: itemMO.used,
-                                     createdAt: itemMO.lastused)
+                                     createdAt: itemMO.lastused,
+                                     lastUsedAt: itemMO.lastused)
             itemsPrivate.onNext(tmpItem)
         }
         return (true, nil)
@@ -106,7 +107,8 @@ final class CoreDataModel: QuickToDoCoreDataProtocol, QuickToDoCoreDataInputs, Q
                     uploadedToICloud: itemMO.uploadedToICloud,
                     done: itemMO.completed,
                     shown: itemMO.used,
-                    createdAt: itemMO.lastused)
+                    createdAt: itemMO.lastused,
+                    lastUsedAt: itemMO.lastused)
         
     }
     
@@ -128,7 +130,8 @@ final class CoreDataModel: QuickToDoCoreDataProtocol, QuickToDoCoreDataInputs, Q
                         uploadedToICloud: itemMO.uploadedToICloud,
                         done: itemMO.completed,
                         shown: itemMO.used,
-                        createdAt: itemMO.lastused)
+                        createdAt: itemMO.lastused,
+                        lastUsedAt: itemMO.lastused)
         }
         return item
         
@@ -145,7 +148,8 @@ final class CoreDataModel: QuickToDoCoreDataProtocol, QuickToDoCoreDataInputs, Q
                         uploadedToICloud: itemMO.uploadedToICloud,
                         done: itemMO.completed,
                         shown: itemMO.used,
-                        createdAt: itemMO.lastused)
+                        createdAt: itemMO.lastused,
+                        lastUsedAt: itemMO.lastused)
         }
         return Item()
     }
@@ -168,7 +172,8 @@ final class CoreDataModel: QuickToDoCoreDataProtocol, QuickToDoCoreDataInputs, Q
                                      uploadedToICloud: itemMO.uploadedToICloud,
                                      done: itemMO.completed,
                                      shown: itemMO.used,
-                                     createdAt: itemMO.lastused)
+                                     createdAt: itemMO.lastused,
+                                     lastUsedAt: itemMO.lastused)
             items.append(tmpItem)
         }
         if(items.count > 1) {

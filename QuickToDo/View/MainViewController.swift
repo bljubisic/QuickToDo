@@ -181,7 +181,8 @@ extension MainViewController: UITableViewDataSource {
                             uploadedToICloud: false,
                             done: false,
                             shown: true,
-                            createdAt: Date()
+                            createdAt: Date(),
+                            lastUsedAt: Date()
                         ))
                         cell.addItemTextBox.text = ""
                     }
@@ -233,18 +234,6 @@ extension MainViewController: UITableViewDataSource {
             _ = self.viewModel.inputs.update(item, withItem: newItem) {
                 self.itemsTableView.reloadData()
             }
-            
-            /*
-            if(item.used == 1) {
-                item.completed = 0
-                tmpCell.usedButton.selected = false
-            } else {
-                item.completed = 1
-                tmpCell.usedButton.selected = true
-            }
-            self.itemsTable.reloadData()
-            dataManager.updateItem(item)
-            */
         }
     }
 }

@@ -17,7 +17,6 @@ protocol QuickToDoInputs {
 }
 
 protocol QuickToDoOutputs {
-    var coreData: QuickToDoCoreDataProtocol { get }
     var items: Observable<Item> { get }
     var cloudStatus: Observable<CloudStatus> { get }
 }
@@ -27,7 +26,7 @@ protocol QuickToDoProtocol {
     var outputs: QuickToDoOutputs { get }
     
 }
-protocol QuickToDoCoreDataInputs {
+protocol QuickToDoStorageInputs {
     func getItems() -> (Bool, Error?)
     func insert(_ item:Item) -> Item
     func getItemWith(_ itemWord: String) -> Item
@@ -35,11 +34,11 @@ protocol QuickToDoCoreDataInputs {
     func getHints(for itemName: String, withCompletion: (Item, Item) -> Void) -> Void
 }
 
-protocol QuickToDoCoreDataOutputs {
+protocol QuickToDoStorageOutputs {
     var items: Observable<Item> { get }
 }
 
-protocol QuickToDoCoreDataProtocol {
-    var inputs: QuickToDoCoreDataInputs { get }
-    var outputs: QuickToDoCoreDataOutputs { get }
+protocol QuickToDoStorageProtocol {
+    var inputs: QuickToDoStorageInputs { get }
+    var outputs: QuickToDoStorageOutputs { get }
 }

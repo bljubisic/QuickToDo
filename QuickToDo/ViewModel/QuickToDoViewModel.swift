@@ -59,6 +59,7 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
     
     func getItems(completionBlock: @escaping () -> Void) -> (Bool, Error?) {
         self.model.outputs.items
+            .observeOn(MainScheduler.instance)
             .subscribe(onNext: { (newItem) in
                 if !self.itemsArray.contains(where: { (item) -> Bool in
                     item.name == newItem.name

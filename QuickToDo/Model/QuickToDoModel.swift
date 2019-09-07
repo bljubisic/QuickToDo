@@ -24,14 +24,15 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
         return cloudStatusPrivate
     }
     
-    var coreData: QuickToDoCoreDataProtocol
+    private var coreData: QuickToDoStorageProtocol
     
-    init(_ withCoreData: QuickToDoCoreDataProtocol) {
+    init(_ withCoreData: QuickToDoStorageProtocol) {
         coreData = withCoreData
     }
     
     func getItems() -> (Bool, Error?) {
-        self.coreData.outputs.items.subscribe({ (item) in
+        self.coreData.outputs.items
+            .subscribe({ (item) in
             if let itemElement = item.element {
                 self.itemsPrivate.onNext(itemElement)
             }
@@ -40,7 +41,6 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
     }
     
     func add(_ item: Item) -> (Bool, Error?) {
-//        print("calling insert with: \(item)")
         let newItem = self.coreData.inputs.insert(item)
         self.itemsPrivate.onNext(newItem)
         return (true, nil)
@@ -57,7 +57,6 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
         
         return Observable.create({ (observer) -> Disposable in
             self.coreData.inputs.getHints(for: itemName) { (firstItem, secondItem) in
-                print(firstItem, secondItem)
                 observer.onNext(firstItem.name)
                 observer.onNext(secondItem.name)
                 observer.onCompleted()
