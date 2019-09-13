@@ -16,6 +16,10 @@ enum CloudStatus {
     case disconnected
 }
 
+public struct QuickToDoError: Error {
+    
+}
+
 public struct Item: Codable {
     
     let name: String

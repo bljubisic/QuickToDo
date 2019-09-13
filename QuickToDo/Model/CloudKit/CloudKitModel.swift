@@ -24,11 +24,18 @@ final class CloudKitModel: QuickToDoStorageProtocol, QuickToDoStorageInputs, Qui
     }
     
     func getItems() -> (Bool, Error?) {
-        Item.retrieveFromCloud { (result: Result <[Item]>) in
+        ItemCK.retrieveFromCloud { (result: Result <[ItemCK]>) in
             switch result {
             case .success(let data):
                 print("\(data.count) items retrieved from Cloud")
-                data.forEach({ (item) in
+                data.forEach({ (itemck) in
+                    let item = Item(name: itemck.name,
+                                    count: itemck.count,
+                                    uploadedToICloud: itemck.uploadedToICloud,
+                                    done: itemck.done,
+                                    shown: itemck.shown,
+                                    createdAt: itemck.createdAt,
+                                    lastUsedAt: itemck.lastUsedAt)
                     self.itemsPrivate.onNext(item)
                 })
             case .failure(let error):
@@ -39,12 +46,25 @@ final class CloudKitModel: QuickToDoStorageProtocol, QuickToDoStorageInputs, Qui
     }
     
     func insert(_ item: Item) -> Item {
-        var itemRet = item
-        item.saveInCloud { (result: Result<CKRecord>) in
+        let itemck = ItemCK(name: item.name,
+                            count: item.count,
+                            uploadedToICloud: item.uploadedToICloud,
+                            done: item.done,
+                            shown: item.shown,
+                            createdAt: item.createdAt,
+                            lastUsedAt: item.lastUsedAt)
+        var itemRet = Item()
+        itemck.saveInCloud { (result: Result<CKRecord>) in
             switch result {
             case .success(_):
-                print("\(item.name) saved in Cloud")
-                itemRet = item
+                print("\(itemck.name) saved in Cloud")
+                itemRet = Item(name: itemck.name,
+                                count: itemck.count,
+                                uploadedToICloud: itemck.uploadedToICloud,
+                                done: itemck.done,
+                                shown: itemck.shown,
+                                createdAt: itemck.createdAt,
+                                lastUsedAt: itemck.lastUsedAt)
             case .failure(let error):
                 print(error.localizedDescription)
             }
@@ -53,16 +73,22 @@ final class CloudKitModel: QuickToDoStorageProtocol, QuickToDoStorageInputs, Qui
     }
     
     func getItemWith(_ itemWord: String) -> Item {
-        var retItem = Item()
-        Item.retrieveFromCloud { (result: Result<[Item]>) in
+        var itemRet = Item()
+        ItemCK.retrieveFromCloud { (result: Result<[ItemCK]>) in
             switch result {
             case .success(let value):
-                retItem = value[0]
+                itemRet = Item(name: value[0].name,
+                               count: value[0].count,
+                               uploadedToICloud: value[0].uploadedToICloud,
+                               done: value[0].done,
+                               shown: value[0].shown,
+                               createdAt: value[0].createdAt,
+                               lastUsedAt: value[0].lastUsedAt)
             case .failure(let error):
                 print(error.localizedDescription)
             }
         }
-        return retItem
+        return itemRet
     }
     
     func update(_ item: Item, withItem: Item) -> Item {

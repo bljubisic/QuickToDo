@@ -12,7 +12,6 @@ import RxSwift
 
 final class CoreDataModel: QuickToDoStorageProtocol, QuickToDoStorageInputs, QuickToDoStorageOutputs {
     
-    
     private var itemsPrivate: PublishSubject<Item>
     
     var items: Observable<Item> {
@@ -109,7 +108,6 @@ final class CoreDataModel: QuickToDoStorageProtocol, QuickToDoStorageInputs, Qui
                     shown: itemMO.used,
                     createdAt: itemMO.lastused,
                     lastUsedAt: itemMO.lastused)
-        
     }
     
     func getItemWith(_ itemWord: String) -> Item {

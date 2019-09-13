@@ -25,28 +25,57 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
     }
     
     private var coreData: QuickToDoStorageProtocol
+    private var cloudKit: QuickToDoStorageProtocol
     
-    init(_ withCoreData: QuickToDoStorageProtocol) {
+    init(_ withCoreData: QuickToDoStorageProtocol, _ withCloudKit: QuickToDoStorageProtocol) {
         coreData = withCoreData
+        cloudKit = withCloudKit
     }
     
     func getItems() -> (Bool, Error?) {
-        self.coreData.outputs.items
-            .subscribe({ (item) in
-            if let itemElement = item.element {
-                self.itemsPrivate.onNext(itemElement)
-            }
-        }).disposed(by: disposeBag)
-        return self.coreData.inputs.getItems()
+        Observable.merge([self.coreData.outputs.items, self.cloudKit.outputs.items])
+            .subscribe({(item) in
+                if let itemElement = item.element {
+                    self.itemsPrivate.onNext(itemElement)
+                }
+            }).disposed(by: disposeBag)
+        _ = self.coreData.inputs.getItems()
+        _ = self.cloudKit.inputs.getItems()
+        
+        return (true, nil)
     }
     
     func add(_ item: Item) -> (Bool, Error?) {
         let newItem = self.coreData.inputs.insert(item)
+        _ = self.cloudKit.inputs.insert(item)
         self.itemsPrivate.onNext(newItem)
         return (true, nil)
     }
     
+    private func addToCloudKit(_ item: Item) -> (Bool, Error?) {
+        _ = self.cloudKit.inputs.insert(item)
+        return (true, nil)
+    }
+    
+    private func addToCoreData(_ item: Item) -> (Bool, Error?) {
+        _ = self.coreData.inputs.insert(item)
+        return (true, nil)
+    }
+    
     func update(_ item: Item, withItem newItem: Item) -> (Bool, Error?) {
+        _ = self.updateToCloudKit(item, withItem: newItem)
+        _ = self.updateToCoreData(item, withItem: newItem)
+        return (true, nil)
+    }
+    
+    private func updateToCloudKit(_ item: Item, withItem newItem: Item) -> (Bool, Error?) {
+        let oldItem = self.cloudKit.inputs.getItemWith(item.name)
+        let superNewItem = self.cloudKit.inputs.update(oldItem, withItem: newItem)
+        self.itemsPrivate.onNext(superNewItem)
+        return (true, nil)
+    }
+    
+    private func updateToCoreData(_ item: Item, withItem newItem: Item) -> (Bool, Error?) {
         let oldItem = self.coreData.inputs.getItemWith(item.name)
         let superNewItem = self.coreData.inputs.update(oldItem, withItem: newItem)
         self.itemsPrivate.onNext(superNewItem)
@@ -55,6 +84,24 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
     
     func getHints(for itemName: String) -> Observable<String> {
         
+        return Observable.merge([self.getHintsFromCoreData(for: itemName), self.getHintsFromCloudKit(for: itemName)])
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
+
+    }
+    
+    private func getHintsFromCloudKit(for itemName: String) -> Observable<String> {
+        return Observable.create({ (observer) -> Disposable in
+            self.cloudKit.inputs.getHints(for: itemName) { (firstItem, secondItem) in
+                observer.onNext(firstItem.name)
+                observer.onNext(secondItem.name)
+                observer.onCompleted()
+            }
+            return Disposables.create()
+        })
+    }
+    
+    private func getHintsFromCoreData(for itemName: String) -> Observable<String> {
         return Observable.create({ (observer) -> Disposable in
             self.coreData.inputs.getHints(for: itemName) { (firstItem, secondItem) in
                 observer.onNext(firstItem.name)
@@ -63,10 +110,6 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
             }
             return Disposables.create()
         })
-        .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
-        .observeOn(MainScheduler.instance)
-
-            //itemHints.onCompleted()
     }
     
     var inputs: QuickToDoInputs { return self }
