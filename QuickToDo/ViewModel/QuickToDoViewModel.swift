@@ -11,8 +11,6 @@ import RxSwift
 
 class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs, QuickToDoViewModelOutputs {
     
-    
-    
     var model: QuickToDoProtocol
     
     var inputs: QuickToDoViewModelInputs { return self }
@@ -62,15 +60,15 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { (newItem) in
                 if !self.itemsArray.contains(where: { (item) -> Bool in
-                    item.name == newItem.name
+                    item.name == newItem?.name
                 }) {
-                    self.itemsArray.append(newItem)
+                    self.itemsArray.append(newItem ?? Item())
                     completionBlock()
                 } else {
                     if let index = self.itemsArray.firstIndex(where: { (item) -> Bool in
-                        item.name == newItem.name
+                        item.name == newItem?.name
                     }) {
-                        self.itemsArray[index] = newItem
+                        self.itemsArray[index] = newItem ?? Item()
                     }
                 }
             }, onError: { (Error) in
@@ -115,7 +113,7 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
     
     var cloudStatus: Observable<CloudStatus>
     
-    var items: Observable<Item>
+    var items: Observable<Item?>
     
     var itemsArray: [Item]
     

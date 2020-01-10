@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import CodableCloudKit
 
 enum CloudStatus {
     case allUpdated
@@ -20,7 +19,7 @@ public struct QuickToDoError: Error {
     
 }
 
-public struct Item: Codable {
+public struct Item {
     
     let name: String
     let count: Int
@@ -41,29 +40,6 @@ extension Item {
         shown = false
         createdAt = Date()
         lastUsedAt = Date()
-    }
-}
-
-extension Item {
-    enum CodingKeys: String, CodingKey {
-        case name
-        case count
-        case uploadedToICloud
-        case done
-        case shown
-        case createdAt
-        case lastUsedAt
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.name = try container.decode(String.self, forKey: .name)
-        self.count = try container.decode(Int.self, forKey: .count)
-        self.uploadedToICloud = try container.decode(Bool.self, forKey: .uploadedToICloud)
-        self.done = try container.decode(Bool.self, forKey: .done)
-        self.shown = try container.decode(Bool.self, forKey: .shown)
-        self.createdAt = try container.decode(Date.self, forKey: .createdAt)
-        self.lastUsedAt = try container.decode(Date.self, forKey: .lastUsedAt)
     }
 }
 

@@ -11,12 +11,12 @@ import RxSwift
 
 class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
     
-    private let itemsPrivate: PublishSubject<Item> = PublishSubject()
+    private let itemsPrivate: PublishSubject<Item?> = PublishSubject()
     private let cloudStatusPrivate: PublishSubject<CloudStatus> = PublishSubject()
     private let itemHints: PublishSubject<String> = PublishSubject()
     private let disposeBag = DisposeBag()
     
-    var items: Observable<Item> {
+    var items: Observable<Item?> {
         return itemsPrivate
     }
     
@@ -46,19 +46,9 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
     }
     
     func add(_ item: Item) -> (Bool, Error?) {
-        let newItem = self.coreData.inputs.insert(item)
-        _ = self.cloudKit.inputs.insert(item)
-        self.itemsPrivate.onNext(newItem)
-        return (true, nil)
-    }
-    
-    private func addToCloudKit(_ item: Item) -> (Bool, Error?) {
-        _ = self.cloudKit.inputs.insert(item)
-        return (true, nil)
-    }
-    
-    private func addToCoreData(_ item: Item) -> (Bool, Error?) {
-        _ = self.coreData.inputs.insert(item)
+        let newItem = self.coreData.inputs.insert()
+        _ = self.cloudKit.inputs.insert()(item)
+        self.itemsPrivate.onNext(newItem(item).0)
         return (true, nil)
     }
     
@@ -69,25 +59,21 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
     }
     
     private func updateToCloudKit(_ item: Item, withItem newItem: Item) -> (Bool, Error?) {
-        let oldItem = self.cloudKit.inputs.getItemWith(item.name)
-        let superNewItem = self.cloudKit.inputs.update(oldItem, withItem: newItem)
-        self.itemsPrivate.onNext(superNewItem)
+        let superNewItem = self.cloudKit.inputs.update()
+        self.itemsPrivate.onNext(superNewItem(item, newItem).0)
         return (true, nil)
     }
     
     private func updateToCoreData(_ item: Item, withItem newItem: Item) -> (Bool, Error?) {
-        let oldItem = self.coreData.inputs.getItemWith(item.name)
-        let superNewItem = self.coreData.inputs.update(oldItem, withItem: newItem)
-        self.itemsPrivate.onNext(superNewItem)
+        let superNewItem = self.coreData.inputs.update()
+        self.itemsPrivate.onNext(superNewItem(item, newItem).0)
         return(true, nil)
     }
     
     func getHints(for itemName: String) -> Observable<String> {
-        
         return Observable.merge([self.getHintsFromCoreData(for: itemName), self.getHintsFromCloudKit(for: itemName)])
             .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
             .observeOn(MainScheduler.instance)
-
     }
     
     private func getHintsFromCloudKit(for itemName: String) -> Observable<String> {

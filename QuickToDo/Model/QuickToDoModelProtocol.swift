@@ -17,7 +17,7 @@ protocol QuickToDoInputs {
 }
 
 protocol QuickToDoOutputs {
-    var items: Observable<Item> { get }
+    var items: Observable<Item?> { get }
     var cloudStatus: Observable<CloudStatus> { get }
 }
 
@@ -27,15 +27,19 @@ protocol QuickToDoProtocol {
     
 }
 protocol QuickToDoStorageInputs {
+    
+    typealias itemProcess = (Item) -> (Item?, Bool)
+    typealias itemProcessUpdate = (Item, Item) -> (Item?, Bool)
+    typealias itemProcessFind = (String) -> (Item?, Bool)
     func getItems() -> (Bool, Error?)
-    func insert(_ item:Item) -> Item
-    func getItemWith(_ itemWord: String) -> Item
-    func update(_ item: Item, withItem: Item) -> Item
+    func insert() -> itemProcess
+    func getItemWith() -> itemProcessFind
+    func update() -> itemProcessUpdate
     func getHints(for itemName: String, withCompletion: (Item, Item) -> Void) -> Void
 }
 
 protocol QuickToDoStorageOutputs {
-    var items: Observable<Item> { get }
+    var items: Observable<Item?> { get }
 }
 
 protocol QuickToDoStorageProtocol {

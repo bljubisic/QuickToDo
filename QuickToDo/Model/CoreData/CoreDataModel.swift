@@ -12,9 +12,9 @@ import RxSwift
 
 final class CoreDataModel: QuickToDoStorageProtocol, QuickToDoStorageInputs, QuickToDoStorageOutputs {
     
-    private var itemsPrivate: PublishSubject<Item>
+    private var itemsPrivate: PublishSubject<Item?>
     
-    var items: Observable<Item> {
+    var items: Observable<Item?> {
         return itemsPrivate.subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
     }
     
@@ -78,7 +78,6 @@ final class CoreDataModel: QuickToDoStorageProtocol, QuickToDoStorageInputs, Qui
     }()
     
     func getItems() -> (Bool, Error?) {
-        
         guard let moc = self.managedObjectContext else {
             return (false, nil)
         }
@@ -98,58 +97,62 @@ final class CoreDataModel: QuickToDoStorageProtocol, QuickToDoStorageInputs, Qui
         return (true, nil)
     }
     
-    func insert(_ item:Item) -> Item {
-        
-        let itemMO: ItemMO = ItemMO.insertIntoContext(moc: self.managedObjectContext!, item: item)
-        return Item(name: itemMO.word,
-                    count: itemMO.count,
-                    uploadedToICloud: itemMO.uploadedToICloud,
-                    done: itemMO.completed,
-                    shown: itemMO.used,
-                    createdAt: itemMO.lastused,
-                    lastUsedAt: itemMO.lastused)
-    }
-    
-    func getItemWith(_ itemWord: String) -> Item {
-        let item = Item()
-        
-        let predicate: NSPredicate = NSPredicate(format: "word = \"\(itemWord)\"")
-        
-        guard let moc = self.managedObjectContext else {
-            return item
-        }
-        let fetchedItems =  ItemMO.fetchInContext(context: moc) { request in
-            request.predicate = predicate
-            request.returnsObjectsAsFaults = false
-            }
-        for itemMO in fetchedItems {
-            return Item(name: itemMO.word,
+    func insert() -> itemProcess {
+        return { item in
+            let itemMO: ItemMO = ItemMO.insertIntoContext(moc: self.managedObjectContext!, item: item)
+            return (Item(name: itemMO.word,
                         count: itemMO.count,
                         uploadedToICloud: itemMO.uploadedToICloud,
                         done: itemMO.completed,
                         shown: itemMO.used,
                         createdAt: itemMO.lastused,
-                        lastUsedAt: itemMO.lastused)
+                        lastUsedAt: itemMO.lastused), true)
         }
-        return item
-        
     }
     
-    func update(_ item: Item, withItem: Item) -> Item {
-        let resultValue: (ItemMO?, Bool) = ItemMO.updateIntoContext(moc: self.managedObjectContext!, item: withItem)
-        if resultValue.1 == true {
-            guard let itemMO = resultValue.0 else {
-                return Item()
+    func getItemWith() -> itemProcessFind {
+        return { itemWord in
+            let item = Item()
+            
+            let predicate: NSPredicate = NSPredicate(format: "word = \"\(itemWord)\"")
+            
+            guard let moc = self.managedObjectContext else {
+                return (item, false)
             }
-            return Item(name: itemMO.word,
-                        count: itemMO.count,
-                        uploadedToICloud: itemMO.uploadedToICloud,
-                        done: itemMO.completed,
-                        shown: itemMO.used,
-                        createdAt: itemMO.lastused,
-                        lastUsedAt: itemMO.lastused)
+            let fetchedItems =  ItemMO.fetchInContext(context: moc) { request in
+                request.predicate = predicate
+                request.returnsObjectsAsFaults = false
+            }
+            for itemMO in fetchedItems {
+                return (Item(name: itemMO.word,
+                            count: itemMO.count,
+                            uploadedToICloud: itemMO.uploadedToICloud,
+                            done: itemMO.completed,
+                            shown: itemMO.used,
+                            createdAt: itemMO.lastused,
+                            lastUsedAt: itemMO.lastused), true)
+            }
+            return (item, false)
         }
-        return Item()
+    }
+    
+    func update() -> itemProcessUpdate {
+        return { (item, withItem) in
+            let resultValue: (ItemMO?, Bool) = ItemMO.updateIntoContext(moc: self.managedObjectContext!, item: withItem)
+            if resultValue.1 == true {
+                guard let itemMO = resultValue.0 else {
+                    return (Item(), false)
+                }
+                return (Item(name: itemMO.word,
+                            count: itemMO.count,
+                            uploadedToICloud: itemMO.uploadedToICloud,
+                            done: itemMO.completed,
+                            shown: itemMO.used,
+                            createdAt: itemMO.lastused,
+                            lastUsedAt: itemMO.lastused), true)
+            }
+            return (Item(), false)
+        }
     }
     
     func getHints(for itemName: String, withCompletion: (Item, Item) -> Void) -> Void {

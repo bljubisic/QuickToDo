@@ -20,7 +20,6 @@
 		E4861BC2215FA3FF0085CFB8 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */; };
 		E48B68DA215D5C3C0062B08C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48B68D9215D5C3C0062B08C /* MainViewController.swift */; };
 		E49F65FB22C379E7008D59FA /* CloudKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49F65FA22C379E7008D59FA /* CloudKitModel.swift */; };
-		E4B7FFA2232B854D004BDCF5 /* ItemCK.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4B7FFA1232B854D004BDCF5 /* ItemCK.swift */; };
 		E4BF3E6E21A04AFC00302EB8 /* QuickToDoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4BF3E6D21A04AFC00302EB8 /* QuickToDoViewModel.swift */; };
 		E4C6E01219E7EA63003A89F7 /* QuickToDo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E4C6E01019E7EA63003A89F7 /* QuickToDo.xcdatamodeld */; };
 		E4C6E01719E7EA63003A89F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01519E7EA63003A89F7 /* Main.storyboard */; };
@@ -58,11 +57,11 @@
 		E435ECEE21890A6A00E68960 /* ItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemTableViewCell.swift; sourceTree = "<group>"; };
 		E435ECF021890A7900E68960 /* AddItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemTableViewCell.swift; sourceTree = "<group>"; };
 		E46FD0E2216406220007FBB7 /* QuickToDoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoModel.swift; sourceTree = "<group>"; };
+		E47939AA23AB8520002C7AC2 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E4861BBF215FA0010085CFB8 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		E48B68D9215D5C3C0062B08C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		E49F65FA22C379E7008D59FA /* CloudKitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitModel.swift; sourceTree = "<group>"; };
-		E4B7FFA1232B854D004BDCF5 /* ItemCK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCK.swift; sourceTree = "<group>"; };
 		E4BF3E6D21A04AFC00302EB8 /* QuickToDoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoViewModel.swift; sourceTree = "<group>"; };
 		E4C6E00919E7EA62003A89F7 /* QuickToDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuickToDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4C6E00D19E7EA62003A89F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -142,7 +141,6 @@
 			isa = PBXGroup;
 			children = (
 				E49F65FA22C379E7008D59FA /* CloudKitModel.swift */,
-				E4B7FFA1232B854D004BDCF5 /* ItemCK.swift */,
 			);
 			path = CloudKit;
 			sourceTree = "<group>";
@@ -181,6 +179,7 @@
 		E4C6E00019E7EA62003A89F7 = {
 			isa = PBXGroup;
 			children = (
+				E47939AA23AB8520002C7AC2 /* MyPlayground.playground */,
 				E4368FFC227EDE0400D6DF79 /* QuickToDoTests */,
 				E4F9A3781A5C146900CC0573 /* CoreData.framework */,
 				E4C6E00B19E7EA62003A89F7 /* QuickToDo */,
@@ -387,17 +386,17 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-QuickToDoTests/Pods-QuickToDoTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/CodableCloudKit/CodableCloudKit.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyCloudKit/SwiftyCloudKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CodableCloudKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyCloudKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -411,17 +410,17 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-QuickToDo/Pods-QuickToDo-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/CodableCloudKit/CodableCloudKit.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyCloudKit/SwiftyCloudKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CodableCloudKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyCloudKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -444,7 +443,6 @@
 				E49F65FB22C379E7008D59FA /* CloudKitModel.swift in Sources */,
 				E435ECF121890A7900E68960 /* AddItemTableViewCell.swift in Sources */,
 				E435ECE521680E0300E68960 /* CoreDataModel.swift in Sources */,
-				E4B7FFA2232B854D004BDCF5 /* ItemCK.swift in Sources */,
 				E4FBC6DA215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift in Sources */,
 				E435ECE72169327000E68960 /* ManagedObjectTypeProtocol.swift in Sources */,
 				E46FD0E3216406220007FBB7 /* QuickToDoModel.swift in Sources */,
