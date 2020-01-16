@@ -46,9 +46,13 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
     }
     
     func add(_ item: Item) -> (Bool, Error?) {
-        let newItem = self.coreData.inputs.insert()
-        _ = self.cloudKit.inputs.insert()(item)
-        self.itemsPrivate.onNext(newItem(item).0)
+        let newInsertFunction = self.coreData.inputs.insert()
+        let ckInsertFunctiomn = self.cloudKit.inputs.insert()
+        _ = ckInsertFunctiomn(item) { (newItem, error) in
+            let updateFunction = self.coreData.inputs.update()
+            _ = updateFunction(item, newItem)
+        }
+        self.itemsPrivate.onNext(newInsertFunction(item, nil).0)
         return (true, nil)
     }
     

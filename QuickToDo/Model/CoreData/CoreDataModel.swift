@@ -98,7 +98,7 @@ final class CoreDataModel: QuickToDoStorageProtocol, QuickToDoStorageInputs, Qui
     }
     
     func insert() -> itemProcess {
-        return { item in
+        return { item, completionHandler  in
             let itemMO: ItemMO = ItemMO.insertIntoContext(moc: self.managedObjectContext!, item: item)
             return (Item(name: itemMO.word,
                         count: itemMO.count,
