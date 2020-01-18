@@ -77,7 +77,7 @@ final class CoreDataModel: QuickToDoStorageProtocol, QuickToDoStorageInputs, Qui
         return managedObjectContext
     }()
     
-    func getItems() -> (Bool, Error?) {
+    func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?) {
         guard let moc = self.managedObjectContext else {
             return (false, nil)
         }

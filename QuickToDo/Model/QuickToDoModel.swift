@@ -39,8 +39,11 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
                     self.itemsPrivate.onNext(itemElement)
                 }
             }).disposed(by: disposeBag)
-        _ = self.coreData.inputs.getItems()
-        _ = self.cloudKit.inputs.getItems()
+        _ = self.coreData.inputs.getItems(withCompletion: nil)
+        _ = self.cloudKit.inputs.getItems() { item in
+            let funcUpdate = self.coreData.inputs.update()
+            _ = funcUpdate(item, item)
+        }
         
         return (true, nil)
     }

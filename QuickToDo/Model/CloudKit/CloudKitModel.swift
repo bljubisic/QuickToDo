@@ -27,7 +27,29 @@ final class CloudKitModel: QuickToDoStorageProtocol, QuickToDoStorageInputs, Qui
         database = container.privateCloudDatabase
     }
     
-    func getItems() -> (Bool, Error?) {
+    func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?) {
+        let predicate = NSPredicate(format: "Used = 1")
+        let query = CKQuery(recordType: "Items", predicate: predicate)
+        
+        self.database.perform(query, inZoneWith: nil) { (receivedRecords, receivedError) in
+            guard let records = receivedRecords else {
+                return
+            }
+            guard let completion = withCompletion else {
+                return
+            }
+            for record in records {
+                let tempItem = Item(name: record.string("Name")!,
+                                    count: record.int("Count")!,
+                                    uploadedToICloud: true,
+                                    done: (record.int("Done")! == 1) ? true : false,
+                                    shown: (record.int("Used")! == 1) ? true : false,
+                                    createdAt: record.creationDate!,
+                                    lastUsedAt: record.modificationDate!)
+                completion(tempItem)
+                self.itemsPrivate.onNext(tempItem)
+            }
+        }
         return(true, nil)
     }
     
@@ -73,13 +95,36 @@ final class CloudKitModel: QuickToDoStorageProtocol, QuickToDoStorageInputs, Qui
     func getItemWith() -> itemProcessFind {
         return { itemWord in
 
-            var itemRet = Item()
+            let itemRet = Item()
             return (itemRet, true)
         }
     }
     
     func update() -> itemProcessUpdate {
         return { (item, newItem) in
+            
+            let predicate = NSPredicate(format: "Name = %@ and Used = %d", newItem.name, (newItem.shown) ? 1 : 0)
+            let query = CKQuery(recordType: "Items", predicate: predicate)
+            
+            self.database.perform(query, inZoneWith: nil) { (recordsRecived, error) in
+                var modifiedRecords = [CKRecord]()
+                guard let records = recordsRecived else {
+                    return
+                }
+                
+                for record in records {
+                    record.set(int: (newItem.shown) ? 1 : 0, key: "Used")
+                    record.set(int: (newItem.done) ? 1 : 0, key: "Done")
+                    modifiedRecords.append(record)
+                }
+                let updateOperation = CKModifyRecordsOperation(recordsToSave: modifiedRecords, recordIDsToDelete: nil)
+                updateOperation.perRecordCompletionBlock = {record, errorReceived in
+                    if let error = errorReceived {
+                        print("Unable to modify record: \(record). Error: \(error.localizedDescription)")
+                    }
+                }
+                self.database.add(updateOperation)
+            }
             return (Item(), true)
         }
     }
