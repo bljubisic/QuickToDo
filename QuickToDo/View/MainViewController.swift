@@ -27,7 +27,7 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+//        self.view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         itemsTableView = UITableView()
         self.view.addSubview(self.itemsTableView)
@@ -43,7 +43,7 @@ class MainViewController: UIViewController {
         }
         
         self.topBar = UIView()
-        self.topBar.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+//        self.topBar.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         self.view.addSubview(self.topBar)
         self.topBar.snp.makeConstraints { (make) in
             make.top.equalTo(self.view.snp.top).inset(35)
@@ -61,7 +61,7 @@ class MainViewController: UIViewController {
         }
         self.itemsNumber.text = "\(self.viewModel.outputs.doneItemsNum)/\(self.viewModel.outputs.totalItemsNum)"
         self.selectorItems = UIButton()
-        self.selectorItems.setTitleColor(UIColor.blue, for: .normal)
+//        self.selectorItems.setTitleColor(UIColor.blue, for: .normal)
         self.selectorItems.setTitle("Show only remaining", for: .normal)
         self.selectorItems.setTitle("Show all", for: .selected)
         self.topBar.addSubview(self.selectorItems)
@@ -72,11 +72,13 @@ class MainViewController: UIViewController {
         }
         self.selectorItems.addTarget(self, action: #selector(updateShowItems), for: .touchUpInside)
         
-        self.viewModel.inputs.getItemsNumbers().subscribe(onNext: { (arg0) in
-
-            let (done, remain) = arg0
-            self.itemsNumber.text = "\(done)/\(remain)"
-        }).disposed(by: disposeBag)
+        self.viewModel.inputs.getItemsNumbers()
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { (arg0) in
+                let (done, remain) = arg0
+                self.itemsNumber.text = "\(done)/\(remain)"
+            })
+            .disposed(by: disposeBag)
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         

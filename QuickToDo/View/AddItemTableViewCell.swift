@@ -32,11 +32,11 @@ class AddItemTableViewCell: UITableViewCell {
         
         self.firstItemSuggestion = UIButton()
         self.firstItemSuggestion.setTitle("First Hint", for: UIControl.State.normal)
-        self.firstItemSuggestion.setTitleColor(UIColor.blue, for: .normal)
+//        self.firstItemSuggestion.setTitleColor(UIColor.blue, for: .normal)
         self.firstItemSuggestion.sizeToFit()
         self.seccondItemSuggestion = UIButton()
         self.seccondItemSuggestion.setTitle("First Hint", for: UIControl.State.normal)
-        self.seccondItemSuggestion.setTitleColor(UIColor.blue, for: .normal)
+//        self.seccondItemSuggestion.setTitleColor(UIColor.blue, for: .normal)
         self.seccondItemSuggestion.sizeToFit()
         
         self.contentView.addSubview(self.addItemTextBox)

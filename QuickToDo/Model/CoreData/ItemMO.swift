@@ -34,7 +34,8 @@ public final class ItemMO: ManagedObject {
         let predicate: NSPredicate = NSPredicate(format: "%K == %@", "word", item.name)
         let oldItemMOWrapped: ItemMO? = ItemMO.findOrFetchInContext(moc: moc, matchingPredicate: predicate)
         guard let oldItemMO = oldItemMOWrapped else {
-            return (nil, false)
+            let returnValue = ItemMO.insertIntoContext(moc: moc, item: item)
+            return (returnValue, true)
         }
         oldItemMO.completed = item.done
         oldItemMO.count = item.count

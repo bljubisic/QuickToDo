@@ -58,12 +58,21 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
     func getItems(completionBlock: @escaping () -> Void) -> (Bool, Error?) {
         self.model.outputs.items
             .observeOn(MainScheduler.instance)
+            .filter({ (itemRec) -> Bool in
+                guard let item = itemRec else {
+                    return false
+                }
+                return item.name != ""
+            })
             .subscribe(onNext: { (newItem) in
                 if !self.itemsArray.contains(where: { (item) -> Bool in
                     item.name == newItem?.name
                 }) {
                     self.itemsArray.append(newItem ?? Item())
-                    completionBlock()
+                    DispatchQueue.main.async {
+                        completionBlock()
+                    }
+                    
                 } else {
                     if let index = self.itemsArray.firstIndex(where: { (item) -> Bool in
                         item.name == newItem?.name
