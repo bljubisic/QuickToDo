@@ -40,6 +40,32 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
         })
     }
     
+    private func getTotalItemNumbers() -> Observable<Int> {
+        return self.model.outputs.items
+                .filter { (itemReceived) -> Bool in
+                    guard let item = itemReceived else {
+                        return false
+                    }
+                    return item.shown == true
+                }
+                .scan(0) { (priorValue, _) -> Int in
+                    return priorValue + 1
+                }
+    }
+    
+    private func getDoneItemNumbers() -> Observable<Int> {
+        return self.model.outputs.items
+                .filter { (itemReceived) -> Bool in
+                    guard let item = itemReceived else {
+                        return false
+                    }
+                    return item.shown == true && item.done == true
+                }
+                .scan(0) { (priorValue, _) -> Int in
+                    return priorValue + 1
+                }
+    }
+    
     func getItemsNumbers() -> Observable<(Int, Int)> {
         let doneItemsNum = getFilteredItemsNum(filterImpl: true)
         let remainItemsNum = getFilteredItemsNum(filterImpl: false)
@@ -142,5 +168,21 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
         }
     }
     
+    func hideAllDoneItems() -> Bool {
+        let updatedItems = self.itemsArray
+                            .filter { (item) -> Bool in
+                                return item.done == true
+                            }
+                            .map { (item) -> Item in
+                                return Item.itemShownLens.set(!item.shown, item)
+                            }
+        updatedItems.forEach { (item) in
+            _ = self.model.inputs.update(item, withItem: item)
+        }
+        self.itemsArray = self.itemsArray.filter({ (item) -> Bool in
+            return item.shown == true
+        })
+        return true
+    }
     
 }

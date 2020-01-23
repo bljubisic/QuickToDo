@@ -17,6 +17,7 @@ protocol QuickToDoViewModelInputs {
     func getItemsSize() -> Int
     func getHints(for itemName: String, withCompletion: @escaping (String, String) -> Void) -> Void
     func getItemsNumbers() -> Observable<(Int, Int)>
+    func hideAllDoneItems() -> Bool
 }
 
 protocol QuickToDoViewModelOutputs {

@@ -112,6 +112,7 @@
 		E41B97AB1A8D3E9F00BF8F51 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				20AA199DE811657804D253DF /* Pods */,
 				E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */,
 				E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */,
 				BDAD6B8AE1842746DE469D1A /* Pods_QuickToDo.framework */,
@@ -185,7 +186,6 @@
 				E4C6E00B19E7EA62003A89F7 /* QuickToDo */,
 				E41B97AB1A8D3E9F00BF8F51 /* Frameworks */,
 				E4C6E00A19E7EA62003A89F7 /* Products */,
-				20AA199DE811657804D253DF /* Pods */,
 			);
 			sourceTree = "<group>";
 		};

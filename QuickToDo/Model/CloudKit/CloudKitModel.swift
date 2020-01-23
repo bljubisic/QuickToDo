@@ -103,7 +103,7 @@ final class CloudKitModel: QuickToDoStorageProtocol, QuickToDoStorageInputs, Qui
     func update() -> itemProcessUpdate {
         return { (item, newItem) in
             
-            let predicate = NSPredicate(format: "Name = %@ and Used = %d", newItem.name, (newItem.shown) ? 1 : 0)
+            let predicate = NSPredicate(format: "(Name == %@) and (Used == %d)", newItem.name, (newItem.shown) ? 0 : 1)
             let query = CKQuery(recordType: "Items", predicate: predicate)
             
             self.database.perform(query, inZoneWith: nil) { (recordsRecived, error) in

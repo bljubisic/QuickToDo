@@ -64,19 +64,31 @@ class MainViewController: UIViewController {
 //        self.selectorItems.setTitleColor(UIColor.blue, for: .normal)
         self.selectorItems.setTitle("Show only remaining", for: .normal)
         self.selectorItems.setTitle("Show all", for: .selected)
+        self.selectorItems.isEnabled = false
+        self.selectorItems.isUserInteractionEnabled = false
         self.topBar.addSubview(self.selectorItems)
         self.selectorItems.snp.makeConstraints { (make) in
             make.top.equalTo(self.topBar.snp.top).inset(10)
             make.bottom.equalTo(self.topBar.snp.bottom).inset(-10)
             make.right.equalTo(self.topBar.snp.right).inset(10)
         }
-        self.selectorItems.addTarget(self, action: #selector(updateShowItems), for: .touchUpInside)
+        self.selectorItems.rx.tap
+            .debug()
+            .subscribe(onNext: { _ in
+                _ = self.viewModel.inputs.hideAllDoneItems()
+                self.itemsTableView.reloadData()
+            })
+            .disposed(by: disposeBag)
         
         self.viewModel.inputs.getItemsNumbers()
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { (arg0) in
-                let (done, remain) = arg0
-                self.itemsNumber.text = "\(done)/\(remain)"
+                let (total, done) = arg0
+                self.itemsNumber.text = "\(total)/\(done)"
+                if (done > 0) {
+                    self.selectorItems.isEnabled = true
+                    self.selectorItems.isUserInteractionEnabled = true
+                }
             })
             .disposed(by: disposeBag)
         
@@ -85,10 +97,6 @@ class MainViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
 
 
-    }
-    
-    @objc func updateShowItems(sender: AnyObject) -> Void {
-        print("Update show items")
     }
     
     func insert(withModel: QuickToDoProtocol) {
@@ -125,6 +133,7 @@ class MainViewController: UIViewController {
         self.itemsTableView.scrollIndicatorInsets = UIEdgeInsets.zero;
         
     }
+
     
     /*
     // MARK: - Navigation

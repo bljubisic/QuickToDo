@@ -78,7 +78,7 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
     }
     
     func getHints(for itemName: String) -> Observable<String> {
-        return Observable.merge([self.getHintsFromCoreData(for: itemName), self.getHintsFromCloudKit(for: itemName)])
+        return self.getHintsFromCoreData(for: itemName)
             .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
             .observeOn(MainScheduler.instance)
     }
