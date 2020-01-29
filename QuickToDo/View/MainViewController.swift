@@ -214,6 +214,11 @@ extension MainViewController: UITableViewDataSource {
                 cell.used.setImage(imageSelected, for: UIControl.State.normal)
             }
             cell.used.addTarget(self, action: #selector(updateItem), for: .touchUpInside)
+            if item.uploadedToICloud {
+                cell.cloud.image = UIImage(named: "Cloud")
+            } else {
+                cell.cloud.image = UIImage(named: "NoCloud")
+            }
             return cell
         }
     }

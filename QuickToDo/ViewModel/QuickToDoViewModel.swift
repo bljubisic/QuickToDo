@@ -90,6 +90,13 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
                 }
                 return item.name != ""
             })
+            .filter({ (itemRec) -> Bool in
+                guard let item = itemRec else {
+                    return false
+                }
+                print(item)
+                return item.shown
+            })
             .subscribe(onNext: { (newItem) in
                 if !self.itemsArray.contains(where: { (item) -> Bool in
                     item.name == newItem?.name
@@ -103,7 +110,13 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
                     if let index = self.itemsArray.firstIndex(where: { (item) -> Bool in
                         item.name == newItem?.name
                     }) {
-                        self.itemsArray[index] = newItem ?? Item()
+                        guard let newItemUnwrapped = newItem else {
+                            return
+                        }
+                        let item = self.itemsArray[index]
+                        if (item.lastUsedAt < newItemUnwrapped.lastUsedAt) {
+                            self.itemsArray[index] = newItemUnwrapped
+                        }
                     }
                 }
             }, onError: { (Error) in

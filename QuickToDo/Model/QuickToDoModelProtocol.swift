@@ -31,6 +31,7 @@ protocol QuickToDoStorageInputs {
     typealias itemProcess = (Item, ((Item, Error?) -> Void)?) -> (Item?, Bool)
     typealias itemProcessUpdate = (Item, Item) -> (Item?, Bool)
     typealias itemProcessFind = (String) -> (Item?, Bool)
+    
     func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?)
     func insert() -> itemProcess
     func getItemWith() -> itemProcessFind
