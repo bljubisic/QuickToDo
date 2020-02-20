@@ -33,3 +33,5 @@ protocol QuickToDoViewModelProtoocol {
     var inputs: QuickToDoViewModelInputs { get }
     var outputs: QuickToDoViewModelOutputs { get }
 }
+
+extension QuickToDoViewModelProtoocol where Self: ObservableObject { }

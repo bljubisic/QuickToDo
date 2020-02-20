@@ -8,8 +8,9 @@
 
 import Foundation
 import RxSwift
+import Combine
 
-class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs, QuickToDoViewModelOutputs {
+class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs, QuickToDoViewModelOutputs, ObservableObject {
     
     var model: QuickToDoProtocol
     
@@ -163,7 +164,7 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
     
     var items: Observable<Item?>
     
-    var itemsArray: [Item]
+    @Published var itemsArray: [Item]
     
     let disposeBag = DisposeBag()
     

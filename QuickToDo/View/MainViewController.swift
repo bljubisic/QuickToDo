@@ -17,6 +17,7 @@ class MainViewController: UIViewController {
     
     var itemsTableView: UITableView!
     var topBar: UIView!
+    var actionButton: UIButton!
     var selectionButton: UIButton!
     var itemsNumber: UILabel!
     var selectorItems: UIButton!
@@ -52,18 +53,27 @@ class MainViewController: UIViewController {
             make.right.equalTo(self.view.snp.right)
         }
         
+        self.actionButton = UIButton()
+        self.actionButton.setImage(UIImage(systemName: "square.and.arrow.up", withConfiguration: UIImage.SymbolConfiguration(weight: .bold)), for: .normal)
+        self.topBar.addSubview(self.actionButton)
+        self.actionButton.snp.makeConstraints { (make) in
+            make.top.equalTo(self.topBar.snp.top).inset(10)
+            make.bottom.equalTo(self.topBar.snp.bottom).inset(-10)
+            make.left.equalTo(self.topBar.snp.left).inset(10)
+        }
         self.itemsNumber = UILabel()
         self.topBar.addSubview(self.itemsNumber)
         self.itemsNumber.snp.makeConstraints { (make) in
             make.top.equalTo(self.topBar.snp.top).inset(10)
             make.bottom.equalTo(self.topBar.snp.bottom).inset(-10)
-            make.left.equalTo(self.topBar.snp.left).inset(10)
+            make.centerX.equalTo(self.topBar.snp.centerX)
         }
         self.itemsNumber.text = "\(self.viewModel.outputs.doneItemsNum)/\(self.viewModel.outputs.totalItemsNum)"
         self.selectorItems = UIButton()
 //        self.selectorItems.setTitleColor(UIColor.blue, for: .normal)
-        self.selectorItems.setTitle("Show only remaining", for: .normal)
-        self.selectorItems.setTitle("Show all", for: .selected)
+        self.selectorItems.setImage(UIImage(systemName: "clear", withConfiguration: UIImage.SymbolConfiguration(weight: .bold)), for: .normal)
+//        self.selectorItems.setTitle("Show only remaining", for: .normal)
+//        self.selectorItems.setTitle("Show all", for: .selected)
         self.selectorItems.isEnabled = false
         self.selectorItems.isUserInteractionEnabled = false
         self.topBar.addSubview(self.selectorItems)

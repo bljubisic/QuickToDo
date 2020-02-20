@@ -102,3 +102,11 @@ extension Item {
                                         lastUsedAt: oldItem.lastUsedAt)}
     )
 }
+
+extension Item: Identifiable {
+    public var id: String {
+        return name
+    }
+    
+    
+}
