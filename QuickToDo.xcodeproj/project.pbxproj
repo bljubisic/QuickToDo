@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		70205870D43A12536DFAD23D /* Pods_QuickToDoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD8069B17A767C026B526CC5 /* Pods_QuickToDoTests.framework */; };
 		9E03C8C2F1BE11AB3CDF1468 /* Pods_QuickToDo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDAD6B8AE1842746DE469D1A /* Pods_QuickToDo.framework */; };
 		E42C85F423E8603600AB6CDD /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42C85F323E8603600AB6CDD /* MainView.swift */; };
 		E435ECE521680E0300E68960 /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE421680E0300E68960 /* CoreDataModel.swift */; };
@@ -46,6 +47,10 @@
 		2CE05E2F6055C31C0270D475 /* Pods-QuickToDo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickToDo.release.xcconfig"; path = "Pods/Target Support Files/Pods-QuickToDo/Pods-QuickToDo.release.xcconfig"; sourceTree = "<group>"; };
 		339EA3DD8F9162C475035285 /* Pods-QuickToDo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickToDo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-QuickToDo/Pods-QuickToDo.debug.xcconfig"; sourceTree = "<group>"; };
 		3B4C516769C5AEA6EE6C967E /* Pods-QuickToDoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickToDoTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-QuickToDoTests/Pods-QuickToDoTests.debug.xcconfig"; sourceTree = "<group>"; };
+		5C32C57665A43BDB50A43B8A /* Pods-QuickToDo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickToDo.debug.xcconfig"; path = "Target Support Files/Pods-QuickToDo/Pods-QuickToDo.debug.xcconfig"; sourceTree = "<group>"; };
+		5E6A03BB8209EC3E7440CE0D /* Pods-QuickToDoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickToDoTests.debug.xcconfig"; path = "Target Support Files/Pods-QuickToDoTests/Pods-QuickToDoTests.debug.xcconfig"; sourceTree = "<group>"; };
+		6CEE349C15F8B330378203D5 /* Pods-QuickToDoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickToDoTests.release.xcconfig"; path = "Target Support Files/Pods-QuickToDoTests/Pods-QuickToDoTests.release.xcconfig"; sourceTree = "<group>"; };
+		88D283320C743761C56A21A7 /* Pods-QuickToDo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickToDo.release.xcconfig"; path = "Target Support Files/Pods-QuickToDo/Pods-QuickToDo.release.xcconfig"; sourceTree = "<group>"; };
 		A97DD8250808A8AD94FBF903 /* Pods-QuickToDoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QuickToDoTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-QuickToDoTests/Pods-QuickToDoTests.release.xcconfig"; sourceTree = "<group>"; };
 		BDAD6B8AE1842746DE469D1A /* Pods_QuickToDo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QuickToDo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD8069B17A767C026B526CC5 /* Pods_QuickToDoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QuickToDoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -85,6 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70205870D43A12536DFAD23D /* Pods_QuickToDoTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,6 +116,17 @@
 				A97DD8250808A8AD94FBF903 /* Pods-QuickToDoTests.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		CE150FDD6AC137119D1407FC /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				5C32C57665A43BDB50A43B8A /* Pods-QuickToDo.debug.xcconfig */,
+				88D283320C743761C56A21A7 /* Pods-QuickToDo.release.xcconfig */,
+				5E6A03BB8209EC3E7440CE0D /* Pods-QuickToDoTests.debug.xcconfig */,
+				6CEE349C15F8B330378203D5 /* Pods-QuickToDoTests.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		E41B97AB1A8D3E9F00BF8F51 /* Frameworks */ = {
@@ -192,6 +209,7 @@
 				E46E6E6F23F2A80600D26E00 /* QuickToDoTests */,
 				E41B97AB1A8D3E9F00BF8F51 /* Frameworks */,
 				E4C6E00A19E7EA62003A89F7 /* Products */,
+				CE150FDD6AC137119D1407FC /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -237,9 +255,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E46E6E7723F2A80600D26E00 /* Build configuration list for PBXNativeTarget "QuickToDoTests" */;
 			buildPhases = (
+				A776296A1A4BE586A67FC9B1 /* [CP] Check Pods Manifest.lock */,
 				E46E6E6A23F2A80600D26E00 /* Sources */,
 				E46E6E6B23F2A80600D26E00 /* Frameworks */,
 				E46E6E6C23F2A80600D26E00 /* Resources */,
+				4F753E6576E391DBBB136789 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -347,6 +367,54 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		4F753E6576E391DBBB136789 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-QuickToDoTests/Pods-QuickToDoTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyCloudKit/SwiftyCloudKit.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyCloudKit.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-QuickToDoTests/Pods-QuickToDoTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A776296A1A4BE586A67FC9B1 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-QuickToDoTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		ECD48E670E140165CE3B12B7 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -371,8 +439,9 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-QuickToDo/Pods-QuickToDo-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-QuickToDo/Pods-QuickToDo-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyCloudKit/SwiftyCloudKit.framework",
@@ -380,13 +449,14 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyCloudKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-QuickToDo/Pods-QuickToDo-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-QuickToDo/Pods-QuickToDo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -505,9 +575,9 @@
 		};
 		E402001C226DF7EE0047A681 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 339EA3DD8F9162C475035285 /* Pods-QuickToDo.debug.xcconfig */;
+			baseConfigurationReference = 5C32C57665A43BDB50A43B8A /* Pods-QuickToDo.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
@@ -583,9 +653,9 @@
 		};
 		E42C85F623E8615200AB6CDD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2CE05E2F6055C31C0270D475 /* Pods-QuickToDo.release.xcconfig */;
+			baseConfigurationReference = 88D283320C743761C56A21A7 /* Pods-QuickToDo.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
@@ -610,6 +680,7 @@
 		};
 		E46E6E7523F2A80600D26E00 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5E6A03BB8209EC3E7440CE0D /* Pods-QuickToDoTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -644,6 +715,7 @@
 		};
 		E46E6E7623F2A80600D26E00 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6CEE349C15F8B330378203D5 /* Pods-QuickToDoTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
