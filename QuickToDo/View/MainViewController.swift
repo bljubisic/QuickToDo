@@ -25,11 +25,8 @@ class MainViewController: UIViewController {
     let disposeBag = DisposeBag()
     
     private var filterDone = false
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-//        self.view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        
+    
+    private func configureScreen() {
         itemsTableView = UITableView()
         self.view.addSubview(self.itemsTableView)
         self.itemsTableView.dataSource = self
@@ -44,7 +41,7 @@ class MainViewController: UIViewController {
         }
         
         self.topBar = UIView()
-//        self.topBar.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+    //        self.topBar.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         self.view.addSubview(self.topBar)
         self.topBar.snp.makeConstraints { (make) in
             make.top.equalTo(self.view.snp.top).inset(35)
@@ -70,10 +67,10 @@ class MainViewController: UIViewController {
         }
         self.itemsNumber.text = "\(self.viewModel.outputs.doneItemsNum)/\(self.viewModel.outputs.totalItemsNum)"
         self.selectorItems = UIButton()
-//        self.selectorItems.setTitleColor(UIColor.blue, for: .normal)
+    //        self.selectorItems.setTitleColor(UIColor.blue, for: .normal)
         self.selectorItems.setImage(UIImage(systemName: "clear", withConfiguration: UIImage.SymbolConfiguration(weight: .bold)), for: .normal)
-//        self.selectorItems.setTitle("Show only remaining", for: .normal)
-//        self.selectorItems.setTitle("Show all", for: .selected)
+    //        self.selectorItems.setTitle("Show only remaining", for: .normal)
+    //        self.selectorItems.setTitle("Show all", for: .selected)
         self.selectorItems.isEnabled = false
         self.selectorItems.isUserInteractionEnabled = false
         self.topBar.addSubview(self.selectorItems)
@@ -90,6 +87,35 @@ class MainViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
+        self.actionButton.rx.tap
+            .debug()
+            .subscribe(onNext: { _ in
+                let controller = UICloudSharingController {
+                    controller, preparationCompletionHandler in
+                    self.viewModel.inputs.prepareSharing()
+                    // Code here to create the CKShare and save it to the database
+                }
+
+                controller.availablePermissions = [.allowPublic, .allowReadOnly]
+//                controller.popoverPresentationController?.barButtonItem =
+//                            shareButton as? UIBarButtonItem
+
+                self.present(controller, animated: true)
+            })
+            .disposed(by: disposeBag)
+    
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+//        self.view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        
+        self.configureScreen()
+        
         self.viewModel.inputs.getItemsNumbers()
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { (arg0) in
@@ -101,12 +127,6 @@ class MainViewController: UIViewController {
                 }
             })
             .disposed(by: disposeBag)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-
-
     }
     
     func insert(withModel: QuickToDoProtocol) {
@@ -266,4 +286,16 @@ extension MainViewController: UITableViewDataSource {
 
 extension MainViewController: UITableViewDelegate {
 
+}
+
+extension MainViewController: UICloudSharingControllerDelegate {
+    func cloudSharingController(_ csc: UICloudSharingController, failedToSaveShareWithError error: Error) {
+        print("failed to save: \(error.localizedDescription)")
+    }
+    
+    func itemTitle(for csc: UICloudSharingController) -> String? {
+        return "QuickToDo Item"
+    }
+    
+    
 }

@@ -9,13 +9,22 @@
 import Foundation
 import RxSwift
 
-class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
-    
+//MARK: QuickToDoProtocol and Variables
+class QuickToDoModel: QuickToDoProtocol {
     private let itemsPrivate: PublishSubject<Item?> = PublishSubject()
     private let cloudStatusPrivate: PublishSubject<CloudStatus> = PublishSubject()
     private let itemHints: PublishSubject<String> = PublishSubject()
     private let disposeBag = DisposeBag()
+    private var coreData: StorageProtocol
+    private var cloudKit: StorageProtocol
     
+    init(_ withCoreData: StorageProtocol, _ withCloudKit: StorageProtocol) {
+        coreData = withCoreData
+        cloudKit = withCloudKit
+    }
+}
+// MARK: QuickToDoOutputs
+extension QuickToDoModel: QuickToDoOutputs {
     var items: Observable<Item?> {
         return itemsPrivate
     }
@@ -24,12 +33,15 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
         return cloudStatusPrivate
     }
     
-    private var coreData: QuickToDoStorageProtocol
-    private var cloudKit: QuickToDoStorageProtocol
+    var inputs: QuickToDoInputs { return self }
     
-    init(_ withCoreData: QuickToDoStorageProtocol, _ withCloudKit: QuickToDoStorageProtocol) {
-        coreData = withCoreData
-        cloudKit = withCloudKit
+    var outputs: QuickToDoOutputs { return self }
+}
+
+// MARK: QuickToDoInputs
+extension QuickToDoModel: QuickToDoInputs {
+    func prepareSharing() {
+        
     }
     
     func getItems() -> (Bool, Error?) {
@@ -104,10 +116,5 @@ class QuickToDoModel: QuickToDoOutputs, QuickToDoInputs, QuickToDoProtocol {
             return Disposables.create()
         })
     }
-    
-    var inputs: QuickToDoInputs { return self }
-    
-    var outputs: QuickToDoOutputs { return self }
-    
-    
 }
+

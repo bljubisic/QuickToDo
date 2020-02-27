@@ -9,20 +9,29 @@
 import Foundation
 import RxSwift
 import Combine
-
-class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs, QuickToDoViewModelOutputs, ObservableObject {
-    
+//MARK: QuickToDoViewModelProtocol
+class QuickToDoViewModel: QuickToDoViewModelProtoocol, ObservableObject {
     var model: QuickToDoProtocol
     
-    var inputs: QuickToDoViewModelInputs { return self }
+    var cloudStatus: Observable<CloudStatus>
     
-    var outputs: QuickToDoViewModelOutputs { return self }
+    var items: Observable<Item?>
+    
+    @Published var itemsArray: [Item]
+    
+    let disposeBag = DisposeBag()
     
     init(_ withModel: QuickToDoProtocol, withTableUpdateCompletion: @escaping () -> Void) {
         self.model = withModel
         items = self.model.outputs.items
         cloudStatus = self.model.outputs.cloudStatus
         itemsArray = [Item]()
+    }
+}
+//MARK: QuickToDoViewModelInputs
+extension QuickToDoViewModel: QuickToDoViewModelInputs {
+    func prepareSharing() {
+        self.model.inputs.prepareSharing()
     }
     
     func add(_ newItem: Item) -> (Bool, Error?) {
@@ -160,27 +169,7 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
         }
     }
     
-    var cloudStatus: Observable<CloudStatus>
-    
-    var items: Observable<Item?>
-    
-    @Published var itemsArray: [Item]
-    
-    let disposeBag = DisposeBag()
-    
-    var doneItemsNum: Int {
-        get {
-            return self.itemsArray.filter({ (item) -> Bool in
-                return item.done == true
-            }).count
-        }
-    }
-    
-    var totalItemsNum: Int {
-        get {
-            return self.itemsArray.count
-        }
-    }
+
     
     func hideAllDoneItems() -> Bool {
         let updatedItems = self.itemsArray
@@ -198,5 +187,23 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs,
         })
         return true
     }
+}
+//MARK: QuickToDoOutputs
+extension QuickToDoViewModel: QuickToDoViewModelOutputs {
+    var inputs: QuickToDoViewModelInputs { return self }
     
+    var outputs: QuickToDoViewModelOutputs { return self }
+    var doneItemsNum: Int {
+        get {
+            return self.itemsArray.filter({ (item) -> Bool in
+                return item.done == true
+            }).count
+        }
+    }
+    
+    var totalItemsNum: Int {
+        get {
+            return self.itemsArray.count
+        }
+    }
 }

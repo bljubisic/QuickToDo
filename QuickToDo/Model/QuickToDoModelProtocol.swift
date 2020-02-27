@@ -14,6 +14,7 @@ protocol QuickToDoInputs {
     func update(_ item: Item, withItem: Item) -> (Bool, Error?)
     func getHints(for itemName: String) -> Observable<String>
     func getItems() -> (Bool, Error?)
+    func prepareSharing() -> Void
 }
 
 protocol QuickToDoOutputs {
@@ -26,7 +27,7 @@ protocol QuickToDoProtocol {
     var outputs: QuickToDoOutputs { get }
     
 }
-protocol QuickToDoStorageInputs {
+protocol StorageInputs {
     
     typealias itemProcess = (Item, ((Item, Error?) -> Void)?) -> (Item?, Bool)
     typealias itemProcessUpdate = (Item, Item) -> (Item?, Bool)
@@ -39,11 +40,11 @@ protocol QuickToDoStorageInputs {
     func getHints(for itemName: String, withCompletion: (Item, Item) -> Void) -> Void
 }
 
-protocol QuickToDoStorageOutputs {
+protocol StorageOutputs {
     var items: Observable<Item?> { get }
 }
 
-protocol QuickToDoStorageProtocol {
-    var inputs: QuickToDoStorageInputs { get }
-    var outputs: QuickToDoStorageOutputs { get }
+protocol StorageProtocol {
+    var inputs: StorageInputs { get }
+    var outputs: StorageOutputs { get }
 }

@@ -15,6 +15,35 @@ enum CloudStatus {
     case disconnected
 }
 
+enum RecordZones: CustomStringConvertible {
+
+    
+    case quickToDoZone
+    
+    var description: String {
+        switch self {
+        case .quickToDoZone: return "QuickToDoZone"
+        }
+    }
+}
+
+enum ItemFields: CustomStringConvertible {
+    
+    case name
+    case count
+    case done
+    case used
+    
+    var description: String {
+        switch self {
+        case .name: return "Name"
+        case .count: return "Count"
+        case .done: return "Done"
+        case .used: return "Used"
+        }
+    }
+}
+
 public struct QuickToDoError: Error {
     
 }

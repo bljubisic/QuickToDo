@@ -9,36 +9,24 @@
 import Foundation
 import CoreData
 import RxSwift
+//MARK: StorageProtocol
+final class CoreDataModel: StorageProtocol {
 
-final class CoreDataModel: QuickToDoStorageProtocol, QuickToDoStorageInputs, QuickToDoStorageOutputs {
-    
     private var itemsPrivate: PublishSubject<Item?>
     
-    var items: Observable<Item?> {
-        return itemsPrivate.subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
-    }
+    // MARK: CoreData Variables
     
-    var inputs: QuickToDoStorageInputs { return self }
-    
-    var outputs: QuickToDoStorageOutputs { return self }
-    
-    init() {
-        itemsPrivate = PublishSubject()
-    }
-    
-    // MARK: Variables
-    
-    lazy var applicationDocumentsDirectory: NSURL? = {
+    lazy private var applicationDocumentsDirectory: NSURL? = {
         return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.QuickToDoSharingDefaults") ?? nil
         }() as NSURL?
     
-    lazy var managedObjectModel: NSManagedObjectModel = {
+    lazy private var managedObjectModel: NSManagedObjectModel = {
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
         let modelURL = Bundle.main.url(forResource: "QuickToDo", withExtension: "momd")!
         return NSManagedObjectModel(contentsOf: modelURL)!
     }()
     
-    lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
+    lazy private var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
         // The persistent store coordinator for the application. This implementation creates and return a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
         // Create the coordinator and store
         var coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
@@ -66,7 +54,7 @@ final class CoreDataModel: QuickToDoStorageProtocol, QuickToDoStorageInputs, Qui
         return coordinator
     }()
     
-    lazy var managedObjectContext: NSManagedObjectContext? = {
+    lazy private var managedObjectContext: NSManagedObjectContext? = {
         // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.) This property is optional since there are legitimate error conditions that could cause the creation of the context to fail.
         let coordinator = self.persistentStoreCoordinator
         if coordinator == nil {
@@ -77,6 +65,12 @@ final class CoreDataModel: QuickToDoStorageProtocol, QuickToDoStorageInputs, Qui
         return managedObjectContext
     }()
     
+    init() {
+        itemsPrivate = PublishSubject()
+    }
+}
+//MARK: StorageInputs
+extension CoreDataModel: StorageInputs {
     func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?) {
         guard let moc = self.managedObjectContext else {
             return (false, nil)
@@ -187,3 +181,12 @@ final class CoreDataModel: QuickToDoStorageProtocol, QuickToDoStorageInputs, Qui
     }
 }
 
+extension CoreDataModel: StorageOutputs {
+    var items: Observable<Item?> {
+        return itemsPrivate.subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+    }
+    
+    var inputs: StorageInputs { return self }
+    
+    var outputs: StorageOutputs { return self }
+}

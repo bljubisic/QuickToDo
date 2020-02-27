@@ -42,6 +42,10 @@ struct MainView_Previews: PreviewProvider {
 }
 
 final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
+    func prepareSharing() {
+        
+    }
+    
     var inputs: QuickToDoInputs { return self }
     
     var outputs: QuickToDoOutputs { return self }
@@ -75,6 +79,10 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
 }
 
 final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs, QuickToDoViewModelOutputs, ObservableObject {
+    func prepareSharing() {
+        
+    }
+    
     func add(_ newItem: Item) -> (Bool, Error?) {
         return (true, nil)
     }
