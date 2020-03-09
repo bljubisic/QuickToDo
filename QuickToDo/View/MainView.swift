@@ -8,6 +8,7 @@
 
 import SwiftUI
 import RxSwift
+import CloudKit
 
 struct MainView: View {
     
@@ -42,7 +43,10 @@ struct MainView_Previews: PreviewProvider {
 }
 
 final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
-    func prepareSharing() {
+    func getRootRecord() -> CKRecord? {
+        return nil
+    }
+    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
         
     }
     
@@ -79,7 +83,11 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
 }
 
 final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs, QuickToDoViewModelOutputs, ObservableObject {
-    func prepareSharing() {
+        
+    func getRootRecord() -> CKRecord? {
+        return nil
+    }
+    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
         
     }
     

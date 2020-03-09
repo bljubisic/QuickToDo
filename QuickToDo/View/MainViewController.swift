@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
+import CloudKit
 
 class MainViewController: UIViewController {
     
@@ -90,17 +91,32 @@ class MainViewController: UIViewController {
         self.actionButton.rx.tap
             .debug()
             .subscribe(onNext: { _ in
-                let controller = UICloudSharingController {
-                    controller, preparationCompletionHandler in
-                    self.viewModel.inputs.prepareSharing()
-                    // Code here to create the CKShare and save it to the database
+                guard let rootRecord = self.viewModel.inputs.getRootRecord() else {
+                    return
                 }
+                let share = CKShare(rootRecord: rootRecord)
 
-                controller.availablePermissions = [.allowPublic, .allowReadOnly]
-//                controller.popoverPresentationController?.barButtonItem =
-//                            shareButton as? UIBarButtonItem
+                share[CKShare.SystemFieldKey.title] = "Sharing list" as CKRecordValue?
 
-                self.present(controller, animated: true)
+                share[CKShare.SystemFieldKey.shareType] = "QuickToDo" as CKRecordValue
+                
+                let sharingViewController = UICloudSharingController(preparationHandler: {(UICloudSharingController, handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) in
+
+                   let modRecordsList = CKModifyRecordsOperation(recordsToSave: [rootRecord, share], recordIDsToDelete: nil)
+                    
+                   modRecordsList.modifyRecordsCompletionBlock = { (record, recordID, error) in
+                       handler(share, CKContainer.default(), error)
+                   }
+                   CKContainer.default().privateCloudDatabase.add(modRecordsList)
+                })
+
+                sharingViewController.delegate = self
+
+                sharingViewController.availablePermissions = [.allowPublic, .allowReadOnly]
+//                sharingViewController.popoverPresentationController?.barButtonItem = shareButton as? UIBarButtonItem
+                self.present(sharingViewController, animated:true, completion:nil)
+
+
             })
             .disposed(by: disposeBag)
     

@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import CloudKit
 
 protocol QuickToDoViewModelInputs {
     func add(_ newItem: Item) -> (Bool, Error?)
@@ -18,7 +19,8 @@ protocol QuickToDoViewModelInputs {
     func getHints(for itemName: String, withCompletion: @escaping (String, String) -> Void) -> Void
     func getItemsNumbers() -> Observable<(Int, Int)>
     func hideAllDoneItems() -> Bool
-    func prepareSharing() -> Void
+    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) -> Void
+    func getRootRecord() -> CKRecord?
 }
 
 protocol QuickToDoViewModelOutputs {

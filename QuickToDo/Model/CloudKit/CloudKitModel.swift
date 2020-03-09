@@ -86,6 +86,27 @@ final class CloudKitModel: StorageProtocol {
 }
 //MARK: StorageInputs extension
 extension CloudKitModel: StorageInputs {
+    func getRootRecord() -> CKRecord? {
+        return self.rootRecord
+    }
+    
+    func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
+        let share = CKShare(rootRecord: self.rootRecord)
+
+        share[CKShare.SystemFieldKey.title] = "Sharing list" as CKRecordValue?
+
+        share[CKShare.SystemFieldKey.shareType] = "QuickToDo" as CKRecordValue
+        
+        let modRecordsList = CKModifyRecordsOperation(recordsToSave: [self.rootRecord, share], recordIDsToDelete: nil)
+         
+        modRecordsList.modifyRecordsCompletionBlock = {
+            (record, recordID, error) in
+             
+            handler(share, CKContainer.default(), error)
+        }
+        CKContainer.default().privateCloudDatabase.add(modRecordsList)
+    }
+    
 
     
     func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?) {

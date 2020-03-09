@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import RxSwift
+import CloudKit
 //MARK: StorageProtocol
 final class CoreDataModel: StorageProtocol {
 
@@ -71,6 +72,13 @@ final class CoreDataModel: StorageProtocol {
 }
 //MARK: StorageInputs
 extension CoreDataModel: StorageInputs {
+    func getRootRecord() -> CKRecord? {
+        return nil
+    }
+    func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
+        
+    }
+    
     func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?) {
         guard let moc = self.managedObjectContext else {
             return (false, nil)

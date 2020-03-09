@@ -8,13 +8,15 @@
 
 import Foundation
 import RxSwift
+import CloudKit
 
 protocol QuickToDoInputs {
     func add(_ item: Item) -> (Bool, Error?)
     func update(_ item: Item, withItem: Item) -> (Bool, Error?)
     func getHints(for itemName: String) -> Observable<String>
     func getItems() -> (Bool, Error?)
-    func prepareSharing() -> Void
+    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) -> Void
+    func getRootRecord() -> CKRecord?
 }
 
 protocol QuickToDoOutputs {
@@ -38,6 +40,8 @@ protocol StorageInputs {
     func getItemWith() -> itemProcessFind
     func update() -> itemProcessUpdate
     func getHints(for itemName: String, withCompletion: (Item, Item) -> Void) -> Void
+    func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) -> Void
+    func getRootRecord() -> CKRecord?
 }
 
 protocol StorageOutputs {

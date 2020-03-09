@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import CloudKit
 
 //MARK: QuickToDoProtocol and Variables
 class QuickToDoModel: QuickToDoProtocol {
@@ -40,8 +41,12 @@ extension QuickToDoModel: QuickToDoOutputs {
 
 // MARK: QuickToDoInputs
 extension QuickToDoModel: QuickToDoInputs {
-    func prepareSharing() {
-        
+    func getRootRecord() -> CKRecord? {
+        return self.cloudKit.inputs.getRootRecord()
+    }
+    
+    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
+        self.cloudKit.inputs.prepareShare(handler: handler)
     }
     
     func getItems() -> (Bool, Error?) {

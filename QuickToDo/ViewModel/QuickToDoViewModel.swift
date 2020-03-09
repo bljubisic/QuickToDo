@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import Combine
+import CloudKit
 //MARK: QuickToDoViewModelProtocol
 class QuickToDoViewModel: QuickToDoViewModelProtoocol, ObservableObject {
     var model: QuickToDoProtocol
@@ -30,8 +31,13 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, ObservableObject {
 }
 //MARK: QuickToDoViewModelInputs
 extension QuickToDoViewModel: QuickToDoViewModelInputs {
-    func prepareSharing() {
-        self.model.inputs.prepareSharing()
+    
+    func getRootRecord() -> CKRecord? {
+        return self.model.inputs.getRootRecord()
+    }
+    
+    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
+        self.model.inputs.prepareSharing(handler: handler)
     }
     
     func add(_ newItem: Item) -> (Bool, Error?) {
