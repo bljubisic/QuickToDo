@@ -20,7 +20,7 @@ protocol QuickToDoInputs {
 }
 
 protocol QuickToDoOutputs {
-    var items: Observable<Item?> { get }
+    var items: Observable<Item> { get }
     var cloudStatus: Observable<CloudStatus> { get }
 }
 

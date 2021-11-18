@@ -25,7 +25,7 @@ protocol QuickToDoViewModelInputs {
 
 protocol QuickToDoViewModelOutputs {
     var cloudStatus: Observable<CloudStatus> { get }
-    var items: Observable<Item?> { get }
+    var items: Observable<Item> { get }
     var itemsArray: [Item] { get }
     var doneItemsNum: Int { get }
     var totalItemsNum: Int { get }

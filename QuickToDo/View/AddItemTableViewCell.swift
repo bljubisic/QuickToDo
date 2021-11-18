@@ -60,10 +60,10 @@ class AddItemTableViewCell: UITableViewCell {
         
         self.seccondItemSuggestion.snp.makeConstraints { (make) in
             make.top.equalTo(self.addItemTextBox.snp.bottom).offset(6)
-            make.right.equalTo(self.contentView).offset(5)
+            make.right.equalTo(self.contentView).offset(10)
 //            make.bottom.equalTo(self.contentView).offset(16)
             make.height.equalTo(30)
-            make.width.equalTo(80)
+            make.width.equalTo(180)
         }
 
     }

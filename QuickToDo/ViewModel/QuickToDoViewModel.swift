@@ -16,7 +16,7 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, ObservableObject {
     
     var cloudStatus: Observable<CloudStatus>
     
-    var items: Observable<Item?>
+    var items: Observable<Item>
     
     @Published var itemsArray: [Item]
     
@@ -58,10 +58,7 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
     
     private func getTotalItemNumbers() -> Observable<Int> {
         return self.model.outputs.items
-                .filter { (itemReceived) -> Bool in
-                    guard let item = itemReceived else {
-                        return false
-                    }
+                .filter { (item) -> Bool in
                     return item.shown == true
                 }
                 .scan(0) { (priorValue, _) -> Int in
@@ -71,10 +68,7 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
     
     private func getDoneItemNumbers() -> Observable<Int> {
         return self.model.outputs.items
-                .filter { (itemReceived) -> Bool in
-                    guard let item = itemReceived else {
-                        return false
-                    }
+                .filter { (item) -> Bool in
                     return item.shown == true && item.done == true
                 }
                 .scan(0) { (priorValue, _) -> Int in
@@ -100,45 +94,36 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
     func getItems(completionBlock: @escaping () -> Void) -> (Bool, Error?) {
         self.model.outputs.items
             .observeOn(MainScheduler.instance)
-            .filter({ (itemRec) -> Bool in
-                guard let item = itemRec else {
-                    return false
-                }
+            .filter({ (item) -> Bool in
                 return item.name != ""
             })
-            .filter({ (itemRec) -> Bool in
-                guard let item = itemRec else {
-                    return false
-                }
+            .filter({ (item) -> Bool in
                 print(item)
                 return item.shown
             })
             .subscribe(onNext: { (newItem) in
                 if !self.itemsArray.contains(where: { (item) -> Bool in
-                    item.name == newItem?.name
+                    item.name == newItem.name
                 }) {
-                    self.itemsArray.append(newItem ?? Item())
+                    self.itemsArray.append(newItem)
                     DispatchQueue.main.async {
                         completionBlock()
                     }
                     
                 } else {
                     if let index = self.itemsArray.firstIndex(where: { (item) -> Bool in
-                        item.name == newItem?.name
+                        item.name == newItem.name
                     }) {
-                        guard let newItemUnwrapped = newItem else {
-                            return
-                        }
                         let item = self.itemsArray[index]
-                        if (item.lastUsedAt < newItemUnwrapped.lastUsedAt) {
-                            self.itemsArray[index] = newItemUnwrapped
+                        if (item.lastUsedAt < newItem.lastUsedAt) {
+                            self.itemsArray[index] = newItem
                         }
                     }
                 }
             }, onError: { (Error) in
                 print(Error)
-            }) {
-        }.disposed(by: disposeBag)
+            }, onDisposed:  {
+            }).disposed(by: disposeBag)
         return self.model.inputs.getItems()
     }
     
@@ -154,11 +139,11 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
         }, onError: { (Error) in
             print(Error)
         }, onCompleted: {
-            if(items.count > 1) {
+            if(items.count >= 1) {
                 withCompletion(items[0], items[1])
             }
         }) {
-            if(items.count > 1) {
+            if(items.count >= 1) {
                 withCompletion(items[0], items[1])
             }
         }.disposed(by: disposeBag)

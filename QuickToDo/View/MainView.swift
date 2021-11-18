@@ -14,20 +14,35 @@ struct MainView: View {
     
     @ObservedObject var viewModel: ViewModelMocked
     
-    init(viewModel: QuickToDoViewModelProtoocol) {
-        self.viewModel = viewModel as! ViewModelMocked
-    }
+//    init(viewModel: QuickToDoViewModelProtoocol) {
+////        self.viewModel = viewModel as! ViewModelMocked
+//    }
     
     var body: some View {
         List(self.viewModel.inputs.getItemsArray(withFilter: false)) { item in
-            Image("selected")
             HStack() {
+                if item.done {
+                  Image("selected").onTapGesture {
+                    let newItem = Item.itemDoneLens.set(!item.done, item)
+                    _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
+                      print("Done")
+                    })
+                  }
+                } else {
+                  Image("select").onTapGesture {
+                    let newItem = Item.itemDoneLens.set(!item.done, item)
+                    _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
+                      print("Done")
+                    })
+                  }
+                }
                 Text(item.name)
                 if item.uploadedToICloud {
                     Image("Cloud")
+                      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
                 } else {
                     Image("NoCloud")
-                        .padding(.trailing, 100.0)
+                      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
                 }
             }
         }
@@ -59,6 +74,7 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
     }
     
     func update(_ item: Item, withItem: Item) -> (Bool, Error?) {
+      self.itemsPrivate.onNext(withItem)
         return (true, nil)
     }
     
@@ -69,15 +85,19 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
     }
     
     func getItems() -> (Bool, Error?) {
+      self.itemsPrivate.onNext(Item(name: "Smt21", count: 1, uploadedToICloud: false, done: false, shown: true, createdAt: Date(), lastUsedAt: Date()))
         return (true, nil)
     }
     
-    var items: Observable<Item?>
+  var items: Observable<Item> {
+    return itemsPrivate.compactMap{ $0 }
+  }
     
     var cloudStatus: Observable<CloudStatus>
+  
+  private let itemsPrivate: PublishSubject<Item?> = PublishSubject()
     
     init() {
-        items = PublishSubject()
         cloudStatus = PublishSubject()
     }
 }
@@ -96,15 +116,60 @@ final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInpu
     }
     
     func update(_ item: Item, withItem: Item, completionBlock: @escaping () -> Void) -> (Bool, Error?) {
+      print("Update")
+      if self.itemsArray.contains(where: { item in
+        item.name == withItem.name
+      }) {
+        if let index = self.itemsArray.firstIndex(where: { (item) -> Bool in
+          item.name == withItem.name
+        }) {
+          let item = self.itemsArray[index]
+          if (item.lastUsedAt < withItem.lastUsedAt) {
+            self.itemsArray[index] = withItem
+          }
+        }
+      }
+      completionBlock()
         return (true, nil)
     }
     
     func getItems(completionBlock: @escaping () -> Void) -> (Bool, Error?) {
+      self.model.outputs.items
+        .observeOn(MainScheduler.instance)
+        .filter{(item) -> Bool in
+          return item.name != ""
+        }
+        .filter{(item) -> Bool in
+          return item.shown
+        }
+        .subscribe(onNext: {(newItem) in
+            if !self.itemsArray.contains(where: { (item) -> Bool in
+              item.name == newItem.name
+            }) {
+              self.itemsArray.append(newItem)
+              DispatchQueue.main.async {
+                completionBlock()
+              }
+              
+            } else {
+              if let index = self.itemsArray.firstIndex(where: { (item) -> Bool in
+                item.name == newItem.name
+              }) {
+                let item = self.itemsArray[index]
+                if (item.lastUsedAt < newItem.lastUsedAt) {
+                  self.itemsArray[index] = newItem
+                }
+              }
+            }
+          }, onError: { (Error) in
+            print(Error)
+          }, onDisposed:  {
+          }).disposed(by: disposeBag)
         return (true, nil)
     }
     
     func getItemsArray(withFilter: Bool) -> [Item] {
-        return [Item(name: "Smt", count: 1, uploadedToICloud: false, done: false, shown: true, createdAt: Date(), lastUsedAt: Date())]
+      return itemsArray
     }
     
     func getItemsSize() -> Int {
@@ -127,7 +192,7 @@ final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInpu
     
     var cloudStatus: Observable<CloudStatus>
     
-    var items: Observable<Item?>
+    var items: Observable<Item>
     
     var itemsArray: [Item]
     
@@ -140,6 +205,8 @@ final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInpu
     var inputs: QuickToDoViewModelInputs { return self }
     
     var outputs: QuickToDoViewModelOutputs { return self }
+  
+  let disposeBag = DisposeBag()
     
     init(model: QuickToDoProtocol) {
         self.model = model
@@ -147,6 +214,6 @@ final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInpu
         self.items = PublishSubject()
         self.doneItemsNum = 0
         self.totalItemsNum = 0
-        self.itemsArray = []
+        self.itemsArray = [Item(name: "Smt21", count: 1, uploadedToICloud: false, done: false, shown: true, createdAt: Date(), lastUsedAt: Date())]
     }
 }

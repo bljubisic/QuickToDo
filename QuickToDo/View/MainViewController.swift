@@ -52,7 +52,7 @@ class MainViewController: UIViewController {
         }
         
         self.actionButton = UIButton()
-        self.actionButton.setImage(UIImage(systemName: "square.and.arrow.up", withConfiguration: UIImage.SymbolConfiguration(weight: .bold)), for: .normal)
+        self.actionButton.setImage(UIImage(systemName: "arrow.clockwise.icloud", withConfiguration: UIImage.SymbolConfiguration(pointSize: 24, weight: .bold)), for: .normal)
         self.topBar.addSubview(self.actionButton)
         self.actionButton.snp.makeConstraints { (make) in
             make.top.equalTo(self.topBar.snp.top).inset(10)
@@ -69,7 +69,7 @@ class MainViewController: UIViewController {
         self.itemsNumber.text = "\(self.viewModel.outputs.doneItemsNum)/\(self.viewModel.outputs.totalItemsNum)"
         self.selectorItems = UIButton()
     //        self.selectorItems.setTitleColor(UIColor.blue, for: .normal)
-        self.selectorItems.setImage(UIImage(systemName: "clear", withConfiguration: UIImage.SymbolConfiguration(weight: .bold)), for: .normal)
+        self.selectorItems.setImage(UIImage(systemName: "xmark.bin", withConfiguration: UIImage.SymbolConfiguration(pointSize: 24, weight: .bold)), for: .normal)
     //        self.selectorItems.setTitle("Show only remaining", for: .normal)
     //        self.selectorItems.setTitle("Show all", for: .selected)
         self.selectorItems.isEnabled = false
@@ -95,28 +95,19 @@ class MainViewController: UIViewController {
                     return
                 }
                 let share = CKShare(rootRecord: rootRecord)
-
                 share[CKShare.SystemFieldKey.title] = "Sharing list" as CKRecordValue?
-
                 share[CKShare.SystemFieldKey.shareType] = "QuickToDo" as CKRecordValue
-                
                 let sharingViewController = UICloudSharingController(preparationHandler: {(UICloudSharingController, handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) in
-
                    let modRecordsList = CKModifyRecordsOperation(recordsToSave: [rootRecord, share], recordIDsToDelete: nil)
-                    
                    modRecordsList.modifyRecordsCompletionBlock = { (record, recordID, error) in
                        handler(share, CKContainer.default(), error)
                    }
                    CKContainer.default().privateCloudDatabase.add(modRecordsList)
                 })
-
                 sharingViewController.delegate = self
-
                 sharingViewController.availablePermissions = [.allowPublic, .allowReadOnly]
 //                sharingViewController.popoverPresentationController?.barButtonItem = shareButton as? UIBarButtonItem
                 self.present(sharingViewController, animated:true, completion:nil)
-
-
             })
             .disposed(by: disposeBag)
     
@@ -214,14 +205,28 @@ extension MainViewController: UITableViewDataSource {
                     if let itemUnwrapped = item {
                         self.viewModel.inputs.getHints(for: itemUnwrapped, withCompletion: { (nameOne, nameTwo) in
                             cell.firstItemSuggestion.setTitle(nameOne, for: .normal)
+                            cell.firstItemSuggestion
+                                .rx
+                                .tap
+                                .subscribe(onNext: { item in
+                                    self.addItem(nameOne)
+                                    cell.addItemTextBox.text = ""
+                                }, onError: {(Error) in print(Error)}, onDisposed:  {}).disposed(by: self.disposeBag)
                             cell.seccondItemSuggestion.setTitle(nameTwo, for: .normal)
+                            cell.seccondItemSuggestion
+                                .rx
+                                .tap
+                                .subscribe(onNext: { item in
+                                    self.addItem(nameTwo)
+                                    cell.addItemTextBox.text = ""
+                                }, onError: {(Error) in print(Error)}, onDisposed:  {}).disposed(by: self.disposeBag)
                         })
                     }
                 },
                     onError: { (Error) in
                     print(Error)
-                }) {
-            }.disposed(by: disposeBag)
+                }, onDisposed:  {
+                }).disposed(by: disposeBag)
             cell.addItemTextBox
                 .rx
                 .controlEvent([.editingDidEndOnExit])   
@@ -267,6 +272,18 @@ extension MainViewController: UITableViewDataSource {
             }
             return cell
         }
+    }
+    
+    func addItem(_ sender: String) {
+        self.viewModel.inputs.add(Item(
+            name: sender,
+            count: 1,
+            uploadedToICloud: false,
+            done: false,
+            shown: true,
+            createdAt: Date(),
+            lastUsedAt: Date())
+        )
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

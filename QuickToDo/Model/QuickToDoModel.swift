@@ -26,8 +26,9 @@ class QuickToDoModel: QuickToDoProtocol {
 }
 // MARK: QuickToDoOutputs
 extension QuickToDoModel: QuickToDoOutputs {
-    var items: Observable<Item?> {
-        return itemsPrivate
+  
+    var items: Observable<Item> {
+      return itemsPrivate.compactMap{ $0 }
     }
     
     var cloudStatus: Observable<CloudStatus> {
@@ -68,11 +69,11 @@ extension QuickToDoModel: QuickToDoInputs {
     func add(_ item: Item) -> (Bool, Error?) {
         let newInsertFunction = self.coreData.inputs.insert()
         let ckInsertFunctiomn = self.cloudKit.inputs.insert()
+        self.itemsPrivate.onNext(newInsertFunction(item, nil).0)
         _ = ckInsertFunctiomn(item) { (newItem, error) in
             let updateFunction = self.coreData.inputs.update()
             _ = updateFunction(item, newItem)
         }
-        self.itemsPrivate.onNext(newInsertFunction(item, nil).0)
         return (true, nil)
     }
     
@@ -95,7 +96,7 @@ extension QuickToDoModel: QuickToDoInputs {
     }
     
     func getHints(for itemName: String) -> Observable<String> {
-        return Observable.merge([self.getHintsFromCoreData(for: itemName), self.getHintsFromCloudKit(for: itemName)])
+        return self.getHintsFromCoreData(for: itemName)
             .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
             .observeOn(MainScheduler.instance)
     }

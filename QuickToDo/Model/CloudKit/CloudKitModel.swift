@@ -60,26 +60,18 @@ final class CloudKitModel: StorageProtocol {
         let query = CKQuery(recordType: "Items", predicate: predicate)
         
         self.database.perform(query, inZoneWith: zone.zoneID) { (receivedRecords, receivedError) in
-            guard let records = receivedRecords else {
-                let item = Item(name: "Root", count: 0, uploadedToICloud: true, done: true, shown: false, createdAt: Date(), lastUsedAt: Date())
-                let insertFunction = self.insert()
-                _ = insertFunction(item) { (newItem, error) in
-                    print("Creating Root record: \(error!)")
-                    self.findRootRecord()
-                }
-                return
-            }
-            if records.isEmpty {
-                let item = Item(name: "Root", count: 0, uploadedToICloud: true, done: true, shown: false, createdAt: Date(), lastUsedAt: Date())
-                let insertFunction = self.insert()
-                _ = insertFunction(item) { (newItem, error) in
-                    print("Creating Root record: \(error!)")
-                    self.findRootRecord()
-                }
-            }
+          if let records = receivedRecords {
             for record in records {
-                self.rootRecord = record
+              self.rootRecord = record
             }
+          } else if receivedRecords == nil || receivedRecords!.isEmpty {
+            let item = Item(name: "Root", count: 0, uploadedToICloud: true, done: true, shown: false, createdAt: Date(), lastUsedAt: Date())
+            let insertFunction = self.insert()
+            _ = insertFunction(item) { (newItem, error) in
+              print("Creating Root record: \(error!)")
+              self.findRootRecord()
+            }
+          }
         }
 
     }
