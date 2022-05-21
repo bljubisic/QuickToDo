@@ -21,7 +21,7 @@ final class CloudKitModel: StorageProtocol {
     private var rootRecord: CKRecord!
     
     var items: Observable<Item?> {
-        return itemsPrivate.subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+        return itemsPrivate.subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
     }
     
     init() {

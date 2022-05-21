@@ -61,7 +61,7 @@ final class CoreDataModel: StorageProtocol {
         if coordinator == nil {
             return nil
         }
-        var managedObjectContext = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.mainQueueConcurrencyType)
+        var managedObjectContext = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.privateQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
         return managedObjectContext
     }()
@@ -72,7 +72,7 @@ final class CoreDataModel: StorageProtocol {
 }
 //MARK: StorageInputs
 extension CoreDataModel: StorageInputs {
-    func getRootRecord() -> CKRecord? {
+    func getRootRecord() -> CKRecord? { 
         return nil
     }
     func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
@@ -169,7 +169,7 @@ extension CoreDataModel: StorageInputs {
             request.predicate = predicate
             request.returnsObjectsAsFaults = false
         }
-        for itemMO in fetchedItems {
+        for itemMO in fetchedItems.filter({(item) in item === ItemMO.self}) {
             let tmpItem: Item = Item(name: itemMO.word,
                                      count: itemMO.count,
                                      uploadedToICloud: itemMO.uploadedToICloud,
@@ -191,7 +191,7 @@ extension CoreDataModel: StorageInputs {
 
 extension CoreDataModel: StorageOutputs {
     var items: Observable<Item?> {
-        return itemsPrivate.subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+        return itemsPrivate.subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
     }
     
     var inputs: StorageInputs { return self }

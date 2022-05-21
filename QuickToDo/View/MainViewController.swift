@@ -23,6 +23,8 @@ class MainViewController: UIViewController {
     var itemsNumber: UILabel!
     var selectorItems: UIButton!
     
+    lazy var refreshControl = UIRefreshControl()
+    
     let disposeBag = DisposeBag()
     
     private var filterDone = false
@@ -114,7 +116,16 @@ class MainViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+        self.itemsTableView.refreshControl = refreshControl
 
+    }
+    
+    @objc func refresh(_ sender: AnyObject) {
+        print("Activated refresh!!!")
+        self.itemsTableView.reloadData()
+        self.refreshControl.endRefreshing()
     }
 
     override func viewDidLoad() {
@@ -124,7 +135,7 @@ class MainViewController: UIViewController {
         self.configureScreen()
         
         self.viewModel.inputs.getItemsNumbers()
-            .observeOn(MainScheduler.instance)
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { (arg0) in
                 let (total, done) = arg0
                 self.itemsNumber.text = "\(total)/\(done)"
@@ -275,7 +286,7 @@ extension MainViewController: UITableViewDataSource {
     }
     
     func addItem(_ sender: String) {
-        self.viewModel.inputs.add(Item(
+        _ = self.viewModel.inputs.add(Item(
             name: sender,
             count: 1,
             uploadedToICloud: false,

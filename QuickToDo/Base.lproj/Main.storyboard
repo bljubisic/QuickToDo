@@ -1,153 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina5_5" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
-        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
     </dependencies>
     <scenes>
         <!--Config View Controller-->
         <scene sceneID="Cwj-3P-s3u">
             <objects>
-                <viewController id="wzX-pp-0dh" customClass="ConfigViewController" customModule="QuickToDo" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="8w5-7s-Wpg"/>
-                        <viewControllerLayoutGuide type="bottom" id="vcO-oc-ilY"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="zfx-LB-duK">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="u5V-ZP-Ifo">
-                                <rect key="frame" x="20" y="28" width="51" height="31"/>
-                                <color key="onTintColor" red="1" green="0.0015948744830000001" blue="0.093226445640000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <connections>
-                                    <action selector="changeShareSwitch:" destination="wzX-pp-0dh" eventType="valueChanged" id="VKn-hS-U9r"/>
-                                </connections>
-                            </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Yes, I want to share my list" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n2J-BZ-zE1">
-                                <rect key="frame" x="77" y="33" width="291" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fua-Qk-Kzs">
-                                <rect key="frame" x="19" y="269" width="48" height="30"/>
-                                <state key="normal" title="Cancel">
-                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <segue destination="r3w-mR-rRY" kind="unwind" unwindAction="prepareForUnwind:" id="vDU-Dg-X7J"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Se2-ux-RuL">
-                                <rect key="frame" x="267" y="269" width="37" height="30"/>
-                                <state key="normal" title="Done">
-                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="sendInvitation:" destination="wzX-pp-0dh" eventType="touchUpInside" id="YJW-wq-tXr"/>
-                                </connections>
-                            </button>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZvD-5h-rJ0">
-                                <rect key="frame" x="13" y="67" width="381" height="169"/>
-                                <subviews>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter iCloud email" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vT5-zD-Vkg">
-                                        <rect key="frame" x="8" y="19" width="219" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="219" id="3CU-oW-PFt"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
-                                    </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7yF-DP-kcG">
-                                        <rect key="frame" x="241" y="19" width="132" height="30"/>
-                                        <state key="normal" title="Find">
-                                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="findICloudContact:" destination="wzX-pp-0dh" eventType="touchUpInside" id="sQm-pX-qls"/>
-                                        </connections>
-                                    </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="iCloud id" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2aZ-yn-Msd">
-                                        <rect key="frame" x="8" y="70" width="69" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Name" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4z9-xH-loi">
-                                        <rect key="frame" x="8" y="99" width="46" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Lastname" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="86L-bh-EcW">
-                                        <rect key="frame" x="8" y="128" width="76" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" red="1" green="0.7171408178169435" blue="0.73093340615568025" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstItem="86L-bh-EcW" firstAttribute="leading" secondItem="ZvD-5h-rJ0" secondAttribute="leading" constant="8" id="0xr-Bb-OoX"/>
-                                    <constraint firstItem="vT5-zD-Vkg" firstAttribute="top" secondItem="7yF-DP-kcG" secondAttribute="top" id="18b-ah-ef7"/>
-                                    <constraint firstItem="4z9-xH-loi" firstAttribute="top" secondItem="2aZ-yn-Msd" secondAttribute="bottom" constant="8" id="3h4-rn-jpK"/>
-                                    <constraint firstItem="vT5-zD-Vkg" firstAttribute="leading" secondItem="ZvD-5h-rJ0" secondAttribute="leadingMargin" id="Ekc-Ec-MOy"/>
-                                    <constraint firstItem="7yF-DP-kcG" firstAttribute="leading" secondItem="vT5-zD-Vkg" secondAttribute="trailing" constant="14" id="IGt-VU-TQL"/>
-                                    <constraint firstItem="2aZ-yn-Msd" firstAttribute="top" secondItem="vT5-zD-Vkg" secondAttribute="bottom" constant="21" id="Oph-QU-D8w"/>
-                                    <constraint firstItem="4z9-xH-loi" firstAttribute="leading" secondItem="ZvD-5h-rJ0" secondAttribute="leading" constant="8" id="WBx-mW-aWN"/>
-                                    <constraint firstItem="vT5-zD-Vkg" firstAttribute="leading" secondItem="86L-bh-EcW" secondAttribute="leading" id="e0C-qR-16U"/>
-                                    <constraint firstItem="vT5-zD-Vkg" firstAttribute="leading" secondItem="2aZ-yn-Msd" secondAttribute="leading" id="es7-p6-4z3"/>
-                                    <constraint firstItem="86L-bh-EcW" firstAttribute="top" secondItem="4z9-xH-loi" secondAttribute="bottom" constant="8" id="hPa-LF-5Vd"/>
-                                    <constraint firstAttribute="bottom" secondItem="86L-bh-EcW" secondAttribute="bottom" constant="20" id="hsP-Xk-Qsv"/>
-                                    <constraint firstAttribute="height" constant="169" id="jun-7N-jBo"/>
-                                    <constraint firstItem="86L-bh-EcW" firstAttribute="top" secondItem="4z9-xH-loi" secondAttribute="bottom" constant="8" id="m6X-Y9-32a"/>
-                                    <constraint firstItem="7yF-DP-kcG" firstAttribute="top" secondItem="ZvD-5h-rJ0" secondAttribute="top" constant="19" id="r5C-Ib-bn8"/>
-                                    <constraint firstAttribute="trailing" secondItem="7yF-DP-kcG" secondAttribute="trailing" constant="8" id="teM-P1-isy"/>
-                                    <constraint firstItem="vT5-zD-Vkg" firstAttribute="leading" secondItem="4z9-xH-loi" secondAttribute="leading" id="uEY-3o-u7s"/>
-                                </constraints>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="ZvD-5h-rJ0" firstAttribute="leading" secondItem="zfx-LB-duK" secondAttribute="leadingMargin" constant="-7" id="2Bv-dW-bp3"/>
-                            <constraint firstItem="Se2-ux-RuL" firstAttribute="top" secondItem="ZvD-5h-rJ0" secondAttribute="bottom" constant="33" id="B6M-VB-TKn"/>
-                            <constraint firstItem="u5V-ZP-Ifo" firstAttribute="top" secondItem="8w5-7s-Wpg" secondAttribute="bottom" constant="8" id="D6T-ix-Bhe"/>
-                            <constraint firstItem="Se2-ux-RuL" firstAttribute="leading" secondItem="Fua-Qk-Kzs" secondAttribute="trailing" constant="200" id="FQZ-dQ-sVY"/>
-                            <constraint firstItem="Se2-ux-RuL" firstAttribute="leading" secondItem="Fua-Qk-Kzs" secondAttribute="trailing" constant="200" id="Gm3-0u-M3c"/>
-                            <constraint firstItem="ZvD-5h-rJ0" firstAttribute="trailing" secondItem="zfx-LB-duK" secondAttribute="trailingMargin" id="HOd-5L-qXi"/>
-                            <constraint firstItem="Se2-ux-RuL" firstAttribute="trailing" secondItem="zfx-LB-duK" secondAttribute="trailingMargin" id="HcH-2o-ng3"/>
-                            <constraint firstItem="n2J-BZ-zE1" firstAttribute="top" secondItem="8w5-7s-Wpg" secondAttribute="bottom" constant="13" id="Q9B-se-Dbw"/>
-                            <constraint firstItem="ZvD-5h-rJ0" firstAttribute="top" secondItem="u5V-ZP-Ifo" secondAttribute="bottom" constant="8" id="Uwy-Ds-B1X"/>
-                            <constraint firstItem="Se2-ux-RuL" firstAttribute="trailing" secondItem="zfx-LB-duK" secondAttribute="trailingMargin" id="XWC-4h-98I"/>
-                            <constraint firstItem="Fua-Qk-Kzs" firstAttribute="leading" secondItem="zfx-LB-duK" secondAttribute="leadingMargin" constant="3" id="Zt7-pf-r50"/>
-                            <constraint firstItem="Se2-ux-RuL" firstAttribute="top" secondItem="ZvD-5h-rJ0" secondAttribute="bottom" constant="33" id="bbb-q5-lXj"/>
-                            <constraint firstItem="Se2-ux-RuL" firstAttribute="top" secondItem="ZvD-5h-rJ0" secondAttribute="bottom" constant="33" id="cRG-Xi-yZs"/>
-                            <constraint firstItem="ZvD-5h-rJ0" firstAttribute="top" secondItem="n2J-BZ-zE1" secondAttribute="bottom" constant="13" id="cTg-pX-JN7"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="n2J-BZ-zE1" secondAttribute="trailing" constant="26" id="eYo-zG-Uue"/>
-                            <constraint firstItem="u5V-ZP-Ifo" firstAttribute="leading" secondItem="zfx-LB-duK" secondAttribute="leadingMargin" id="hjM-Ls-Fja"/>
-                            <constraint firstItem="Fua-Qk-Kzs" firstAttribute="top" secondItem="ZvD-5h-rJ0" secondAttribute="bottom" constant="33" id="iyV-dB-8w2"/>
-                            <constraint firstItem="n2J-BZ-zE1" firstAttribute="leading" secondItem="u5V-ZP-Ifo" secondAttribute="trailing" constant="8" id="q69-xH-KrO"/>
-                            <constraint firstItem="ZvD-5h-rJ0" firstAttribute="top" secondItem="u5V-ZP-Ifo" secondAttribute="bottom" constant="8" id="s1b-O4-LPf"/>
-                            <constraint firstItem="n2J-BZ-zE1" firstAttribute="leading" secondItem="u5V-ZP-Ifo" secondAttribute="trailing" constant="8" id="sV4-Ss-hq8"/>
-                            <constraint firstItem="Se2-ux-RuL" firstAttribute="leading" secondItem="Fua-Qk-Kzs" secondAttribute="trailing" constant="200" id="vOI-98-gcw"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="findView" destination="ZvD-5h-rJ0" id="71v-rE-HOt"/>
-                        <outlet property="iCloudEmail" destination="vT5-zD-Vkg" id="dba-yg-cBy"/>
-                        <outlet property="iCloudId" destination="2aZ-yn-Msd" id="837-4S-CAa"/>
-                        <outlet property="iCloudLastname" destination="86L-bh-EcW" id="xQg-b2-1TT"/>
-                        <outlet property="iCloudName" destination="4z9-xH-loi" id="U5h-G0-YVN"/>
-                        <outlet property="sendInvitationButton" destination="Se2-ux-RuL" id="Ek3-Ty-CDk"/>
-                        <outlet property="shareSwitch" destination="u5V-ZP-Ifo" id="feM-rl-s0e"/>
-                    </connections>
-                </viewController>
+                <viewController id="wzX-pp-0dh" customClass="ConfigViewController" customModule="QuickToDo" customModuleProvider="target" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zew-eD-zzn" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="r3w-mR-rRY" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="657" y="63"/>
         </scene>

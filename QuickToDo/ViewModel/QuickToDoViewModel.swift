@@ -93,7 +93,7 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
     
     func getItems(completionBlock: @escaping () -> Void) -> (Bool, Error?) {
         self.model.outputs.items
-            .observeOn(MainScheduler.instance)
+            .observe(on: MainScheduler.instance)
             .filter({ (item) -> Bool in
                 return item.name != ""
             })
@@ -132,22 +132,17 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
     }
     
     func getHints(for itemName: String, withCompletion: @escaping (String, String) -> Void) -> Void {
-        var items: [String] = [String]()
-        self.model.inputs.getHints(for: itemName)
-            .subscribe(onNext: { (name) in
-                items.append(name)
-        }, onError: { (Error) in
-            print(Error)
-        }, onCompleted: {
-            if(items.count >= 1) {
-                withCompletion(items[0], items[1])
-            }
-        }) {
-            if(items.count >= 1) {
-                withCompletion(items[0], items[1])
-            }
-        }.disposed(by: disposeBag)
-        
+        let items: [String] = self.itemsArray
+            .filter{(item) in item.name.hasPrefix(itemName)}
+            .map{(item) in item.name}
+    
+        if(items.count > 1) {
+            withCompletion(items[0], items[1])
+        } else if(items.count == 1) {
+            withCompletion(items[0], "")
+        } else {
+            withCompletion("", "")
+        }
     }
     
     func getItemsArray(withFilter: Bool = false) -> [Item] {

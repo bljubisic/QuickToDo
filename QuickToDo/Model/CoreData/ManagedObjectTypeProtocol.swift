@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import RxSwift
 
 protocol ManagedObjectContextSettable: class {
     var managedObjectContext: NSManagedObjectContext! { get set }
@@ -69,9 +70,16 @@ extension ManagedObjectType where Self: ManagedObject {
     public static func fetchInContext(context: NSManagedObjectContext, configurationBlock: (NSFetchRequest<NSFetchRequestResult>) -> () = {_ in }) -> [Self] {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: Self.entityName)
         configurationBlock(request)
-        guard let result = try! context.fetch(request) as? [Self]
-            else {
-                fatalError("Fetched object have wrong type")
+        var resultOpt = [] as? [Self]
+        do {
+            resultOpt = try ((context as NSManagedObjectContext).fetch(request) as? [Self])!
+        } catch{
+            let nserror = error as NSError
+            print("Unresolved error \(nserror), \(nserror.userInfo)")
+        }
+        guard let result = resultOpt else {
+            print("Unknown type of result")
+            return []
         }
         return result
     }

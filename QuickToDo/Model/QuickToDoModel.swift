@@ -59,8 +59,8 @@ extension QuickToDoModel: QuickToDoInputs {
             }).disposed(by: disposeBag)
         _ = self.coreData.inputs.getItems(withCompletion: nil)
         _ = self.cloudKit.inputs.getItems() { item in
-            let funcUpdate = self.coreData.inputs.update()
-            _ = funcUpdate(item, item)
+//            let funcUpdate = self.coreData.inputs.update()
+//            _ = funcUpdate(item, item)
         }
         
         return (true, nil)
@@ -71,8 +71,8 @@ extension QuickToDoModel: QuickToDoInputs {
         let ckInsertFunctiomn = self.cloudKit.inputs.insert()
         self.itemsPrivate.onNext(newInsertFunction(item, nil).0)
         _ = ckInsertFunctiomn(item) { (newItem, error) in
-            let updateFunction = self.coreData.inputs.update()
-            _ = updateFunction(item, newItem)
+//            let updateFunction = self.coreData.inputs.update()
+//            _ = updateFunction(item, newItem)
         }
         return (true, nil)
     }
@@ -97,8 +97,8 @@ extension QuickToDoModel: QuickToDoInputs {
     
     func getHints(for itemName: String) -> Observable<String> {
         return self.getHintsFromCoreData(for: itemName)
-            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
-            .observeOn(MainScheduler.instance)
+            .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
+            .observe(on: MainScheduler.instance)
     }
     
     private func getHintsFromCloudKit(for itemName: String) -> Observable<String> {

@@ -17,32 +17,47 @@ struct MainView: View {
 //    init(viewModel: QuickToDoViewModelProtoocol) {
 ////        self.viewModel = viewModel as! ViewModelMocked
 //    }
-    
+    @State private var text = ""
     var body: some View {
-        List(self.viewModel.inputs.getItemsArray(withFilter: false)) { item in
-            HStack() {
-                if item.done {
-                  Image("selected").onTapGesture {
-                    let newItem = Item.itemDoneLens.set(!item.done, item)
-                    _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
-                      print("Done")
-                    })
-                  }
-                } else {
-                  Image("select").onTapGesture {
-                    let newItem = Item.itemDoneLens.set(!item.done, item)
-                    _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
-                      print("Done")
-                    })
-                  }
+        List() {
+            VStack() {
+                TextField("Add new item", text: $text)
+                HStack() {
+                    Button(action: {}) {
+                        Text("First Hint")
+                            .padding()
+                    }
+                    Button(action: {}) {
+                        Text("Second Hint")
+                            .padding()
+                    }
                 }
-                Text(item.name)
-                if item.uploadedToICloud {
-                    Image("Cloud")
-                      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
-                } else {
-                    Image("NoCloud")
-                      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+            }
+            ForEach(self.viewModel.inputs.getItemsArray(withFilter: false)) {item in
+                HStack() {
+                    if item.done {
+                      Image("selected").onTapGesture {
+                        let newItem = Item.itemDoneLens.set(!item.done, item)
+                        _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
+                          print("Done")
+                        })
+                      }
+                    } else {
+                      Image("select").onTapGesture {
+                        let newItem = Item.itemDoneLens.set(!item.done, item)
+                        _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
+                          print("Done")
+                        })
+                      }
+                    }
+                    Text(item.name)
+                    if item.uploadedToICloud {
+                        Image("Cloud")
+                          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+                    } else {
+                        Image("NoCloud")
+                          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+                    }
                 }
             }
         }
@@ -85,17 +100,17 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
     }
     
     func getItems() -> (Bool, Error?) {
-      self.itemsPrivate.onNext(Item(name: "Smt21", count: 1, uploadedToICloud: false, done: false, shown: true, createdAt: Date(), lastUsedAt: Date()))
+      self.itemsPrivate.onNext(Item(name: "Smt2232", count: 1, uploadedToICloud: true, done: false, shown: true, createdAt: Date(), lastUsedAt: Date()))
         return (true, nil)
     }
     
-  var items: Observable<Item> {
-    return itemsPrivate.compactMap{ $0 }
-  }
+    var items: Observable<Item> {
+      return itemsPrivate.compactMap{ $0 }
+    }
     
     var cloudStatus: Observable<CloudStatus>
   
-  private let itemsPrivate: PublishSubject<Item?> = PublishSubject()
+    private let itemsPrivate: PublishSubject<Item?> = PublishSubject()
     
     init() {
         cloudStatus = PublishSubject()
@@ -135,7 +150,7 @@ final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInpu
     
     func getItems(completionBlock: @escaping () -> Void) -> (Bool, Error?) {
       self.model.outputs.items
-        .observeOn(MainScheduler.instance)
+        .observe(on: MainScheduler.instance)
         .filter{(item) -> Bool in
           return item.name != ""
         }
@@ -214,6 +229,6 @@ final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInpu
         self.items = PublishSubject()
         self.doneItemsNum = 0
         self.totalItemsNum = 0
-        self.itemsArray = [Item(name: "Smt21", count: 1, uploadedToICloud: false, done: false, shown: true, createdAt: Date(), lastUsedAt: Date())]
+        self.itemsArray = [Item(name: "Smt24232", count: 1, uploadedToICloud: false, done: false, shown: true, createdAt: Date(), lastUsedAt: Date())]
     }
 }
