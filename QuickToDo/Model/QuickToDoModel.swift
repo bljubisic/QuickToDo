@@ -79,6 +79,7 @@ extension QuickToDoModel: QuickToDoInputs {
             _ = ckInsertFunctiomn(item) { (newItem, error) in
                 let updateFunction = self.coreData.inputs.update()
                 _ = updateFunction(item, newItem)
+                self.itemsPrivate.onNext(newItem)
             }
         }
         return (true, nil)
