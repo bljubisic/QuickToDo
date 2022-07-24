@@ -6,6 +6,7 @@ App uses:
   - SnapKit, 
   - MVVM, 
   - CoreData,
-  - CloudKit.
+  - CloudKit,
+  - SwiftUI
   
-  Built using XCode 11, Swift 5, and should be run on iOS 13.
+  Built using XCode 13, Swift 5, and should be run on iOS 15.

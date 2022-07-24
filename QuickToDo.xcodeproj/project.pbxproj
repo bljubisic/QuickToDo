@@ -47,8 +47,6 @@
 
 /* Begin PBXFileReference section */
 		E404A39F1A8EBA34008D32A5 /* QuickToDo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = QuickToDo.entitlements; sourceTree = "<group>"; };
-		E41652DE2838D9DD00803392 /* SwiftyCloudKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = SwiftyCloudKit; path = ../SwiftyCloudKit; sourceTree = "<group>"; };
-		E41652DF2838DA4700803392 /* SwiftyCloudKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = SwiftyCloudKit; path = ../SwiftyCloudKit; sourceTree = "<group>"; };
 		E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		E42C85F323E8603600AB6CDD /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		E435ECE421680E0300E68960 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
@@ -103,22 +101,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		CE150FDD6AC137119D1407FC /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
-		E41652DD2838D9DD00803392 /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				E41652DE2838D9DD00803392 /* SwiftyCloudKit */,
-				E41652DF2838DA4700803392 /* SwiftyCloudKit */,
-			);
-			name = Packages;
-			sourceTree = "<group>";
-		};
 		E41B97AB1A8D3E9F00BF8F51 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -190,14 +172,12 @@
 		E4C6E00019E7EA62003A89F7 = {
 			isa = PBXGroup;
 			children = (
-				E41652DD2838D9DD00803392 /* Packages */,
 				E47939AA23AB8520002C7AC2 /* MyPlayground.playground */,
 				E4F9A3781A5C146900CC0573 /* CoreData.framework */,
 				E4C6E00B19E7EA62003A89F7 /* QuickToDo */,
 				E46E6E6F23F2A80600D26E00 /* QuickToDoTests */,
 				E41B97AB1A8D3E9F00BF8F51 /* Frameworks */,
 				E4C6E00A19E7EA62003A89F7 /* Products */,
-				CE150FDD6AC137119D1407FC /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
