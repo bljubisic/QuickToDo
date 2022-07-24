@@ -12,14 +12,44 @@ import CloudKit
 
 struct MainView: View {
     
-    @ObservedObject var viewModel: ViewModelMocked
+    @ObservedObject var viewModel: QuickToDoViewModel
     
-//    init(viewModel: QuickToDoViewModelProtoocol) {
-////        self.viewModel = viewModel as! ViewModelMocked
-//    }
+    init(viewModel: QuickToDoViewModelProtoocol) {
+        self.viewModel = viewModel as! QuickToDoViewModel
+        _ = self.viewModel.inputs.getItems {
+            print("called getItems")
+        }
+    }
+    
     @State private var text = ""
     var body: some View {
         List() {
+            ForEach(self.viewModel.inputs.getItemsArray(withFilter: false)) {item in
+                HStack() {
+                    Button(action: {
+                        print("Tapped \(item.name)")
+                        let newItem = Item.itemDoneLens.set(!item.done, item)
+                        _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
+                                print("Done")
+                            })
+                    }, label: {
+                        if item.done {
+                            Image("selected")
+                        }
+                        else {
+                            Image("select")
+                        }
+                    })
+                    Text(item.name)
+                    if item.uploadedToICloud {
+                        Image("Cloud")
+                          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+                    } else {
+                        Image("NoCloud")
+                          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+                    }
+                }
+            }
             VStack() {
                 TextField("Add new item", text: $text)
                 HStack() {
@@ -30,33 +60,6 @@ struct MainView: View {
                     Button(action: {}) {
                         Text("Second Hint")
                             .padding()
-                    }
-                }
-            }
-            ForEach(self.viewModel.inputs.getItemsArray(withFilter: false)) {item in
-                HStack() {
-                    if item.done {
-                      Image("selected").onTapGesture {
-                        let newItem = Item.itemDoneLens.set(!item.done, item)
-                        _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
-                          print("Done")
-                        })
-                      }
-                    } else {
-                      Image("select").onTapGesture {
-                        let newItem = Item.itemDoneLens.set(!item.done, item)
-                        _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
-                          print("Done")
-                        })
-                      }
-                    }
-                    Text(item.name)
-                    if item.uploadedToICloud {
-                        Image("Cloud")
-                          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
-                    } else {
-                        Image("NoCloud")
-                          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
                     }
                 }
             }
@@ -73,6 +76,10 @@ struct MainView_Previews: PreviewProvider {
 }
 
 final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
+    func getZone() -> CKRecordZone? {
+        return nil
+    }
+    
     func getRootRecord() -> CKRecord? {
         return nil
     }
@@ -84,7 +91,7 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
     
     var outputs: QuickToDoOutputs { return self }
     
-    func add(_ item: Item) -> (Bool, Error?) {
+    func add(_ item: Item, addToCloud: Bool) -> (Bool, Error?) {
         return (true, nil)
     }
     
@@ -118,6 +125,10 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
 }
 
 final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs, QuickToDoViewModelOutputs, ObservableObject {
+    func getZone() -> CKRecordZone? {
+        return nil
+    }
+    
         
     func getRootRecord() -> CKRecord? {
         return nil
@@ -229,6 +240,6 @@ final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInpu
         self.items = PublishSubject()
         self.doneItemsNum = 0
         self.totalItemsNum = 0
-        self.itemsArray = [Item(name: "Smt24232", count: 1, uploadedToICloud: false, done: false, shown: true, createdAt: Date(), lastUsedAt: Date())]
+        self.itemsArray = [Item(name: "Smt24232", count: 1, uploadedToICloud: false, done: true, shown: true, createdAt: Date(), lastUsedAt: Date())]
     }
 }

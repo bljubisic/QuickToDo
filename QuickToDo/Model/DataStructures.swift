@@ -19,12 +19,19 @@ enum RecordZones: CustomStringConvertible {
 
     
     case quickToDoZone
+    case sharedZone
     
     var description: String {
         switch self {
         case .quickToDoZone: return "QuickToDoZone"
+        case .sharedZone: return "SharedZone"
         }
+        
     }
+}
+
+enum Config {
+    static let containerIdentifier = "iCloud.Persukibo.QuickToDo"
 }
 
 enum ItemFields: CustomStringConvertible {

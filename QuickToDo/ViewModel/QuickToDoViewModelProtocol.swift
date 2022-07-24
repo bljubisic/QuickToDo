@@ -21,6 +21,7 @@ protocol QuickToDoViewModelInputs {
     func hideAllDoneItems() -> Bool
     func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) -> Void
     func getRootRecord() -> CKRecord?
+    func getZone() -> CKRecordZone?
 }
 
 protocol QuickToDoViewModelOutputs {

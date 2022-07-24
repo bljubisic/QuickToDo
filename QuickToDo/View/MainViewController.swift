@@ -93,22 +93,24 @@ class MainViewController: UIViewController {
         self.actionButton.rx.tap
             .debug()
             .subscribe(onNext: { _ in
-                guard let rootRecord = self.viewModel.inputs.getRootRecord() else {
-                    return
-                }
-                let share = CKShare(rootRecord: rootRecord)
+                let share = CKShare(recordZoneID: self.viewModel.inputs.getZone()!.zoneID)
                 share[CKShare.SystemFieldKey.title] = "Sharing list" as CKRecordValue?
                 share[CKShare.SystemFieldKey.shareType] = "QuickToDo" as CKRecordValue
                 let sharingViewController = UICloudSharingController(preparationHandler: {(UICloudSharingController, handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) in
-                   let modRecordsList = CKModifyRecordsOperation(recordsToSave: [rootRecord, share], recordIDsToDelete: nil)
-                   modRecordsList.modifyRecordsCompletionBlock = { (record, recordID, error) in
-                       handler(share, CKContainer.default(), error)
+                   let modRecordsList = CKModifyRecordsOperation(recordsToSave: [share], recordIDsToDelete: nil)
+                   modRecordsList.modifyRecordsResultBlock = { (result) in
+                       switch result{
+                       case .success():
+                           handler(share, CKContainer.default(), nil)
+                       case .failure(let error):
+                           handler(share, CKContainer.default(), error)
+                       }
                    }
                    CKContainer.default().privateCloudDatabase.add(modRecordsList)
                 })
                 sharingViewController.delegate = self
                 sharingViewController.availablePermissions = [.allowPublic, .allowReadOnly]
-//                sharingViewController.popoverPresentationController?.barButtonItem = shareButton as? UIBarButtonItem
+//                sharingViewController.popoverPresentationController?.barButtonItem = self.actionButton as? UIBarButtonItem
                 self.present(sharingViewController, animated:true, completion:nil)
             })
             .disposed(by: disposeBag)
@@ -124,8 +126,10 @@ class MainViewController: UIViewController {
     
     @objc func refresh(_ sender: AnyObject) {
         print("Activated refresh!!!")
-        self.itemsTableView.reloadData()
-        self.refreshControl.endRefreshing()
+        self.viewModel.inputs.getItems {
+            self.itemsTableView.reloadData()
+            self.refreshControl.endRefreshing()
+        }
     }
 
     override func viewDidLoad() {
@@ -148,9 +152,7 @@ class MainViewController: UIViewController {
     }
     
     func insert(withModel: QuickToDoProtocol) {
-        let viewModel = QuickToDoViewModel(withModel) {
-                self.itemsTableView.reloadData()
-            }
+        let viewModel = QuickToDoViewModel(withModel)
         self.viewModel = viewModel
     }
     

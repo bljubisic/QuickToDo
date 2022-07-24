@@ -46,11 +46,16 @@ extension QuickToDoModel: QuickToDoInputs {
         return self.cloudKit.inputs.getRootRecord()
     }
     
+    func getZone() -> CKRecordZone? {
+        return self.cloudKit.inputs.getZone()
+    }
+    
     func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
         self.cloudKit.inputs.prepareShare(handler: handler)
     }
     
     func getItems() -> (Bool, Error?) {
+        print("Called getItems")
         Observable.merge([self.coreData.outputs.items, self.cloudKit.outputs.items])
             .subscribe({(item) in
                 if let itemElement = item.element {
@@ -59,20 +64,22 @@ extension QuickToDoModel: QuickToDoInputs {
             }).disposed(by: disposeBag)
         _ = self.coreData.inputs.getItems(withCompletion: nil)
         _ = self.cloudKit.inputs.getItems() { item in
-//            let funcUpdate = self.coreData.inputs.update()
-//            _ = funcUpdate(item, item)
+            let funcUpdate = self.coreData.inputs.update()
+            _ = funcUpdate(item, item)
         }
         
         return (true, nil)
     }
     
-    func add(_ item: Item) -> (Bool, Error?) {
+    func add(_ item: Item, addToCloud: Bool) -> (Bool, Error?) {
         let newInsertFunction = self.coreData.inputs.insert()
         let ckInsertFunctiomn = self.cloudKit.inputs.insert()
         self.itemsPrivate.onNext(newInsertFunction(item, nil).0)
-        _ = ckInsertFunctiomn(item) { (newItem, error) in
-//            let updateFunction = self.coreData.inputs.update()
-//            _ = updateFunction(item, newItem)
+        if addToCloud {
+            _ = ckInsertFunctiomn(item) { (newItem, error) in
+                let updateFunction = self.coreData.inputs.update()
+                _ = updateFunction(item, newItem)
+            }
         }
         return (true, nil)
     }

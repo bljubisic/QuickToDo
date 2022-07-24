@@ -11,12 +11,13 @@ import RxSwift
 import CloudKit
 
 protocol QuickToDoInputs {
-    func add(_ item: Item) -> (Bool, Error?)
+    func add(_ item: Item, addToCloud: Bool) -> (Bool, Error?)
     func update(_ item: Item, withItem: Item) -> (Bool, Error?)
     func getHints(for itemName: String) -> Observable<String>
     func getItems() -> (Bool, Error?)
     func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) -> Void
     func getRootRecord() -> CKRecord?
+    func getZone() -> CKRecordZone?
 }
 
 protocol QuickToDoOutputs {
@@ -24,7 +25,7 @@ protocol QuickToDoOutputs {
     var cloudStatus: Observable<CloudStatus> { get }
 }
 
-protocol QuickToDoProtocol {
+public protocol QuickToDoProtocol {
     var inputs: QuickToDoInputs { get }
     var outputs: QuickToDoOutputs { get }
     
@@ -42,6 +43,8 @@ protocol StorageInputs {
     func getHints(for itemName: String, withCompletion: (Item, Item) -> Void) -> Void
     func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) -> Void
     func getRootRecord() -> CKRecord?
+    func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?)
+    func getZone() -> CKRecordZone?
 }
 
 protocol StorageOutputs {

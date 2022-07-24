@@ -17,6 +17,7 @@ final class CloudKitModel: StorageProtocol {
     private var itemsRecords: [CKRecord]
     private var container: CKContainer!
     private var database: CKDatabase
+    private var sharedDatabase: CKDatabase
     private var zone: CKRecordZone
     private var rootRecord: CKRecord!
     
@@ -29,6 +30,7 @@ final class CloudKitModel: StorageProtocol {
         container = CKContainer.default()
         zone = CKRecordZone(zoneName: String(describing: RecordZones.quickToDoZone))
         database = container.privateCloudDatabase
+        sharedDatabase = container.sharedCloudDatabase
         itemsRecords = []
         
         self.database.save(zone) { newZone, error in
@@ -78,8 +80,40 @@ final class CloudKitModel: StorageProtocol {
 }
 //MARK: StorageInputs extension
 extension CloudKitModel: StorageInputs {
+    
     func getRootRecord() -> CKRecord? {
         return self.rootRecord
+    }
+    
+    func getZone() -> CKRecordZone? {
+        return self.zone
+    }
+    
+    func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?) {
+        let predicate = NSPredicate(format: "Root = %@", root.recordID)
+        let query = CKQuery(recordType: "Items", predicate: predicate)
+        
+        self.sharedDatabase.perform(query, inZoneWith: zone.zoneID) { (receivedRecords, receivedError) in
+            guard let records = receivedRecords else {
+                return
+            }
+            guard let completionUnwraped = completion else {
+                return
+            }
+            for record in records {
+                let tempItem = Item(name: record.string(String(describing: ItemFields.name))!,
+                                    count: record.int(String(describing: ItemFields.count))!,
+                                    uploadedToICloud: true,
+                                    done: (record.int(String(describing: ItemFields.done))! == 1) ? true : false,
+                                    shown: (record.int(String(describing: ItemFields.used))! == 1) ? true : false,
+                                    createdAt: record.creationDate!,
+                                    lastUsedAt: record.modificationDate!)
+                self.itemsRecords.append(record)
+                completionUnwraped(tempItem)
+                self.itemsPrivate.onNext(tempItem)
+            }
+        }
+        return(true, nil)
     }
     
     func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
@@ -133,6 +167,7 @@ extension CloudKitModel: StorageInputs {
             let newRecord = CKRecord(recordType: "Items", recordID:  CKRecord.ID(zoneID: self.zone.zoneID))
             let rootReference = CKRecord.Reference(recordID: self.rootRecord.recordID, action: .deleteSelf)
             newRecord.setObject(rootReference, forKey: "Root")
+            newRecord.setParent(self.rootRecord)
             var itemRet = Item()
             let error: Error? = nil
             newRecord.set(string: item.name, key: String(describing: ItemFields.name))
@@ -180,7 +215,7 @@ extension CloudKitModel: StorageInputs {
     func update() -> itemProcessUpdate {
         return { (item, newItem) in
             
-            let predicate = NSPredicate(format: "(Name == %@) and (Used == %d)", newItem.name, (newItem.shown) ? 0 : 1)
+            let predicate = NSPredicate(format: "(Name == %@) and (Used == %d)", item.name, item.shown)
             let query = CKQuery(recordType: "Items", predicate: predicate)
             
             self.database.perform(query, inZoneWith: self.zone.zoneID) { (recordsRecived, error) in

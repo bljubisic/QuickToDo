@@ -21,8 +21,9 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, ObservableObject {
     @Published var itemsArray: [Item]
     
     let disposeBag = DisposeBag()
+    typealias returnVoid = () -> Void
     
-    init(_ withModel: QuickToDoProtocol, withTableUpdateCompletion: @escaping () -> Void) {
+    init(_ withModel: QuickToDoProtocol) {
         self.model = withModel
         items = self.model.outputs.items
         cloudStatus = self.model.outputs.cloudStatus
@@ -36,13 +37,17 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
         return self.model.inputs.getRootRecord()
     }
     
+    func getZone() -> CKRecordZone? {
+        return self.model.inputs.getZone()
+    }
+    
     func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
         self.model.inputs.prepareSharing(handler: handler)
     }
     
     func add(_ newItem: Item) -> (Bool, Error?) {
 //        print("Calling add with: \(newItem)")
-        return self.model.inputs.add(newItem)
+        return self.model.inputs.add(newItem, addToCloud: true)
     }
     
     private func getFilteredItemsNum(filterImpl done: Bool) -> Observable<Int> {

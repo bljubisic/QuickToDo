@@ -72,7 +72,14 @@ final class CoreDataModel: StorageProtocol {
 }
 //MARK: StorageInputs
 extension CoreDataModel: StorageInputs {
+    func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?) {
+        return (true, nil)
+    }
+    
     func getRootRecord() -> CKRecord? { 
+        return nil
+    }
+    func getZone() -> CKRecordZone? {
         return nil
     }
     func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
