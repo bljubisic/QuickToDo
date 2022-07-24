@@ -25,7 +25,7 @@ protocol QuickToDoOutputs {
     var cloudStatus: Observable<CloudStatus> { get }
 }
 
-public protocol QuickToDoProtocol {
+protocol QuickToDoProtocol {
     var inputs: QuickToDoInputs { get }
     var outputs: QuickToDoOutputs { get }
     

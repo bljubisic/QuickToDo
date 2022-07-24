@@ -9,10 +9,31 @@
 import SwiftUI
 import RxSwift
 import CloudKit
+import Combine
+
+public final class DebounceObject: ObservableObject {
+    @Published var text: String = ""
+    @Published var debouncedText: String = ""
+    private var bag = Set<AnyCancellable>()
+
+    public init(dueTime: TimeInterval = 0.5) {
+        $text
+            .removeDuplicates()
+            .debounce(for: .seconds(dueTime), scheduler: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] value in
+                self?.debouncedText = value
+            })
+            .store(in: &bag)
+    }
+}
 
 struct MainView: View {
     
+    @StateObject var debounceObject = DebounceObject()
+    
     @ObservedObject var viewModel: QuickToDoViewModel
+    @State var hint1 = ""
+    @State var hint2 = ""
     
     init(viewModel: QuickToDoViewModelProtoocol) {
         self.viewModel = viewModel as! QuickToDoViewModel
@@ -51,19 +72,45 @@ struct MainView: View {
                 }
             }
             VStack() {
-                TextField("Add new item", text: $text)
+                TextField("Add new item", text: $debounceObject.text)
+                    .onChange(of: debounceObject.debouncedText) { text in
+                        self.viewModel.inputs.getHints(for: debounceObject.debouncedText, withCompletion: {name1, name2 in
+                            hint1 = name1
+                            hint2 = name2
+                        })
+                    }
+                    .onSubmit {
+                        self.addItem(debounceObject.text)
+                    }
                 HStack() {
-                    Button(action: {}) {
-                        Text("First Hint")
+                    Button(action: {
+                        debounceObject.text = hint1
+                    }) {
+                        Text(hint1)
                             .padding()
                     }
-                    Button(action: {}) {
-                        Text("Second Hint")
+                    Button(action: {
+                        debounceObject.text = hint2
+                    }) {
+                        Text(hint2)
                             .padding()
                     }
                 }
             }
         }
+        .navigationTitle("Quick ToDo List")
+    }
+    
+    func addItem(_ sender: String) {
+        _ = self.viewModel.inputs.add(Item(
+            name: sender,
+            count: 1,
+            uploadedToICloud: false,
+            done: false,
+            shown: true,
+            createdAt: Date(),
+            lastUsedAt: Date())
+        )
     }
 }
 
