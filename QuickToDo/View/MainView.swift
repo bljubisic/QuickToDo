@@ -32,10 +32,12 @@ struct MainView: View {
     @StateObject var debounceObject = DebounceObject()
     
     @ObservedObject var viewModel: QuickToDoViewModel
+//    @ObservedObject var viewModel: ViewModelMocked
     @State var hint1 = ""
     @State var hint2 = ""
     
     init(viewModel: QuickToDoViewModelProtoocol) {
+//        self.viewModel = viewModel as! ViewModelMocked
         self.viewModel = viewModel as! QuickToDoViewModel
         _ = self.viewModel.inputs.getItems {
             print("called getItems")
@@ -62,12 +64,18 @@ struct MainView: View {
                         }
                     })
                     Text(item.name)
+                        .scaledToFit()
+                    Spacer()
                     if item.uploadedToICloud {
                         Image("Cloud")
-                          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                          .frame(maxWidth: 50, maxHeight: 50, alignment: .trailing)
                     } else {
                         Image("NoCloud")
-                          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(maxWidth: 50, maxHeight: 50, alignment: .trailing)
                     }
                 }
             }

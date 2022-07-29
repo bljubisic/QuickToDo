@@ -140,7 +140,6 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
         let items: [String] = self.itemsArray
             .filter{(item) in item.name.hasPrefix(itemName)}
             .map{(item) in item.name}
-    
         if(items.count > 1) {
             withCompletion(items[0], items[1])
         } else if(items.count == 1) {
