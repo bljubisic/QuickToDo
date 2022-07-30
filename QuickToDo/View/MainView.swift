@@ -32,10 +32,12 @@ struct MainView: View {
     @StateObject var debounceObject = DebounceObject()
     
     @ObservedObject var viewModel: QuickToDoViewModel
+//    @ObservedObject var viewModel: ViewModelMocked
     @State var hint1 = ""
     @State var hint2 = ""
     
     init(viewModel: QuickToDoViewModelProtoocol) {
+//        self.viewModel = viewModel as! ViewModelMocked
         self.viewModel = viewModel as! QuickToDoViewModel
         _ = self.viewModel.inputs.getItems {
             print("called getItems")
@@ -43,62 +45,90 @@ struct MainView: View {
     }
     
     @State private var text = ""
+
     var body: some View {
-        List() {
-            ForEach(self.viewModel.inputs.getItemsArray(withFilter: false)) {item in
-                HStack() {
-                    Button(action: {
-                        print("Tapped \(item.name)")
-                        let newItem = Item.itemDoneLens.set(!item.done, item)
-                        _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
-                                print("Done")
-                            })
-                    }, label: {
-                        if item.done {
-                            Image("selected")
-                        }
-                        else {
-                            Image("select")
-                        }
-                    })
-                    Text(item.name)
-                    if item.uploadedToICloud {
-                        Image("Cloud")
-                          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
-                    } else {
-                        Image("NoCloud")
-                          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
-                    }
-                }
+        VStack() {
+            HStack() {
+                Button(action: {
+                    print("Pressed refresh")
+                }, label: {
+                    Image(systemName: "arrow.clockwise.circle")
+                })
+                Spacer()
+                Button(action: {
+                    print("Pressed remove done")
+                }, label: {
+                    Image(systemName: "xmark.bin")
+                })
+                Button(action: {
+                    print("Pressed refresh cloud")
+                }, label: {
+                    Image(systemName: "arrow.clockwise.icloud")
+                })
             }
-            VStack() {
-                TextField("Add new item", text: $debounceObject.text)
-                    .onChange(of: debounceObject.debouncedText) { text in
-                        self.viewModel.inputs.getHints(for: debounceObject.debouncedText, withCompletion: {name1, name2 in
-                            hint1 = name1
-                            hint2 = name2
+            .padding()
+            List() {
+                ForEach(self.viewModel.inputs.getItemsArray(withFilter: false)) {item in
+                    HStack() {
+                        Button(action: {
+                            print("Tapped \(item.name)")
+                            let newItem = Item.itemDoneLens.set(!item.done, item)
+                            _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
+                                    print("Done")
+                                })
+                        }, label: {
+                            if item.done {
+                                Image("selected")
+                            }
+                            else {
+                                Image("select")
+                            }
                         })
+                        Text(item.name)
+                            .scaledToFit()
+                        Spacer()
+                        if item.uploadedToICloud {
+                            Image("Cloud")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                              .frame(maxWidth: 50, maxHeight: 50, alignment: .trailing)
+                        } else {
+                            Image("NoCloud")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(maxWidth: 50, maxHeight: 50, alignment: .trailing)
+                        }
                     }
-                    .onSubmit {
-                        self.addItem(debounceObject.text)
-                    }
-                HStack() {
-                    Button(action: {
-                        debounceObject.text = hint1
-                    }) {
-                        Text(hint1)
-                            .padding()
-                    }
-                    Button(action: {
-                        debounceObject.text = hint2
-                    }) {
-                        Text(hint2)
-                            .padding()
+                }
+                VStack() {
+                    TextField("Add new item", text: $debounceObject.text)
+                        .onChange(of: debounceObject.debouncedText) { text in
+                            self.viewModel.inputs.getHints(for: debounceObject.debouncedText, withCompletion: {name1, name2 in
+                                hint1 = name1
+                                hint2 = name2
+                            })
+                        }
+                        .onSubmit {
+                            self.addItem(debounceObject.text)
+                        }
+                    HStack() {
+                        Button(action: {
+                            debounceObject.text = hint1
+                        }) {
+                            Text(hint1)
+                                .padding()
+                        }
+                        Button(action: {
+                            debounceObject.text = hint2
+                        }) {
+                            Text(hint2)
+                                .padding()
+                        }
                     }
                 }
             }
+            .navigationTitle("Quick ToDo List!!!")
         }
-        .navigationTitle("Quick ToDo List")
     }
     
     func addItem(_ sender: String) {
@@ -119,6 +149,7 @@ struct MainView_Previews: PreviewProvider {
         let model = ModelMocked()
         let viewModel = ViewModelMocked(model: model)
         return MainView(viewModel: viewModel)
+            .previewInterfaceOrientation(.portrait)
     }
 }
 
