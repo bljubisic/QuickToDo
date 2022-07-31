@@ -18,7 +18,7 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, ObservableObject {
     
     var items: Observable<Item>
     
-    @Published var itemsArray: [Item]
+    @Published public var itemsArray: [Item]
     
     let disposeBag = DisposeBag()
     typealias returnVoid = () -> Void
@@ -102,10 +102,6 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
             .filter({ (item) -> Bool in
                 return item.name != ""
             })
-            .filter({ (item) -> Bool in
-                print(item)
-                return item.shown
-            })
             .subscribe(onNext: { (newItem) in
                 if !self.itemsArray.contains(where: { (item) -> Bool in
                     item.name == newItem.name
@@ -129,7 +125,14 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
                 print(Error)
             }, onDisposed:  {
             }).disposed(by: disposeBag)
+//        self.removeShownItems()
         return self.model.inputs.getItems()
+    }
+    
+    private func removeShownItems() {
+        self.itemsArray = itemsArray.filter({item -> Bool in
+            return item.shown == true
+        })
     }
     
     func getItemsSize() -> Int {
@@ -154,20 +157,18 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
             return self.itemsArray
         } else {
             return self.itemsArray.filter({ (item) -> Bool in
-                return item.done == true
+                return item.shown == true
             })
         }
     }
     
-
-    
-    func hideAllDoneItems() -> Bool {
+    func showOrHideAllDoneItems(shown: Bool) -> Bool {
         let updatedItems = self.itemsArray
                             .filter { (item) -> Bool in
                                 return item.done == true
                             }
                             .map { (item) -> Item in
-                                return Item.itemShownLens.set(!item.shown, item)
+                                return Item.itemShownLens.set(shown, item)
                             }
         updatedItems.forEach { (item) in
             _ = self.model.inputs.update(item, withItem: item)
