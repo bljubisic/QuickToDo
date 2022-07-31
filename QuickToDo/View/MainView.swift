@@ -50,7 +50,10 @@ struct MainView: View {
         VStack() {
             HStack() {
                 Button(action: {
-                    print("Pressed refresh")
+                    print("pressed refresh")
+                    _ = self.viewModel.inputs.getItems {
+                        print("called getItems")
+                    }
                 }, label: {
                     Image(systemName: "arrow.clockwise.circle")
                 })
@@ -109,7 +112,7 @@ struct MainView: View {
                             })
                         }
                         .onSubmit {
-                            self.addItem(debounceObject.text)
+                            _ = self.addItem(debounceObject.text)
                         }
                     HStack() {
                         Button(action: {
@@ -128,6 +131,12 @@ struct MainView: View {
                 }
             }
             .navigationTitle("Quick ToDo List!!!")
+            .refreshable {
+                print("start refresh")
+                _ = self.viewModel.inputs.getItems {
+                    print("called getItems")
+                }
+           }
         }
     }
     
