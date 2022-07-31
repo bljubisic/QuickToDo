@@ -1,2 +1,3 @@
-*xcworkspace/xcuserdata/*
+*xcodeproject/*xcworkspace/xcuserdata/*
 *xcodeproject/xcuserdata/*
+.DS_Store
