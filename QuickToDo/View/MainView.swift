@@ -40,11 +40,12 @@ struct MainView: View {
 //        self.viewModel = viewModel as! ViewModelMocked
         self.viewModel = viewModel as! QuickToDoViewModel
         _ = self.viewModel.inputs.getItems {
-            print("called getItems")
+//            print("called getItems")
         }
     }
     
     @State private var text = ""
+    @State private var shown = true
 
     var body: some View {
         VStack() {
@@ -60,6 +61,11 @@ struct MainView: View {
                 Spacer()
                 Button(action: {
                     print("Pressed remove done")
+                    shown = !shown
+                    _ = self.viewModel.inputs.showOrHideAllDoneItems(shown: shown)
+                    _ = self.viewModel.inputs.getItems {
+                        print("getting new items")
+                    }
                 }, label: {
                     Image(systemName: "xmark.bin")
                 })
@@ -71,35 +77,37 @@ struct MainView: View {
             }
             .padding()
             List() {
-                ForEach(self.viewModel.inputs.getItemsArray(withFilter: false)) {item in
-                    HStack() {
-                        Button(action: {
-                            print("Tapped \(item.name)")
-                            let newItem = Item.itemDoneLens.set(!item.done, item)
-                            _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
-                                    print("Done")
-                                })
-                        }, label: {
-                            if item.done {
-                                Image("selected")
+                ForEach(self.viewModel.outputs.itemsArray) { item in
+                    if (item.shown == true) {
+                        HStack() {
+                            Button(action: {
+                                print("Tapped \(item.name)")
+                                let newItem = Item.itemDoneLens.set(!item.done, item)
+                                _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
+                                        print("Done")
+                                    })
+                            }, label: {
+                                if item.done {
+                                    Image("selected")
+                                }
+                                else {
+                                    Image("select")
+                                }
+                            })
+                            Text(item.name)
+                                .scaledToFit()
+                            Spacer()
+                            if item.uploadedToICloud {
+                                Image("Cloud")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                  .frame(maxWidth: 50, maxHeight: 50, alignment: .trailing)
+                            } else {
+                                Image("NoCloud")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(maxWidth: 50, maxHeight: 50, alignment: .trailing)
                             }
-                            else {
-                                Image("select")
-                            }
-                        })
-                        Text(item.name)
-                            .scaledToFit()
-                        Spacer()
-                        if item.uploadedToICloud {
-                            Image("Cloud")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                              .frame(maxWidth: 50, maxHeight: 50, alignment: .trailing)
-                        } else {
-                            Image("NoCloud")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(maxWidth: 50, maxHeight: 50, alignment: .trailing)
                         }
                     }
                 }
@@ -112,7 +120,7 @@ struct MainView: View {
                             })
                         }
                         .onSubmit {
-                            _ = self.addItem(debounceObject.text)
+                            self.addItem(debounceObject.text)
                         }
                     HStack() {
                         Button(action: {
@@ -299,7 +307,7 @@ final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInpu
         }
     }
     
-    func hideAllDoneItems() -> Bool {
+    func showOrHideAllDoneItems(shown: Bool) -> Bool {
         return true
     }
     

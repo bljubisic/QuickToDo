@@ -85,7 +85,7 @@ class MainViewController: UIViewController {
         self.selectorItems.rx.tap
             .debug()
             .subscribe(onNext: { _ in
-                _ = self.viewModel.inputs.hideAllDoneItems()
+                _ = self.viewModel.inputs.showOrHideAllDoneItems(shown: true)
                 self.itemsTableView.reloadData()
             })
             .disposed(by: disposeBag)

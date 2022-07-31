@@ -55,7 +55,6 @@ extension QuickToDoModel: QuickToDoInputs {
     }
     
     func getItems() -> (Bool, Error?) {
-        print("Called getItems")
         Observable.merge([self.coreData.outputs.items, self.cloudKit.outputs.items])
             .subscribe({(item) in
                 if let itemElement = item.element {
