@@ -3,126 +3,100 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E40CCF8319F4406B004CF859 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40CCF8219F4406B004CF859 /* Entity.swift */; };
-		E410086B1A2D0ECD00D6731A /* QuickToDoDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E410086A1A2D0ECD00D6731A /* QuickToDoDataManager.swift */; };
-		E4258A8D1ABD7E1B002B8EB1 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4258A8C1ABD7E1B002B8EB1 /* CloudKit.framework */; };
-		E4723EDA1ACB2F2800239A68 /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4723ED91ACB2F2800239A68 /* ConfigManager.swift */; };
-		E48BC55D1A9D0254003C2262 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01819E7EA63003A89F7 /* Images.xcassets */; };
-		E48C9AC71A3261DE007041DD /* ItemObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C9AC61A3261DE007041DD /* ItemObject.swift */; };
-		E48CDA101A1C728C00C24F26 /* ViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48CDA0F1A1C728C00C24F26 /* ViewTableViewCell.swift */; };
-		E49DE6C81A9922600063F5D5 /* QuickToDoDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E410086A1A2D0ECD00D6731A /* QuickToDoDataManager.swift */; };
-		E49DE6C91A9922640063F5D5 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40CCF8219F4406B004CF859 /* Entity.swift */; };
-		E49DE6CA1A9922690063F5D5 /* ItemObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C9AC61A3261DE007041DD /* ItemObject.swift */; };
-		E49DE6CB1A9922750063F5D5 /* QuickToDo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E4C6E01019E7EA63003A89F7 /* QuickToDo.xcdatamodeld */; };
-		E49DE6CD1A9A71F40063F5D5 /* TodayTableViewCellSum.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49DE6CC1A9A71F40063F5D5 /* TodayTableViewCellSum.swift */; };
-		E4C6E00F19E7EA63003A89F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C6E00E19E7EA63003A89F7 /* AppDelegate.swift */; };
+		E42C85F423E8603600AB6CDD /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42C85F323E8603600AB6CDD /* MainView.swift */; };
+		E435ECE521680E0300E68960 /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE421680E0300E68960 /* CoreDataModel.swift */; };
+		E435ECE72169327000E68960 /* ManagedObjectTypeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE62169327000E68960 /* ManagedObjectTypeProtocol.swift */; };
+		E435ECE9216932FB00E68960 /* ItemMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE8216932FA00E68960 /* ItemMO.swift */; };
+		E435ECEB21729EB700E68960 /* QuickToDoViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECEA21729EB700E68960 /* QuickToDoViewModelProtocol.swift */; };
+		E435ECEF21890A6A00E68960 /* ItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECEE21890A6A00E68960 /* ItemTableViewCell.swift */; };
+		E435ECF121890A7900E68960 /* AddItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECF021890A7900E68960 /* AddItemTableViewCell.swift */; };
+		E44980ED2839003A0009313D /* SwiftyCloudKit in Frameworks */ = {isa = PBXBuildFile; productRef = E44980EC2839003A0009313D /* SwiftyCloudKit */; };
+		E44980F0283900A30009313D /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = E44980EF283900A30009313D /* RxCocoa */; };
+		E44980F2283900A30009313D /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E44980F1283900A30009313D /* RxSwift */; };
+		E44980F5283900B20009313D /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E44980F4283900B20009313D /* SnapKit */; };
+		E46E6E7123F2A80600D26E00 /* QuickToDoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46E6E7023F2A80600D26E00 /* QuickToDoTests.swift */; };
+		E46FD0E3216406220007FBB7 /* QuickToDoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46FD0E2216406220007FBB7 /* QuickToDoModel.swift */; };
+		E4861BC0215FA0010085CFB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4861BBF215FA0010085CFB8 /* AppDelegate.swift */; };
+		E4861BC2215FA3FF0085CFB8 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */; };
+		E48B68DA215D5C3C0062B08C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48B68D9215D5C3C0062B08C /* MainViewController.swift */; };
+		E49DE916289737EC00B70245 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = E49DE915289737EC00B70245 /* .gitignore */; };
+		E49F65FB22C379E7008D59FA /* CloudKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49F65FA22C379E7008D59FA /* CloudKitModel.swift */; };
+		E4BF3E6E21A04AFC00302EB8 /* QuickToDoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4BF3E6D21A04AFC00302EB8 /* QuickToDoViewModel.swift */; };
 		E4C6E01219E7EA63003A89F7 /* QuickToDo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E4C6E01019E7EA63003A89F7 /* QuickToDo.xcdatamodeld */; };
-		E4C6E01419E7EA63003A89F7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C6E01319E7EA63003A89F7 /* ViewController.swift */; };
-		E4C6E01719E7EA63003A89F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01519E7EA63003A89F7 /* Main.storyboard */; };
 		E4C6E01919E7EA63003A89F7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01819E7EA63003A89F7 /* Images.xcassets */; };
 		E4C6E01C19E7EA63003A89F7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01A19E7EA63003A89F7 /* LaunchScreen.xib */; };
-		E4C6E02819E7EA63003A89F7 /* QuickToDoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C6E02719E7EA63003A89F7 /* QuickToDoTests.swift */; };
-		E4E030411A0D908F002993CF /* InputTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E030401A0D908F002993CF /* InputTableViewCell.swift */; };
-		E4E77BBE1AE316B700AADF16 /* ConfigManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4723ED91ACB2F2800239A68 /* ConfigManager.swift */; };
-		E4EBBBCD1AB62F39002DA67A /* ConfigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4EBBBCC1AB62F39002DA67A /* ConfigViewController.swift */; };
+		E4C893982838F56D002B860A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01519E7EA63003A89F7 /* Main.storyboard */; };
 		E4F014C81AC8887B00264AD5 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = E4F014C71AC8887B00264AD5 /* Config.plist */; };
-		E4F1DD1C1A991BD000F86D95 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */; };
-		E4F1DD211A991BD000F86D95 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F1DD201A991BD000F86D95 /* TodayViewController.swift */; };
-		E4F1DD231A991BD000F86D95 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4F1DD221A991BD000F86D95 /* MainInterface.storyboard */; };
-		E4F1DD261A991BD000F86D95 /* Quick ToDo Sum.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E4F1DD1B1A991BD000F86D95 /* Quick ToDo Sum.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E4F9A3791A5C146900CC0573 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4F9A3781A5C146900CC0573 /* CoreData.framework */; };
+		E4FBC6DA215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */; };
+		E4FBC6DC215AD63300F1B6E2 /* DataStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		E4C6E02219E7EA63003A89F7 /* PBXContainerItemProxy */ = {
+		E46E6E7323F2A80600D26E00 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E4C6E00119E7EA62003A89F7 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = E4C6E00819E7EA62003A89F7;
 			remoteInfo = QuickToDo;
 		};
-		E4F1DD241A991BD000F86D95 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E4C6E00119E7EA62003A89F7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E4F1DD1A1A991BD000F86D95;
-			remoteInfo = "Quick ToDo Sum";
-		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		E41B97BB1A8D3E9F00BF8F51 /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				E4F1DD261A991BD000F86D95 /* Quick ToDo Sum.appex in Embed App Extensions */,
-			);
-			name = "Embed App Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		E404A39F1A8EBA34008D32A5 /* QuickToDo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = QuickToDo.entitlements; sourceTree = "<group>"; };
-		E40CCF8219F4406B004CF859 /* Entity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
-		E410086A1A2D0ECD00D6731A /* QuickToDoDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickToDoDataManager.swift; sourceTree = "<group>"; };
 		E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
-		E4258A8C1ABD7E1B002B8EB1 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
-		E4723ED91ACB2F2800239A68 /* ConfigManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigManager.swift; sourceTree = "<group>"; };
-		E48C9AC61A3261DE007041DD /* ItemObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemObject.swift; sourceTree = "<group>"; };
-		E48CDA0F1A1C728C00C24F26 /* ViewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewTableViewCell.swift; sourceTree = "<group>"; };
-		E49DE6C71A9922400063F5D5 /* Quick ToDo Sum.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Quick ToDo Sum.entitlements"; sourceTree = "<group>"; };
-		E49DE6CC1A9A71F40063F5D5 /* TodayTableViewCellSum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodayTableViewCellSum.swift; sourceTree = "<group>"; };
+		E42C85F323E8603600AB6CDD /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		E435ECE421680E0300E68960 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
+		E435ECE62169327000E68960 /* ManagedObjectTypeProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedObjectTypeProtocol.swift; sourceTree = "<group>"; };
+		E435ECE8216932FA00E68960 /* ItemMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemMO.swift; sourceTree = "<group>"; };
+		E435ECEA21729EB700E68960 /* QuickToDoViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoViewModelProtocol.swift; sourceTree = "<group>"; };
+		E435ECEE21890A6A00E68960 /* ItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemTableViewCell.swift; sourceTree = "<group>"; };
+		E435ECF021890A7900E68960 /* AddItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemTableViewCell.swift; sourceTree = "<group>"; };
+		E46E6E6E23F2A80600D26E00 /* QuickToDoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuickToDoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E46E6E7023F2A80600D26E00 /* QuickToDoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoTests.swift; sourceTree = "<group>"; };
+		E46E6E7223F2A80600D26E00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E46FD0E2216406220007FBB7 /* QuickToDoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoModel.swift; sourceTree = "<group>"; };
+		E47939AA23AB8520002C7AC2 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		E4861BBF215FA0010085CFB8 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		E48B68D9215D5C3C0062B08C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		E49DE915289737EC00B70245 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		E49F65FA22C379E7008D59FA /* CloudKitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitModel.swift; sourceTree = "<group>"; };
+		E4BF3E6D21A04AFC00302EB8 /* QuickToDoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoViewModel.swift; sourceTree = "<group>"; };
 		E4C6E00919E7EA62003A89F7 /* QuickToDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuickToDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4C6E00D19E7EA62003A89F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E4C6E00E19E7EA63003A89F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E4C6E01119E7EA63003A89F7 /* QuickToDo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = QuickToDo.xcdatamodel; sourceTree = "<group>"; };
-		E4C6E01319E7EA63003A89F7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		E4C6E01619E7EA63003A89F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E4C6E01819E7EA63003A89F7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E4C6E01B19E7EA63003A89F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		E4C6E02119E7EA63003A89F7 /* QuickToDoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuickToDoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		E4C6E02619E7EA63003A89F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E4C6E02719E7EA63003A89F7 /* QuickToDoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoTests.swift; sourceTree = "<group>"; };
-		E4C6E03119E7EE90003A89F7 /* QuickToDoPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = QuickToDoPlayground.playground; sourceTree = "<group>"; };
-		E4E030401A0D908F002993CF /* InputTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputTableViewCell.swift; sourceTree = "<group>"; };
-		E4EBBBCC1AB62F39002DA67A /* ConfigViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigViewController.swift; sourceTree = "<group>"; };
 		E4F014C71AC8887B00264AD5 /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Config.plist; sourceTree = "<group>"; };
-		E4F1DD1B1A991BD000F86D95 /* Quick ToDo Sum.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Quick ToDo Sum.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E4F1DD1F1A991BD000F86D95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E4F1DD201A991BD000F86D95 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
-		E4F1DD221A991BD000F86D95 /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
 		E4F9A3781A5C146900CC0573 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoModelProtocol.swift; sourceTree = "<group>"; };
+		E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStructures.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		E46E6E6B23F2A80600D26E00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E4C6E00619E7EA62003A89F7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				E4F9A3791A5C146900CC0573 /* CoreData.framework in Frameworks */,
-				E4258A8D1ABD7E1B002B8EB1 /* CloudKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E4C6E01E19E7EA63003A89F7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E4F1DD181A991BD000F86D95 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E4F1DD1C1A991BD000F86D95 /* NotificationCenter.framework in Frameworks */,
+				E44980ED2839003A0009313D /* SwiftyCloudKit in Frameworks */,
+				E44980F2283900A30009313D /* RxSwift in Frameworks */,
+				E44980F5283900B20009313D /* SnapKit in Frameworks */,
+				E44980F0283900A30009313D /* RxCocoa in Frameworks */,
+				E4861BC2215FA3FF0085CFB8 /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,19 +106,79 @@
 		E41B97AB1A8D3E9F00BF8F51 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E4258A8C1ABD7E1B002B8EB1 /* CloudKit.framework */,
+				E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */,
 				E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		E435ECE321680DD900E68960 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				E435ECE421680E0300E68960 /* CoreDataModel.swift */,
+				E435ECE62169327000E68960 /* ManagedObjectTypeProtocol.swift */,
+				E435ECE8216932FA00E68960 /* ItemMO.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
+		E46E6E6F23F2A80600D26E00 /* QuickToDoTests */ = {
+			isa = PBXGroup;
+			children = (
+				E46E6E7023F2A80600D26E00 /* QuickToDoTests.swift */,
+				E46E6E7223F2A80600D26E00 /* Info.plist */,
+			);
+			path = QuickToDoTests;
+			sourceTree = "<group>";
+		};
+		E49F65F922C379CB008D59FA /* CloudKit */ = {
+			isa = PBXGroup;
+			children = (
+				E49F65FA22C379E7008D59FA /* CloudKitModel.swift */,
+			);
+			path = CloudKit;
+			sourceTree = "<group>";
+		};
+		E4AFEE3C215AB04D0001AEDA /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E49F65F922C379CB008D59FA /* CloudKit */,
+				E435ECE321680DD900E68960 /* CoreData */,
+				E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */,
+				E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */,
+				E46FD0E2216406220007FBB7 /* QuickToDoModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E4AFEE3D215AB0560001AEDA /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				E435ECEA21729EB700E68960 /* QuickToDoViewModelProtocol.swift */,
+				E4BF3E6D21A04AFC00302EB8 /* QuickToDoViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		E4AFEE3E215AB0620001AEDA /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E48B68D9215D5C3C0062B08C /* MainViewController.swift */,
+				E435ECEE21890A6A00E68960 /* ItemTableViewCell.swift */,
+				E435ECF021890A7900E68960 /* AddItemTableViewCell.swift */,
+				E42C85F323E8603600AB6CDD /* MainView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		E4C6E00019E7EA62003A89F7 = {
 			isa = PBXGroup;
 			children = (
+				E49DE915289737EC00B70245 /* .gitignore */,
+				E47939AA23AB8520002C7AC2 /* MyPlayground.playground */,
 				E4F9A3781A5C146900CC0573 /* CoreData.framework */,
 				E4C6E00B19E7EA62003A89F7 /* QuickToDo */,
-				E4C6E02419E7EA63003A89F7 /* QuickToDoTests */,
-				E4F1DD1D1A991BD000F86D95 /* Quick ToDo Sum */,
+				E46E6E6F23F2A80600D26E00 /* QuickToDoTests */,
 				E41B97AB1A8D3E9F00BF8F51 /* Frameworks */,
 				E4C6E00A19E7EA62003A89F7 /* Products */,
 			);
@@ -154,8 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				E4C6E00919E7EA62003A89F7 /* QuickToDo.app */,
-				E4C6E02119E7EA63003A89F7 /* QuickToDoTests.xctest */,
-				E4F1DD1B1A991BD000F86D95 /* Quick ToDo Sum.appex */,
+				E46E6E6E23F2A80600D26E00 /* QuickToDoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -163,18 +196,12 @@
 		E4C6E00B19E7EA62003A89F7 /* QuickToDo */ = {
 			isa = PBXGroup;
 			children = (
+				E4AFEE3C215AB04D0001AEDA /* Model */,
+				E4AFEE3D215AB0560001AEDA /* ViewModel */,
+				E4AFEE3E215AB0620001AEDA /* View */,
 				E404A39F1A8EBA34008D32A5 /* QuickToDo.entitlements */,
-				E4C6E00E19E7EA63003A89F7 /* AppDelegate.swift */,
-				E4E030401A0D908F002993CF /* InputTableViewCell.swift */,
-				E48CDA0F1A1C728C00C24F26 /* ViewTableViewCell.swift */,
-				E4C6E01319E7EA63003A89F7 /* ViewController.swift */,
-				E4EBBBCC1AB62F39002DA67A /* ConfigViewController.swift */,
-				E48C9AC61A3261DE007041DD /* ItemObject.swift */,
-				E40CCF8219F4406B004CF859 /* Entity.swift */,
-				E410086A1A2D0ECD00D6731A /* QuickToDoDataManager.swift */,
-				E4723ED91ACB2F2800239A68 /* ConfigManager.swift */,
+				E4861BBF215FA0010085CFB8 /* AppDelegate.swift */,
 				E4C6E00C19E7EA62003A89F7 /* Supporting Files */,
-				E4C6E03119E7EE90003A89F7 /* QuickToDoPlayground.playground */,
 			);
 			path = QuickToDo;
 			sourceTree = "<group>";
@@ -192,46 +219,27 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		E4C6E02419E7EA63003A89F7 /* QuickToDoTests */ = {
-			isa = PBXGroup;
-			children = (
-				E4C6E02719E7EA63003A89F7 /* QuickToDoTests.swift */,
-				E4C6E02519E7EA63003A89F7 /* Supporting Files */,
-			);
-			path = QuickToDoTests;
-			sourceTree = "<group>";
-		};
-		E4C6E02519E7EA63003A89F7 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				E4C6E02619E7EA63003A89F7 /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		E4F1DD1D1A991BD000F86D95 /* Quick ToDo Sum */ = {
-			isa = PBXGroup;
-			children = (
-				E49DE6C71A9922400063F5D5 /* Quick ToDo Sum.entitlements */,
-				E4F1DD201A991BD000F86D95 /* TodayViewController.swift */,
-				E4F1DD221A991BD000F86D95 /* MainInterface.storyboard */,
-				E49DE6CC1A9A71F40063F5D5 /* TodayTableViewCellSum.swift */,
-				E4F1DD1E1A991BD000F86D95 /* Supporting Files */,
-			);
-			path = "Quick ToDo Sum";
-			sourceTree = "<group>";
-		};
-		E4F1DD1E1A991BD000F86D95 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				E4F1DD1F1A991BD000F86D95 /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		E46E6E6D23F2A80600D26E00 /* QuickToDoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E46E6E7723F2A80600D26E00 /* Build configuration list for PBXNativeTarget "QuickToDoTests" */;
+			buildPhases = (
+				E46E6E6A23F2A80600D26E00 /* Sources */,
+				E46E6E6B23F2A80600D26E00 /* Frameworks */,
+				E46E6E6C23F2A80600D26E00 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E46E6E7423F2A80600D26E00 /* PBXTargetDependency */,
+			);
+			name = QuickToDoTests;
+			productName = QuickToDoTests;
+			productReference = E46E6E6E23F2A80600D26E00 /* QuickToDoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		E4C6E00819E7EA62003A89F7 /* QuickToDo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E4C6E02B19E7EA63003A89F7 /* Build configuration list for PBXNativeTarget "QuickToDo" */;
@@ -239,52 +247,21 @@
 				E4C6E00519E7EA62003A89F7 /* Sources */,
 				E4C6E00619E7EA62003A89F7 /* Frameworks */,
 				E4C6E00719E7EA62003A89F7 /* Resources */,
-				E41B97BB1A8D3E9F00BF8F51 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				E4F1DD251A991BD000F86D95 /* PBXTargetDependency */,
 			);
 			name = QuickToDo;
+			packageProductDependencies = (
+				E44980EC2839003A0009313D /* SwiftyCloudKit */,
+				E44980EF283900A30009313D /* RxCocoa */,
+				E44980F1283900A30009313D /* RxSwift */,
+				E44980F4283900B20009313D /* SnapKit */,
+			);
 			productName = QuickToDo;
 			productReference = E4C6E00919E7EA62003A89F7 /* QuickToDo.app */;
 			productType = "com.apple.product-type.application";
-		};
-		E4C6E02019E7EA63003A89F7 /* QuickToDoTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E4C6E02E19E7EA63003A89F7 /* Build configuration list for PBXNativeTarget "QuickToDoTests" */;
-			buildPhases = (
-				E4C6E01D19E7EA63003A89F7 /* Sources */,
-				E4C6E01E19E7EA63003A89F7 /* Frameworks */,
-				E4C6E01F19E7EA63003A89F7 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				E4C6E02319E7EA63003A89F7 /* PBXTargetDependency */,
-			);
-			name = QuickToDoTests;
-			productName = QuickToDoTests;
-			productReference = E4C6E02119E7EA63003A89F7 /* QuickToDoTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		E4F1DD1A1A991BD000F86D95 /* Quick ToDo Sum */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E4F1DD271A991BD100F86D95 /* Build configuration list for PBXNativeTarget "Quick ToDo Sum" */;
-			buildPhases = (
-				E4F1DD171A991BD000F86D95 /* Sources */,
-				E4F1DD181A991BD000F86D95 /* Frameworks */,
-				E4F1DD191A991BD000F86D95 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Quick ToDo Sum";
-			productName = "Quick ToDo Sum";
-			productReference = E4F1DD1B1A991BD000F86D95 /* Quick ToDo Sum.appex */;
-			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -292,34 +269,29 @@
 		E4C6E00119E7EA62003A89F7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0600;
+				LastSwiftMigration = 0730;
+				LastSwiftUpdateCheck = 1130;
+				LastUpgradeCheck = 1330;
 				ORGANIZATIONNAME = "Bratislav Ljubisic";
 				TargetAttributes = {
-					E4C6E00819E7EA62003A89F7 = {
-						CreatedOnToolsVersion = 6.0.1;
+					E46E6E6D23F2A80600D26E00 = {
+						CreatedOnToolsVersion = 11.3.1;
 						DevelopmentTeam = ENT89NLKC9;
-						SystemCapabilities = {
-							com.apple.ApplicationGroups.iOS = {
-								enabled = 1;
-							};
-							com.apple.iCloud = {
-								enabled = 1;
-							};
-						};
-					};
-					E4C6E02019E7EA63003A89F7 = {
-						CreatedOnToolsVersion = 6.0.1;
+						ProvisioningStyle = Automatic;
 						TestTargetID = E4C6E00819E7EA62003A89F7;
 					};
-					E4F1DD1A1A991BD000F86D95 = {
-						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = ENT89NLKC9;
+					E4C6E00819E7EA62003A89F7 = {
+						CreatedOnToolsVersion = 6.0.1;
+						LastSwiftMigration = 1330;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
 							};
+							com.apple.Push = {
+								enabled = 1;
+							};
 							com.apple.iCloud = {
-								enabled = 0;
+								enabled = 1;
 							};
 						};
 					};
@@ -327,106 +299,88 @@
 			};
 			buildConfigurationList = E4C6E00419E7EA62003A89F7 /* Build configuration list for PBXProject "QuickToDo" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
 			mainGroup = E4C6E00019E7EA62003A89F7;
+			packageReferences = (
+				E44980EB2839003A0009313D /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */,
+				E44980EE283900A30009313D /* XCRemoteSwiftPackageReference "RxSwift" */,
+				E44980F3283900B20009313D /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = E4C6E00A19E7EA62003A89F7 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				E4C6E00819E7EA62003A89F7 /* QuickToDo */,
-				E4C6E02019E7EA63003A89F7 /* QuickToDoTests */,
-				E4F1DD1A1A991BD000F86D95 /* Quick ToDo Sum */,
+				E46E6E6D23F2A80600D26E00 /* QuickToDoTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		E46E6E6C23F2A80600D26E00 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E4C6E00719E7EA62003A89F7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E49DE916289737EC00B70245 /* .gitignore in Resources */,
 				E4F014C81AC8887B00264AD5 /* Config.plist in Resources */,
-				E4C6E01719E7EA63003A89F7 /* Main.storyboard in Resources */,
 				E4C6E01C19E7EA63003A89F7 /* LaunchScreen.xib in Resources */,
 				E4C6E01919E7EA63003A89F7 /* Images.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E4C6E01F19E7EA63003A89F7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E4F1DD191A991BD000F86D95 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E4F1DD231A991BD000F86D95 /* MainInterface.storyboard in Resources */,
-				E48BC55D1A9D0254003C2262 /* Images.xcassets in Resources */,
+				E4C893982838F56D002B860A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		E46E6E6A23F2A80600D26E00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E46E6E7123F2A80600D26E00 /* QuickToDoTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E4C6E00519E7EA62003A89F7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4E030411A0D908F002993CF /* InputTableViewCell.swift in Sources */,
-				E48C9AC71A3261DE007041DD /* ItemObject.swift in Sources */,
-				E40CCF8319F4406B004CF859 /* Entity.swift in Sources */,
-				E4723EDA1ACB2F2800239A68 /* ConfigManager.swift in Sources */,
-				E48CDA101A1C728C00C24F26 /* ViewTableViewCell.swift in Sources */,
-				E4C6E01419E7EA63003A89F7 /* ViewController.swift in Sources */,
-				E4C6E00F19E7EA63003A89F7 /* AppDelegate.swift in Sources */,
-				E410086B1A2D0ECD00D6731A /* QuickToDoDataManager.swift in Sources */,
+				E4BF3E6E21A04AFC00302EB8 /* QuickToDoViewModel.swift in Sources */,
+				E435ECE9216932FB00E68960 /* ItemMO.swift in Sources */,
+				E4FBC6DC215AD63300F1B6E2 /* DataStructures.swift in Sources */,
 				E4C6E01219E7EA63003A89F7 /* QuickToDo.xcdatamodeld in Sources */,
-				E4EBBBCD1AB62F39002DA67A /* ConfigViewController.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E4C6E01D19E7EA63003A89F7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E4C6E02819E7EA63003A89F7 /* QuickToDoTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E4F1DD171A991BD000F86D95 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E4F1DD211A991BD000F86D95 /* TodayViewController.swift in Sources */,
-				E49DE6CB1A9922750063F5D5 /* QuickToDo.xcdatamodeld in Sources */,
-				E49DE6CA1A9922690063F5D5 /* ItemObject.swift in Sources */,
-				E49DE6C81A9922600063F5D5 /* QuickToDoDataManager.swift in Sources */,
-				E49DE6C91A9922640063F5D5 /* Entity.swift in Sources */,
-				E4E77BBE1AE316B700AADF16 /* ConfigManager.swift in Sources */,
-				E49DE6CD1A9A71F40063F5D5 /* TodayTableViewCellSum.swift in Sources */,
+				E435ECEB21729EB700E68960 /* QuickToDoViewModelProtocol.swift in Sources */,
+				E435ECEF21890A6A00E68960 /* ItemTableViewCell.swift in Sources */,
+				E49F65FB22C379E7008D59FA /* CloudKitModel.swift in Sources */,
+				E435ECF121890A7900E68960 /* AddItemTableViewCell.swift in Sources */,
+				E435ECE521680E0300E68960 /* CoreDataModel.swift in Sources */,
+				E4FBC6DA215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift in Sources */,
+				E435ECE72169327000E68960 /* ManagedObjectTypeProtocol.swift in Sources */,
+				E46FD0E3216406220007FBB7 /* QuickToDoModel.swift in Sources */,
+				E4861BC0215FA0010085CFB8 /* AppDelegate.swift in Sources */,
+				E42C85F423E8603600AB6CDD /* MainView.swift in Sources */,
+				E48B68DA215D5C3C0062B08C /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		E4C6E02319E7EA63003A89F7 /* PBXTargetDependency */ = {
+		E46E6E7423F2A80600D26E00 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E4C6E00819E7EA62003A89F7 /* QuickToDo */;
-			targetProxy = E4C6E02219E7EA63003A89F7 /* PBXContainerItemProxy */;
-		};
-		E4F1DD251A991BD000F86D95 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E4F1DD1A1A991BD000F86D95 /* Quick ToDo Sum */;
-			targetProxy = E4F1DD241A991BD000F86D95 /* PBXContainerItemProxy */;
+			targetProxy = E46E6E7323F2A80600D26E00 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -450,7 +404,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		E4C6E02919E7EA63003A89F7 /* Debug */ = {
+		E402001B226DF7EE0047A681 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -458,221 +412,310 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Debug;
-		};
-		E4C6E02A19E7EA63003A89F7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Debug;
+		};
+		E402001C226DF7EE0047A681 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = QuickToDo/QuickToDo.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = ENT89NLKC9;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = QuickToDo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = Persukibo.QuickToDo;
+				PRODUCT_NAME = QuickToDo;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		E42C85F523E8615200AB6CDD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		E4C6E02C19E7EA63003A89F7 /* Debug */ = {
+		E42C85F623E8615200AB6CDD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = QuickToDo/QuickToDo.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = ENT89NLKC9;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = QuickToDo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = Persukibo.QuickToDo;
+				PRODUCT_NAME = QuickToDo;
 				PROVISIONING_PROFILE = "";
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Debug;
-		};
-		E4C6E02D19E7EA63003A89F7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_ENTITLEMENTS = QuickToDo/QuickToDo.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
-				INFOPLIST_FILE = QuickToDo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
-		E4C6E02F19E7EA63003A89F7 /* Debug */ = {
+		E46E6E7523F2A80600D26E00 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = ENT89NLKC9;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = QuickToDoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.persukibo.QuickToDoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuickToDo.app/QuickToDo";
 			};
 			name = Debug;
 		};
-		E4C6E03019E7EA63003A89F7 /* Release */ = {
+		E46E6E7623F2A80600D26E00 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = ENT89NLKC9;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = QuickToDoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuickToDo.app/QuickToDo";
-			};
-			name = Release;
-		};
-		E4F1DD281A991BD100F86D95 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "Quick ToDo Sum/Quick ToDo Sum.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
+				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
 				);
-				INFOPLIST_FILE = "Quick ToDo Sum/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.persukibo.QuickToDoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		E4F1DD291A991BD100F86D95 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "Quick ToDo Sum/Quick ToDo Sum.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				INFOPLIST_FILE = "Quick ToDo Sum/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuickToDo.app/QuickToDo";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		E46E6E7723F2A80600D26E00 /* Build configuration list for PBXNativeTarget "QuickToDoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E46E6E7523F2A80600D26E00 /* Debug */,
+				E46E6E7623F2A80600D26E00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		E4C6E00419E7EA62003A89F7 /* Build configuration list for PBXProject "QuickToDo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E4C6E02919E7EA63003A89F7 /* Debug */,
-				E4C6E02A19E7EA63003A89F7 /* Release */,
+				E402001B226DF7EE0047A681 /* Debug */,
+				E42C85F523E8615200AB6CDD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		E4C6E02B19E7EA63003A89F7 /* Build configuration list for PBXNativeTarget "QuickToDo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E4C6E02C19E7EA63003A89F7 /* Debug */,
-				E4C6E02D19E7EA63003A89F7 /* Release */,
+				E402001C226DF7EE0047A681 /* Debug */,
+				E42C85F623E8615200AB6CDD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E4C6E02E19E7EA63003A89F7 /* Build configuration list for PBXNativeTarget "QuickToDoTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E4C6E02F19E7EA63003A89F7 /* Debug */,
-				E4C6E03019E7EA63003A89F7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E4F1DD271A991BD100F86D95 /* Build configuration list for PBXNativeTarget "Quick ToDo Sum" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E4F1DD281A991BD100F86D95 /* Debug */,
-				E4F1DD291A991BD100F86D95 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E44980EB2839003A0009313D /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bljubisic/SwiftyCloudKit";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		E44980EE283900A30009313D /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		E44980F3283900B20009313D /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				branch = develop;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E44980EC2839003A0009313D /* SwiftyCloudKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E44980EB2839003A0009313D /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */;
+			productName = SwiftyCloudKit;
+		};
+		E44980EF283900A30009313D /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E44980EE283900A30009313D /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		E44980F1283900A30009313D /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E44980EE283900A30009313D /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		E44980F4283900B20009313D /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E44980F3283900B20009313D /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		E4C6E01019E7EA63003A89F7 /* QuickToDo.xcdatamodeld */ = {
