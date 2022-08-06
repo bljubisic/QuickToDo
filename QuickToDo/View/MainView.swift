@@ -51,16 +51,16 @@ struct MainView: View {
         VStack() {
             HStack() {
                 Button(action: {
-                    print("pressed refresh")
                     _ = self.viewModel.inputs.getItems {
                         print("called getItems")
                     }
                 }, label: {
                     Image(systemName: "arrow.clockwise.circle")
+                        .resizable()
+                        .frame(width: 40.0, height: 40.0)
                 })
                 Spacer()
                 Button(action: {
-                    print("Pressed remove done")
                     shown = !shown
                     _ = self.viewModel.inputs.showOrHideAllDoneItems(shown: shown)
                     _ = self.viewModel.inputs.getItems {
@@ -68,11 +68,17 @@ struct MainView: View {
                     }
                 }, label: {
                     Image(systemName: "xmark.bin")
+                        .resizable()
+                        .frame(width: 40.0, height: 40.0)
+                        .padding()
                 })
                 Button(action: {
-                    print("Pressed refresh cloud")
+                    _ = self.viewModel.inputs.uploadToCloud()
                 }, label: {
                     Image(systemName: "arrow.clockwise.icloud")
+                        .resizable()
+                        .frame(width: 40.0, height: 30.0)
+                        .padding()
                 })
             }
             .padding()
@@ -129,6 +135,7 @@ struct MainView: View {
                             Text(hint1)
                                 .padding()
                         }
+                        Spacer()
                         Button(action: {
                             debounceObject.text = hint2
                         }) {
@@ -182,6 +189,10 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
         
     }
     
+    func uploadToCloud(items: [Item]) -> (Bool, Error?) {
+        return (true, nil)
+    }
+    
     var inputs: QuickToDoInputs { return self }
     
     var outputs: QuickToDoOutputs { return self }
@@ -222,6 +233,10 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
 final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs, QuickToDoViewModelOutputs, ObservableObject {
     func getZone() -> CKRecordZone? {
         return nil
+    }
+    
+    func uploadToCloud() -> (Bool, Error?) {
+        return(true, nil)
     }
     
         

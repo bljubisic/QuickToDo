@@ -18,6 +18,7 @@ protocol QuickToDoInputs {
     func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) -> Void
     func getRootRecord() -> CKRecord?
     func getZone() -> CKRecordZone?
+    func uploadToCloud(items: [Item]) -> (Bool, Error?)
 }
 
 protocol QuickToDoOutputs {
