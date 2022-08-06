@@ -140,6 +140,23 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
     }
     
     func getHints(for itemName: String, withCompletion: @escaping (String, String) -> Void) -> Void {
+//        var hints: [String] = Array()
+//        self.model.inputs.getHints(for: itemName)
+//            .observe(on: MainScheduler.instance)
+//            .subscribe(onNext: {item in
+//                hints.append(item)
+//            }, onCompleted: {
+//                print("Completed!!")
+//                if(hints.count > 1) {
+//                    withCompletion(hints[0], hints[1])
+//                } else if(hints.count == 1) {
+//                    withCompletion(hints[0], "")
+//                } else {
+//                    withCompletion("", "")
+//                }
+//            })
+//            .disposed(by: disposeBag)
+        
         let items: [String] = self.itemsArray
             .filter{(item) in item.name.hasPrefix(itemName)}
             .map{(item) in item.name}
@@ -177,6 +194,10 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
             return item.shown == true
         })
         return true
+    }
+    
+    func uploadToCloud() -> (Bool, Error?) {
+        return model.inputs.uploadToCloud(items: itemsArray.filter{item in !item.uploadedToICloud})
     }
 }
 //MARK: QuickToDoOutputs

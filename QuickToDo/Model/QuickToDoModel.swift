@@ -108,6 +108,18 @@ extension QuickToDoModel: QuickToDoInputs {
             .observe(on: MainScheduler.instance)
     }
     
+    func uploadToCloud(items: [Item]) -> (Bool, Error?) {
+        let ckInsertFunctiomn = self.cloudKit.inputs.insert()
+        items.forEach{item in
+            _ = ckInsertFunctiomn(item){(newItem, error) in
+                let updateFunction = self.coreData.inputs.update()
+                _ = updateFunction(item, newItem)
+                self.itemsPrivate.onNext(newItem)
+            }
+        }
+        return(true, nil)
+    }
+    
     private func getHintsFromCloudKit(for itemName: String) -> Observable<String> {
         return Observable.create({ (observer) -> Disposable in
             self.cloudKit.inputs.getHints(for: itemName) { (firstItem, secondItem) in
