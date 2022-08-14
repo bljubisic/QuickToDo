@@ -61,11 +61,19 @@ struct MainView: View {
                 })
                 Spacer()
                 Button(action: {
+                    _ = self.viewModel.inputs.clearList()
+                }, label: {
+                    Image(systemName: "xmark.circle")
+                        .resizable()
+                        .frame(width: 40.0, height: 40.0)
+                        .padding()
+                })
+                Button(action: {
                     shown = !shown
                     _ = self.viewModel.inputs.showOrHideAllDoneItems(shown: shown)
-                    _ = self.viewModel.inputs.getItems {
-                        print("getting new items")
-                    }
+//                    _ = self.viewModel.inputs.getItems {
+//                        print("getting new items")
+//                    }
                 }, label: {
                     Image(systemName: "xmark.bin")
                         .resizable()
@@ -231,8 +239,13 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
 }
 
 final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs, QuickToDoViewModelOutputs, ObservableObject {
+    
     func getZone() -> CKRecordZone? {
         return nil
+    }
+    
+    func clearList() -> Bool {
+        return true
     }
     
     func uploadToCloud() -> (Bool, Error?) {

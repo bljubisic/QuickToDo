@@ -10,6 +10,7 @@ import Foundation
 import RxSwift
 import Combine
 import CloudKit
+import CoreMedia
 //MARK: QuickToDoViewModelProtocol
 class QuickToDoViewModel: QuickToDoViewModelProtoocol, ObservableObject {
     var model: QuickToDoProtocol
@@ -102,6 +103,9 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
             .filter({ (item) -> Bool in
                 return item.name != ""
             })
+            .filter({item -> Bool in
+                return item.shown == true
+            })
             .subscribe(onNext: { (newItem) in
                 if !self.itemsArray.contains(where: { (item) -> Bool in
                     item.name == newItem.name
@@ -180,19 +184,23 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
     }
     
     func showOrHideAllDoneItems(shown: Bool) -> Bool {
-        let updatedItems = self.itemsArray
+        let tmpArray = self.itemsArray
                             .filter { (item) -> Bool in
-                                return item.done == true
+                                return item.done != shown
                             }
-                            .map { (item) -> Item in
-                                return Item.itemShownLens.set(shown, item)
-                            }
-        updatedItems.forEach { (item) in
-            _ = self.model.inputs.update(item, withItem: item)
-        }
-        self.itemsArray = self.itemsArray.filter({ (item) -> Bool in
-            return item.shown == true
+        self.itemsArray.removeAll() 
+        self.itemsArray.append(contentsOf: tmpArray)
+        return true
+    }
+    
+    func clearList() -> Bool {
+        let updatedList = self.itemsArray.map({(item) -> Item in
+            return Item.itemShownLens.set(false, item)
         })
+        updatedList.forEach({item in
+            _ = self.model.inputs.update(item, withItem: item)
+        })
+        self.itemsArray.removeAll()
         return true
     }
     
