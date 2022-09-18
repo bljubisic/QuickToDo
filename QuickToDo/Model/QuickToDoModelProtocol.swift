@@ -19,11 +19,14 @@ protocol QuickToDoInputs {
     func getRootRecord() -> CKRecord?
     func getZone() -> CKRecordZone?
     func uploadToCloud(items: [Item]) -> (Bool, Error?)
+    func save(config: QuickToDoConfig) -> (Bool, Error?)
+    func getConfig() -> QuickToDoConfig?
 }
 
 protocol QuickToDoOutputs {
     var items: Observable<Item> { get }
     var cloudStatus: Observable<CloudStatus> { get }
+    var config: QuickToDoConfig { get }
 }
 
 protocol QuickToDoProtocol {

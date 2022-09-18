@@ -33,6 +33,19 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, ObservableObject {
 }
 //MARK: QuickToDoViewModelInputs
 extension QuickToDoViewModel: QuickToDoViewModelInputs {
+    func save(config: Bool) -> (Bool, Error?) {
+        let config = QuickToDoConfig(showDoneItems: config)
+        return self.model.inputs.save(config: config)
+    }
+    
+    func getConfig() -> Bool {
+        let config = self.model.inputs.getConfig()
+        guard let configUnWrapped = config else {
+            return false
+        }
+        return configUnWrapped.showDoneItems
+    }
+    
     
     func getRootRecord() -> CKRecord? {
         return self.model.inputs.getRootRecord()
@@ -188,7 +201,7 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
                             .filter { (item) -> Bool in
                                 return item.done != shown
                             }
-        self.itemsArray.removeAll() 
+        self.itemsArray.removeAll()
         self.itemsArray.append(contentsOf: tmpArray)
         return true
     }

@@ -24,6 +24,8 @@ protocol QuickToDoViewModelInputs {
     func getZone() -> CKRecordZone?
     func clearList() -> Bool
     func uploadToCloud() -> (Bool, Error?)
+    func getConfig() -> Bool
+    func save(config: Bool) -> (Bool, Error?)
 }
 
 protocol QuickToDoViewModelOutputs {

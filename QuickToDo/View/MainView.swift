@@ -39,13 +39,15 @@ struct MainView: View {
     init(viewModel: QuickToDoViewModelProtoocol) {
 //        self.viewModel = viewModel as! ViewModelMocked
         self.viewModel = viewModel as! QuickToDoViewModel
+        shown = viewModel.inputs.getConfig()
         _ = self.viewModel.inputs.getItems {
 //            print("called getItems")
         }
+        
     }
     
     @State private var text = ""
-    @State private var shown = true
+    @State private var shown: Bool
 
     var body: some View {
         VStack() {
@@ -69,11 +71,8 @@ struct MainView: View {
                         .padding()
                 })
                 Button(action: {
-                    shown = !shown
-                    _ = self.viewModel.inputs.showOrHideAllDoneItems(shown: shown)
-//                    _ = self.viewModel.inputs.getItems {
-//                        print("getting new items")
-//                    }
+                    shown.toggle()
+                    _ = self.viewModel.inputs.save(config: shown)
                 }, label: {
                     Image(systemName: "xmark.bin")
                         .resizable()
@@ -92,7 +91,7 @@ struct MainView: View {
             .padding()
             List() {
                 ForEach(self.viewModel.outputs.itemsArray) { item in
-                    if (item.shown == true) {
+                    if ((!shown && !item.done) || (shown)) {
                         HStack() {
                             Button(action: {
                                 print("Tapped \(item.name)")
@@ -186,6 +185,16 @@ struct MainView_Previews: PreviewProvider {
 }
 
 final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
+    func save(config: QuickToDoConfig) -> (Bool, Error?) {
+        return (true, nil)
+    }
+    
+    func getConfig() -> QuickToDoConfig? {
+        return QuickToDoConfig(showDoneItems: true)
+    }
+    
+    var config: QuickToDoConfig
+    
     func getZone() -> CKRecordZone? {
         return nil
     }
@@ -235,10 +244,19 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
     
     init() {
         cloudStatus = PublishSubject()
+        config = QuickToDoConfig(showDoneItems: true)
     }
 }
 
 final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs, QuickToDoViewModelOutputs, ObservableObject {
+    func save(config: Bool) -> (Bool, Error?) {
+        return (true, nil)
+    }
+    
+    func getConfig() -> Bool {
+        return true
+    }
+    
     
     func getZone() -> CKRecordZone? {
         return nil
