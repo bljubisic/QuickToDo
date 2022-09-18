@@ -116,9 +116,6 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
             .filter({ (item) -> Bool in
                 return item.name != ""
             })
-            .filter({item -> Bool in
-                return item.shown == true
-            })
             .subscribe(onNext: { (newItem) in
                 if !self.itemsArray.contains(where: { (item) -> Bool in
                     item.name == newItem.name
