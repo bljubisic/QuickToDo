@@ -2,4 +2,5 @@
 *xcodeproject/xcuserdata/*
 **/xcuserdata/*
 *.xcuserstate
+.vscode
 .DS_Store
