@@ -16,6 +16,7 @@ class QuickToDoModel: QuickToDoProtocol {
     private let cloudStatusPrivate: PublishSubject<CloudStatus> = PublishSubject()
     private let itemHints: PublishSubject<String> = PublishSubject()
     private let disposeBag = DisposeBag()
+    private var configPriv = QuickToDoConfig()
     private var coreData: StorageProtocol
     private var cloudKit: StorageProtocol
     
@@ -26,7 +27,11 @@ class QuickToDoModel: QuickToDoProtocol {
 }
 // MARK: QuickToDoOutputs
 extension QuickToDoModel: QuickToDoOutputs {
-  
+    var config: QuickToDoConfig {
+        get {
+            return configPriv
+        }
+    }
     var items: Observable<Item> {
       return itemsPrivate.compactMap{ $0 }
     }
@@ -42,6 +47,24 @@ extension QuickToDoModel: QuickToDoOutputs {
 
 // MARK: QuickToDoInputs
 extension QuickToDoModel: QuickToDoInputs {
+    func save(config: QuickToDoConfig) -> (Bool, Error?) {
+        configPriv = QuickToDoConfig.showDoneItemsLens.set(config.showDoneItems, configPriv)
+        if let encodedConfig = try? JSONEncoder().encode(configPriv) {
+           UserDefaults.standard.set(encodedConfig, forKey: "Config")
+        }
+        return (true, nil)
+    }
+    
+    func getConfig() -> QuickToDoConfig? {
+        if let decodedData = UserDefaults.standard.object(forKey: "Config") as? Data {
+           if let config = try? JSONDecoder().decode(QuickToDoConfig.self, from: decodedData) {
+               configPriv = config
+               return config
+          }
+        }
+        return nil
+    }
+    
     func getRootRecord() -> CKRecord? {
         return self.cloudKit.inputs.getRootRecord()
     }

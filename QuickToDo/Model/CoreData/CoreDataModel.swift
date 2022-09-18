@@ -76,7 +76,7 @@ extension CoreDataModel: StorageInputs {
         return (true, nil)
     }
     
-    func getRootRecord() -> CKRecord? { 
+    func getRootRecord() -> CKRecord? {
         return nil
     }
     func getZone() -> CKRecordZone? {

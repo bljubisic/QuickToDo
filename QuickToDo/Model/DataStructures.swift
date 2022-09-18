@@ -55,6 +55,23 @@ public struct QuickToDoError: Error {
     
 }
 
+public struct QuickToDoConfig: Codable {
+    let showDoneItems: Bool
+}
+
+extension QuickToDoConfig {
+    public init() {
+        showDoneItems = true
+    }
+}
+
+extension QuickToDoConfig {
+    static let showDoneItemsLens = Lens<QuickToDoConfig, Bool> (
+        get: { $0.showDoneItems },
+        set: {(showDoneItems, oldConfig) in QuickToDoConfig(showDoneItems: showDoneItems) }
+    )
+}
+
 public struct Item {
     
     let name: String
