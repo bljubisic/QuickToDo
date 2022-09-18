@@ -7,38 +7,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "55BA1D4F-69CE-4096-AA9B-B0581323D9AB"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "QuickToDo/Model/CloudKit/CloudKitModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "218"
-            endingLineNumber = "218"
-            landmarkName = "update()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "C83E2DDE-0D78-4F13-901F-5CA5E2F87DC5"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "QuickToDo/Model/CloudKit/CloudKitModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "222"
-            endingLineNumber = "222"
-            landmarkName = "update()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "DDF3B2BC-4D65-4CA1-9002-AF137D3AE9E0"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -161,6 +129,262 @@
             startingLineNumber = "102"
             endingLineNumber = "102"
             landmarkName = "saveOrRollback()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4089E220-E9D9-4248-8DAB-0C24009049ED"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "QuickToDo/View/MainView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D4843798-6FF5-4B68-9F48-C519FB2FA320"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "QuickToDo/Model/CloudKit/CloudKitModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "218"
+            endingLineNumber = "218"
+            landmarkName = "update()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "58904EDE-5C98-4F9F-8FF8-14F1015D32D7"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "QuickToDo/Model/CloudKit/CloudKitModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "222"
+            endingLineNumber = "222"
+            landmarkName = "update()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E02FECEC-C7EF-425C-9B51-B8440CA41CFD"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "QuickToDo/ViewModel/QuickToDoViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "207"
+            endingLineNumber = "207"
+            landmarkName = "clearList()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "E02FECEC-C7EF-425C-9B51-B8440CA41CFD - dc93eaf6212df2c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "QuickToDo.QuickToDoViewModel.clearList() -&gt; Swift.Bool"
+                  moduleName = "QuickToDo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/ViewModel/QuickToDoViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "210"
+                  endingLineNumber = "210"
+                  offsetFromSymbolStart = "48">
+               </Location>
+               <Location
+                  uuid = "E02FECEC-C7EF-425C-9B51-B8440CA41CFD - b47c604b23f9bd6c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (QuickToDo.Item) -&gt; QuickToDo.Item in QuickToDo.QuickToDoViewModel.clearList() -&gt; Swift.Bool"
+                  moduleName = "QuickToDo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/ViewModel/QuickToDoViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "211"
+                  endingLineNumber = "211"
+                  offsetFromSymbolStart = "36">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "93FC5552-AE29-4BBC-B9C6-80E7687FD2B9"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "QuickToDo/ViewModel/QuickToDoViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "210"
+            endingLineNumber = "210"
+            landmarkName = "clearList()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "93FC5552-AE29-4BBC-B9C6-80E7687FD2B9 - dc93eaf6212df8b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "QuickToDo.QuickToDoViewModel.clearList() -&gt; Swift.Bool"
+                  moduleName = "QuickToDo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/ViewModel/QuickToDoViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "213"
+                  endingLineNumber = "213"
+                  offsetFromSymbolStart = "180">
+               </Location>
+               <Location
+                  uuid = "93FC5552-AE29-4BBC-B9C6-80E7687FD2B9 - 6ef9476a36f63b77"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (QuickToDo.Item) -&gt; () in QuickToDo.QuickToDoViewModel.clearList() -&gt; Swift.Bool"
+                  moduleName = "QuickToDo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/ViewModel/QuickToDoViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "214"
+                  endingLineNumber = "214"
+                  offsetFromSymbolStart = "48">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "CCB56700-7A22-48B9-8A23-76E67C42B7FD"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "QuickToDo/ViewModel/QuickToDoViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "120"
+            endingLineNumber = "120"
+            landmarkName = "getItems(completionBlock:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "CCB56700-7A22-48B9-8A23-76E67C42B7FD - 64d1c275f685d14c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (QuickToDo.Item) -&gt; () in QuickToDo.QuickToDoViewModel.getItems(completionBlock: () -&gt; ()) -&gt; (Swift.Bool, Swift.Optional&lt;Swift.Error&gt;)"
+                  moduleName = "QuickToDo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/ViewModel/QuickToDoViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "120"
+                  endingLineNumber = "120"
+                  offsetFromSymbolStart = "604">
+               </Location>
+               <Location
+                  uuid = "CCB56700-7A22-48B9-8A23-76E67C42B7FD - 248477f552573299"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (QuickToDo.Item) -&gt; Swift.Bool in closure #2 (QuickToDo.Item) -&gt; () in QuickToDo.QuickToDoViewModel.getItems(completionBlock: () -&gt; ()) -&gt; (Swift.Bool, Swift.Optional&lt;Swift.Error&gt;)"
+                  moduleName = "QuickToDo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/ViewModel/QuickToDoViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "121"
+                  endingLineNumber = "121"
+                  offsetFromSymbolStart = "40">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "112D8444-1111-4039-8D7F-09838B9CAC79"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "QuickToDo/ViewModel/QuickToDoViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "213"
+            endingLineNumber = "213"
+            landmarkName = "clearList()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "87137026-24D1-4601-BB1C-0C2C485AF7DB"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "QuickToDo/Model/CoreData/CoreDataModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
+            landmarkName = "getItems(withCompletion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B822BE9B-A2E3-4CC8-AB97-F809198D396A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "QuickToDo/ViewModel/QuickToDoViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "133"
+            endingLineNumber = "133"
+            landmarkName = "getItems(completionBlock:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "45670673-9B71-49F9-AD3A-E7E99D68ED67"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "QuickToDo/ViewModel/QuickToDoViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "123"
+            endingLineNumber = "123"
+            landmarkName = "getItems(completionBlock:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

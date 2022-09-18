@@ -101,9 +101,7 @@ extension CoreDataModel: StorageInputs {
                                      shown: itemMO.used,
                                      createdAt: itemMO.lastused,
                                      lastUsedAt: itemMO.lastused)
-            if tmpItem.shown {
-                itemsPrivate.onNext(tmpItem)
-            }
+            itemsPrivate.onNext(tmpItem)
         }
         return (true, nil)
     }

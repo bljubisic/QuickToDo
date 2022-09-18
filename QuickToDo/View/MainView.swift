@@ -91,7 +91,7 @@ struct MainView: View {
             .padding()
             List() {
                 ForEach(self.viewModel.outputs.itemsArray) { item in
-                    if ((!shown && !item.done) || (shown)) {
+                    if (((!shown && !item.done) || (shown)) && item.shown) {
                         HStack() {
                             Button(action: {
                                 print("Tapped \(item.name)")
@@ -106,7 +106,7 @@ struct MainView: View {
                                 else {
                                     Image("select")
                                 }
-                            })
+                            }).buttonStyle(.borderless)
                             Text(item.name)
                                 .scaledToFit()
                             Spacer()
@@ -141,14 +141,14 @@ struct MainView: View {
                         }) {
                             Text(hint1)
                                 .padding()
-                        }
+                        }.buttonStyle(.borderless)
                         Spacer()
                         Button(action: {
                             debounceObject.text = hint2
                         }) {
                             Text(hint2)
                                 .padding()
-                        }
+                        }.buttonStyle(.borderless)
                     }
                 }
             }
