@@ -27,6 +27,7 @@ public final class DebounceObject: ObservableObject {
     }
 }
 
+
 struct MainView: View {
     
     @StateObject var debounceObject = DebounceObject()

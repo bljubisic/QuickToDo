@@ -17,20 +17,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        // Override point for customization after application launch.
-        window = UIWindow(frame: UIScreen.main.bounds)
-        let coreData = CoreDataModel()
-        let cloudKit = CloudKitModel()
-        let model = QuickToDoModel(coreData, cloudKit)
-
-        
-        let viewController: MainViewController = MainViewController()
-        viewController.insert(withModel: model)
-        window?.rootViewController = viewController
-        window?.makeKeyAndVisible()
-        return true
-    }
+//    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+//        // Override point for customization after application launch.
+//        window = UIWindow(frame: UIScreen.main.bounds)
+//        let coreData = CoreDataModel()
+//        let cloudKit = CloudKitModel()
+//        let model = QuickToDoModel(coreData, cloudKit)
+//
+//
+//        let viewController: MainViewController = MainViewController()
+//        viewController.insert(withModel: model)
+//        window?.rootViewController = viewController
+//        window?.makeKeyAndVisible()
+//        return true
+//    }
     
     func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
         
@@ -187,7 +187,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 @main
 struct AppyApp: App {
-
+    
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var body: some Scene {
         WindowGroup {
             NavigationView {
