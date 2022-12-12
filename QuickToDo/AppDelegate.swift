@@ -32,9 +32,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        return true
 //    }
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        UIApplication.shared.registerForRemoteNotifications()
+        UNUserNotificationCenter.current().requestAuthorization(options:
+            [[.alert, .sound, .badge]],
+                completionHandler: { (granted, error) in
+                    // Handle Error
+            })
+        application.registerForRemoteNotifications()
+
         return true
     }
+    
     func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
         
         guard cloudKitShareMetadata.containerIdentifier == Config.containerIdentifier else {
