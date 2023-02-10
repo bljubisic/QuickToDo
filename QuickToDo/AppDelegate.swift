@@ -17,18 +17,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     
+//    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+//        // Override point for customization after application launch.
+//        window = UIWindow(frame: UIScreen.main.bounds)
+//        let coreData = CoreDataModel()
+//        let cloudKit = CloudKitModel()
+//        let model = QuickToDoModel(coreData, cloudKit)
+//
+//
+//        let viewController: MainViewController = MainViewController()
+//        viewController.insert(withModel: model)
+//        window?.rootViewController = viewController
+//        window?.makeKeyAndVisible()
+//        return true
+//    }
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        // Override point for customization after application launch.
-        window = UIWindow(frame: UIScreen.main.bounds)
-        let coreData = CoreDataModel()
-        let cloudKit = CloudKitModel()
-        let model = QuickToDoModel(coreData, cloudKit)
+        UNUserNotificationCenter.current().requestAuthorization(options:
+            [[.alert, .sound, .badge]],
+                completionHandler: { (granted, error) in
+                    // Handle Error
+            })
+        application.registerForRemoteNotifications()
 
-        
-        let viewController: MainViewController = MainViewController()
-        viewController.insert(withModel: model)
-        window?.rootViewController = viewController
-        window?.makeKeyAndVisible()
         return true
     }
     
@@ -72,58 +82,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         acceptSharesOperation.qualityOfService = .utility
         container.add(acceptSharesOperation)
-        
-//        acceptSharesOperation.perShareResultBlock = {
-//            metadata, share, error in
-//            if error != nil {
-//                print(error?.localizedDescription ?? "")
-//            } else {
-//
-//                let operation = CKFetchRecordsOperation(
-//                    recordIDs: [cloudKitShareMetadata.rootRecordID])
-//
-//                operation.perRecordCompletionBlock = { record, _, error in
-//
-//                    if error != nil {
-//                        print(error?.localizedDescription ?? "")
-//                    }
-//
-//                    if let shareRecord = record {
-//                        DispatchQueue.main.async() {
-//                            // Shared record successfully fetched. Update user
-//                            // interface here to present to user.
-//                            print("Shared record successfully fetched")
-//                            let tempItem = Item(name: shareRecord.string(String(describing: ItemFields.name))!,
-//                                                count: shareRecord.int(String(describing: ItemFields.count))!,
-//                                                uploadedToICloud: true,
-//                                                done: (shareRecord.int(String(describing: ItemFields.done))! == 1) ? true : false,
-//                                                shown: (shareRecord.int(String(describing: ItemFields.used))! == 1) ? true : false,
-//                                                createdAt: shareRecord.creationDate!,
-//                                                lastUsedAt: shareRecord.modificationDate!)
-//                            _ = model.add(tempItem, addToCloud: false)
-//                            _ = cloudKit.inputs.getSharedItems(for: shareRecord, with: {(item) in
-//                                _ = model.add(item, addToCloud: false);
-//                            })
-//                        }
-//
-//                    }
-//                }
-//
-//                operation.fetchRecordsCompletionBlock = { (recordsWithRecordIDs,error) in
-//                    if error != nil {
-//                        print(error?.localizedDescription ?? "")
-//                    }else {
-//                        if let recordsWithRecordIDs = recordsWithRecordIDs {
-//                            print("Count \(recordsWithRecordIDs.count)")
-//                        }
-//                    }
-//                }
-//                CKContainer.default().sharedCloudDatabase.add(operation)
-//            }
-//        }
-//
-//        CKContainer(identifier: cloudKitShareMetadata.containerIdentifier)
-//            .add(acceptSharesOperation)
     }
     
     func showAlertInvitationOnMainViewController(record: CKRecord) {
@@ -132,7 +90,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-
+        if let notification = CKNotification(fromRemoteNotificationDictionary: userInfo) {
+            print("CloudKit database changed")
+            NotificationCenter.default.post(name: .NSPersistentStoreRemoteChange, object: nil)
+            completionHandler(.newData)
+            return
+        }
+        completionHandler(.noData)
     }
     
     func applicationWillTerminate(_ application: UIApplication) {
@@ -187,7 +151,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 @main
 struct AppyApp: App {
-
+    
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var body: some Scene {
         WindowGroup {
             NavigationView {

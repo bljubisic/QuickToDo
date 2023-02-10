@@ -27,6 +27,7 @@ public final class DebounceObject: ObservableObject {
     }
 }
 
+
 struct MainView: View {
     
     @StateObject var debounceObject = DebounceObject()
@@ -52,41 +53,70 @@ struct MainView: View {
     var body: some View {
         VStack() {
             HStack() {
-                Button(action: {
-                    _ = self.viewModel.inputs.getItems {
-                        print("called getItems")
-                    }
-                }, label: {
-                    Image(systemName: "arrow.clockwise.circle")
-                        .resizable()
-                        .frame(width: 40.0, height: 40.0)
-                })
+                VStack() {
+                    Button(action: {
+                        _ = self.viewModel.inputs.getItems {
+                            print("called getItems")
+                        }
+                    }, label: {
+                        Image(systemName: "arrow.clockwise.circle")
+                            .resizable()
+                            .frame(width: 40.0, height: 40.0)
+                    })
+                    Text("Refresh")
+                        .fontWeight(.semibold)
+                        .foregroundColor(Color.blue)
+                        .font(.system(size: 12,  design: .rounded))
+                        .frame(width: 80.0, height: 20.0)
+                }
+                .padding()
                 Spacer()
-                Button(action: {
-                    _ = self.viewModel.inputs.clearList()
-                }, label: {
-                    Image(systemName: "xmark.circle")
-                        .resizable()
-                        .frame(width: 40.0, height: 40.0)
-                        .padding()
-                })
-                Button(action: {
-                    shown.toggle()
-                    _ = self.viewModel.inputs.save(config: shown)
-                }, label: {
-                    Image(systemName: "xmark.bin")
-                        .resizable()
-                        .frame(width: 40.0, height: 40.0)
-                        .padding()
-                })
-                Button(action: {
-                    _ = self.viewModel.inputs.uploadToCloud()
-                }, label: {
-                    Image(systemName: "arrow.clockwise.icloud")
-                        .resizable()
-                        .frame(width: 40.0, height: 30.0)
-                        .padding()
-                })
+                VStack() {
+                    Button(action: {
+                        _ = self.viewModel.inputs.clearList()
+                    }, label: {
+                        Image(systemName: "cart.badge.minus")
+                            .resizable()
+                            .frame(width: 50.0, height: 40.0)
+                    })
+                    Text("Remove all")
+                        .fontWeight(.semibold)
+                        .foregroundColor(Color.blue)
+                        .font(.system(size: 12,  design: .rounded))
+                        .frame(width: 80.0, height: 20.0)
+                }
+
+                VStack() {
+                    Button(action: {
+                        shown.toggle()
+                        _ = self.viewModel.inputs.save(config: shown)
+                    }, label: {
+                        ((shown) ? Image(systemName: "bag") : Image(systemName: "bag.fill"))
+                            .resizable()
+                            .frame(width: 40.0, height: 40.0)
+                    })
+                    ((shown) ? Text("Remove done") : Text("Show done"))
+                        .fontWeight(.semibold)
+                        .foregroundColor(Color.blue)
+                        .font(.system(size: 12,  design: .rounded))
+                        .frame(width: 80.0, height: 20.0)
+                }
+
+                VStack() {
+                    Button(action: {
+                        _ = self.viewModel.inputs.uploadToCloud()
+                    }, label: {
+                        Image(systemName: "arrow.clockwise.icloud")
+                            .resizable()
+                            .frame(width: 60.0, height: 40.0)
+                    })
+                    Text("Update")
+                        .fontWeight(.semibold)
+                        .foregroundColor(Color.blue)
+                        .font(.system(size: 12,  design: .rounded))
+                        .frame(width: 80.0, height: 20.0)
+                }
+
             }
             .padding()
             List() {

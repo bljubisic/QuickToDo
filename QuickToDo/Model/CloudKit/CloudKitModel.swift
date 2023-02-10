@@ -33,6 +33,29 @@ final class CloudKitModel: StorageProtocol {
         sharedDatabase = container.sharedCloudDatabase
         itemsRecords = []
         
+        database.fetchAllSubscriptions{ (subscriptions, error) in
+            guard let subscriptionsUnwrapped = subscriptions  else {
+                return
+            }
+            if(subscriptionsUnwrapped.isEmpty) {
+                let newSubscription = CKQuerySubscription(recordType: "Items", predicate: NSPredicate(value: true), options: [.firesOnRecordCreation, .firesOnRecordDeletion])
+                let notification = CKSubscription.NotificationInfo()
+                notification.shouldSendContentAvailable = true
+                notification.alertBody = "New Item has been added!!"
+                newSubscription.notificationInfo = notification
+                self.database.save(newSubscription) { (subscription, error) in
+                    if let error = error {
+                         print(error)
+                         return
+                    }
+
+                    if let _ = subscription {
+                         print("Hurrah! We have a subscription")
+                    }
+                }
+            }
+        }
+        
         self.database.save(zone) { newZone, error in
             if let err = error {
                 print("Zone not created: \(err)")
@@ -215,7 +238,7 @@ extension CloudKitModel: StorageInputs {
     func update() -> itemProcessUpdate {
         return { (item, newItem) in
             
-            let predicate = NSPredicate(format: "(Name == %@) and (Used == %d)", item.name, !item.shown)
+            let predicate = NSPredicate(format: "(Name == %@)", item.name)
             let query = CKQuery(recordType: "Items", predicate: predicate)
             
             self.database.perform(query, inZoneWith: self.zone.zoneID) { (recordsRecived, error) in

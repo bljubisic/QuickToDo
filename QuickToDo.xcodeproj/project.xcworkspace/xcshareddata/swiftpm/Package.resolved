@@ -21,10 +21,10 @@
     {
       "identity" : "swiftycloudkit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/bljubisic/SwiftyCloudKit",
+      "location" : "https://github.com/simengangstad/SwiftyCloudKit",
       "state" : {
         "branch" : "master",
-        "revision" : "7f38926ca8174bf2c2c22b29918771efc2baf82b"
+        "revision" : "5eadb90f3fee5bec6e55c3ef21c7a97f96099b97"
       }
     }
   ],
