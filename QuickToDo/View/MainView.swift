@@ -61,7 +61,7 @@ struct MainView: View {
                     }, label: {
                         Image(systemName: "arrow.clockwise.circle")
                             .resizable()
-                            .frame(width: 40.0, height: 40.0)
+                            .frame(width: 20.0, height: 20.0)
                     })
                     Text("Refresh")
                         .fontWeight(.semibold)
@@ -77,7 +77,7 @@ struct MainView: View {
                     }, label: {
                         Image(systemName: "cart.badge.minus")
                             .resizable()
-                            .frame(width: 50.0, height: 40.0)
+                            .frame(width: 30.0, height: 20.0)
                     })
                     Text("Remove all")
                         .fontWeight(.semibold)
@@ -93,7 +93,7 @@ struct MainView: View {
                     }, label: {
                         ((shown) ? Image(systemName: "bag") : Image(systemName: "bag.fill"))
                             .resizable()
-                            .frame(width: 40.0, height: 40.0)
+                            .frame(width: 20.0, height: 20.0)
                     })
                     ((shown) ? Text("Remove done") : Text("Show done"))
                         .fontWeight(.semibold)
@@ -108,7 +108,7 @@ struct MainView: View {
                     }, label: {
                         Image(systemName: "arrow.clockwise.icloud")
                             .resizable()
-                            .frame(width: 60.0, height: 40.0)
+                            .frame(width: 30.0, height: 20.0)
                     })
                     Text("Update")
                         .fontWeight(.semibold)
@@ -140,17 +140,10 @@ struct MainView: View {
                             Text(item.name)
                                 .scaledToFit()
                             Spacer()
-                            if item.uploadedToICloud {
-                                Image("Cloud")
+                            ((item.uploadedToICloud) ? Image("Cloud") : Image("NoCloud"))
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                  .frame(maxWidth: 50, maxHeight: 50, alignment: .trailing)
-                            } else {
-                                Image("NoCloud")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(maxWidth: 50, maxHeight: 50, alignment: .trailing)
-                            }
+                                  .frame(maxWidth: 30, maxHeight: 30, alignment: .trailing)
                         }
                     }
                 }
