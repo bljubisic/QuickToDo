@@ -60,10 +60,10 @@ final class CloudKitModel: StorageProtocol {
             if let err = error {
                 print("Zone not created: \(err)")
             } else {
-                print("Zone created")
+                self.zone = newZone!
+                self.findOrCreateRootRecord()
             }
         }
-        self.findOrCreateRootRecord()
     }
     
     private func findRootRecord()  {
@@ -93,7 +93,6 @@ final class CloudKitModel: StorageProtocol {
               let item = Item(name: "Root", count: 0, uploadedToICloud: true, done: true, shown: false, createdAt: Date(), lastUsedAt: Date())
               let insertFunction = self.insert()
               _ = insertFunction(item) { (newItem, error) in
-                print("Creating Root record")
                 self.findRootRecord()
               }
 
@@ -191,6 +190,7 @@ extension CloudKitModel: StorageInputs {
             let newRecord = CKRecord(recordType: "Items", recordID:  CKRecord.ID(zoneID: self.zone.zoneID))
             var itemRet = Item()
             let error: Error? = nil
+            self.findRootRecord()
             if self.rootRecord != nil {
                 let rootReference = CKRecord.Reference(recordID: self.rootRecord.recordID, action: .deleteSelf)
                 newRecord.setObject(rootReference, forKey: "Root")
@@ -218,6 +218,10 @@ extension CloudKitModel: StorageInputs {
                                    done: (recordUnwrapped.int(String(describing: ItemFields.done)) == 0) ? false : true,
                                    shown: (recordUnwrapped.int(String(describing: ItemFields.used)) == 0) ? false : true,
                                    createdAt: Date(), lastUsedAt: Date())
+                }
+                print("Record created!! \(itemRet.name)")
+                if itemRet.name == "Root" {
+                    self.rootRecord = record!
                 }
                 completionHandler?(itemRet, error)
                
