@@ -89,16 +89,17 @@ final class CloudKitModel: StorageProtocol {
             for record in records {
               self.rootRecord = record
             }
-          } else if receivedRecords == nil || receivedRecords!.isEmpty {
-            let item = Item(name: "Root", count: 0, uploadedToICloud: true, done: true, shown: false, createdAt: Date(), lastUsedAt: Date())
-            let insertFunction = self.insert()
-            _ = insertFunction(item) { (newItem, error) in
-              print("Creating Root record: \(error!)")
-              self.findRootRecord()
+            if self.rootRecord == nil {
+              let item = Item(name: "Root", count: 0, uploadedToICloud: true, done: true, shown: false, createdAt: Date(), lastUsedAt: Date())
+              let insertFunction = self.insert()
+              _ = insertFunction(item) { (newItem, error) in
+                print("Creating Root record")
+                self.findRootRecord()
+              }
+
             }
           }
         }
-
     }
 }
 //MARK: StorageInputs extension
@@ -188,11 +189,13 @@ extension CloudKitModel: StorageInputs {
     func insert() -> itemProcess {
         return { item, completionHandler in
             let newRecord = CKRecord(recordType: "Items", recordID:  CKRecord.ID(zoneID: self.zone.zoneID))
-            let rootReference = CKRecord.Reference(recordID: self.rootRecord.recordID, action: .deleteSelf)
-            newRecord.setObject(rootReference, forKey: "Root")
-            newRecord.setParent(self.rootRecord)
             var itemRet = Item()
             let error: Error? = nil
+            if self.rootRecord != nil {
+                let rootReference = CKRecord.Reference(recordID: self.rootRecord.recordID, action: .deleteSelf)
+                newRecord.setObject(rootReference, forKey: "Root")
+                newRecord.setParent(self.rootRecord)
+            }
             newRecord.set(string: item.name, key: String(describing: ItemFields.name))
             newRecord.set(int: (item.done) ? 1 : 0, key: String(describing: ItemFields.done))
             newRecord.set(int: item.count, key: String(describing: ItemFields.count))
