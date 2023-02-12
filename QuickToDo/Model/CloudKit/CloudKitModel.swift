@@ -158,18 +158,19 @@ extension CloudKitModel: StorageInputs {
     
 
     
-    func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?) {
+    func getItems(withCompletion: ((Item) -> Void)?) async -> (Bool, Error?) {
         let predicate = NSPredicate(format: "Used = 1")
         let query = CKQuery(recordType: "Items", predicate: predicate)
-        
-        self.database.perform(query, inZoneWith: zone.zoneID) { (receivedRecords, receivedError) in
-            guard let records = receivedRecords else {
-                return
-            }
+        do {
+            let receivedRecords = try await self.database.perform(query, inZoneWith: zone.zoneID)
+            
+            /*{ (receivedRecords, receivedError) in
+             //        self.database.fetch(withQuery: query, inZoneWith: self.zone.zoneID) {(results) in
+             */
             guard let completion = withCompletion else {
-                return
+                return (false, nil)
             }
-            for record in records {
+            for record in receivedRecords {
                 let tempItem = Item(name: record.string(String(describing: ItemFields.name))!,
                                     count: record.int(String(describing: ItemFields.count))!,
                                     uploadedToICloud: true,
@@ -181,6 +182,9 @@ extension CloudKitModel: StorageInputs {
                 completion(tempItem)
                 self.itemsPrivate.onNext(tempItem)
             }
+        } catch {
+            print("Error")
+            return(false, nil)
         }
         return(true, nil)
     }

@@ -155,6 +155,7 @@ struct MainView: View {
                                 hint2 = name2
                             })
                         }
+                        .textFieldStyle(.roundedBorder)
                         .onSubmit {
                             self.addItem(debounceObject.text)
                         }
