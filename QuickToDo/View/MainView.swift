@@ -145,6 +145,14 @@ struct MainView: View {
                                     .aspectRatio(contentMode: .fit)
                                   .frame(maxWidth: 30, maxHeight: 30, alignment: .trailing)
                         }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                            Button(role: .destructive, action: {
+                                let newItem = Item.itemShownLens.set(!item.shown, item)
+                                _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
+                                    print("Done")
+                                })
+                            }) {Label("Delete", systemImage: "trash")}
+                        }
                     }
                 }
                 VStack() {
