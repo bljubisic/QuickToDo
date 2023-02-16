@@ -118,7 +118,7 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
             })
             .subscribe(onNext: { (newItem) in
                 if !self.itemsArray.contains(where: { (item) -> Bool in
-                    item.name == newItem.name
+                    item.id == newItem.id
                 }) {
                     self.itemsArray.append(newItem)
                     DispatchQueue.main.async {
@@ -127,7 +127,7 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
                     
                 } else {
                     if let index = self.itemsArray.firstIndex(where: { (item) -> Bool in
-                        item.name == newItem.name
+                        item.id == newItem.id
                     }) {
                         let item = self.itemsArray[index]
                         if (item.lastUsedAt < newItem.lastUsedAt) {
@@ -212,6 +212,11 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
         })
         self.itemsArray.removeAll()
         return true
+    }
+    
+    func remove(updated item: Item) -> (Bool, Error?) {
+        self.itemsArray = self.itemsArray.filter({$0.id != item.id})
+        return (true, nil)
     }
     
     func uploadToCloud() -> (Bool, Error?) {

@@ -26,6 +26,7 @@ protocol QuickToDoViewModelInputs {
     func uploadToCloud() -> (Bool, Error?)
     func getConfig() -> Bool
     func save(config: Bool) -> (Bool, Error?)
+    func remove(updated item: Item) -> (Bool, Error?)
 }
 
 protocol QuickToDoViewModelOutputs {

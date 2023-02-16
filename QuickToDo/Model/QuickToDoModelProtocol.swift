@@ -39,11 +39,13 @@ protocol StorageInputs {
     typealias itemProcess = (Item, ((Item, Error?) -> Void)?) -> (Item?, Bool)
     typealias itemProcessUpdate = (Item, Item) -> (Item?, Bool)
     typealias itemProcessFind = (String) -> (Item?, Bool)
+    typealias itemProcessFindWithID = (UUID) -> (Item?, Bool)
     
     func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?)
     func insert() -> itemProcess
     func getItemWith() -> itemProcessFind
     func update() -> itemProcessUpdate
+    func getItemWithId() -> itemProcessFindWithID
     func getHints(for itemName: String, withCompletion: (Item, Item) -> Void) -> Void
     func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) -> Void
     func getRootRecord() -> CKRecord?

@@ -251,6 +251,7 @@ extension MainViewController: UITableViewDataSource {
                 .subscribe{ text in
                     if let word = cell.addItemTextBox.text {
                         _  = self.viewModel.inputs.add(Item(
+                            id: UUID(),
                             name: word,
                             count: 1,
                             uploadedToICloud: false,
@@ -289,6 +290,7 @@ extension MainViewController: UITableViewDataSource {
     
     func addItem(_ sender: String) {
         _ = self.viewModel.inputs.add(Item(
+            id: UUID(),
             name: sender,
             count: 1,
             uploadedToICloud: false,

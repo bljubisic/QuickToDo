@@ -40,6 +40,7 @@ enum ItemFields: CustomStringConvertible {
     case count
     case done
     case used
+    case id
     
     var description: String {
         switch self {
@@ -47,6 +48,7 @@ enum ItemFields: CustomStringConvertible {
         case .count: return "Count"
         case .done: return "Done"
         case .used: return "Used"
+        case .id: return "Id"
         }
     }
 }
@@ -74,6 +76,7 @@ extension QuickToDoConfig {
 
 public struct Item {
     
+    public let id: UUID
     let name: String
     let count: Int
     let uploadedToICloud: Bool
@@ -86,6 +89,7 @@ public struct Item {
 
 extension Item {
     public init() {
+        id = UUID()
         name = ""
         count = 0
         uploadedToICloud = false
@@ -105,7 +109,8 @@ extension Item {
     
     static let itemNameLens = Lens<Item, String> (
         get: { $0.name },
-        set: { (name, oldItem) in Item(name: name,
+        set: { (name, oldItem) in Item(id: oldItem.id,
+                                       name: name,
                                        count: oldItem.count,
                                        uploadedToICloud:oldItem.uploadedToICloud,
                                        done: oldItem.done,
@@ -116,7 +121,8 @@ extension Item {
     
     static let itemUploadedToICloudLens = Lens<Item, Bool> (
         get: { $0.uploadedToICloud },
-        set: { (uploadedToICloud, oldItem) in Item(name: oldItem.name,
+        set: { (uploadedToICloud, oldItem) in Item(id: oldItem.id,
+                                                   name: oldItem.name,
                                                    count: oldItem.count,
                                                    uploadedToICloud: uploadedToICloud,
                                                    done: oldItem.done,
@@ -126,7 +132,8 @@ extension Item {
     )
     static let itemDoneLens = Lens<Item, Bool> (
         get: { $0.done },
-        set: { (done, oldItem) in Item(name: oldItem.name,
+        set: { (done, oldItem) in Item(id: oldItem.id,
+                                       name: oldItem.name,
                                        count: oldItem.count,
                                        uploadedToICloud: oldItem.uploadedToICloud,
                                        done: done,
@@ -136,7 +143,8 @@ extension Item {
     )
     static let itemShownLens = Lens<Item, Bool> (
         get: { $0.shown },
-        set: { (shown, oldItem) in Item(name: oldItem.name,
+        set: { (shown, oldItem) in Item(id: oldItem.id,
+                                        name: oldItem.name,
                                         count: oldItem.count,
                                         uploadedToICloud: oldItem.uploadedToICloud,
                                         done: oldItem.done,
@@ -146,7 +154,8 @@ extension Item {
     )
     static let itemCountLens = Lens<Item, Int> (
         get: { $0.count },
-        set: { (count, oldItem) in Item(name: oldItem.name,
+        set: { (count, oldItem) in Item(id: oldItem.id,
+                                        name: oldItem.name,
                                         count: count,
                                         uploadedToICloud: oldItem.uploadedToICloud,
                                         done: oldItem.done,
@@ -157,9 +166,5 @@ extension Item {
 }
 
 extension Item: Identifiable {
-    public var id: String {
-        return name
-    }
-    
-    
+
 }
