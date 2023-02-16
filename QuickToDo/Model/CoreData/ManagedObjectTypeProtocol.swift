@@ -10,12 +10,12 @@ import Foundation
 import CoreData
 import RxSwift
 
-protocol ManagedObjectContextSettable: class {
+protocol ManagedObjectContextSettable: AnyObject {
     var managedObjectContext: NSManagedObjectContext! { get set }
 }
 
 
-public protocol ManagedObjectType: class {
+public protocol ManagedObjectType: AnyObject {
     static var entityName: String { get }
     static var defaultSortDescriptors: [NSSortDescriptor] { get }
 }

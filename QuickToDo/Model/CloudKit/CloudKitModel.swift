@@ -90,7 +90,7 @@ final class CloudKitModel: StorageProtocol {
               self.rootRecord = record
             }
             if self.rootRecord == nil {
-              let item = Item(name: "Root", count: 0, uploadedToICloud: true, done: true, shown: false, createdAt: Date(), lastUsedAt: Date())
+                let item = Item(id: UUID(), name: "Root", count: 0, uploadedToICloud: true, done: true, shown: false, createdAt: Date(), lastUsedAt: Date())
               let insertFunction = self.insert()
               _ = insertFunction(item) { (newItem, error) in
                 self.findRootRecord()
@@ -103,6 +103,18 @@ final class CloudKitModel: StorageProtocol {
 }
 //MARK: StorageInputs extension
 extension CloudKitModel: StorageInputs {
+    func getItemWithId() -> itemProcessFindWithID {
+        return { id in
+
+            let itemRet = Item()
+            return (itemRet, true)
+        }
+    }
+    
+    func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?) {
+        return (true, nil)
+    }
+    
     
     func getRootRecord() -> CKRecord? {
         return self.rootRecord
@@ -124,7 +136,8 @@ extension CloudKitModel: StorageInputs {
                 return
             }
             for record in records {
-                let tempItem = Item(name: record.string(String(describing: ItemFields.name))!,
+                let tempItem = Item(id: UUID(uuidString: record.string(String(describing: ItemFields.id))!)!,
+                                    name: record.string(String(describing: ItemFields.name))!,
                                     count: record.int(String(describing: ItemFields.count))!,
                                     uploadedToICloud: true,
                                     done: (record.int(String(describing: ItemFields.done))! == 1) ? true : false,
@@ -171,7 +184,8 @@ extension CloudKitModel: StorageInputs {
                 return (false, nil)
             }
             for record in receivedRecords {
-                let tempItem = Item(name: record.string(String(describing: ItemFields.name))!,
+                let tempItem = Item(id: UUID(uuidString: record.string(String(describing: ItemFields.id))!)!,
+                                    name: record.string(String(describing: ItemFields.name))!,
                                     count: record.int(String(describing: ItemFields.count))!,
                                     uploadedToICloud: true,
                                     done: (record.int(String(describing: ItemFields.done))! == 1) ? true : false,
@@ -200,6 +214,7 @@ extension CloudKitModel: StorageInputs {
                 newRecord.setObject(rootReference, forKey: "Root")
                 newRecord.setParent(self.rootRecord)
             }
+            newRecord.set(string: item.id.uuidString, key: String(describing: ItemFields.id))
             newRecord.set(string: item.name, key: String(describing: ItemFields.name))
             newRecord.set(int: (item.done) ? 1 : 0, key: String(describing: ItemFields.done))
             newRecord.set(int: item.count, key: String(describing: ItemFields.count))
@@ -209,14 +224,16 @@ extension CloudKitModel: StorageInputs {
                     return
                 }
                 if (errorReceived == nil) {
-                    itemRet = Item(name: recordUnwrapped.string(String(describing: ItemFields.name))!,
+                    itemRet = Item(id: UUID(uuidString: recordUnwrapped.string(String(describing: ItemFields.id))!)!,
+                                   name: recordUnwrapped.string(String(describing: ItemFields.name))!,
                                    count: recordUnwrapped.int(String(describing: ItemFields.count))!,
                                    uploadedToICloud: true,
                                    done: (recordUnwrapped.int(String(describing: ItemFields.done)) == 0) ? false : true,
                                    shown: (recordUnwrapped.int(String(describing: ItemFields.used)) == 0) ? false : true,
                                    createdAt: Date(), lastUsedAt: Date())
                 } else {
-                    itemRet = Item(name: recordUnwrapped.string(String(describing: ItemFields.name))!,
+                    itemRet = Item(id: UUID(uuidString: recordUnwrapped.string(String(describing: ItemFields.id))!)!,
+                                   name: recordUnwrapped.string(String(describing: ItemFields.name))!,
                                    count: recordUnwrapped.int(String(describing: ItemFields.count))!,
                                    uploadedToICloud: false,
                                    done: (recordUnwrapped.int(String(describing: ItemFields.done)) == 0) ? false : true,

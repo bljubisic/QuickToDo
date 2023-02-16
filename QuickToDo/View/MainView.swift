@@ -37,6 +37,10 @@ struct MainView: View {
     @State var hint1 = ""
     @State var hint2 = ""
     
+    @State private var text = ""
+    @State private var shown: Bool = false
+    @State private var selectedItem: Item?
+    
     init(viewModel: QuickToDoViewModelProtoocol) {
 //        self.viewModel = viewModel as! ViewModelMocked
         self.viewModel = viewModel as! QuickToDoViewModel
@@ -47,9 +51,6 @@ struct MainView: View {
         
     }
     
-    @State private var text = ""
-    @State private var shown: Bool
-
     var body: some View {
         VStack() {
             HStack() {
@@ -145,6 +146,10 @@ struct MainView: View {
                                     .aspectRatio(contentMode: .fit)
                                   .frame(maxWidth: 30, maxHeight: 30, alignment: .trailing)
                         }
+                        .onTapGesture {
+                            selectedItem = item
+                            debounceObject.text = selectedItem!.name
+                        }
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button(role: .destructive, action: {
                                 let newItem = Item.itemShownLens.set(!item.shown, item)
@@ -157,6 +162,12 @@ struct MainView: View {
                 }
                 VStack() {
                     TextField("Add new item", text: $debounceObject.text)
+                        .onAppear() {
+                            guard let selItem = selectedItem else {
+                                return
+                            }
+                            debounceObject.text = selItem.name
+                        }
                         .onChange(of: debounceObject.debouncedText) { text in
                             self.viewModel.inputs.getHints(for: debounceObject.debouncedText, withCompletion: {name1, name2 in
                                 hint1 = name1
@@ -165,7 +176,17 @@ struct MainView: View {
                         }
                         .textFieldStyle(.roundedBorder)
                         .onSubmit {
-                            self.addItem(debounceObject.text)
+                            if let selItem = selectedItem {
+                                let newItem = Item.itemNameLens.set(debounceObject.text, selItem)
+                                _ = self.viewModel.update(selItem, withItem: newItem, completionBlock: {
+                                    print("Done!")
+                                    self.selectedItem = nil
+                                })
+                            } else {
+                                self.addItem(debounceObject.text)
+                            }
+                            
+                            debounceObject.text = ""
                         }
                     HStack() {
                         Button(action: {
@@ -196,6 +217,7 @@ struct MainView: View {
     
     func addItem(_ sender: String) {
         _ = self.viewModel.inputs.add(Item(
+            id: UUID(),
             name: sender,
             count: 1,
             uploadedToICloud: false,
@@ -262,7 +284,7 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
     }
     
     func getItems() -> (Bool, Error?) {
-      self.itemsPrivate.onNext(Item(name: "Smt2232", count: 1, uploadedToICloud: true, done: false, shown: true, createdAt: Date(), lastUsedAt: Date()))
+        self.itemsPrivate.onNext(Item(id: UUID(), name: "Smt2232", count: 1, uploadedToICloud: true, done: false, shown: true, createdAt: Date(), lastUsedAt: Date()))
         return (true, nil)
     }
     
@@ -282,6 +304,10 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
 
 final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs, QuickToDoViewModelOutputs, ObservableObject {
     func save(config: Bool) -> (Bool, Error?) {
+        return (true, nil)
+    }
+    
+    func remove(updated item: Item) -> (Bool, Error?) {
         return (true, nil)
     }
     
@@ -413,6 +439,6 @@ final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInpu
         self.items = PublishSubject()
         self.doneItemsNum = 0
         self.totalItemsNum = 0
-        self.itemsArray = [Item(name: "Smt24232", count: 1, uploadedToICloud: false, done: true, shown: true, createdAt: Date(), lastUsedAt: Date())]
+        self.itemsArray = [Item(id: UUID(), name: "Smt24232", count: 1, uploadedToICloud: false, done: true, shown: true, createdAt: Date(), lastUsedAt: Date())]
     }
 }

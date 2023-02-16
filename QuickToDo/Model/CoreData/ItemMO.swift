@@ -17,6 +17,7 @@ public final class ItemMO: ManagedObject {
     @NSManaged public private(set) var used: Bool
     @NSManaged public private(set) var word: String
     @NSManaged public private(set) var uploadedToICloud: Bool
+    @NSManaged public private(set) var id: String
     
     public static func insertIntoContext(moc: NSManagedObjectContext, item: Item) -> ItemMO {
         let localItemMO: ItemMO = moc.insertObject()
@@ -26,12 +27,13 @@ public final class ItemMO: ManagedObject {
         localItemMO.used = item.shown
         localItemMO.word = item.name
         localItemMO.uploadedToICloud = item.uploadedToICloud
+        localItemMO.id = item.id.uuidString
         _ = moc.saveOrRollback()
         return localItemMO
     }
     
     public static func updateIntoContext(moc: NSManagedObjectContext, item: Item) -> (ItemMO?, Bool) {
-        let predicate: NSPredicate = NSPredicate(format: "%K == %@", "word", item.name)
+        let predicate: NSPredicate = NSPredicate(format: "%K == %@", "id", item.id.uuidString)
         let oldItemMOWrapped: ItemMO? = ItemMO.findOrFetchInContext(moc: moc, matchingPredicate: predicate)
         guard let oldItemMO = oldItemMOWrapped else {
             let returnValue = ItemMO.insertIntoContext(moc: moc, item: item)
@@ -43,6 +45,7 @@ public final class ItemMO: ManagedObject {
         oldItemMO.used = item.shown
         oldItemMO.word = item.name
         oldItemMO.uploadedToICloud = item.uploadedToICloud
+        oldItemMO.id = item.id.uuidString
         let returnValue = moc.saveOrRollback()
         return(oldItemMO, returnValue)
     }

@@ -72,6 +72,33 @@ final class CoreDataModel: StorageProtocol {
 }
 //MARK: StorageInputs
 extension CoreDataModel: StorageInputs {
+    func getItemWithId() -> itemProcessFindWithID {
+        return {id in
+            let item = Item()
+            
+            let predicate: NSPredicate = NSPredicate(format: "id = \"\(id)\"")
+            
+            guard let moc = self.managedObjectContext else {
+                return (item, false)
+            }
+            let fetchedItems =  ItemMO.fetchInContext(context: moc) { request in
+                request.predicate = predicate
+                request.returnsObjectsAsFaults = false
+            }
+            for itemMO in fetchedItems {
+                return (Item(id: UUID(uuidString: itemMO.id)!,
+                            name: itemMO.word,
+                            count: itemMO.count,
+                            uploadedToICloud: itemMO.uploadedToICloud,
+                            done: itemMO.completed,
+                            shown: itemMO.used,
+                            createdAt: itemMO.lastused,
+                            lastUsedAt: itemMO.lastused), true)
+            }
+            return (item, false)
+        }
+    }
+    
     func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?) {
         return (true, nil)
     }
@@ -94,7 +121,8 @@ extension CoreDataModel: StorageInputs {
             request.returnsObjectsAsFaults = false
         }
         for itemMO in fetchedItems {
-            let tmpItem: Item = Item(name: itemMO.word,
+            let tmpItem: Item = Item(id: UUID(uuidString: itemMO.id)!,
+                                     name: itemMO.word,
                                      count: itemMO.count,
                                      uploadedToICloud: itemMO.uploadedToICloud,
                                      done: itemMO.completed,
@@ -109,7 +137,8 @@ extension CoreDataModel: StorageInputs {
     func insert() -> itemProcess {
         return { item, completionHandler  in
             let itemMO: ItemMO = ItemMO.insertIntoContext(moc: self.managedObjectContext!, item: item)
-            return (Item(name: itemMO.word,
+            return (Item(id: UUID(uuidString: itemMO.id)!,
+                        name: itemMO.word,
                         count: itemMO.count,
                         uploadedToICloud: itemMO.uploadedToICloud,
                         done: itemMO.completed,
@@ -133,7 +162,8 @@ extension CoreDataModel: StorageInputs {
                 request.returnsObjectsAsFaults = false
             }
             for itemMO in fetchedItems {
-                return (Item(name: itemMO.word,
+                return (Item(id: UUID(uuidString: itemMO.id)!,
+                            name: itemMO.word,
                             count: itemMO.count,
                             uploadedToICloud: itemMO.uploadedToICloud,
                             done: itemMO.completed,
@@ -152,7 +182,8 @@ extension CoreDataModel: StorageInputs {
                 guard let itemMO = resultValue.0 else {
                     return (Item(), false)
                 }
-                return (Item(name: itemMO.word,
+                return (Item(id: UUID(uuidString: itemMO.id)!,
+                            name: itemMO.word,
                             count: itemMO.count,
                             uploadedToICloud: itemMO.uploadedToICloud,
                             done: itemMO.completed,
@@ -177,7 +208,8 @@ extension CoreDataModel: StorageInputs {
             request.returnsObjectsAsFaults = false
         }
         for itemMO in fetchedItems.filter({(item) in item === ItemMO.self}) {
-            let tmpItem: Item = Item(name: itemMO.word,
+            let tmpItem: Item = Item(id: UUID(uuidString: itemMO.id)!,
+                                     name: itemMO.word,
                                      count: itemMO.count,
                                      uploadedToICloud: itemMO.uploadedToICloud,
                                      done: itemMO.completed,
