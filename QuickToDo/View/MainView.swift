@@ -121,21 +121,39 @@ struct MainView: View {
             }
             .padding()
             List() {
-                ForEach(self.viewModel.outputs.itemsArray) { item in
+                ForEach(self.viewModel.outputs.itemsArray.enumerated().map({$0}), id: \.element.id) { index, item in
+                    let red: Double = (index > 8 ) ? ((index < 16) ? Double(32 * (8 - (index - 8)) ) : ((index < 24) ? Double(32 * (index - 16)) : 255)) : 255
+                    let green: Double = (index < 8) ? Double(32 * (8 - index)) : ((index > 8) ? 0 : ((index > 24) ? Double(32 * (index - 16)) : 0 ))
+                    let blue: Double = (index > 8 ) ? ((index < 16) ? Double(32 * (index - 8)) : ((index < 24) ? Double (32 * (8 - (index - 16))) : 0)) : 0
                     if (((!shown && !item.done) || (shown)) && item.shown) {
                         HStack() {
                             Button(action: {
-                                print("Tapped \(item.name)")
+                                print("Tapped \(item.name): \(red) : \(green): \(blue)")
                                 let newItem = Item.itemDoneLens.set(!item.done, item)
                                 _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
                                         print("Done")
                                     })
                             }, label: {
                                 if item.done {
-                                    Image("selected")
+                                    ZStack {
+                                        Circle()
+                                            .stroke(Color(red: red/255, green: green/255, blue: blue/255), lineWidth: 2)
+                                            .frame(width: 35.0, height: 35.0)
+                                        Circle()
+                                            .fill()
+                                            .foregroundColor(Color(red: red/255, green: green/255, blue: blue/255))
+                                            .frame(width: 25.0, height: 25.0)
+                                    }
                                 }
                                 else {
-                                    Image("select")
+                                    ZStack {
+                                        Circle()
+                                            .stroke(.black, lineWidth: 2)
+                                            .frame(width: 35.0, height: 35.0)
+                                        Circle()
+                                            .stroke(Color(red: red/255, green: green/255, blue: blue/255))
+                                            .frame(width: 25.0, height: 25.0)
+                                    }
                                 }
                             }).buttonStyle(.borderless)
                             Text(item.name)

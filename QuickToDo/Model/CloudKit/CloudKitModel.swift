@@ -266,7 +266,7 @@ extension CloudKitModel: StorageInputs {
     func update() -> itemProcessUpdate {
         return { (item, newItem) in
             
-            let predicate = NSPredicate(format: "(Name == %@)", item.name)
+            let predicate = NSPredicate(format: "(id == %@)", item.id.uuidString)
             let query = CKQuery(recordType: "Items", predicate: predicate)
             
             self.database.perform(query, inZoneWith: self.zone.zoneID) { (recordsRecived, error) in
