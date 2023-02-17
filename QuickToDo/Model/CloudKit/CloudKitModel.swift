@@ -111,11 +111,6 @@ extension CloudKitModel: StorageInputs {
         }
     }
     
-    func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?) {
-        return (true, nil)
-    }
-    
-    
     func getRootRecord() -> CKRecord? {
         return self.rootRecord
     }
@@ -171,19 +166,18 @@ extension CloudKitModel: StorageInputs {
     
 
     
-    func getItems(withCompletion: ((Item) -> Void)?) async -> (Bool, Error?) {
+    func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?) {
         let predicate = NSPredicate(format: "Used = 1")
         let query = CKQuery(recordType: "Items", predicate: predicate)
-        do {
-            let receivedRecords = try await self.database.perform(query, inZoneWith: zone.zoneID)
-            
-            /*{ (receivedRecords, receivedError) in
-             //        self.database.fetch(withQuery: query, inZoneWith: self.zone.zoneID) {(results) in
-             */
-            guard let completion = withCompletion else {
-                return (false, nil)
+        
+        self.database.perform(query, inZoneWith: zone.zoneID) { (receivedRecords, receivedError) in
+            guard let records = receivedRecords else {
+                return
             }
-            for record in receivedRecords {
+            guard let completion = withCompletion else {
+                return
+            }
+            for record in records {
                 let tempItem = Item(id: UUID(uuidString: record.string(String(describing: ItemFields.id))!)!,
                                     name: record.string(String(describing: ItemFields.name))!,
                                     count: record.int(String(describing: ItemFields.count))!,
@@ -196,9 +190,6 @@ extension CloudKitModel: StorageInputs {
                 completion(tempItem)
                 self.itemsPrivate.onNext(tempItem)
             }
-        } catch {
-            print("Error")
-            return(false, nil)
         }
         return(true, nil)
     }
@@ -266,7 +257,7 @@ extension CloudKitModel: StorageInputs {
     func update() -> itemProcessUpdate {
         return { (item, newItem) in
             
-            let predicate = NSPredicate(format: "(id == %@)", item.id.uuidString)
+            let predicate = NSPredicate(format: "(Id == %@)", item.id.uuidString)
             let query = CKQuery(recordType: "Items", predicate: predicate)
             
             self.database.perform(query, inZoneWith: self.zone.zoneID) { (recordsRecived, error) in
@@ -278,6 +269,7 @@ extension CloudKitModel: StorageInputs {
                 for record in records {
                     record.set(int: (newItem.shown) ? 1 : 0, key: String(describing: ItemFields.used))
                     record.set(int: (newItem.done) ? 1 : 0, key: String(describing: ItemFields.done))
+                    record.set(string: newItem.name, key: String(describing: ItemFields.name))
                     modifiedRecords.append(record)
                 }
                 let updateOperation = CKModifyRecordsOperation(recordsToSave: modifiedRecords, recordIDsToDelete: nil)
