@@ -38,7 +38,7 @@ final class CloudKitModel: StorageProtocol {
                 return
             }
             if(subscriptionsUnwrapped.isEmpty) {
-                let newSubscription = CKQuerySubscription(recordType: "Items", predicate: NSPredicate(value: true), options: [.firesOnRecordCreation, .firesOnRecordDeletion])
+                let newSubscription = CKQuerySubscription(recordType: "Items", predicate: NSPredicate(value: true), options: [.firesOnRecordCreation, .firesOnRecordDeletion, .firesOnRecordUpdate])
                 let notification = CKSubscription.NotificationInfo()
                 notification.shouldSendContentAvailable = true
                 notification.alertBody = "New Item has been added!!"

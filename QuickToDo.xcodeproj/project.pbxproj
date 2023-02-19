@@ -17,6 +17,7 @@
 		E44980F0283900A30009313D /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = E44980EF283900A30009313D /* RxCocoa */; };
 		E44980F2283900A30009313D /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E44980F1283900A30009313D /* RxSwift */; };
 		E44980F5283900B20009313D /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E44980F4283900B20009313D /* SnapKit */; };
+		E4562D0129A223A4004DDFDF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4562D0029A223A4004DDFDF /* SceneDelegate.swift */; };
 		E46E6E7123F2A80600D26E00 /* QuickToDoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46E6E7023F2A80600D26E00 /* QuickToDoTests.swift */; };
 		E46FD0E3216406220007FBB7 /* QuickToDoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46FD0E2216406220007FBB7 /* QuickToDoModel.swift */; };
 		E47AC1DC2928D3170076E170 /* SwiftyCloudKit in Frameworks */ = {isa = PBXBuildFile; productRef = E47AC1DB2928D3170076E170 /* SwiftyCloudKit */; };
@@ -56,6 +57,7 @@
 		E435ECEA21729EB700E68960 /* QuickToDoViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoViewModelProtocol.swift; sourceTree = "<group>"; };
 		E435ECEE21890A6A00E68960 /* ItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemTableViewCell.swift; sourceTree = "<group>"; };
 		E435ECF021890A7900E68960 /* AddItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemTableViewCell.swift; sourceTree = "<group>"; };
+		E4562D0029A223A4004DDFDF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		E46E6E6E23F2A80600D26E00 /* QuickToDoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuickToDoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E46E6E7023F2A80600D26E00 /* QuickToDoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoTests.swift; sourceTree = "<group>"; };
 		E46E6E7223F2A80600D26E00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 				E4AFEE3D215AB0560001AEDA /* ViewModel */,
 				E4AFEE3E215AB0620001AEDA /* View */,
 				E404A39F1A8EBA34008D32A5 /* QuickToDo.entitlements */,
+				E4562D0029A223A4004DDFDF /* SceneDelegate.swift */,
 				E4861BBF215FA0010085CFB8 /* AppDelegate.swift */,
 				E4C6E00C19E7EA62003A89F7 /* Supporting Files */,
 			);
@@ -363,6 +366,7 @@
 				E435ECEB21729EB700E68960 /* QuickToDoViewModelProtocol.swift in Sources */,
 				E435ECEF21890A6A00E68960 /* ItemTableViewCell.swift in Sources */,
 				E49F65FB22C379E7008D59FA /* CloudKitModel.swift in Sources */,
+				E4562D0129A223A4004DDFDF /* SceneDelegate.swift in Sources */,
 				E435ECF121890A7900E68960 /* AddItemTableViewCell.swift in Sources */,
 				E435ECE521680E0300E68960 /* CoreDataModel.swift in Sources */,
 				E4FBC6DA215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift in Sources */,

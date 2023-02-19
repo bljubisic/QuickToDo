@@ -11,8 +11,8 @@ import CoreData
 import CloudKit
 import SwiftUI
 
-//@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+@main
+class AppDelegate: NSObject, UIApplicationDelegate {
     
     var window: UIWindow?
     
@@ -42,51 +42,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
-    func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
-        
-        guard cloudKitShareMetadata.containerIdentifier == Config.containerIdentifier else {
-            print("Shared container identifier \(cloudKitShareMetadata.containerIdentifier) did not match known identifier.")
-            return
-        }
-        let container = CKContainer(identifier: Config.containerIdentifier)
-        let acceptSharesOperation = CKAcceptSharesOperation(shareMetadatas: [cloudKitShareMetadata])
-        
-        window = UIWindow(frame: UIScreen.main.bounds)
-        let coreData = CoreDataModel()
-        let cloudKit = CloudKitModel()
-        let model = QuickToDoModel(coreData, cloudKit)
-
-        
-        let viewController: MainViewController = MainViewController()
-        viewController.insert(withModel: model)
-        window?.rootViewController = viewController
-        window?.makeKeyAndVisible()
-        
-        acceptSharesOperation.perShareResultBlock = {metadata, result in
-            let shareRecordType = metadata.share.recordType
-
-            switch result {
-            case .failure(let error):
-                debugPrint("Error accepting share: \(error)")
-
-            case .success:
-                debugPrint("Accepted CloudKit share with type: \(shareRecordType)")
-            }
-        }
-        
-        acceptSharesOperation.acceptSharesResultBlock = { result in
-            if case .failure(let error) = result {
-                debugPrint("Error accepting CloudKit Share: \(error)")
-            }
-        }
-        
-        acceptSharesOperation.qualityOfService = .utility
-        container.add(acceptSharesOperation)
-    }
+//    func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
+//
+//        guard cloudKitShareMetadata.containerIdentifier == Config.containerIdentifier else {
+//            print("Shared container identifier \(cloudKitShareMetadata.containerIdentifier) did not match known identifier.")
+//            return
+//        }
+//        let container = CKContainer(identifier: Config.containerIdentifier)
+//        let acceptSharesOperation = CKAcceptSharesOperation(shareMetadatas: [cloudKitShareMetadata])
+//
+//        window = UIWindow(frame: UIScreen.main.bounds)
+//        let coreData = CoreDataModel()
+//        let cloudKit = CloudKitModel()
+//        let model = QuickToDoModel(coreData, cloudKit)
+//
+//
+//        let viewController: MainViewController = MainViewController()
+//        viewController.insert(withModel: model)
+//        window?.rootViewController = viewController
+//        window?.makeKeyAndVisible()
+//
+//        acceptSharesOperation.perShareResultBlock = {metadata, result in
+//            let shareRecordType = metadata.share.recordType
+//
+//            switch result {
+//            case .failure(let error):
+//                debugPrint("Error accepting share: \(error)")
+//
+//            case .success:
+//                debugPrint("Accepted CloudKit share with type: \(shareRecordType)")
+//            }
+//        }
+//
+//        acceptSharesOperation.acceptSharesResultBlock = { result in
+//            if case .failure(let error) = result {
+//                debugPrint("Error accepting CloudKit Share: \(error)")
+//            }
+//        }
+//
+//        acceptSharesOperation.qualityOfService = .utility
+//        container.add(acceptSharesOperation)
+//    }
     
-    func showAlertInvitationOnMainViewController(record: CKRecord) {
-        
-    }
+//    func showAlertInvitationOnMainViewController(record: CKRecord) {
+//
+//    }
     
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -132,6 +132,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return container
     }()
     
+    // MARK: UISceneSession Lifecycle
+    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        // Called when a new scene session is being created.
+        // Use this method to select a configuration to create the new scene with.
+        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    }
+
+    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+        // Called when the user discards a scene session.
+        // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
+        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+    }
+    
     // MARK: - Core Data Saving support
     func saveContext () {
         let context = persistentContainer.viewContext
@@ -149,21 +162,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
 }
 
-@main
-struct AppyApp: App {
-    
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
-    var body: some Scene {
-        WindowGroup {
-            NavigationView {
-                let coreData = CoreDataModel()
-                let cloudKit = CloudKitModel()
-                let model = QuickToDoModel(coreData, cloudKit)
-                let viewModel = QuickToDoViewModel(model)
-                MainView(viewModel: viewModel)
-            }
-        }
-    }
-}
+//@main
+//struct AppyApp: App {
+//
+//    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+//
+//    var body: some Scene {
+//        WindowGroup {
+//            NavigationView {
+//                let coreData = CoreDataModel()
+//                let cloudKit = CloudKitModel()
+//                let model = QuickToDoModel(coreData, cloudKit)
+//                let viewModel = QuickToDoViewModel(model)
+//                MainView(viewModel: viewModel)
+//            }
+//        }
+//    }
+//}
 

@@ -74,6 +74,31 @@ struct MainView: View {
                 Spacer()
                 VStack() {
                     Button(action: {
+                        _ = self.viewModel.inputs.prepareSharing() {share, container, error in
+                            guard let shareUnwrapped = share, let containerUnwrapped = container else {
+                                return
+                            }
+                            DispatchQueue.main.async {
+                                let sharingController = UICloudSharingController(share: shareUnwrapped, container: containerUnwrapped)
+                                sharingController.availablePermissions = [.allowReadWrite, .allowPrivate]
+                                sharingController.modalPresentationStyle = .formSheet
+                                UIApplication.shared.windows.first?.rootViewController?.present(sharingController, animated: true)
+                            }
+                        }
+                    }, label: {
+                        Image(systemName: "square.and.arrow.up")
+                            .resizable()
+                            .frame(width: 20.0, height: 20.0)
+                    })
+                    Text("Share")
+                        .fontWeight(.semibold)
+                        .foregroundColor(Color.blue)
+                        .font(.system(size: 12,  design: .rounded))
+                        .frame(width: 80.0, height: 20.0)
+                }
+                .padding()
+                VStack() {
+                    Button(action: {
                         _ = self.viewModel.inputs.clearList()
                     }, label: {
                         Image(systemName: "cart.badge.minus")
