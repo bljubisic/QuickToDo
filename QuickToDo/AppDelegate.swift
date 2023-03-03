@@ -42,47 +42,47 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
-    func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
-        
-        guard cloudKitShareMetadata.containerIdentifier == Config.containerIdentifier else {
-            print("Shared container identifier \(cloudKitShareMetadata.containerIdentifier) did not match known identifier.")
-            return
-        }
-        let container = CKContainer(identifier: Config.containerIdentifier)
-        let acceptSharesOperation = CKAcceptSharesOperation(shareMetadatas: [cloudKitShareMetadata])
-        
-        window = UIWindow(frame: UIScreen.main.bounds)
-        let coreData = CoreDataModel()
-        let cloudKit = CloudKitModel()
-        let model = QuickToDoModel(coreData, cloudKit)
-
-        
-        let viewController: MainViewController = MainViewController()
-        viewController.insert(withModel: model)
-        window?.rootViewController = viewController
-        window?.makeKeyAndVisible()
-        
-        acceptSharesOperation.perShareResultBlock = {metadata, result in
-            let shareRecordType = metadata.share.recordType
-
-            switch result {
-            case .failure(let error):
-                debugPrint("Error accepting share: \(error)")
-
-            case .success:
-                debugPrint("Accepted CloudKit share with type: \(shareRecordType)")
-            }
-        }
-        
-        acceptSharesOperation.acceptSharesResultBlock = { result in
-            if case .failure(let error) = result {
-                debugPrint("Error accepting CloudKit Share: \(error)")
-            }
-        }
-        
-        acceptSharesOperation.qualityOfService = .utility
-        container.add(acceptSharesOperation)
-    }
+//    func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
+//
+//        guard cloudKitShareMetadata.containerIdentifier == Config.containerIdentifier else {
+//            print("Shared container identifier \(cloudKitShareMetadata.containerIdentifier) did not match known identifier.")
+//            return
+//        }
+//        let container = CKContainer(identifier: Config.containerIdentifier)
+//        let acceptSharesOperation = CKAcceptSharesOperation(shareMetadatas: [cloudKitShareMetadata])
+//
+//        window = UIWindow(frame: UIScreen.main.bounds)
+//        let coreData = CoreDataModel()
+//        let cloudKit = CloudKitModel()
+//        let model = QuickToDoModel(coreData, cloudKit)
+//
+//
+//        let viewController: MainViewController = MainViewController()
+//        viewController.insert(withModel: model)
+//        window?.rootViewController = viewController
+//        window?.makeKeyAndVisible()
+//
+//        acceptSharesOperation.perShareResultBlock = {metadata, result in
+//            let shareRecordType = metadata.share.recordType
+//
+//            switch result {
+//            case .failure(let error):
+//                debugPrint("Error accepting share: \(error)")
+//
+//            case .success:
+//                debugPrint("Accepted CloudKit share with type: \(shareRecordType)")
+//            }
+//        }
+//
+//        acceptSharesOperation.acceptSharesResultBlock = { result in
+//            if case .failure(let error) = result {
+//                debugPrint("Error accepting CloudKit Share: \(error)")
+//            }
+//        }
+//
+//        acceptSharesOperation.qualityOfService = .utility
+//        container.add(acceptSharesOperation)
+//    }
     
     func showAlertInvitationOnMainViewController(record: CKRecord) {
         
