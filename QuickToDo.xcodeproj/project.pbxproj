@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,6 +17,7 @@
 		E44980F0283900A30009313D /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = E44980EF283900A30009313D /* RxCocoa */; };
 		E44980F2283900A30009313D /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E44980F1283900A30009313D /* RxSwift */; };
 		E44980F5283900B20009313D /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E44980F4283900B20009313D /* SnapKit */; };
+		E44C26C22A6DAE7400ECD7B6 /* SwiftDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44C26C12A6DAE7400ECD7B6 /* SwiftDataModel.swift */; };
 		E46E6E7123F2A80600D26E00 /* QuickToDoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46E6E7023F2A80600D26E00 /* QuickToDoTests.swift */; };
 		E46FD0E3216406220007FBB7 /* QuickToDoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46FD0E2216406220007FBB7 /* QuickToDoModel.swift */; };
 		E47AC1DC2928D3170076E170 /* SwiftyCloudKit in Frameworks */ = {isa = PBXBuildFile; productRef = E47AC1DB2928D3170076E170 /* SwiftyCloudKit */; };
@@ -56,6 +57,7 @@
 		E435ECEA21729EB700E68960 /* QuickToDoViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoViewModelProtocol.swift; sourceTree = "<group>"; };
 		E435ECEE21890A6A00E68960 /* ItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemTableViewCell.swift; sourceTree = "<group>"; };
 		E435ECF021890A7900E68960 /* AddItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemTableViewCell.swift; sourceTree = "<group>"; };
+		E44C26C12A6DAE7400ECD7B6 /* SwiftDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataModel.swift; sourceTree = "<group>"; };
 		E46E6E6E23F2A80600D26E00 /* QuickToDoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuickToDoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E46E6E7023F2A80600D26E00 /* QuickToDoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoTests.swift; sourceTree = "<group>"; };
 		E46E6E7223F2A80600D26E00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -122,6 +124,14 @@
 			path = CoreData;
 			sourceTree = "<group>";
 		};
+		E44C26C02A6DAE4B00ECD7B6 /* SwiftData */ = {
+			isa = PBXGroup;
+			children = (
+				E44C26C12A6DAE7400ECD7B6 /* SwiftDataModel.swift */,
+			);
+			path = SwiftData;
+			sourceTree = "<group>";
+		};
 		E46E6E6F23F2A80600D26E00 /* QuickToDoTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -142,6 +152,7 @@
 		E4AFEE3C215AB04D0001AEDA /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				E44C26C02A6DAE4B00ECD7B6 /* SwiftData */,
 				E49F65F922C379CB008D59FA /* CloudKit */,
 				E435ECE321680DD900E68960 /* CoreData */,
 				E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */,
@@ -363,6 +374,7 @@
 				E435ECEB21729EB700E68960 /* QuickToDoViewModelProtocol.swift in Sources */,
 				E435ECEF21890A6A00E68960 /* ItemTableViewCell.swift in Sources */,
 				E49F65FB22C379E7008D59FA /* CloudKitModel.swift in Sources */,
+				E44C26C22A6DAE7400ECD7B6 /* SwiftDataModel.swift in Sources */,
 				E435ECF121890A7900E68960 /* AddItemTableViewCell.swift in Sources */,
 				E435ECE521680E0300E68960 /* CoreDataModel.swift in Sources */,
 				E4FBC6DA215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift in Sources */,
@@ -472,7 +484,7 @@
 				INFOPLIST_FILE = QuickToDo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Simple QuickToDo";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -560,7 +572,7 @@
 				INFOPLIST_FILE = QuickToDo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Simple QuickToDo";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
