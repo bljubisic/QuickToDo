@@ -257,6 +257,8 @@ struct MainView_Previews: PreviewProvider {
 }
 
 final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
+    typealias Observable = RxSwift.Observable
+    
     func save(config: QuickToDoConfig) -> (Bool, Error?) {
         return (true, nil)
     }
@@ -321,6 +323,8 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
 }
 
 final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs, QuickToDoViewModelOutputs, ObservableObject {
+    typealias Observable = RxSwift.Observable
+    
     func save(config: Bool) -> (Bool, Error?) {
         return (true, nil)
     }
