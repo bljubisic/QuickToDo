@@ -16,3 +16,8 @@ func circle(radius: Distance) -> Region {
 
 circle(radius: 10)(CGPoint(x: 5, y: 5))
 
+for hourOffset in 0 ... 4 {
+    print(hourOffset)
+}
+
+

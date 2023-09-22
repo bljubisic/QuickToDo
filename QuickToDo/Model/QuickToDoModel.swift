@@ -17,11 +17,12 @@ class QuickToDoModel: QuickToDoProtocol {
     private let itemHints: PublishSubject<String> = PublishSubject()
     private let disposeBag = DisposeBag()
     private var configPriv = QuickToDoConfig()
-    private var coreData: StorageProtocol
+//    private var coreData: StorageProtocol
+    private var swiftData: StorageProtocol
     private var cloudKit: StorageProtocol
     
-    init(_ withCoreData: StorageProtocol, _ withCloudKit: StorageProtocol) {
-        coreData = withCoreData
+    init(_ withSwiftData: StorageProtocol, _ withCloudKit: StorageProtocol) {
+        swiftData = withSwiftData
         cloudKit = withCloudKit
     }
 }
@@ -78,15 +79,15 @@ extension QuickToDoModel: QuickToDoInputs {
     }
     
     func getItems() -> (Bool, Error?) {
-        Observable.merge([self.coreData.outputs.items, self.cloudKit.outputs.items])
+        Observable.merge([self.swiftData.outputs.items, self.cloudKit.outputs.items])
             .subscribe({(item) in
                 if let itemElement = item.element {
                     self.itemsPrivate.onNext(itemElement)
                 }
             }).disposed(by: disposeBag)
-        _ = self.coreData.inputs.getItems(withCompletion: nil)
+        _ = self.swiftData.inputs.getItems(withCompletion: nil)
         _ = self.cloudKit.inputs.getItems() { item in
-            let funcUpdate = self.coreData.inputs.update()
+            let funcUpdate = self.swiftData.inputs.update()
             _ = funcUpdate(item, item)
         }
         
@@ -94,12 +95,12 @@ extension QuickToDoModel: QuickToDoInputs {
     }
     
     func add(_ item: Item, addToCloud: Bool) -> (Bool, Error?) {
-        let newInsertFunction = self.coreData.inputs.insert()
+        let newInsertFunction = self.swiftData.inputs.insert()
         let ckInsertFunctiomn = self.cloudKit.inputs.insert()
         self.itemsPrivate.onNext(newInsertFunction(item, nil).0)
         if addToCloud {
             _ = ckInsertFunctiomn(item) { (newItem, error) in
-                let updateFunction = self.coreData.inputs.update()
+                let updateFunction = self.swiftData.inputs.update()
                 _ = updateFunction(item, newItem)
                 self.itemsPrivate.onNext(newItem)
             }
@@ -109,7 +110,7 @@ extension QuickToDoModel: QuickToDoInputs {
     
     func update(_ item: Item, withItem newItem: Item) -> (Bool, Error?) {
         _ = self.updateToCloudKit(item, withItem: newItem)
-        _ = self.updateToCoreData(item, withItem: newItem)
+        _ = self.updateToSwiftData(item, withItem: newItem)
         return (true, nil)
     }
     
@@ -119,14 +120,14 @@ extension QuickToDoModel: QuickToDoInputs {
         return (true, nil)
     }
     
-    private func updateToCoreData(_ item: Item, withItem newItem: Item) -> (Bool, Error?) {
-        let superNewItem = self.coreData.inputs.update()
+    private func updateToSwiftData(_ item: Item, withItem newItem: Item) -> (Bool, Error?) {
+        let superNewItem = self.swiftData.inputs.update()
         self.itemsPrivate.onNext(superNewItem(item, newItem).0)
         return(true, nil)
     }
     
     func getHints(for itemName: String) -> Observable<String> {
-        return self.getHintsFromCoreData(for: itemName)
+        return self.getHintsFromSwiftData(for: itemName)
             .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
             .observe(on: MainScheduler.instance)
     }
@@ -135,7 +136,7 @@ extension QuickToDoModel: QuickToDoInputs {
         let ckInsertFunctiomn = self.cloudKit.inputs.insert()
         items.forEach{item in
             _ = ckInsertFunctiomn(item){(newItem, error) in
-                let updateFunction = self.coreData.inputs.update()
+                let updateFunction = self.swiftData.inputs.update()
                 _ = updateFunction(item, newItem)
                 self.itemsPrivate.onNext(newItem)
             }
@@ -154,9 +155,9 @@ extension QuickToDoModel: QuickToDoInputs {
         })
     }
     
-    private func getHintsFromCoreData(for itemName: String) -> Observable<String> {
+    private func getHintsFromSwiftData(for itemName: String) -> Observable<String> {
         return Observable.create({ (observer) -> Disposable in
-            self.coreData.inputs.getHints(for: itemName) { (firstItem, secondItem) in
+            self.swiftData.inputs.getHints(for: itemName) { (firstItem, secondItem) in
                 observer.onNext(firstItem.name)
                 observer.onNext(secondItem.name)
                 observer.onCompleted()
