@@ -174,7 +174,7 @@ extension SwiftDataModel: StorageInputs {
         
 
         if let fetchedItems = try? self.container.mainContext.fetch<ItemSD>(descriptor) {
-            for itemMO in fetchedItems.filter({(item) in item === ItemMO.self}) {
+            for itemMO in fetchedItems.filter({(item) in item === ItemSD.self}) {
                 let tmpItem: Item = Item(id: UUID(uuidString: itemMO.uuid!)!,
                                          name: itemMO.word!,
                                          count: itemMO.count!,
