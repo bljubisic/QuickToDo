@@ -145,7 +145,7 @@ extension SwiftDataModel: StorageInputs {
     func getItemWithId() -> itemProcessFindWithID {
         return { id in
             let predicate = #Predicate<ItemSD> {item in item.uuid! == id.uuidString}
-            var descriptor = FetchDescriptor(predicate: predicate)
+            let descriptor = FetchDescriptor(predicate: predicate)
             let item = Item()
             
             if let items = try? self.container.mainContext.fetch<ItemSD>(descriptor) {
@@ -170,7 +170,7 @@ extension SwiftDataModel: StorageInputs {
         var items: [Item] = [Item]()
         
         let predicate = #Predicate<ItemSD> {item in item.word!.starts(with: itemName)}
-        var descriptor = FetchDescriptor(predicate: predicate)
+        let descriptor = FetchDescriptor(predicate: predicate)
         
 
         if let fetchedItems = try? self.container.mainContext.fetch<ItemSD>(descriptor) {

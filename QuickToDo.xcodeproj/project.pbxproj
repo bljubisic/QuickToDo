@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E4044A622AD1926700E0FC6A /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */; };
 		E42C85F423E8603600AB6CDD /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42C85F323E8603600AB6CDD /* MainView.swift */; };
 		E435ECE521680E0300E68960 /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE421680E0300E68960 /* CoreDataModel.swift */; };
 		E435ECE72169327000E68960 /* ManagedObjectTypeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE62169327000E68960 /* ManagedObjectTypeProtocol.swift */; };
@@ -16,7 +17,6 @@
 		E435ECF121890A7900E68960 /* AddItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECF021890A7900E68960 /* AddItemTableViewCell.swift */; };
 		E44980F0283900A30009313D /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = E44980EF283900A30009313D /* RxCocoa */; };
 		E44980F2283900A30009313D /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E44980F1283900A30009313D /* RxSwift */; };
-		E44980F5283900B20009313D /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E44980F4283900B20009313D /* SnapKit */; };
 		E44E38C82AB8E723001ED038 /* ItemSD.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44E38C72AB8E723001ED038 /* ItemSD.swift */; };
 		E44E38C92AB8E784001ED038 /* SwiftDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44C26C12A6DAE7400ECD7B6 /* SwiftDataModel.swift */; };
 		E46E6E7123F2A80600D26E00 /* QuickToDoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46E6E7023F2A80600D26E00 /* QuickToDoTests.swift */; };
@@ -32,23 +32,16 @@
 		E4861BC0215FA0010085CFB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4861BBF215FA0010085CFB8 /* AppDelegate.swift */; };
 		E4861BC2215FA3FF0085CFB8 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */; };
 		E48B68DA215D5C3C0062B08C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48B68D9215D5C3C0062B08C /* MainViewController.swift */; };
+		E49125AE2AC7642D00DF090C /* QuickToDoIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49125AC2AC7642D00DF090C /* QuickToDoIntent.swift */; };
 		E49DE916289737EC00B70245 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = E49DE915289737EC00B70245 /* .gitignore */; };
 		E49F65FB22C379E7008D59FA /* CloudKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49F65FA22C379E7008D59FA /* CloudKitModel.swift */; };
 		E4BF3E6E21A04AFC00302EB8 /* QuickToDoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4BF3E6D21A04AFC00302EB8 /* QuickToDoViewModel.swift */; };
-		E4C11E532ABF617000C788E6 /* QuickToDoViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECEA21729EB700E68960 /* QuickToDoViewModelProtocol.swift */; };
-		E4C11E542ABF619200C788E6 /* CloudKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49F65FA22C379E7008D59FA /* CloudKitModel.swift */; };
-		E4C11E552ABF619600C788E6 /* SwiftDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44C26C12A6DAE7400ECD7B6 /* SwiftDataModel.swift */; };
-		E4C11E562ABF61A700C788E6 /* QuickToDoModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */; };
 		E4C11E572ABF61AA00C788E6 /* DataStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */; };
-		E4C11E582ABF61AD00C788E6 /* QuickToDoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46FD0E2216406220007FBB7 /* QuickToDoModel.swift */; };
-		E4C11E592ABF620100C788E6 /* QuickToDoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4BF3E6D21A04AFC00302EB8 /* QuickToDoViewModel.swift */; };
-		E4C11E5B2AC0A2A700C788E6 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E4C11E5A2AC0A2A700C788E6 /* RxSwift */; };
-		E4C11E5D2AC0A2D100C788E6 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = E4C11E5C2AC0A2D100C788E6 /* RxCocoa */; };
-		E4C11E5F2AC0A2FA00C788E6 /* SwiftyCloudKit in Frameworks */ = {isa = PBXBuildFile; productRef = E4C11E5E2AC0A2FA00C788E6 /* SwiftyCloudKit */; };
 		E4C6E01219E7EA63003A89F7 /* QuickToDo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E4C6E01019E7EA63003A89F7 /* QuickToDo.xcdatamodeld */; };
 		E4C6E01919E7EA63003A89F7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01819E7EA63003A89F7 /* Images.xcassets */; };
 		E4C6E01C19E7EA63003A89F7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01A19E7EA63003A89F7 /* LaunchScreen.xib */; };
 		E4C893982838F56D002B860A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01519E7EA63003A89F7 /* Main.storyboard */; };
+		E4E5C7382AD0B2FD001B0095 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E4E5C7372AD0B2FD001B0095 /* SnapKit */; };
 		E4F014C81AC8887B00264AD5 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = E4F014C71AC8887B00264AD5 /* Config.plist */; };
 		E4F9A3791A5C146900CC0573 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4F9A3781A5C146900CC0573 /* CoreData.framework */; };
 		E4FBC6DA215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */; };
@@ -116,6 +109,7 @@
 		E4861BBF215FA0010085CFB8 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		E48B68D9215D5C3C0062B08C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		E49125AC2AC7642D00DF090C /* QuickToDoIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoIntent.swift; sourceTree = "<group>"; };
 		E49DE915289737EC00B70245 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		E49F65FA22C379E7008D59FA /* CloudKitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitModel.swift; sourceTree = "<group>"; };
 		E4BF3E6D21A04AFC00302EB8 /* QuickToDoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoViewModel.swift; sourceTree = "<group>"; };
@@ -143,11 +137,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4C11E5B2AC0A2A700C788E6 /* RxSwift in Frameworks */,
+				E4044A622AD1926700E0FC6A /* CloudKit.framework in Frameworks */,
 				E477E6942A76B2C5003C7FCB /* SwiftUI.framework in Frameworks */,
-				E4C11E5D2AC0A2D100C788E6 /* RxCocoa in Frameworks */,
 				E477E6932A76B2C5003C7FCB /* WidgetKit.framework in Frameworks */,
-				E4C11E5F2AC0A2FA00C788E6 /* SwiftyCloudKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,8 +149,8 @@
 			files = (
 				E4F9A3791A5C146900CC0573 /* CoreData.framework in Frameworks */,
 				E44980F2283900A30009313D /* RxSwift in Frameworks */,
-				E44980F5283900B20009313D /* SnapKit in Frameworks */,
 				E47AC1DC2928D3170076E170 /* SwiftyCloudKit in Frameworks */,
+				E4E5C7382AD0B2FD001B0095 /* SnapKit in Frameworks */,
 				E44980F0283900A30009313D /* RxCocoa in Frameworks */,
 				E4861BC2215FA3FF0085CFB8 /* CloudKit.framework in Frameworks */,
 			);
@@ -192,13 +184,6 @@
 			path = CoreData;
 			sourceTree = "<group>";
 		};
-		E44C26C02A6DAE4B00ECD7B6 /* SwiftData */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = SwiftData;
-			sourceTree = "<group>";
-		};
 		E46E6E6F23F2A80600D26E00 /* QuickToDoTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -219,6 +204,14 @@
 			path = QuickToDoWidget;
 			sourceTree = "<group>";
 		};
+		E49125AB2AC7640F00DF090C /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				E49125AC2AC7642D00DF090C /* QuickToDoIntent.swift */,
+			);
+			path = Intents;
+			sourceTree = "<group>";
+		};
 		E49F65F922C379CB008D59FA /* CloudKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -230,7 +223,7 @@
 		E4AFEE3C215AB04D0001AEDA /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				E44C26C02A6DAE4B00ECD7B6 /* SwiftData */,
+				E49125AB2AC7640F00DF090C /* Intents */,
 				E49F65F922C379CB008D59FA /* CloudKit */,
 				E435ECE321680DD900E68960 /* CoreData */,
 				E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */,
@@ -346,9 +339,6 @@
 			);
 			name = QuickToDoWidgetExtension;
 			packageProductDependencies = (
-				E4C11E5A2AC0A2A700C788E6 /* RxSwift */,
-				E4C11E5C2AC0A2D100C788E6 /* RxCocoa */,
-				E4C11E5E2AC0A2FA00C788E6 /* SwiftyCloudKit */,
 			);
 			productName = QuickToDoWidgetExtension;
 			productReference = E477E6922A76B2C5003C7FCB /* QuickToDoWidgetExtension.appex */;
@@ -372,8 +362,8 @@
 			packageProductDependencies = (
 				E44980EF283900A30009313D /* RxCocoa */,
 				E44980F1283900A30009313D /* RxSwift */,
-				E44980F4283900B20009313D /* SnapKit */,
 				E47AC1DB2928D3170076E170 /* SwiftyCloudKit */,
+				E4E5C7372AD0B2FD001B0095 /* SnapKit */,
 			);
 			productName = QuickToDo;
 			productReference = E4C6E00919E7EA62003A89F7 /* QuickToDo.app */;
@@ -427,8 +417,8 @@
 			mainGroup = E4C6E00019E7EA62003A89F7;
 			packageReferences = (
 				E44980EE283900A30009313D /* XCRemoteSwiftPackageReference "RxSwift" */,
-				E44980F3283900B20009313D /* XCRemoteSwiftPackageReference "SnapKit" */,
 				E47AC1DA2928D3170076E170 /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */,
+				E4E5C7362AD0B2FD001B0095 /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = E4C6E00A19E7EA62003A89F7 /* Products */;
 			projectDirPath = "";
@@ -484,16 +474,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4C11E592ABF620100C788E6 /* QuickToDoViewModel.swift in Sources */,
-				E4C11E542ABF619200C788E6 /* CloudKitModel.swift in Sources */,
-				E4C11E532ABF617000C788E6 /* QuickToDoViewModelProtocol.swift in Sources */,
 				E477E6972A76B2C5003C7FCB /* QuickToDoWidgetBundle.swift in Sources */,
+				E49125AE2AC7642D00DF090C /* QuickToDoIntent.swift in Sources */,
 				E477E6992A76B2C5003C7FCB /* QuickToDoWidget.swift in Sources */,
-				E4C11E582ABF61AD00C788E6 /* QuickToDoModel.swift in Sources */,
 				E48005622ABA338B00DEA8F2 /* ItemSD.swift in Sources */,
 				E4C11E572ABF61AA00C788E6 /* DataStructures.swift in Sources */,
-				E4C11E562ABF61A700C788E6 /* QuickToDoModelProtocol.swift in Sources */,
-				E4C11E552ABF619600C788E6 /* SwiftDataModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -949,20 +934,20 @@
 				kind = branch;
 			};
 		};
-		E44980F3283900B20009313D /* XCRemoteSwiftPackageReference "SnapKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
-			requirement = {
-				branch = develop;
-				kind = branch;
-			};
-		};
 		E47AC1DA2928D3170076E170 /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/simengangstad/SwiftyCloudKit";
 			requirement = {
 				branch = master;
 				kind = branch;
+			};
+		};
+		E4E5C7362AD0B2FD001B0095 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.6.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -978,30 +963,15 @@
 			package = E44980EE283900A30009313D /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxSwift;
 		};
-		E44980F4283900B20009313D /* SnapKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E44980F3283900B20009313D /* XCRemoteSwiftPackageReference "SnapKit" */;
-			productName = SnapKit;
-		};
 		E47AC1DB2928D3170076E170 /* SwiftyCloudKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E47AC1DA2928D3170076E170 /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */;
 			productName = SwiftyCloudKit;
 		};
-		E4C11E5A2AC0A2A700C788E6 /* RxSwift */ = {
+		E4E5C7372AD0B2FD001B0095 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E44980EE283900A30009313D /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxSwift;
-		};
-		E4C11E5C2AC0A2D100C788E6 /* RxCocoa */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E44980EE283900A30009313D /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxCocoa;
-		};
-		E4C11E5E2AC0A2FA00C788E6 /* SwiftyCloudKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E47AC1DA2928D3170076E170 /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */;
-			productName = SwiftyCloudKit;
+			package = E4E5C7362AD0B2FD001B0095 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 

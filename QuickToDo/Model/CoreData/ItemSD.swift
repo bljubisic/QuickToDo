@@ -19,7 +19,15 @@ class ItemSD {
     var uploadedToICloud: Bool?
     var uuid: String?
     
-    public init(completed: Bool = false, count: Int = 0, lastUsed: Date = Date(), used: Bool = false, word: String = "", uploadedToICloud: Bool = false, uuid: String = "") {
+    public init(
+        completed: Bool = false,
+        count: Int = 0,
+        lastUsed: Date = Date(),
+        used: Bool = false,
+        word: String = "",
+        uploadedToICloud: Bool = false,
+        uuid: String = ""
+    ) {
         self.completed = completed
         self.count = count
         self.lastUsed = lastUsed
