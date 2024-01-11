@@ -23,7 +23,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<key>Quick ToDo Sum.xcscheme</key>
 		<dict>
@@ -143,6 +143,11 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>E46E6E6D23F2A80600D26E00</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E477E6912A76B2C5003C7FCB</key>
 		<dict>
 			<key>primary</key>
 			<true/>

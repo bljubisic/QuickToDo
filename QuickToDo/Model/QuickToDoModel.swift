@@ -88,7 +88,15 @@ extension QuickToDoModel: QuickToDoInputs {
         _ = self.swiftData.inputs.getItems(withCompletion: nil)
         _ = self.cloudKit.inputs.getItems() { item in
             let funcUpdate = self.swiftData.inputs.update()
-            _ = funcUpdate(item, item)
+            let data = UserDefaults.standard.object(forKey: item.id.uuidString)
+            if let data = UserDefaults.standard.object(forKey: item.id.uuidString) {
+                let newItemUD = NSKeyedUnarchiver.unarchiveObject(with: data as! Data) as! ItemUD 
+                let newItem = Item.itemDoneLens.set(newItemUD.done, item)
+                _ = funcUpdate(item, newItem)
+                UserDefaults.standard.removeObject(forKey: item.id.uuidString)
+            } else {
+                _ = funcUpdate(item, item)
+            }
         }
         
         return (true, nil)

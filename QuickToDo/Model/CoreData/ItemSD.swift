@@ -11,6 +11,7 @@ import SwiftData
 
 @Model
 class ItemSD {
+    
     var completed: Bool?
     var count: Int?
     var lastUsed: Date?

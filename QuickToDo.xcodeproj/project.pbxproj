@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E4044A622AD1926700E0FC6A /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */; };
+		E4044A642AD3351E00E0FC6A /* SwiftData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4044A632AD3351E00E0FC6A /* SwiftData.framework */; };
 		E42C85F423E8603600AB6CDD /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42C85F323E8603600AB6CDD /* MainView.swift */; };
 		E435ECE521680E0300E68960 /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE421680E0300E68960 /* CoreDataModel.swift */; };
 		E435ECE72169327000E68960 /* ManagedObjectTypeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE62169327000E68960 /* ManagedObjectTypeProtocol.swift */; };
@@ -80,6 +81,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E4044A632AD3351E00E0FC6A /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = System/Library/Frameworks/SwiftData.framework; sourceTree = SDKROOT; };
 		E404A39F1A8EBA34008D32A5 /* QuickToDo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = QuickToDo.entitlements; sourceTree = "<group>"; };
 		E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		E42C85F323E8603600AB6CDD /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -139,6 +141,7 @@
 			files = (
 				E4044A622AD1926700E0FC6A /* CloudKit.framework in Frameworks */,
 				E477E6942A76B2C5003C7FCB /* SwiftUI.framework in Frameworks */,
+				E4044A642AD3351E00E0FC6A /* SwiftData.framework in Frameworks */,
 				E477E6932A76B2C5003C7FCB /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -162,6 +165,7 @@
 		E41B97AB1A8D3E9F00BF8F51 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E4044A632AD3351E00E0FC6A /* SwiftData.framework */,
 				E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */,
 				E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */,
 				E477E6772A76B289003C7FCB /* WidgetKit.framework */,
@@ -375,9 +379,10 @@
 		E4C6E00119E7EA62003A89F7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftMigration = 0730;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1330;
+				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = "Bratislav Ljubisic";
 				TargetAttributes = {
 					E46E6E6D23F2A80600D26E00 = {
@@ -545,6 +550,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -582,7 +588,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -614,7 +620,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0;
+				MARKETING_VERSION = 3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = Persukibo.QuickToDo;
 				PRODUCT_NAME = QuickToDo;
 				PROVISIONING_PROFILE = "";
@@ -632,6 +638,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -669,11 +676,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
@@ -702,7 +708,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0;
+				MARKETING_VERSION = 3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = Persukibo.QuickToDo;
 				PRODUCT_NAME = QuickToDo;
 				PROVISIONING_PROFILE = "";
@@ -820,7 +826,7 @@
 				INFOPLIST_FILE = QuickToDoWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = QuickToDoWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2023 Bratislav Ljubisic. All rights reserved.";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -833,10 +839,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Persukibo.QuickToDo.QuickToDoWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -866,7 +875,7 @@
 				INFOPLIST_FILE = QuickToDoWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = QuickToDoWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2023 Bratislav Ljubisic. All rights reserved.";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -878,9 +887,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Persukibo.QuickToDo.QuickToDoWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
