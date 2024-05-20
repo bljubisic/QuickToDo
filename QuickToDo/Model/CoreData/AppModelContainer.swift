@@ -9,7 +9,7 @@
 import Foundation
 import SwiftData
 
-var sharedModelContainer: ModelContainer {
+var sharedModelContainer: ModelContainer = {
     let appGroupContainerID = "group.QuickToDoSharingDefaults"
     guard let appGroupContainer = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupContainerID) else {
         fatalError("Shared file container could not be created.")
@@ -21,4 +21,4 @@ var sharedModelContainer: ModelContainer {
     } catch {
         fatalError("Failed to create the model container: \(error)")
     }
-}
+}()

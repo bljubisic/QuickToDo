@@ -17,21 +17,16 @@ struct Provider: AppIntentTimelineProvider {
     
     typealias Intent = QuickToDoIntent
     
+    
     @MainActor func snapshot(for configuration: QuickToDoIntent, in context: Context) async -> SimpleEntry {
-        let descriptor = FetchDescriptor(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
-        
-        if let items = try? sharedModelContainer.mainContext.fetch(descriptor) {
-            let endIndex = (items.count > 3) ? 2 : items.count
-            let subItems = items[0 ..< endIndex]
-            
-            let entry = SimpleEntry(date: Date(), items: subItems)
-            return entry
-        }
-        return SimpleEntry(date: Date(), items: [ItemSD()])
+        let entry = SimpleEntry(date: Date(), items: [])
+        return entry
     }
     
     @MainActor func timeline(for configuration: QuickToDoIntent, in context: Context) async -> Timeline<SimpleEntry> {
-        let descriptor = FetchDescriptor(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
+        
+        let predicate = #Predicate<ItemSD> {item in item.completed == false}
+        let descriptor = FetchDescriptor(predicate: predicate, sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
         if let items = try? sharedModelContainer.mainContext.fetch(descriptor) {
             let endIndex = (items.count > 3) ? 2 : items.count
             let subItems = items[0 ..< endIndex]
@@ -78,7 +73,6 @@ struct SimpleEntry: TimelineEntry {
 }
 
 struct QuickToDoWidgetEntryView : View {
-    @Environment(\.modelContext) private var context
     var entry: Provider.Entry
     
     private func getColorRed(index: Int)-> Double {
@@ -127,12 +121,11 @@ struct QuickToDoWidgetEntryView : View {
     
     var body: some View {
         ForEach(0 ..< entry.items.count) { index in
-//            var red: Double = getColorRed(index: index)
             let red: Double = getColorRed(index: index)
             let green: Double = getColorGreen(index: index)
             let blue: Double = getColorBlue(index: index)
             HStack() {
-                Button(intent: QuickToDoIntent(), label: {
+                Button(intent: QuickToDoIntent(id: entry.items[index].uuid), label: {
                     ZStack {
                         Circle()
                             .stroke(.black, lineWidth: 2)
@@ -147,11 +140,10 @@ struct QuickToDoWidgetEntryView : View {
                 Spacer()
             }.padding(1)
         }
-        .modelContext(context)
-        .modelContainer(for: ItemSD.self)
         .containerBackground(for: .widget) {
             Color.white
         }
+        .modelContainer(sharedModelContainer)
     }
 }
 

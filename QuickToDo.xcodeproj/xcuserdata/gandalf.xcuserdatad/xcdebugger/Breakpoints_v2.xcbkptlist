@@ -114,36 +114,6 @@
             endingLineNumber = "207"
             landmarkName = "clearList()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "E02FECEC-C7EF-425C-9B51-B8440CA41CFD - dc93eaf6212df2c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDo.QuickToDoViewModel.clearList() -&gt; Swift.Bool"
-                  moduleName = "QuickToDo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/ViewModel/QuickToDoViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "210"
-                  endingLineNumber = "210">
-               </Location>
-               <Location
-                  uuid = "E02FECEC-C7EF-425C-9B51-B8440CA41CFD - b47c604b23f9bd6c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (QuickToDo.Item) -&gt; QuickToDo.Item in QuickToDo.QuickToDoViewModel.clearList() -&gt; Swift.Bool"
-                  moduleName = "QuickToDo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/ViewModel/QuickToDoViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "211"
-                  endingLineNumber = "211">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -160,36 +130,6 @@
             endingLineNumber = "210"
             landmarkName = "clearList()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "93FC5552-AE29-4BBC-B9C6-80E7687FD2B9 - dc93eaf6212df8b"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDo.QuickToDoViewModel.clearList() -&gt; Swift.Bool"
-                  moduleName = "QuickToDo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/ViewModel/QuickToDoViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "213"
-                  endingLineNumber = "213">
-               </Location>
-               <Location
-                  uuid = "93FC5552-AE29-4BBC-B9C6-80E7687FD2B9 - 6ef9476a36f63b77"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 (QuickToDo.Item) -&gt; () in QuickToDo.QuickToDoViewModel.clearList() -&gt; Swift.Bool"
-                  moduleName = "QuickToDo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/ViewModel/QuickToDoViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "214"
-                  endingLineNumber = "214">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -206,36 +146,6 @@
             endingLineNumber = "120"
             landmarkName = "getItems(completionBlock:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "CCB56700-7A22-48B9-8A23-76E67C42B7FD - 64d1c275f685d14c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 (QuickToDo.Item) -&gt; () in QuickToDo.QuickToDoViewModel.getItems(completionBlock: () -&gt; ()) -&gt; (Swift.Bool, Swift.Optional&lt;Swift.Error&gt;)"
-                  moduleName = "QuickToDo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/ViewModel/QuickToDoViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "120"
-                  endingLineNumber = "120">
-               </Location>
-               <Location
-                  uuid = "CCB56700-7A22-48B9-8A23-76E67C42B7FD - 248477f552573299"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (QuickToDo.Item) -&gt; Swift.Bool in closure #2 (QuickToDo.Item) -&gt; () in QuickToDo.QuickToDoViewModel.getItems(completionBlock: () -&gt; ()) -&gt; (Swift.Bool, Swift.Optional&lt;Swift.Error&gt;)"
-                  moduleName = "QuickToDo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/ViewModel/QuickToDoViewModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "121"
-                  endingLineNumber = "121">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -380,50 +290,6 @@
             endingLineNumber = "34"
             landmarkName = "persistentStoreCoordinator"
             landmarkType = "24">
-            <Locations>
-               <Location
-                  uuid = "0A0F7A7E-7D26-411C-B055-FD19E8580E0A - 98ce59b475edd6ce"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; Swift.Optional&lt;__C.NSPersistentStoreCoordinator&gt; in QuickToDo.CoreDataModel.persistentStoreCoordinator.getter : Swift.Optional&lt;__C.NSPersistentStoreCoordinator&gt;"
-                  moduleName = "QuickToDo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/Model/CoreData/CoreDataModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "34"
-                  endingLineNumber = "34">
-               </Location>
-               <Location
-                  uuid = "0A0F7A7E-7D26-411C-B055-FD19E8580E0A - 359bfe803596adcf"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; Swift.Optional&lt;__C.NSPersistentStoreCoordinator&gt; in QuickToDo.CoreDataModelOld.persistentStoreCoordinator.getter : Swift.Optional&lt;__C.NSPersistentStoreCoordinator&gt;"
-                  moduleName = "QuickToDo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/Model/CoreData/CoreDataModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "34"
-                  endingLineNumber = "34">
-               </Location>
-               <Location
-                  uuid = "0A0F7A7E-7D26-411C-B055-FD19E8580E0A - 359bfe803596adcf"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; Swift.Optional&lt;__C.NSPersistentStoreCoordinator&gt; in QuickToDo.CoreDataModelOld.persistentStoreCoordinator.getter : Swift.Optional&lt;__C.NSPersistentStoreCoordinator&gt;"
-                  moduleName = "QuickToDo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/Model/CoreData/CoreDataModel.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "34"
-                  endingLineNumber = "34">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -516,300 +382,10 @@
             filePath = "QuickToDoWidget/QuickToDoWidget.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "135"
-            endingLineNumber = "135"
+            startingLineNumber = "128"
+            endingLineNumber = "128"
             landmarkName = "body"
             landmarkType = "24">
-            <Locations>
-               <Location
-                  uuid = "E9BB27A4-1351-40A0-84BD-72E3AD914B91 - ced64fc01357266d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.buttonStyle&lt;&#x3c4;_0_0 where &#x3c4;_1_0: SwiftUI.PrimitiveButtonStyle&gt;(&#x3c4;_1_0) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.scaledToFit() -&gt; some&gt;&gt;.0, SwiftUI.Spacer)&gt; in closure #2 (Swift.Int, QuickToDoWidgetExtension.ItemSD) -&gt; &lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0 in QuickToDoWidgetExtension.QuickToDoWidgetEntryView.body.getter : some"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "83"
-                  endingLineNumber = "83">
-               </Location>
-               <Location
-                  uuid = "E9BB27A4-1351-40A0-84BD-72E3AD914B91 - 23c3fc1f119763c1"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; SwiftUI.ZStack&lt;SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.frame(width: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, height: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, alignment: SwiftUI.Alignment) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.frame(width: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, height: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, alignment: SwiftUI.Alignment) -&gt; some&gt;&gt;.0)&gt;&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.buttonStyle&lt;&#x3c4;_0_0 where &#x3c4;_1_0: SwiftUI.PrimitiveButtonStyle&gt;(&#x3c4;_1_0) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.scaledToFit() -&gt; some&gt;&gt;.0, SwiftUI.Spacer)&gt; in closure #2 (Swift.Int, QuickToDoWidgetExtension.ItemSD) -&gt; &lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0 in QuickToDoWidgetExtension.QuickToDoWidgetEntryView.body.getter : some"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "84"
-                  endingLineNumber = "84">
-               </Location>
-               <Location
-                  uuid = "E9BB27A4-1351-40A0-84BD-72E3AD914B91 - ced64fc013572965"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.buttonStyle&lt;&#x3c4;_0_0 where &#x3c4;_1_0: SwiftUI.PrimitiveButtonStyle&gt;(&#x3c4;_1_0) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.scaledToFit() -&gt; some&gt;&gt;.0, SwiftUI.Spacer)&gt; in closure #2 (Swift.Int, QuickToDoWidgetExtension.ItemSD) -&gt; &lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0 in QuickToDoWidgetExtension.QuickToDoWidgetEntryView.body.getter : some"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "91"
-                  endingLineNumber = "91">
-               </Location>
-               <Location
-                  uuid = "E9BB27A4-1351-40A0-84BD-72E3AD914B91 - 23c3fc1f11976cc9"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; SwiftUI.ZStack&lt;SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.frame(width: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, height: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, alignment: SwiftUI.Alignment) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.frame(width: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, height: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, alignment: SwiftUI.Alignment) -&gt; some&gt;&gt;.0)&gt;&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.buttonStyle&lt;&#x3c4;_0_0 where &#x3c4;_1_0: SwiftUI.PrimitiveButtonStyle&gt;(&#x3c4;_1_0) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.scaledToFit() -&gt; some&gt;&gt;.0, SwiftUI.Spacer)&gt; in closure #2 (Swift.Int, QuickToDoWidgetExtension.ItemSD) -&gt; &lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0 in QuickToDoWidgetExtension.QuickToDoWidgetEntryView.body.getter : some"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "92"
-                  endingLineNumber = "92">
-               </Location>
-               <Location
-                  uuid = "E9BB27A4-1351-40A0-84BD-72E3AD914B91 - ced64fc013572946"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.buttonStyle&lt;&#x3c4;_0_0 where &#x3c4;_1_0: SwiftUI.PrimitiveButtonStyle&gt;(&#x3c4;_1_0) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.scaledToFit() -&gt; some&gt;&gt;.0, SwiftUI.Spacer)&gt; in closure #2 (Swift.Int, QuickToDoWidgetExtension.ItemSD) -&gt; &lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0 in QuickToDoWidgetExtension.QuickToDoWidgetEntryView.body.getter : some"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "92"
-                  endingLineNumber = "92">
-               </Location>
-               <Location
-                  uuid = "E9BB27A4-1351-40A0-84BD-72E3AD914B91 - 23c3fc1f11976d28"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; SwiftUI.ZStack&lt;SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.frame(width: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, height: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, alignment: SwiftUI.Alignment) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.frame(width: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, height: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, alignment: SwiftUI.Alignment) -&gt; some&gt;&gt;.0)&gt;&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.buttonStyle&lt;&#x3c4;_0_0 where &#x3c4;_1_0: SwiftUI.PrimitiveButtonStyle&gt;(&#x3c4;_1_0) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.scaledToFit() -&gt; some&gt;&gt;.0, SwiftUI.Spacer)&gt; in closure #2 (Swift.Int, QuickToDoWidgetExtension.ItemSD) -&gt; &lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0 in QuickToDoWidgetExtension.QuickToDoWidgetEntryView.body.getter : some"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "93"
-                  endingLineNumber = "93">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "0BCD1D5F-0930-4B55-B902-553ECC7F1B86"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "QuickToDo/Model/Intents/QuickToDoIntent.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "61"
-            endingLineNumber = "61"
-            landmarkName = "perform()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "0BCD1D5F-0930-4B55-B902-553ECC7F1B86 - c173bb9942b02f82"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for QuickToDoWidgetExtension.QuickToDoIntent.perform() async throws -&gt; some"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/Model/Intents/QuickToDoIntent.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "48"
-                  endingLineNumber = "48">
-               </Location>
-               <Location
-                  uuid = "0BCD1D5F-0930-4B55-B902-553ECC7F1B86 - e8a9b77fcfc80ef"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.QuickToDoIntent.performDbUpdate() -&gt; Swift.Bool"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/Model/Intents/QuickToDoIntent.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "63"
-                  endingLineNumber = "63">
-               </Location>
-               <Location
-                  uuid = "0BCD1D5F-0930-4B55-B902-553ECC7F1B86 - c173bb9942b02295"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for QuickToDoWidgetExtension.QuickToDoIntent.perform() async throws -&gt; some"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/Model/Intents/QuickToDoIntent.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "71"
-                  endingLineNumber = "71">
-               </Location>
-               <Location
-                  uuid = "0BCD1D5F-0930-4B55-B902-553ECC7F1B86 - c173bb9942b02d5f"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for QuickToDoWidgetExtension.QuickToDoIntent.perform() async throws -&gt; some"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/Model/Intents/QuickToDoIntent.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "61"
-                  endingLineNumber = "61">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "325F61A4-E8EE-443A-8BB7-673D41020F5B"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "QuickToDo/Model/Intents/QuickToDoIntent.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "68"
-            endingLineNumber = "68"
-            landmarkName = "performDbUpdate()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "325F61A4-E8EE-443A-8BB7-673D41020F5B - e8a9b77fcfc81d7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.QuickToDoIntent.performDbUpdate() -&gt; Swift.Bool"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/Model/Intents/QuickToDoIntent.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "55"
-                  endingLineNumber = "55">
-               </Location>
-               <Location
-                  uuid = "325F61A4-E8EE-443A-8BB7-673D41020F5B - e8a9b77fcfc8f04"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.QuickToDoIntent.performDbUpdate() -&gt; Swift.Bool"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/Model/Intents/QuickToDoIntent.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "68"
-                  endingLineNumber = "68">
-               </Location>
-               <Location
-                  uuid = "325F61A4-E8EE-443A-8BB7-673D41020F5B - e8a9b77fcfc8ede"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.QuickToDoIntent.performDbUpdate() -&gt; Swift.Bool"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/Model/Intents/QuickToDoIntent.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "78"
-                  endingLineNumber = "78">
-               </Location>
-               <Location
-                  uuid = "325F61A4-E8EE-443A-8BB7-673D41020F5B - e8a9b77fcfc8f04"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.QuickToDoIntent.performDbUpdate() -&gt; Swift.Bool"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/Model/Intents/QuickToDoIntent.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "68"
-                  endingLineNumber = "68">
-               </Location>
-               <Location
-                  uuid = "325F61A4-E8EE-443A-8BB7-673D41020F5B - e8a9b77fcfc8f04"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.QuickToDoIntent.performDbUpdate() -&gt; Swift.Bool"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/Model/Intents/QuickToDoIntent.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "68"
-                  endingLineNumber = "68">
-               </Location>
-               <Location
-                  uuid = "325F61A4-E8EE-443A-8BB7-673D41020F5B - e8a9b77fcfc8f04"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.QuickToDoIntent.performDbUpdate() -&gt; Swift.Bool"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/Model/Intents/QuickToDoIntent.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "68"
-                  endingLineNumber = "68">
-               </Location>
-               <Location
-                  uuid = "325F61A4-E8EE-443A-8BB7-673D41020F5B - e8a9b77fcfc8f04"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.QuickToDoIntent.performDbUpdate() -&gt; Swift.Bool"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/Model/Intents/QuickToDoIntent.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "68"
-                  endingLineNumber = "68">
-               </Location>
-               <Location
-                  uuid = "325F61A4-E8EE-443A-8BB7-673D41020F5B - e8a9b77fcfc8f04"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.QuickToDoIntent.performDbUpdate() -&gt; Swift.Bool"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/Model/Intents/QuickToDoIntent.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "68"
-                  endingLineNumber = "68">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -822,68 +398,10 @@
             filePath = "QuickToDoWidget/QuickToDoWidget.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "179"
-            endingLineNumber = "179"
+            startingLineNumber = "171"
+            endingLineNumber = "171"
             landmarkName = "init()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "4A241D43-E720-4EDC-9816-356A93A3765D - 68bacfc26e215f5d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.QuickToDoWidget.init() -&gt; QuickToDoWidgetExtension.QuickToDoWidget"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "120"
-                  endingLineNumber = "120">
-               </Location>
-               <Location
-                  uuid = "4A241D43-E720-4EDC-9816-356A93A3765D - 68bacfc26e215f7c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.QuickToDoWidget.init() -&gt; QuickToDoWidgetExtension.QuickToDoWidget"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "121"
-                  endingLineNumber = "121">
-               </Location>
-               <Location
-                  uuid = "4A241D43-E720-4EDC-9816-356A93A3765D - 68bacfc26e215c33"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.QuickToDoWidget.init() -&gt; QuickToDoWidgetExtension.QuickToDoWidget"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "146"
-                  endingLineNumber = "146">
-               </Location>
-               <Location
-                  uuid = "4A241D43-E720-4EDC-9816-356A93A3765D - 68bacfc26e215d80"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.QuickToDoWidget.init() -&gt; QuickToDoWidgetExtension.QuickToDoWidget"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "133"
-                  endingLineNumber = "133">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -938,7 +456,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "C9C11797-3AA2-48DF-A569-7BA6893AFCE3"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "QuickToDo/AppDelegate.swift"
@@ -948,50 +466,6 @@
             endingLineNumber = "155"
             landmarkName = "QuickToDoApp"
             landmarkType = "14">
-            <Locations>
-               <Location
-                  uuid = "C9C11797-3AA2-48DF-A569-7BA6893AFCE3 - d1c3dbcf71093db0"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDo.QuickToDoApp.appDelegate.getter : QuickToDo.AppDelegate"
-                  moduleName = "QuickToDo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/%3Ccompiler-generated%3E"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "0"
-                  endingLineNumber = "0">
-               </Location>
-               <Location
-                  uuid = "C9C11797-3AA2-48DF-A569-7BA6893AFCE3 - 794caa934ce749f7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDo.QuickToDoApp.init() -&gt; QuickToDo.QuickToDoApp"
-                  moduleName = "QuickToDo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/AppDelegate.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "155"
-                  endingLineNumber = "155">
-               </Location>
-               <Location
-                  uuid = "C9C11797-3AA2-48DF-A569-7BA6893AFCE3 - c727c4cbac24629"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "default argument 0 of QuickToDo.QuickToDoApp.init(appDelegate: SwiftUI.UIApplicationDelegateAdaptor&lt;QuickToDo.AppDelegate&gt;) -&gt; QuickToDo.QuickToDoApp"
-                  moduleName = "QuickToDo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/AppDelegate.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "0"
-                  endingLineNumber = "0">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1008,50 +482,6 @@
             endingLineNumber = "33"
             landmarkName = "MainView"
             landmarkType = "14">
-            <Locations>
-               <Location
-                  uuid = "7DB439A9-2229-4D78-97A6-39E409F47FF5 - 4e05d0e88b376858"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "property wrapper backing initializer of QuickToDo.MainView.debounceObject : QuickToDo.DebounceObject"
-                  moduleName = "QuickToDo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/View/MainView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "0"
-                  endingLineNumber = "0">
-               </Location>
-               <Location
-                  uuid = "7DB439A9-2229-4D78-97A6-39E409F47FF5 - 8f4303e24899557b"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDo.MainView.debounceObject.getter : QuickToDo.DebounceObject"
-                  moduleName = "QuickToDo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/View/MainView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "0"
-                  endingLineNumber = "0">
-               </Location>
-               <Location
-                  uuid = "7DB439A9-2229-4D78-97A6-39E409F47FF5 - bc2baced35502f24"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDo.MainView.$debounceObject.getter : SwiftUI.ObservedObject&lt;QuickToDo.DebounceObject&gt;.Wrapper"
-                  moduleName = "QuickToDo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/View/MainView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "33"
-                  endingLineNumber = "33">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1084,50 +514,6 @@
             endingLineNumber = "234"
             landmarkName = "body"
             landmarkType = "24">
-            <Locations>
-               <Location
-                  uuid = "29C0B3E3-9EB0-48E6-BD1F-6C08A50A1F4B - 3fb6b5dc632065c7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #4 () -&gt; () in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.onAppear(perform: Swift.Optional&lt;() -&gt; ()&gt;) -&gt; some&gt;&gt;.0)&gt; in QuickToDo.MainView.body.getter : some"
-                  moduleName = "QuickToDo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/View/MainView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "234"
-                  endingLineNumber = "234">
-               </Location>
-               <Location
-                  uuid = "29C0B3E3-9EB0-48E6-BD1F-6C08A50A1F4B - 3fb6b5dc632065c7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #4 () -&gt; () in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.onAppear(perform: Swift.Optional&lt;() -&gt; ()&gt;) -&gt; some&gt;&gt;.0)&gt; in QuickToDo.MainView.body.getter : some"
-                  moduleName = "QuickToDo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/View/MainView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "234"
-                  endingLineNumber = "234">
-               </Location>
-               <Location
-                  uuid = "29C0B3E3-9EB0-48E6-BD1F-6C08A50A1F4B - 3fb6b5dc632065c7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #4 () -&gt; () in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, &lt;&lt;opaque return type of SwiftUI.View.onAppear(perform: Swift.Optional&lt;() -&gt; ()&gt;) -&gt; some&gt;&gt;.0)&gt; in QuickToDo.MainView.body.getter : some"
-                  moduleName = "QuickToDo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/View/MainView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "234"
-                  endingLineNumber = "234">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1156,10 +542,26 @@
             filePath = "QuickToDoWidget/QuickToDoWidget.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
             landmarkName = "placeholder(in:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5870DC23-30CA-4DF6-96B3-3B9826FCF94C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "QuickToDo/Model/CoreData/AppModelContainer.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "13"
+            endingLineNumber = "13"
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
