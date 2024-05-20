@@ -18,109 +18,55 @@ struct Provider: AppIntentTimelineProvider {
     typealias Intent = QuickToDoIntent
     
     @MainActor func snapshot(for configuration: QuickToDoIntent, in context: Context) async -> SimpleEntry {
-        var entries: [ItemUD] = []
-        let userDefaultsOpt = UserDefaults(suiteName: "ENT89NLKC9.group.QuickToDoSharingDefaults")
-        if let userDefaults = userDefaultsOpt {
-            let items: Dictionary<String, Data> = (userDefaults.object(forKey: "com.persukibo.items") as? Dictionary<String, Data>)!
-            items.forEach({(key: String, value: Any) in
-                do {
-                    let itemWrapped = try NSKeyedUnarchiver.unarchivedObject(ofClass: ItemUD.self, from: value as! Data)
-                    if let item = itemWrapped {
-                        if(!item.done) {
-                            entries.append(item)
-                        }
-                    }
-                } catch {
-                    print(error)
-                }
-            })
-        }
-        let endIndex = (entries.count > 3) ? 2 : entries.count
-        let subItems = entries[0 ..< endIndex]
+        let descriptor = FetchDescriptor(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
+        
+        if let items = try? sharedModelContainer.mainContext.fetch(descriptor) {
+            let endIndex = (items.count > 3) ? 2 : items.count
+            let subItems = items[0 ..< endIndex]
             
-        let entry = SimpleEntry(date: Date(), items: subItems)
-        return entry
+            let entry = SimpleEntry(date: Date(), items: subItems)
+            return entry
+        }
+        return SimpleEntry(date: Date(), items: [ItemSD()])
     }
     
     @MainActor func timeline(for configuration: QuickToDoIntent, in context: Context) async -> Timeline<SimpleEntry> {
-        var entries: [ItemUD] = []
-        let userDefaultsOpt = UserDefaults(suiteName: "group.QuickToDoSharingDefaults")
-        if let userDefaults = userDefaultsOpt {
-            let itemsWrapped: Dictionary<String, Data>? = (userDefaults.object(forKey: "com.persukibo.items") as? Dictionary<String, Data>)
-            if let items = itemsWrapped {
-                items.forEach({(key: String, value: Any) in
-                    do {
-                        let itemWrapped = try NSKeyedUnarchiver.unarchivedObject(ofClass: ItemUD.self, from: value as! Data)
-                        if let item = itemWrapped {
-                            if(!item.done) {
-                                entries.append(item)
-                            }
-                        }
-                    } catch {
-                        print(error)
-                    }
-                })
-            }
-
-        }
-        let endIndex = (entries.count > 3) ? 2 : entries.count
-        let subItems = entries[0 ..< endIndex]
+        let descriptor = FetchDescriptor(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
+        if let items = try? sharedModelContainer.mainContext.fetch(descriptor) {
+            let endIndex = (items.count > 3) ? 2 : items.count
+            let subItems = items[0 ..< endIndex]
             
-        let entry = SimpleEntry(date: Date(), items: subItems)
-        let timeline = Timeline(entries: [entry], policy: .atEnd)
-        return timeline
+            let entry = SimpleEntry(date: Date(), items: subItems)
+            let timeline = Timeline(entries: [entry], policy: .atEnd)
+            return timeline
+        }
+        return Timeline(entries: [], policy: .atEnd)
     }
     
-    @Query(sort: \ItemSD.lastUsed, animation: .smooth) private var items: [ItemSD]
-    let container: ModelContainer
     
-    @MainActor init(container: ModelContainer) {
-        self.container = container
+    @Query(sort: \ItemSD.lastUsed, animation: .smooth) private var items: [ItemSD]
+    
+    @MainActor init() {
         let descriptor = FetchDescriptor(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
-        if let items = try? container.mainContext.fetch(descriptor) {
-            let itemsExcluded = items.filter{(item) in item.completed != true}
-            var itemsDict = Dictionary<String, Data>()
-            itemsExcluded.forEach{(item) in
-                do {
-                    let tmpItem = ItemUD(id: item.uuid!, word: item.word!, done: item.completed!)
-                    let encodedData = try NSKeyedArchiver.archivedData(withRootObject: tmpItem, requiringSecureCoding: false)
-                    itemsDict[item.uuid!] = encodedData
-//                    UserDefaults.standard.set(encodedData, forKey: item.uuid!)
-                } catch {
-                    fatalError("Failed to create the model container: \(error)")
-                }
-            }
-            let userDefaultsOpt = UserDefaults(suiteName: "group.QuickToDoSharingDefaults")
-            if let userDefaults = userDefaultsOpt {
-                userDefaults.set(itemsDict, forKey: "com.persukibo.items")
-            }
+        if let items = try? sharedModelContainer.mainContext.fetch(descriptor) {
+            let endIndex = (items.count > 3) ? 2 : items.count
+            let subItems = items[0 ..< endIndex]
             
+            let entry = SimpleEntry(date: Date(), items: subItems)
         }
     }
     
     @MainActor func placeholder(in context: Context) -> SimpleEntry {
-        var entries: [ItemUD] = []
-        let userDefaultsOpt = UserDefaults(suiteName: "group.QuickToDoSharingDefaults")
-        if let userDefaults = userDefaultsOpt {
-            let items: Dictionary<String, Data> = (userDefaults.object(forKey: "com.persukibo.items") as? Dictionary<String, Data>)!
-            items.forEach({(key: String, value: Any) in
-                do {
-                    let itemWrapped = try NSKeyedUnarchiver.unarchivedObject(ofClass: ItemUD.self, from: value as! Data)
-                    if let item = itemWrapped {
-                        if(!item.done) {
-                            entries.append(item)
-                        }
-                    }
-                } catch {
-                    print(error)
-                }
-            })
-        }
-        let endIndex = (entries.count > 3) ? 2 : entries.count
-        let subItems = entries[0 ..< endIndex]
+        let descriptor = FetchDescriptor(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
+        
+        if let items = try? sharedModelContainer.mainContext.fetch(descriptor) {
+            let endIndex = (items.count > 3) ? 2 : items.count
+            let subItems = items[0 ..< endIndex]
             
-        let entry = SimpleEntry(date: Date(), items: subItems)
-        return entry
+            let entry = SimpleEntry(date: Date(), items: subItems)
+            return entry
+        }
+        return SimpleEntry(date: Date(), items: [ItemSD()])
     }
 }
 
@@ -128,21 +74,65 @@ struct Provider: AppIntentTimelineProvider {
 
 struct SimpleEntry: TimelineEntry {
     var date: Date
-    let items: ArraySlice<ItemUD>
+    let items: ArraySlice<ItemSD>
 }
 
 struct QuickToDoWidgetEntryView : View {
     @Environment(\.modelContext) private var context
     var entry: Provider.Entry
-    var container: ModelContainer
+    
+    private func getColorRed(index: Int)-> Double {
+        if index > 8 {
+            if index < 16 {
+                return Double(32 * (8 - (index - 8)))
+            } else if  index < 24 {
+                return Double(32 * (index - 16))
+            } else {
+                return 255
+            }
+        } else {
+            return 255
+        }
+    }
+    
+    private func getColorGreen(index: Int) -> Double {
+        if index < 8 {
+            return Double(32 * (8 - index))
+        } else {
+            if index > 8 {
+                return 0
+            } else if index > 24 {
+                return Double (32 * (index - 16))
+            } else {
+                return 0
+            }
+        }
+    }
+    
+    private func getColorBlue(index: Int) -> Double {
+        if index > 8 {
+            if index < 16 {
+                return Double(32 * (index - 8))
+            } else {
+                if index < 24 {
+                    return Double (32 * (8 - (index - 16)))
+                } else {
+                    return 0
+                }
+            }
+        } else {
+            return 0
+        }
+    }
     
     var body: some View {
-        ForEach(entry.items.enumerated().map({$0}), id: \.element.id) { index, item in
-            let red: Double = (index > 8 ) ? ((index < 16) ? Double(32 * (8 - (index - 8)) ) : ((index < 24) ? Double(32 * (index - 16)) : 255)) : 255
-            let green: Double = (index < 8) ? Double(32 * (8 - index)) : ((index > 8) ? 0 : ((index > 24) ? Double(32 * (index - 16)) : 0 ))
-            let blue: Double = (index > 8 ) ? ((index < 16) ? Double(32 * (index - 8)) : ((index < 24) ? Double (32 * (8 - (index - 16))) : 0)) : 0
+        ForEach(0 ..< entry.items.count) { index in
+//            var red: Double = getColorRed(index: index)
+            let red: Double = getColorRed(index: index)
+            let green: Double = getColorGreen(index: index)
+            let blue: Double = getColorBlue(index: index)
             HStack() {
-                Button(intent: QuickToDoIntent(id: item.id, container: container), label: {
+                Button(intent: QuickToDoIntent(), label: {
                     ZStack {
                         Circle()
                             .stroke(.black, lineWidth: 2)
@@ -152,7 +142,7 @@ struct QuickToDoWidgetEntryView : View {
                             .frame(width: 25.0, height: 25.0)
                     }
                 }).buttonStyle(.borderless)
-                Text(item.word)
+                Text(entry.items[index].word!)
                     .scaledToFit()
                 Spacer()
             }.padding(1)
@@ -193,12 +183,12 @@ struct QuickToDoWidget: Widget {
     }
 
     @MainActor var body: some WidgetConfiguration {
-        AppIntentConfiguration(kind: kind, intent: QuickToDoIntent.self, provider: Provider(container: self.container)) { entry in
+        AppIntentConfiguration(kind: kind, intent: QuickToDoIntent.self, provider: Provider()) { entry in
             if #available(iOS 17.0, *) {
-                QuickToDoWidgetEntryView(entry: entry, container: self.container)
+                QuickToDoWidgetEntryView(entry: entry)
                     .containerBackground(.fill.tertiary, for: .widget)
             } else {
-                QuickToDoWidgetEntryView(entry: entry, container: self.container)
+                QuickToDoWidgetEntryView(entry: entry)
                     .padding()
                     .background()
             }
@@ -211,7 +201,7 @@ struct QuickToDoWidget: Widget {
 #Preview(as: .systemSmall) {
     QuickToDoWidget()
 } timeline: {
-    let items = [ItemUD(), ItemUD(), ItemUD(), ItemUD()]
+    let items = [ItemSD(), ItemSD(), ItemSD(), ItemSD()]
     let endIndex = (items.count > 3) ? 2 : items.count
     let subItems = items[0 ..< endIndex]
     SimpleEntry(date: .now, items: subItems)

@@ -127,8 +127,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "210"
-                  endingLineNumber = "210"
-                  offsetFromSymbolStart = "48">
+                  endingLineNumber = "210">
                </Location>
                <Location
                   uuid = "E02FECEC-C7EF-425C-9B51-B8440CA41CFD - b47c604b23f9bd6c"
@@ -142,8 +141,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "211"
-                  endingLineNumber = "211"
-                  offsetFromSymbolStart = "36">
+                  endingLineNumber = "211">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -175,8 +173,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "213"
-                  endingLineNumber = "213"
-                  offsetFromSymbolStart = "180">
+                  endingLineNumber = "213">
                </Location>
                <Location
                   uuid = "93FC5552-AE29-4BBC-B9C6-80E7687FD2B9 - 6ef9476a36f63b77"
@@ -190,8 +187,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "214"
-                  endingLineNumber = "214"
-                  offsetFromSymbolStart = "48">
+                  endingLineNumber = "214">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -223,8 +219,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "120"
-                  endingLineNumber = "120"
-                  offsetFromSymbolStart = "604">
+                  endingLineNumber = "120">
                </Location>
                <Location
                   uuid = "CCB56700-7A22-48B9-8A23-76E67C42B7FD - 248477f552573299"
@@ -238,8 +233,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "121"
-                  endingLineNumber = "121"
-                  offsetFromSymbolStart = "40">
+                  endingLineNumber = "121">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -399,8 +393,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "34"
-                  endingLineNumber = "34"
-                  offsetFromSymbolStart = "400">
+                  endingLineNumber = "34">
                </Location>
                <Location
                   uuid = "0A0F7A7E-7D26-411C-B055-FD19E8580E0A - 359bfe803596adcf"
@@ -414,8 +407,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "34"
-                  endingLineNumber = "34"
-                  offsetFromSymbolStart = "400">
+                  endingLineNumber = "34">
                </Location>
                <Location
                   uuid = "0A0F7A7E-7D26-411C-B055-FD19E8580E0A - 359bfe803596adcf"
@@ -429,8 +421,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "34"
-                  endingLineNumber = "34"
-                  offsetFromSymbolStart = "540">
+                  endingLineNumber = "34">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -518,84 +509,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "74EEA1FB-1D4B-4E98-9114-01FC9C688B58"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "QuickToDoWidget/QuickToDoWidget.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "141"
-            endingLineNumber = "141"
-            landmarkName = "body"
-            landmarkType = "24">
-            <Locations>
-               <Location
-                  uuid = "74EEA1FB-1D4B-4E98-9114-01FC9C688B58 - 5b0d8cfb69757fed"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 (Swift.Int, QuickToDoWidgetExtension.ItemSD) -&gt; &lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0 in QuickToDoWidgetExtension.QuickToDoWidgetEntryView.body.getter : some"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "79"
-                  endingLineNumber = "79"
-                  offsetFromSymbolStart = "272">
-               </Location>
-               <Location
-                  uuid = "74EEA1FB-1D4B-4E98-9114-01FC9C688B58 - 5b0d8cfb697570e5"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 (Swift.Int, QuickToDoWidgetExtension.ItemSD) -&gt; &lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0 in QuickToDoWidgetExtension.QuickToDoWidgetEntryView.body.getter : some"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "87"
-                  endingLineNumber = "87"
-                  offsetFromSymbolStart = "272">
-               </Location>
-               <Location
-                  uuid = "74EEA1FB-1D4B-4E98-9114-01FC9C688B58 - 5b0d8cfb697570c6"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 (Swift.Int, QuickToDoWidgetExtension.ItemSD) -&gt; &lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0 in QuickToDoWidgetExtension.QuickToDoWidgetEntryView.body.getter : some"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "88"
-                  endingLineNumber = "88"
-                  offsetFromSymbolStart = "484">
-               </Location>
-               <Location
-                  uuid = "74EEA1FB-1D4B-4E98-9114-01FC9C688B58 - 5b0d8cfb697574aa"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 (Swift.Int, QuickToDoWidgetExtension.ItemUD) -&gt; &lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0 in QuickToDoWidgetExtension.QuickToDoWidgetEntryView.body.getter : some"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "116"
-                  endingLineNumber = "116"
-                  offsetFromSymbolStart = "352">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "E9BB27A4-1351-40A0-84BD-72E3AD914B91"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -603,8 +516,8 @@
             filePath = "QuickToDoWidget/QuickToDoWidget.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "145"
-            endingLineNumber = "145"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
             landmarkName = "body"
             landmarkType = "24">
             <Locations>
@@ -620,8 +533,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "83"
-                  endingLineNumber = "83"
-                  offsetFromSymbolStart = "420">
+                  endingLineNumber = "83">
                </Location>
                <Location
                   uuid = "E9BB27A4-1351-40A0-84BD-72E3AD914B91 - 23c3fc1f119763c1"
@@ -635,8 +547,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "84"
-                  endingLineNumber = "84"
-                  offsetFromSymbolStart = "108">
+                  endingLineNumber = "84">
                </Location>
                <Location
                   uuid = "E9BB27A4-1351-40A0-84BD-72E3AD914B91 - ced64fc013572965"
@@ -650,8 +561,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "91"
-                  endingLineNumber = "91"
-                  offsetFromSymbolStart = "420">
+                  endingLineNumber = "91">
                </Location>
                <Location
                   uuid = "E9BB27A4-1351-40A0-84BD-72E3AD914B91 - 23c3fc1f11976cc9"
@@ -665,8 +575,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "92"
-                  endingLineNumber = "92"
-                  offsetFromSymbolStart = "108">
+                  endingLineNumber = "92">
                </Location>
                <Location
                   uuid = "E9BB27A4-1351-40A0-84BD-72E3AD914B91 - ced64fc013572946"
@@ -680,8 +589,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "92"
-                  endingLineNumber = "92"
-                  offsetFromSymbolStart = "420">
+                  endingLineNumber = "92">
                </Location>
                <Location
                   uuid = "E9BB27A4-1351-40A0-84BD-72E3AD914B91 - 23c3fc1f11976d28"
@@ -695,8 +603,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "93"
-                  endingLineNumber = "93"
-                  offsetFromSymbolStart = "108">
+                  endingLineNumber = "93">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -728,8 +635,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "48"
-                  endingLineNumber = "48"
-                  offsetFromSymbolStart = "92">
+                  endingLineNumber = "48">
                </Location>
                <Location
                   uuid = "0BCD1D5F-0930-4B55-B902-553ECC7F1B86 - e8a9b77fcfc80ef"
@@ -743,8 +649,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "63"
-                  endingLineNumber = "63"
-                  offsetFromSymbolStart = "1412">
+                  endingLineNumber = "63">
                </Location>
                <Location
                   uuid = "0BCD1D5F-0930-4B55-B902-553ECC7F1B86 - c173bb9942b02295"
@@ -758,8 +663,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "71"
-                  endingLineNumber = "71"
-                  offsetFromSymbolStart = "92">
+                  endingLineNumber = "71">
                </Location>
                <Location
                   uuid = "0BCD1D5F-0930-4B55-B902-553ECC7F1B86 - c173bb9942b02d5f"
@@ -773,8 +677,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "61"
-                  endingLineNumber = "61"
-                  offsetFromSymbolStart = "92">
+                  endingLineNumber = "61">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -806,8 +709,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "55"
-                  endingLineNumber = "55"
-                  offsetFromSymbolStart = "856">
+                  endingLineNumber = "55">
                </Location>
                <Location
                   uuid = "325F61A4-E8EE-443A-8BB7-673D41020F5B - e8a9b77fcfc8f04"
@@ -821,8 +723,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "68"
-                  endingLineNumber = "68"
-                  offsetFromSymbolStart = "3348">
+                  endingLineNumber = "68">
                </Location>
                <Location
                   uuid = "325F61A4-E8EE-443A-8BB7-673D41020F5B - e8a9b77fcfc8ede"
@@ -836,8 +737,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "78"
-                  endingLineNumber = "78"
-                  offsetFromSymbolStart = "368">
+                  endingLineNumber = "78">
                </Location>
                <Location
                   uuid = "325F61A4-E8EE-443A-8BB7-673D41020F5B - e8a9b77fcfc8f04"
@@ -851,8 +751,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "68"
-                  endingLineNumber = "68"
-                  offsetFromSymbolStart = "412">
+                  endingLineNumber = "68">
                </Location>
                <Location
                   uuid = "325F61A4-E8EE-443A-8BB7-673D41020F5B - e8a9b77fcfc8f04"
@@ -866,8 +765,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "68"
-                  endingLineNumber = "68"
-                  offsetFromSymbolStart = "40">
+                  endingLineNumber = "68">
                </Location>
                <Location
                   uuid = "325F61A4-E8EE-443A-8BB7-673D41020F5B - e8a9b77fcfc8f04"
@@ -881,8 +779,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "68"
-                  endingLineNumber = "68"
-                  offsetFromSymbolStart = "108">
+                  endingLineNumber = "68">
                </Location>
                <Location
                   uuid = "325F61A4-E8EE-443A-8BB7-673D41020F5B - e8a9b77fcfc8f04"
@@ -896,8 +793,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "68"
-                  endingLineNumber = "68"
-                  offsetFromSymbolStart = "136">
+                  endingLineNumber = "68">
                </Location>
                <Location
                   uuid = "325F61A4-E8EE-443A-8BB7-673D41020F5B - e8a9b77fcfc8f04"
@@ -911,146 +807,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "68"
-                  endingLineNumber = "68"
-                  offsetFromSymbolStart = "140">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "4C827F79-3B89-4979-9797-6253EB976172"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "QuickToDoWidget/QuickToDoWidget.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
-            landmarkName = "init(container:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "4C827F79-3B89-4979-9797-6253EB976172 - 929d55dd80668cea"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.Provider.init(container: SwiftData.ModelContainer) -&gt; QuickToDoWidgetExtension.Provider"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "51"
-                  endingLineNumber = "51"
-                  offsetFromSymbolStart = "360">
-               </Location>
-               <Location
-                  uuid = "4C827F79-3B89-4979-9797-6253EB976172 - 929d55dd80668c89"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.Provider.init(container: SwiftData.ModelContainer) -&gt; QuickToDoWidgetExtension.Provider"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "52"
-                  endingLineNumber = "52"
-                  offsetFromSymbolStart = "360">
-               </Location>
-               <Location
-                  uuid = "4C827F79-3B89-4979-9797-6253EB976172 - 929d55dd80668cea"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.Provider.init(container: SwiftData.ModelContainer) -&gt; QuickToDoWidgetExtension.Provider"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "51"
-                  endingLineNumber = "51"
-                  offsetFromSymbolStart = "536">
-               </Location>
-               <Location
-                  uuid = "4C827F79-3B89-4979-9797-6253EB976172 - 929d55dd80668ca8"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.Provider.init(container: SwiftData.ModelContainer) -&gt; QuickToDoWidgetExtension.Provider"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "53"
-                  endingLineNumber = "53"
-                  offsetFromSymbolStart = "536">
-               </Location>
-               <Location
-                  uuid = "4C827F79-3B89-4979-9797-6253EB976172 - 929d55dd80668ca8"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.Provider.init(container: SwiftData.ModelContainer) -&gt; QuickToDoWidgetExtension.Provider"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "53"
-                  endingLineNumber = "53"
-                  offsetFromSymbolStart = "452">
-               </Location>
-               <Location
-                  uuid = "4C827F79-3B89-4979-9797-6253EB976172 - 929d55dd80668a1e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.Provider.init(container: SwiftData.ModelContainer) -&gt; QuickToDoWidgetExtension.Provider"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "63"
-                  endingLineNumber = "63"
-                  offsetFromSymbolStart = "548">
-               </Location>
-               <Location
-                  uuid = "4C827F79-3B89-4979-9797-6253EB976172 - 929d55dd80668916"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.Provider.init(container: SwiftData.ModelContainer) -&gt; QuickToDoWidgetExtension.Provider"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "71"
-                  endingLineNumber = "71"
-                  offsetFromSymbolStart = "548">
-               </Location>
-               <Location
-                  uuid = "4C827F79-3B89-4979-9797-6253EB976172 - 929d55dd8066886f"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "QuickToDoWidgetExtension.Provider.init(container: SwiftData.ModelContainer) -&gt; QuickToDoWidgetExtension.Provider"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "78"
-                  endingLineNumber = "78"
-                  offsetFromSymbolStart = "568">
+                  endingLineNumber = "68">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -1065,8 +822,8 @@
             filePath = "QuickToDoWidget/QuickToDoWidget.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "189"
-            endingLineNumber = "189"
+            startingLineNumber = "179"
+            endingLineNumber = "179"
             landmarkName = "init()"
             landmarkType = "7">
             <Locations>
@@ -1082,8 +839,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "120"
-                  endingLineNumber = "120"
-                  offsetFromSymbolStart = "980">
+                  endingLineNumber = "120">
                </Location>
                <Location
                   uuid = "4A241D43-E720-4EDC-9816-356A93A3765D - 68bacfc26e215f7c"
@@ -1097,8 +853,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "121"
-                  endingLineNumber = "121"
-                  offsetFromSymbolStart = "980">
+                  endingLineNumber = "121">
                </Location>
                <Location
                   uuid = "4A241D43-E720-4EDC-9816-356A93A3765D - 68bacfc26e215c33"
@@ -1112,8 +867,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "146"
-                  endingLineNumber = "146"
-                  offsetFromSymbolStart = "980">
+                  endingLineNumber = "146">
                </Location>
                <Location
                   uuid = "4A241D43-E720-4EDC-9816-356A93A3765D - 68bacfc26e215d80"
@@ -1127,149 +881,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "133"
-                  endingLineNumber = "133"
-                  offsetFromSymbolStart = "980">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "DB820CA4-14D5-4832-AC1A-CFD455B786F8"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "QuickToDoWidget/QuickToDoWidget.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "21"
-            endingLineNumber = "21"
-            landmarkName = "snapshot(for:in:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "DB820CA4-14D5-4832-AC1A-CFD455B786F8 - 2da2c4382a050d08"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for QuickToDoWidgetExtension.Provider.snapshot(for: QuickToDoWidgetExtension.QuickToDoIntent, in: WidgetKit.TimelineProviderContext) async -&gt; QuickToDoWidgetExtension.SimpleEntry"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "21"
-                  endingLineNumber = "21"
-                  offsetFromSymbolStart = "168">
-               </Location>
-               <Location
-                  uuid = "DB820CA4-14D5-4832-AC1A-CFD455B786F8 - 2da2c4382a050d08"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for QuickToDoWidgetExtension.Provider.snapshot(for: QuickToDoWidgetExtension.QuickToDoIntent, in: WidgetKit.TimelineProviderContext) async -&gt; QuickToDoWidgetExtension.SimpleEntry"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "21"
-                  endingLineNumber = "21"
-                  offsetFromSymbolStart = "152">
-               </Location>
-               <Location
-                  uuid = "DB820CA4-14D5-4832-AC1A-CFD455B786F8 - 2da2c4382a050d08"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for QuickToDoWidgetExtension.Provider.snapshot(for: QuickToDoWidgetExtension.QuickToDoIntent, in: WidgetKit.TimelineProviderContext) async -&gt; QuickToDoWidgetExtension.SimpleEntry"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "21"
-                  endingLineNumber = "21"
-                  offsetFromSymbolStart = "204">
-               </Location>
-               <Location
-                  uuid = "DB820CA4-14D5-4832-AC1A-CFD455B786F8 - 2da2c4382a050d08"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for QuickToDoWidgetExtension.Provider.snapshot(for: QuickToDoWidgetExtension.QuickToDoIntent, in: WidgetKit.TimelineProviderContext) async -&gt; QuickToDoWidgetExtension.SimpleEntry"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "21"
-                  endingLineNumber = "21"
-                  offsetFromSymbolStart = "212">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "B8466375-AB60-4B6D-82AA-9F14DB7E72D1"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "QuickToDoWidget/QuickToDoWidget.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
-            landmarkName = "timeline(for:in:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "B8466375-AB60-4B6D-82AA-9F14DB7E72D1 - e8e210bfddc365f7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for QuickToDoWidgetExtension.Provider.timeline(for: QuickToDoWidgetExtension.QuickToDoIntent, in: WidgetKit.TimelineProviderContext) async -&gt; WidgetKit.Timeline&lt;QuickToDoWidgetExtension.SimpleEntry&gt;"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "40"
-                  endingLineNumber = "40"
-                  offsetFromSymbolStart = "208">
-               </Location>
-               <Location
-                  uuid = "B8466375-AB60-4B6D-82AA-9F14DB7E72D1 - e8e210bfddc36573"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for QuickToDoWidgetExtension.Provider.timeline(for: QuickToDoWidgetExtension.QuickToDoIntent, in: WidgetKit.TimelineProviderContext) async -&gt; WidgetKit.Timeline&lt;QuickToDoWidgetExtension.SimpleEntry&gt;"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "44"
-                  endingLineNumber = "44"
-                  offsetFromSymbolStart = "208">
-               </Location>
-               <Location
-                  uuid = "B8466375-AB60-4B6D-82AA-9F14DB7E72D1 - e8e210bfddc364ad"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for QuickToDoWidgetExtension.Provider.timeline(for: QuickToDoWidgetExtension.QuickToDoIntent, in: WidgetKit.TimelineProviderContext) async -&gt; WidgetKit.Timeline&lt;QuickToDoWidgetExtension.SimpleEntry&gt;"
-                  moduleName = "QuickToDoWidgetExtension"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDoWidget/QuickToDoWidget.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "46"
-                  endingLineNumber = "46"
-                  offsetFromSymbolStart = "216">
+                  endingLineNumber = "133">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -1349,8 +961,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "0"
-                  endingLineNumber = "0"
-                  offsetFromSymbolStart = "32">
+                  endingLineNumber = "0">
                </Location>
                <Location
                   uuid = "C9C11797-3AA2-48DF-A569-7BA6893AFCE3 - 794caa934ce749f7"
@@ -1364,8 +975,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "155"
-                  endingLineNumber = "155"
-                  offsetFromSymbolStart = "100">
+                  endingLineNumber = "155">
                </Location>
                <Location
                   uuid = "C9C11797-3AA2-48DF-A569-7BA6893AFCE3 - c727c4cbac24629"
@@ -1379,8 +989,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "0"
-                  endingLineNumber = "0"
-                  offsetFromSymbolStart = "20">
+                  endingLineNumber = "0">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -1412,8 +1021,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "0"
-                  endingLineNumber = "0"
-                  offsetFromSymbolStart = "36">
+                  endingLineNumber = "0">
                </Location>
                <Location
                   uuid = "7DB439A9-2229-4D78-97A6-39E409F47FF5 - 8f4303e24899557b"
@@ -1427,8 +1035,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "0"
-                  endingLineNumber = "0"
-                  offsetFromSymbolStart = "16">
+                  endingLineNumber = "0">
                </Location>
                <Location
                   uuid = "7DB439A9-2229-4D78-97A6-39E409F47FF5 - bc2baced35502f24"
@@ -1442,8 +1049,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "33"
-                  endingLineNumber = "33"
-                  offsetFromSymbolStart = "0">
+                  endingLineNumber = "33">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -1458,8 +1064,8 @@
             filePath = "QuickToDo/Model/CoreData/SwiftDataModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "40"
-            endingLineNumber = "40"
+            startingLineNumber = "28"
+            endingLineNumber = "28"
             landmarkName = "getItems(withCompletion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1491,8 +1097,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "234"
-                  endingLineNumber = "234"
-                  offsetFromSymbolStart = "188">
+                  endingLineNumber = "234">
                </Location>
                <Location
                   uuid = "29C0B3E3-9EB0-48E6-BD1F-6C08A50A1F4B - 3fb6b5dc632065c7"
@@ -1506,8 +1111,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "234"
-                  endingLineNumber = "234"
-                  offsetFromSymbolStart = "192">
+                  endingLineNumber = "234">
                </Location>
                <Location
                   uuid = "29C0B3E3-9EB0-48E6-BD1F-6C08A50A1F4B - 3fb6b5dc632065c7"
@@ -1521,8 +1125,7 @@
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "234"
-                  endingLineNumber = "234"
-                  offsetFromSymbolStart = "172">
+                  endingLineNumber = "234">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -1553,8 +1156,8 @@
             filePath = "QuickToDoWidget/QuickToDoWidget.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "102"
-            endingLineNumber = "102"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
             landmarkName = "placeholder(in:)"
             landmarkType = "7">
          </BreakpointContent>

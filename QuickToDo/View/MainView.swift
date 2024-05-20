@@ -10,6 +10,7 @@ import SwiftUI
 import RxSwift
 import CloudKit
 import Combine
+import WidgetKit
 
 public final class DebounceObject: ObservableObject {
     @Published var text: String = ""
@@ -29,6 +30,8 @@ public final class DebounceObject: ObservableObject {
 
 
 struct MainView: View {
+    
+    @Environment(\.scenePhase) var scenePhase
     
     @StateObject var debounceObject = DebounceObject()
     
@@ -132,6 +135,7 @@ struct MainView: View {
                                 let newItem = Item.itemDoneLens.set(!item.done, item)
                                 _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
                                         print("Done")
+                                        WidgetCenter.shared.reloadAllTimelines()
                                     })
                             }, label: {
                                 if item.done {
@@ -186,7 +190,7 @@ struct MainView: View {
                             }
                             debounceObject.text = selItem.name
                         }
-                        .onChange(of: debounceObject.debouncedText) { text in
+                        .onChange(of: debounceObject.debouncedText) {
                             self.viewModel.inputs.getHints(for: debounceObject.debouncedText, withCompletion: {name1, name2 in
                                 hint1 = name1
                                 hint2 = name2
@@ -230,34 +234,68 @@ struct MainView: View {
                     print("called getItems")
                 }
            }
-            .onAppear {
-                let userDefaultsOptional = UserDefaults(suiteName: "group.QuickToDoSharingDefaults")
-                if let userDefaults = userDefaultsOptional {
-                    let itemsUserDefaultsWrapped: Dictionary<String, Data>? = (userDefaults.object(forKey: "com.persukibo.items") as? Dictionary<String, Data>)
-                    if let itemsUserDefaults = itemsUserDefaultsWrapped {
-                        do {
-                            try itemsUserDefaults.forEach { (key: String, value: Data) in
-                                NSKeyedUnarchiver.setClass(ItemUD.self, forClassName: "QuickToDoWidgetExtension.ItemUD")
-                                let itemWrapped = try NSKeyedUnarchiver.unarchivedObject(ofClass: ItemUD.self, from: value )
-                                if let itemUD = itemWrapped {
-                                    let foundItemWrapped = viewModel.itemsArray.filter{ item in
-                                        item.id.uuidString == itemUD.id
-                                    }.first
-                                    if let foundItem = foundItemWrapped {
-                                        let modifiedItem = Item.itemDoneLens.set(itemUD.done, foundItem)
-                                        _ = viewModel.update(foundItem, withItem: modifiedItem, completionBlock: {
-                                            print("Done!")
-                                        })
+            .onChange(of: scenePhase) { oldState, newState in
+                if newState == .background {
+                    print("Entered background")
+                } else if newState == .inactive {
+                    print("Became inactive")
+                } else if newState == .active {
+                    let userDefaultsOptional = UserDefaults(suiteName: "group.QuickToDoSharingDefaults")
+                    if let userDefaults = userDefaultsOptional {
+                        let itemsUserDefaultsWrapped: Dictionary<String, Data>? = (userDefaults.object(forKey: "com.persukibo.items") as? Dictionary<String, Data>)
+                        if let itemsUserDefaults = itemsUserDefaultsWrapped {
+                            do {
+                                try itemsUserDefaults.forEach { (key: String, value: Data) in
+                                    NSKeyedUnarchiver.setClass(ItemUD.self, forClassName: "QuickToDoWidgetExtension.ItemUD")
+                                    let itemWrapped = try NSKeyedUnarchiver.unarchivedObject(ofClass: ItemUD.self, from: value )
+                                    if let itemUD = itemWrapped {
+                                        let foundItemWrapped = viewModel.itemsArray.filter{ item in
+                                            item.id.uuidString == itemUD.id
+                                        }.first
+                                        if let foundItem = foundItemWrapped {
+                                            let modifiedItem = Item.itemDoneLens.set(itemUD.done, foundItem)
+                                            _ = viewModel.update(foundItem, withItem: modifiedItem, completionBlock: {
+                                                print("Done!")
+                                            })
+                                        }
                                     }
                                 }
+                                userDefaults.removeObject(forKey: "com.persukibo.items")
+                            } catch {
+                                print(error)
                             }
-                            userDefaults.removeObject(forKey: "com.persukibo.items")
-                        } catch {
-                            print(error)
                         }
                     }
                 }
             }
+//            .onAppear {
+//                let userDefaultsOptional = UserDefaults(suiteName: "group.QuickToDoSharingDefaults")
+//                if let userDefaults = userDefaultsOptional {
+//                    let itemsUserDefaultsWrapped: Dictionary<String, Data>? = (userDefaults.object(forKey: "com.persukibo.items") as? Dictionary<String, Data>)
+//                    if let itemsUserDefaults = itemsUserDefaultsWrapped {
+//                        do {
+//                            try itemsUserDefaults.forEach { (key: String, value: Data) in
+//                                NSKeyedUnarchiver.setClass(ItemUD.self, forClassName: "QuickToDoWidgetExtension.ItemUD")
+//                                let itemWrapped = try NSKeyedUnarchiver.unarchivedObject(ofClass: ItemUD.self, from: value )
+//                                if let itemUD = itemWrapped {
+//                                    let foundItemWrapped = viewModel.itemsArray.filter{ item in
+//                                        item.id.uuidString == itemUD.id
+//                                    }.first
+//                                    if let foundItem = foundItemWrapped {
+//                                        let modifiedItem = Item.itemDoneLens.set(itemUD.done, foundItem)
+//                                        _ = viewModel.update(foundItem, withItem: modifiedItem, completionBlock: {
+//                                            print("Done!")
+//                                        })
+//                                    }
+//                                }
+//                            }
+//                            userDefaults.removeObject(forKey: "com.persukibo.items")
+//                        } catch {
+//                            print(error)
+//                        }
+//                    }
+//                }
+//            }
         }
     }
     

@@ -14,22 +14,10 @@ import CloudKit
 final class SwiftDataModel: StorageProtocol {
     
     private var itemsPrivate: PublishSubject<Item?>
-    private let container: ModelContainer
     
     init() {
         itemsPrivate = PublishSubject()
         
-        let appGroupContainerID = "group.QuickToDoSharingDefaults"
-        guard let appGroupContainer = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupContainerID) else {
-            fatalError("Shared file container could not be created.")
-        }
-        let url = appGroupContainer.appendingPathComponent("QuickToDo.sqlite")
-
-        do {
-            container = try ModelContainer(for: ItemSD.self, configurations: ModelConfiguration(url: url))
-        } catch {
-            fatalError("Failed to create the model container: \(error)")
-        }
     }
     
 }
@@ -40,7 +28,7 @@ extension SwiftDataModel: StorageInputs {
         var descriptor = FetchDescriptor<ItemSD>(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
         let item = Item()
         
-        if let items = try? self.container.mainContext.fetch<ItemSD>(descriptor) {
+        if let items = try? sharedModelContainer.mainContext.fetch<ItemSD>(descriptor) {
             for item in items {
                 let tmpItem = Item(id: UUID(uuidString: item.uuid!)!,
                                    name: item.word!,
@@ -67,7 +55,7 @@ extension SwiftDataModel: StorageInputs {
                 uploadedToICloud: item.uploadedToICloud,
                 uuid: item.id.uuidString
             )
-            self.container.mainContext.insert(itemSD)
+            sharedModelContainer.mainContext.insert(itemSD)
             return (Item(id: UUID(uuidString: itemSD.uuid!)!,
                          name: itemSD.word!,
                         count: itemSD.count!,
@@ -86,7 +74,7 @@ extension SwiftDataModel: StorageInputs {
             let predicate = #Predicate<ItemSD> {item in item.word == itemWord}
             var descriptor = FetchDescriptor(predicate: predicate)
 
-            if let fetchedItems =  try? self.container.mainContext.fetch<ItemSD>(descriptor) {
+            if let fetchedItems =  try? sharedModelContainer.mainContext.fetch<ItemSD>(descriptor) {
                 if let itemSD = fetchedItems.first {
                     return (Item(id: UUID(uuidString: itemSD.uuid!)!,
                                 name: itemSD.word!,
@@ -106,7 +94,7 @@ extension SwiftDataModel: StorageInputs {
     private func updateIntoContext(withItem item: Item, itemID: String) -> (ItemSD?, Bool) {
         let predicate = #Predicate<ItemSD> { itemFound in itemFound.uuid == itemID }
         var descriptor = FetchDescriptor(predicate: predicate)
-        if let oldItems = try? self.container.mainContext.fetch<ItemSD>(descriptor) {
+        if let oldItems = try? sharedModelContainer.mainContext.fetch<ItemSD>(descriptor) {
             if let oldItem = oldItems.first {
                 oldItem.completed = item.done
                 oldItem.count = item.count
@@ -115,7 +103,7 @@ extension SwiftDataModel: StorageInputs {
                 oldItem.word = item.name
                 oldItem.uploadedToICloud = item.uploadedToICloud
                 oldItem.uuid = item.id.uuidString
-                self.container.mainContext.insert(oldItem)
+                sharedModelContainer.mainContext.insert(oldItem)
                 return (oldItem, true)
             }
         }
@@ -148,7 +136,7 @@ extension SwiftDataModel: StorageInputs {
             let descriptor = FetchDescriptor(predicate: predicate)
             let item = Item()
             
-            if let items = try? self.container.mainContext.fetch<ItemSD>(descriptor) {
+            if let items = try? sharedModelContainer.mainContext.fetch<ItemSD>(descriptor) {
                 if let item = items.first {
                     return (Item(id: UUID(uuidString: item.uuid!)!,
                                  name: item.word!,
@@ -173,7 +161,7 @@ extension SwiftDataModel: StorageInputs {
         let descriptor = FetchDescriptor(predicate: predicate)
         
 
-        if let fetchedItems = try? self.container.mainContext.fetch<ItemSD>(descriptor) {
+        if let fetchedItems = try? sharedModelContainer.mainContext.fetch<ItemSD>(descriptor) {
             for itemMO in fetchedItems.filter({(item) in item === ItemSD.self}) {
                 let tmpItem: Item = Item(id: UUID(uuidString: itemMO.uuid!)!,
                                          name: itemMO.word!,

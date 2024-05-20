@@ -64,26 +64,19 @@ struct QuickToDoIntent: AppIntent, WidgetConfigurationIntent, CustomIntentMigrat
         return .result()
     }
     
-    @MainActor private func performDbUpdate() -> Bool {
+    @MainActor private func performDbUpdate() async -> Bool {
         guard  let idUnwraped = id else {
             return false
         }
-        let userDefaultsOpt = UserDefaults(suiteName: "group.QuickToDoSharingDefaults")
-        if let userDefaults = userDefaultsOpt {
-            var itemsOpt: Dictionary<String, Data>? = (userDefaults.object(forKey: "com.persukibo.items") as? Dictionary<String, Data>)
-            if var items = itemsOpt {
-                if let data = items[idUnwraped]{
-                    let item = NSKeyedUnarchiver.unarchiveObject(with: data as! Data) as! ItemUD
-                    item.done = true
-                    let encodedData = NSKeyedArchiver.archivedData(withRootObject: item)
-                    items[idUnwraped] = encodedData
-                    userDefaults.set(items, forKey: "com.persukibo.items")
-                    userDefaults.synchronize()
-                }else{
-                    print("There is an issue")
-                }
-            }
+        let predicate = #Predicate<ItemSD> {item in item.uuid! == id}
+        let descriptor = FetchDescriptor(predicate: predicate)
+        
+        if let item = try? sharedModelContainer.mainContext.fetch<ItemSD>(descriptor).first {
+            item.completed = true
+            item.lastUsed = .now
+            sharedModelContainer.mainContext.insert(item)
         }
+        
         return true
     }
     
