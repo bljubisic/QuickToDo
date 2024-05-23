@@ -78,7 +78,7 @@ extension QuickToDoModel: QuickToDoInputs {
         self.cloudKit.inputs.prepareShare(handler: handler)
     }
     
-    func getItems() -> (Bool, Error?) {
+    func getItems() -> (Bool, Error?){
         Observable.merge([self.swiftData.outputs.items, self.cloudKit.outputs.items])
             .subscribe({(item) in
                 if let itemElement = item.element {
@@ -87,18 +87,13 @@ extension QuickToDoModel: QuickToDoInputs {
             }).disposed(by: disposeBag)
         _ = self.swiftData.inputs.getItems(withCompletion: nil)
         _ = self.cloudKit.inputs.getItems() { item in
-            let funcUpdate = self.swiftData.inputs.update()
-            let data = UserDefaults.standard.object(forKey: item.id.uuidString)
-            if let data = UserDefaults.standard.object(forKey: item.id.uuidString) {
-                let newItemUD = NSKeyedUnarchiver.unarchiveObject(with: data as! Data) as! ItemUD 
-                let newItem = Item.itemDoneLens.set(newItemUD.done, item)
-                _ = funcUpdate(item, newItem)
-                UserDefaults.standard.removeObject(forKey: item.id.uuidString)
-            } else {
-                _ = funcUpdate(item, item)
+            _ = self.items.filter{itemFiltered in itemFiltered.id == item.id}.map{itemMapped in
+                if (itemMapped.done != item.done || itemMapped.shown != item.shown) {
+                    let funcUpdate = self.swiftData.inputs.update()
+                    _ = funcUpdate(item, item)
+                }
             }
         }
-        
         return (true, nil)
     }
     

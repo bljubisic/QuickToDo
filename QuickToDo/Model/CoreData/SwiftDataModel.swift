@@ -10,14 +10,15 @@ import SwiftData
 import Foundation
 import CloudKit
 
-@MainActor
 final class SwiftDataModel: StorageProtocol {
+    
+    var modelContext: ModelContext
     
     private var itemsPrivate: PublishSubject<Item?>
     
     init() {
         itemsPrivate = PublishSubject()
-        
+        modelContext = ModelContext(sharedModelContainer)
     }
     
 }
@@ -28,7 +29,7 @@ extension SwiftDataModel: StorageInputs {
         var descriptor = FetchDescriptor<ItemSD>(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
         let item = Item()
         
-        if let items = try? sharedModelContainer.mainContext.fetch<ItemSD>(descriptor) {
+        if let items = try? self.modelContext.fetch<ItemSD>(descriptor) {
             for item in items {
                 let tmpItem = Item(id: UUID(uuidString: item.uuid!)!,
                                    name: item.word!,
@@ -55,7 +56,7 @@ extension SwiftDataModel: StorageInputs {
                 uploadedToICloud: item.uploadedToICloud,
                 uuid: item.id.uuidString
             )
-            sharedModelContainer.mainContext.insert(itemSD)
+            self.modelContext.insert(itemSD)
             return (Item(id: UUID(uuidString: itemSD.uuid!)!,
                          name: itemSD.word!,
                         count: itemSD.count!,
@@ -74,7 +75,7 @@ extension SwiftDataModel: StorageInputs {
             let predicate = #Predicate<ItemSD> {item in item.word == itemWord}
             var descriptor = FetchDescriptor(predicate: predicate)
 
-            if let fetchedItems =  try? sharedModelContainer.mainContext.fetch<ItemSD>(descriptor) {
+            if let fetchedItems =  try? self.modelContext.fetch<ItemSD>(descriptor) {
                 if let itemSD = fetchedItems.first {
                     return (Item(id: UUID(uuidString: itemSD.uuid!)!,
                                 name: itemSD.word!,
@@ -94,7 +95,7 @@ extension SwiftDataModel: StorageInputs {
     private func updateIntoContext(withItem item: Item, itemID: String) -> (ItemSD?, Bool) {
         let predicate = #Predicate<ItemSD> { itemFound in itemFound.uuid == itemID }
         var descriptor = FetchDescriptor(predicate: predicate)
-        if let oldItems = try? sharedModelContainer.mainContext.fetch<ItemSD>(descriptor) {
+        if let oldItems = try? self.modelContext.fetch<ItemSD>(descriptor) {
             if let oldItem = oldItems.first {
                 oldItem.completed = item.done
                 oldItem.count = item.count
@@ -103,7 +104,6 @@ extension SwiftDataModel: StorageInputs {
                 oldItem.word = item.name
                 oldItem.uploadedToICloud = item.uploadedToICloud
                 oldItem.uuid = item.id.uuidString
-                sharedModelContainer.mainContext.insert(oldItem)
                 return (oldItem, true)
             }
         }
@@ -136,7 +136,7 @@ extension SwiftDataModel: StorageInputs {
             let descriptor = FetchDescriptor(predicate: predicate)
             let item = Item()
             
-            if let items = try? sharedModelContainer.mainContext.fetch<ItemSD>(descriptor) {
+            if let items = try? self.modelContext.fetch<ItemSD>(descriptor) {
                 if let item = items.first {
                     return (Item(id: UUID(uuidString: item.uuid!)!,
                                  name: item.word!,
@@ -161,7 +161,7 @@ extension SwiftDataModel: StorageInputs {
         let descriptor = FetchDescriptor(predicate: predicate)
         
 
-        if let fetchedItems = try? sharedModelContainer.mainContext.fetch<ItemSD>(descriptor) {
+        if let fetchedItems = try? self.modelContext.fetch<ItemSD>(descriptor) {
             for itemMO in fetchedItems.filter({(item) in item === ItemSD.self}) {
                 let tmpItem: Item = Item(id: UUID(uuidString: itemMO.uuid!)!,
                                          name: itemMO.word!,
@@ -204,6 +204,8 @@ extension SwiftDataModel: StorageInputs {
 }
 
 extension SwiftDataModel: StorageOutputs {
+    
+    
     var items: RxSwift.Observable<Item?> {
         return itemsPrivate.subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
     }

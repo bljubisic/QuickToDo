@@ -618,7 +618,7 @@
 				INFOPLIST_FILE = QuickToDo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Simple QuickToDo";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -706,7 +706,7 @@
 				INFOPLIST_FILE = QuickToDo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Simple QuickToDo";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -945,8 +945,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.7.1;
+				branch = main;
+				kind = branch;
 			};
 		};
 		E4761D992BFB417F0092408C /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */ = {
