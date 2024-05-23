@@ -46,7 +46,7 @@ protocol StorageInputs {
     func getItemWith() -> itemProcessFind
     func update() -> itemProcessUpdate
     func getItemWithId() -> itemProcessFindWithID
-    func getHints(for itemName: String, withCompletion: (Item, Item) -> Void) -> Void
+    func getHints(for itemName: String, withCompletion: @escaping(Item, Item) -> Void) -> Void
     func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) -> Void
     func getRootRecord() -> CKRecord?
     func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?)

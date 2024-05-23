@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E4044A622AD1926700E0FC6A /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */; };
+		E4044A642AD3351E00E0FC6A /* SwiftData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4044A632AD3351E00E0FC6A /* SwiftData.framework */; };
 		E42C85F423E8603600AB6CDD /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42C85F323E8603600AB6CDD /* MainView.swift */; };
 		E435ECE521680E0300E68960 /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE421680E0300E68960 /* CoreDataModel.swift */; };
 		E435ECE72169327000E68960 /* ManagedObjectTypeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE62169327000E68960 /* ManagedObjectTypeProtocol.swift */; };
@@ -14,19 +16,30 @@
 		E435ECEB21729EB700E68960 /* QuickToDoViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECEA21729EB700E68960 /* QuickToDoViewModelProtocol.swift */; };
 		E435ECEF21890A6A00E68960 /* ItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECEE21890A6A00E68960 /* ItemTableViewCell.swift */; };
 		E435ECF121890A7900E68960 /* AddItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECF021890A7900E68960 /* AddItemTableViewCell.swift */; };
-		E44980F0283900A30009313D /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = E44980EF283900A30009313D /* RxCocoa */; };
-		E44980F2283900A30009313D /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E44980F1283900A30009313D /* RxSwift */; };
-		E44980F5283900B20009313D /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E44980F4283900B20009313D /* SnapKit */; };
-		E44C26C22A6DAE7400ECD7B6 /* SwiftDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44C26C12A6DAE7400ECD7B6 /* SwiftDataModel.swift */; };
+		E44E38C82AB8E723001ED038 /* ItemSD.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44E38C72AB8E723001ED038 /* ItemSD.swift */; };
+		E44E38C92AB8E784001ED038 /* SwiftDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44C26C12A6DAE7400ECD7B6 /* SwiftDataModel.swift */; };
 		E46E6E7123F2A80600D26E00 /* QuickToDoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46E6E7023F2A80600D26E00 /* QuickToDoTests.swift */; };
 		E46FD0E3216406220007FBB7 /* QuickToDoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46FD0E2216406220007FBB7 /* QuickToDoModel.swift */; };
-		E47AC1DC2928D3170076E170 /* SwiftyCloudKit in Frameworks */ = {isa = PBXBuildFile; productRef = E47AC1DB2928D3170076E170 /* SwiftyCloudKit */; };
+		E4761D952BFB3C980092408C /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4761D942BFB3C980092408C /* AppModelContainer.swift */; };
+		E4761D982BFB41620092408C /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = E4761D972BFB41620092408C /* RxCocoa */; };
+		E4761D9B2BFB417F0092408C /* SwiftyCloudKit in Frameworks */ = {isa = PBXBuildFile; productRef = E4761D9A2BFB417F0092408C /* SwiftyCloudKit */; };
+		E4761D9E2BFB419B0092408C /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E4761D9D2BFB419B0092408C /* SnapKit */; };
+		E4761D9F2BFB52900092408C /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4761D942BFB3C980092408C /* AppModelContainer.swift */; };
+		E477E6932A76B2C5003C7FCB /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E477E6772A76B289003C7FCB /* WidgetKit.framework */; };
+		E477E6942A76B2C5003C7FCB /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E477E6792A76B289003C7FCB /* SwiftUI.framework */; };
+		E477E6972A76B2C5003C7FCB /* QuickToDoWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E477E6962A76B2C5003C7FCB /* QuickToDoWidgetBundle.swift */; };
+		E477E6992A76B2C5003C7FCB /* QuickToDoWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = E477E6982A76B2C5003C7FCB /* QuickToDoWidget.swift */; };
+		E477E69B2A76B2C7003C7FCB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E477E69A2A76B2C7003C7FCB /* Assets.xcassets */; };
+		E477E69F2A76B2C7003C7FCB /* QuickToDoWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E477E6922A76B2C5003C7FCB /* QuickToDoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		E48005622ABA338B00DEA8F2 /* ItemSD.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44E38C72AB8E723001ED038 /* ItemSD.swift */; };
 		E4861BC0215FA0010085CFB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4861BBF215FA0010085CFB8 /* AppDelegate.swift */; };
 		E4861BC2215FA3FF0085CFB8 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */; };
 		E48B68DA215D5C3C0062B08C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48B68D9215D5C3C0062B08C /* MainViewController.swift */; };
+		E49125AE2AC7642D00DF090C /* QuickToDoIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49125AC2AC7642D00DF090C /* QuickToDoIntent.swift */; };
 		E49DE916289737EC00B70245 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = E49DE915289737EC00B70245 /* .gitignore */; };
 		E49F65FB22C379E7008D59FA /* CloudKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49F65FA22C379E7008D59FA /* CloudKitModel.swift */; };
 		E4BF3E6E21A04AFC00302EB8 /* QuickToDoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4BF3E6D21A04AFC00302EB8 /* QuickToDoViewModel.swift */; };
+		E4C11E572ABF61AA00C788E6 /* DataStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */; };
 		E4C6E01219E7EA63003A89F7 /* QuickToDo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E4C6E01019E7EA63003A89F7 /* QuickToDo.xcdatamodeld */; };
 		E4C6E01919E7EA63003A89F7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01819E7EA63003A89F7 /* Images.xcassets */; };
 		E4C6E01C19E7EA63003A89F7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01A19E7EA63003A89F7 /* LaunchScreen.xib */; };
@@ -45,9 +58,31 @@
 			remoteGlobalIDString = E4C6E00819E7EA62003A89F7;
 			remoteInfo = QuickToDo;
 		};
+		E477E69D2A76B2C7003C7FCB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E4C6E00119E7EA62003A89F7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E477E6912A76B2C5003C7FCB;
+			remoteInfo = QuickToDoWidgetExtension;
+		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		E477E68A2A76B291003C7FCB /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				E477E69F2A76B2C7003C7FCB /* QuickToDoWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		E4044A632AD3351E00E0FC6A /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = System/Library/Frameworks/SwiftData.framework; sourceTree = SDKROOT; };
 		E404A39F1A8EBA34008D32A5 /* QuickToDo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = QuickToDo.entitlements; sourceTree = "<group>"; };
 		E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		E42C85F323E8603600AB6CDD /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -58,14 +93,27 @@
 		E435ECEE21890A6A00E68960 /* ItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemTableViewCell.swift; sourceTree = "<group>"; };
 		E435ECF021890A7900E68960 /* AddItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemTableViewCell.swift; sourceTree = "<group>"; };
 		E44C26C12A6DAE7400ECD7B6 /* SwiftDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataModel.swift; sourceTree = "<group>"; };
+		E44E38C72AB8E723001ED038 /* ItemSD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSD.swift; sourceTree = "<group>"; };
 		E46E6E6E23F2A80600D26E00 /* QuickToDoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuickToDoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E46E6E7023F2A80600D26E00 /* QuickToDoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoTests.swift; sourceTree = "<group>"; };
 		E46E6E7223F2A80600D26E00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E46E774F2AC61BB700BEF784 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
+		E46E775A2AC61BB700BEF784 /* IntentsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntentsUI.framework; path = System/Library/Frameworks/IntentsUI.framework; sourceTree = SDKROOT; };
 		E46FD0E2216406220007FBB7 /* QuickToDoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoModel.swift; sourceTree = "<group>"; };
+		E47555572A9B75DE004E2530 /* QuickToDoWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickToDoWidgetExtension.entitlements; sourceTree = "<group>"; };
+		E4761D942BFB3C980092408C /* AppModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelContainer.swift; sourceTree = "<group>"; };
+		E477E6772A76B289003C7FCB /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		E477E6792A76B289003C7FCB /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		E477E6922A76B2C5003C7FCB /* QuickToDoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = QuickToDoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		E477E6962A76B2C5003C7FCB /* QuickToDoWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoWidgetBundle.swift; sourceTree = "<group>"; };
+		E477E6982A76B2C5003C7FCB /* QuickToDoWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoWidget.swift; sourceTree = "<group>"; };
+		E477E69A2A76B2C7003C7FCB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E477E69C2A76B2C7003C7FCB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E47939AA23AB8520002C7AC2 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E4861BBF215FA0010085CFB8 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		E48B68D9215D5C3C0062B08C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		E49125AC2AC7642D00DF090C /* QuickToDoIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoIntent.swift; sourceTree = "<group>"; };
 		E49DE915289737EC00B70245 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		E49F65FA22C379E7008D59FA /* CloudKitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitModel.swift; sourceTree = "<group>"; };
 		E4BF3E6D21A04AFC00302EB8 /* QuickToDoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoViewModel.swift; sourceTree = "<group>"; };
@@ -89,16 +137,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E477E68F2A76B2C5003C7FCB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E4044A622AD1926700E0FC6A /* CloudKit.framework in Frameworks */,
+				E477E6942A76B2C5003C7FCB /* SwiftUI.framework in Frameworks */,
+				E4044A642AD3351E00E0FC6A /* SwiftData.framework in Frameworks */,
+				E477E6932A76B2C5003C7FCB /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E4C6E00619E7EA62003A89F7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4761D982BFB41620092408C /* RxCocoa in Frameworks */,
 				E4F9A3791A5C146900CC0573 /* CoreData.framework in Frameworks */,
-				E44980F2283900A30009313D /* RxSwift in Frameworks */,
-				E44980F5283900B20009313D /* SnapKit in Frameworks */,
-				E47AC1DC2928D3170076E170 /* SwiftyCloudKit in Frameworks */,
-				E44980F0283900A30009313D /* RxCocoa in Frameworks */,
 				E4861BC2215FA3FF0085CFB8 /* CloudKit.framework in Frameworks */,
+				E4761D9B2BFB417F0092408C /* SwiftyCloudKit in Frameworks */,
+				E4761D9E2BFB419B0092408C /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,8 +166,13 @@
 		E41B97AB1A8D3E9F00BF8F51 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E4044A632AD3351E00E0FC6A /* SwiftData.framework */,
 				E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */,
 				E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */,
+				E477E6772A76B289003C7FCB /* WidgetKit.framework */,
+				E477E6792A76B289003C7FCB /* SwiftUI.framework */,
+				E46E774F2AC61BB700BEF784 /* Intents.framework */,
+				E46E775A2AC61BB700BEF784 /* IntentsUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -117,19 +180,14 @@
 		E435ECE321680DD900E68960 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				E44C26C12A6DAE7400ECD7B6 /* SwiftDataModel.swift */,
+				E44E38C72AB8E723001ED038 /* ItemSD.swift */,
 				E435ECE421680E0300E68960 /* CoreDataModel.swift */,
 				E435ECE62169327000E68960 /* ManagedObjectTypeProtocol.swift */,
 				E435ECE8216932FA00E68960 /* ItemMO.swift */,
+				E4761D942BFB3C980092408C /* AppModelContainer.swift */,
 			);
 			path = CoreData;
-			sourceTree = "<group>";
-		};
-		E44C26C02A6DAE4B00ECD7B6 /* SwiftData */ = {
-			isa = PBXGroup;
-			children = (
-				E44C26C12A6DAE7400ECD7B6 /* SwiftDataModel.swift */,
-			);
-			path = SwiftData;
 			sourceTree = "<group>";
 		};
 		E46E6E6F23F2A80600D26E00 /* QuickToDoTests */ = {
@@ -139,6 +197,25 @@
 				E46E6E7223F2A80600D26E00 /* Info.plist */,
 			);
 			path = QuickToDoTests;
+			sourceTree = "<group>";
+		};
+		E477E6952A76B2C5003C7FCB /* QuickToDoWidget */ = {
+			isa = PBXGroup;
+			children = (
+				E477E6962A76B2C5003C7FCB /* QuickToDoWidgetBundle.swift */,
+				E477E6982A76B2C5003C7FCB /* QuickToDoWidget.swift */,
+				E477E69A2A76B2C7003C7FCB /* Assets.xcassets */,
+				E477E69C2A76B2C7003C7FCB /* Info.plist */,
+			);
+			path = QuickToDoWidget;
+			sourceTree = "<group>";
+		};
+		E49125AB2AC7640F00DF090C /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				E49125AC2AC7642D00DF090C /* QuickToDoIntent.swift */,
+			);
+			path = Intents;
 			sourceTree = "<group>";
 		};
 		E49F65F922C379CB008D59FA /* CloudKit */ = {
@@ -152,7 +229,7 @@
 		E4AFEE3C215AB04D0001AEDA /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				E44C26C02A6DAE4B00ECD7B6 /* SwiftData */,
+				E49125AB2AC7640F00DF090C /* Intents */,
 				E49F65F922C379CB008D59FA /* CloudKit */,
 				E435ECE321680DD900E68960 /* CoreData */,
 				E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */,
@@ -185,11 +262,13 @@
 		E4C6E00019E7EA62003A89F7 = {
 			isa = PBXGroup;
 			children = (
+				E47555572A9B75DE004E2530 /* QuickToDoWidgetExtension.entitlements */,
 				E49DE915289737EC00B70245 /* .gitignore */,
 				E47939AA23AB8520002C7AC2 /* MyPlayground.playground */,
 				E4F9A3781A5C146900CC0573 /* CoreData.framework */,
 				E4C6E00B19E7EA62003A89F7 /* QuickToDo */,
 				E46E6E6F23F2A80600D26E00 /* QuickToDoTests */,
+				E477E6952A76B2C5003C7FCB /* QuickToDoWidget */,
 				E41B97AB1A8D3E9F00BF8F51 /* Frameworks */,
 				E4C6E00A19E7EA62003A89F7 /* Products */,
 			);
@@ -200,6 +279,7 @@
 			children = (
 				E4C6E00919E7EA62003A89F7 /* QuickToDo.app */,
 				E46E6E6E23F2A80600D26E00 /* QuickToDoTests.xctest */,
+				E477E6922A76B2C5003C7FCB /* QuickToDoWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -251,6 +331,25 @@
 			productReference = E46E6E6E23F2A80600D26E00 /* QuickToDoTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		E477E6912A76B2C5003C7FCB /* QuickToDoWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E477E6A02A76B2C7003C7FCB /* Build configuration list for PBXNativeTarget "QuickToDoWidgetExtension" */;
+			buildPhases = (
+				E477E68E2A76B2C5003C7FCB /* Sources */,
+				E477E68F2A76B2C5003C7FCB /* Frameworks */,
+				E477E6902A76B2C5003C7FCB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = QuickToDoWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = QuickToDoWidgetExtension;
+			productReference = E477E6922A76B2C5003C7FCB /* QuickToDoWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		E4C6E00819E7EA62003A89F7 /* QuickToDo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E4C6E02B19E7EA63003A89F7 /* Build configuration list for PBXNativeTarget "QuickToDo" */;
@@ -258,17 +357,18 @@
 				E4C6E00519E7EA62003A89F7 /* Sources */,
 				E4C6E00619E7EA62003A89F7 /* Frameworks */,
 				E4C6E00719E7EA62003A89F7 /* Resources */,
+				E477E68A2A76B291003C7FCB /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				E477E69E2A76B2C7003C7FCB /* PBXTargetDependency */,
 			);
 			name = QuickToDo;
 			packageProductDependencies = (
-				E44980EF283900A30009313D /* RxCocoa */,
-				E44980F1283900A30009313D /* RxSwift */,
-				E44980F4283900B20009313D /* SnapKit */,
-				E47AC1DB2928D3170076E170 /* SwiftyCloudKit */,
+				E4761D972BFB41620092408C /* RxCocoa */,
+				E4761D9A2BFB417F0092408C /* SwiftyCloudKit */,
+				E4761D9D2BFB419B0092408C /* SnapKit */,
 			);
 			productName = QuickToDo;
 			productReference = E4C6E00919E7EA62003A89F7 /* QuickToDo.app */;
@@ -280,9 +380,10 @@
 		E4C6E00119E7EA62003A89F7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftMigration = 0730;
-				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1330;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = "Bratislav Ljubisic";
 				TargetAttributes = {
 					E46E6E6D23F2A80600D26E00 = {
@@ -290,6 +391,9 @@
 						DevelopmentTeam = ENT89NLKC9;
 						ProvisioningStyle = Automatic;
 						TestTargetID = E4C6E00819E7EA62003A89F7;
+					};
+					E477E6912A76B2C5003C7FCB = {
+						CreatedOnToolsVersion = 15.0;
 					};
 					E4C6E00819E7EA62003A89F7 = {
 						CreatedOnToolsVersion = 6.0.1;
@@ -318,9 +422,9 @@
 			);
 			mainGroup = E4C6E00019E7EA62003A89F7;
 			packageReferences = (
-				E44980EE283900A30009313D /* XCRemoteSwiftPackageReference "RxSwift" */,
-				E44980F3283900B20009313D /* XCRemoteSwiftPackageReference "SnapKit" */,
-				E47AC1DA2928D3170076E170 /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */,
+				E4761D962BFB41620092408C /* XCRemoteSwiftPackageReference "RxSwift" */,
+				E4761D992BFB417F0092408C /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */,
+				E4761D9C2BFB419B0092408C /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = E4C6E00A19E7EA62003A89F7 /* Products */;
 			projectDirPath = "";
@@ -328,6 +432,7 @@
 			targets = (
 				E4C6E00819E7EA62003A89F7 /* QuickToDo */,
 				E46E6E6D23F2A80600D26E00 /* QuickToDoTests */,
+				E477E6912A76B2C5003C7FCB /* QuickToDoWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -337,6 +442,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E477E6902A76B2C5003C7FCB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E477E69B2A76B2C7003C7FCB /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,6 +476,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E477E68E2A76B2C5003C7FCB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E477E6972A76B2C5003C7FCB /* QuickToDoWidgetBundle.swift in Sources */,
+				E49125AE2AC7642D00DF090C /* QuickToDoIntent.swift in Sources */,
+				E477E6992A76B2C5003C7FCB /* QuickToDoWidget.swift in Sources */,
+				E48005622ABA338B00DEA8F2 /* ItemSD.swift in Sources */,
+				E4C11E572ABF61AA00C788E6 /* DataStructures.swift in Sources */,
+				E4761D9F2BFB52900092408C /* AppModelContainer.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E4C6E00519E7EA62003A89F7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -372,15 +498,17 @@
 				E4FBC6DC215AD63300F1B6E2 /* DataStructures.swift in Sources */,
 				E4C6E01219E7EA63003A89F7 /* QuickToDo.xcdatamodeld in Sources */,
 				E435ECEB21729EB700E68960 /* QuickToDoViewModelProtocol.swift in Sources */,
+				E4761D952BFB3C980092408C /* AppModelContainer.swift in Sources */,
 				E435ECEF21890A6A00E68960 /* ItemTableViewCell.swift in Sources */,
 				E49F65FB22C379E7008D59FA /* CloudKitModel.swift in Sources */,
-				E44C26C22A6DAE7400ECD7B6 /* SwiftDataModel.swift in Sources */,
 				E435ECF121890A7900E68960 /* AddItemTableViewCell.swift in Sources */,
 				E435ECE521680E0300E68960 /* CoreDataModel.swift in Sources */,
 				E4FBC6DA215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift in Sources */,
 				E435ECE72169327000E68960 /* ManagedObjectTypeProtocol.swift in Sources */,
+				E44E38C92AB8E784001ED038 /* SwiftDataModel.swift in Sources */,
 				E46FD0E3216406220007FBB7 /* QuickToDoModel.swift in Sources */,
 				E4861BC0215FA0010085CFB8 /* AppDelegate.swift in Sources */,
+				E44E38C82AB8E723001ED038 /* ItemSD.swift in Sources */,
 				E42C85F423E8603600AB6CDD /* MainView.swift in Sources */,
 				E48B68DA215D5C3C0062B08C /* MainViewController.swift in Sources */,
 			);
@@ -393,6 +521,11 @@
 			isa = PBXTargetDependency;
 			target = E4C6E00819E7EA62003A89F7 /* QuickToDo */;
 			targetProxy = E46E6E7323F2A80600D26E00 /* PBXContainerItemProxy */;
+		};
+		E477E69E2A76B2C7003C7FCB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E477E6912A76B2C5003C7FCB /* QuickToDoWidgetExtension */;
+			targetProxy = E477E69D2A76B2C7003C7FCB /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -420,6 +553,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -457,7 +591,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -484,12 +618,12 @@
 				INFOPLIST_FILE = QuickToDo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Simple QuickToDo";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0;
+				MARKETING_VERSION = 3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = Persukibo.QuickToDo;
 				PRODUCT_NAME = QuickToDo;
 				PROVISIONING_PROFILE = "";
@@ -507,6 +641,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -544,11 +679,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
@@ -572,12 +706,12 @@
 				INFOPLIST_FILE = QuickToDo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Simple QuickToDo";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0;
+				MARKETING_VERSION = 3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = Persukibo.QuickToDo;
 				PRODUCT_NAME = QuickToDo;
 				PROVISIONING_PROFILE = "";
@@ -613,6 +747,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = QuickToDoTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -645,6 +780,7 @@
 				DEVELOPMENT_TEAM = ENT89NLKC9;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = QuickToDoTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -661,6 +797,108 @@
 			};
 			name = Release;
 		};
+		E477E6A12A76B2C7003C7FCB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = QuickToDoWidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = ENT89NLKC9;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = QuickToDoWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = QuickToDoWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2023 Bratislav Ljubisic. All rights reserved.";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = Persukibo.QuickToDo.QuickToDoWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		E477E6A22A76B2C7003C7FCB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = QuickToDoWidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = ENT89NLKC9;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = QuickToDoWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = QuickToDoWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2023 Bratislav Ljubisic. All rights reserved.";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = Persukibo.QuickToDo.QuickToDoWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -669,6 +907,15 @@
 			buildConfigurations = (
 				E46E6E7523F2A80600D26E00 /* Debug */,
 				E46E6E7623F2A80600D26E00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E477E6A02A76B2C7003C7FCB /* Build configuration list for PBXNativeTarget "QuickToDoWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E477E6A12A76B2C7003C7FCB /* Debug */,
+				E477E6A22A76B2C7003C7FCB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -694,7 +941,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		E44980EE283900A30009313D /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+		E4761D962BFB41620092408C /* XCRemoteSwiftPackageReference "RxSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
 			requirement = {
@@ -702,15 +949,7 @@
 				kind = branch;
 			};
 		};
-		E44980F3283900B20009313D /* XCRemoteSwiftPackageReference "SnapKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
-			requirement = {
-				branch = develop;
-				kind = branch;
-			};
-		};
-		E47AC1DA2928D3170076E170 /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */ = {
+		E4761D992BFB417F0092408C /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/simengangstad/SwiftyCloudKit";
 			requirement = {
@@ -718,28 +957,31 @@
 				kind = branch;
 			};
 		};
+		E4761D9C2BFB419B0092408C /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E44980EF283900A30009313D /* RxCocoa */ = {
+		E4761D972BFB41620092408C /* RxCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E44980EE283900A30009313D /* XCRemoteSwiftPackageReference "RxSwift" */;
+			package = E4761D962BFB41620092408C /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxCocoa;
 		};
-		E44980F1283900A30009313D /* RxSwift */ = {
+		E4761D9A2BFB417F0092408C /* SwiftyCloudKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E44980EE283900A30009313D /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxSwift;
-		};
-		E44980F4283900B20009313D /* SnapKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E44980F3283900B20009313D /* XCRemoteSwiftPackageReference "SnapKit" */;
-			productName = SnapKit;
-		};
-		E47AC1DB2928D3170076E170 /* SwiftyCloudKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E47AC1DA2928D3170076E170 /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */;
+			package = E4761D992BFB417F0092408C /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */;
 			productName = SwiftyCloudKit;
+		};
+		E4761D9D2BFB419B0092408C /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E4761D9C2BFB419B0092408C /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 

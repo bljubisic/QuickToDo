@@ -74,6 +74,36 @@ extension QuickToDoConfig {
     )
 }
 
+public class ItemUD: NSObject, NSSecureCoding {
+    public static var supportsSecureCoding: Bool = true
+    
+    let id: String
+    let word: String
+    var done: Bool
+    
+    public init(id: String, word: String, done: Bool) {
+        self.id = id
+        self.word = word
+        self.done = done
+    }
+    
+    public override init() {
+        self.done = false
+        self.word = ""
+        self.id = ""
+    }
+    required public init(coder decoder: NSCoder) {
+        self.id = decoder.decodeObject(forKey: "id") as? String ?? ""
+        self.word = decoder.decodeObject(forKey: "word") as? String ?? ""
+        self.done = decoder.decodeBool(forKey: "done")
+    }
+    public func encode(with coder: NSCoder) {
+        coder.encode(id, forKey: "id")
+        coder.encode(word, forKey: "word")
+        coder.encode(done, forKey: "done")
+    }
+}
+
 public struct Item {
     
     public let id: UUID

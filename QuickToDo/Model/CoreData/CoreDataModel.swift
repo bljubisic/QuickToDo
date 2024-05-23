@@ -11,7 +11,7 @@ import CoreData
 import RxSwift
 import CloudKit
 //MARK: StorageProtocol
-final class CoreDataModel: StorageProtocol {
+final class CoreDataModelOld: StorageProtocol {
 
     private var itemsPrivate: PublishSubject<Item?>
     
@@ -30,12 +30,17 @@ final class CoreDataModel: StorageProtocol {
     lazy private var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
         // The persistent store coordinator for the application. This implementation creates and return a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
         // Create the coordinator and store
+        objc_sync_enter(self)
         var coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
-        let url = self.applicationDocumentsDirectory!.appendingPathComponent("QuickToDo.sqlite")
+        let url = self.applicationDocumentsDirectory!.appendingPathComponent("QuickToDo1.sqlite")
+        if let description = container.persistentStoreDescriptions.first {
+            description.url = url
+            description.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
+        }
+        
         var error: NSError? = nil
         var failureReason = "There was an error creating or loading the application's saved data."
         do {
-            
             try coordinator!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: nil)
             
             //error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict as! [NSObject : AnyObject])
@@ -52,6 +57,7 @@ final class CoreDataModel: StorageProtocol {
             dict[NSLocalizedFailureReasonErrorKey] = failureReason
             dict[NSUnderlyingErrorKey] = error
         }
+        objc_sync_exit(self)
         return coordinator
     }()
     
@@ -66,12 +72,14 @@ final class CoreDataModel: StorageProtocol {
         return managedObjectContext
     }()
     
+    lazy private var container = NSPersistentContainer(name: "Item", managedObjectModel: managedObjectModel)
+    
     init() {
         itemsPrivate = PublishSubject()
     }
 }
 //MARK: StorageInputs
-extension CoreDataModel: StorageInputs {
+extension CoreDataModelOld: StorageInputs {
     func getItemWithId() -> itemProcessFindWithID {
         return {id in
             let item = Item()
@@ -228,7 +236,7 @@ extension CoreDataModel: StorageInputs {
     }
 }
 
-extension CoreDataModel: StorageOutputs {
+extension CoreDataModelOld: StorageOutputs {
     var items: Observable<Item?> {
         return itemsPrivate.subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
     }
