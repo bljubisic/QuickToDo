@@ -45,9 +45,7 @@ struct QuickToDoIntent: AppIntent, WidgetConfigurationIntent, CustomIntentMigrat
     
     func perform() async throws -> some IntentResult {
 
-        print("Performing an intent :)")
         let _ = await self.performDbUpdate()
-//        let _ = self.performCloudKitUpdate()
         return .result()
     }
     
@@ -66,6 +64,7 @@ struct QuickToDoIntent: AppIntent, WidgetConfigurationIntent, CustomIntentMigrat
             }
         } catch {
             print(error)
+            return false
         }
         
         return true

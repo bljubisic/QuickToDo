@@ -120,30 +120,39 @@ struct QuickToDoWidgetEntryView : View {
     }
     
     var body: some View {
-        ForEach(0 ..< entry.items.count) { index in
-            let red: Double = getColorRed(index: index)
-            let green: Double = getColorGreen(index: index)
-            let blue: Double = getColorBlue(index: index)
-            HStack() {
-                Button(intent: QuickToDoIntent(id: entry.items[index].uuid), label: {
-                    ZStack {
-                        Circle()
-                            .stroke(.black, lineWidth: 2)
-                            .frame(width: 35.0, height: 35.0)
-                        Circle()
-                            .stroke(Color(red: red/255, green: green/255, blue: blue/255))
-                            .frame(width: 25.0, height: 25.0)
-                    }
-                }).buttonStyle(.borderless)
-                Text(entry.items[index].word!)
-                    .scaledToFit()
-                Spacer()
-            }.padding(1)
+        if(entry.items.count > 0) {
+            ForEach(0 ..< entry.items.count) { index in
+                let red: Double = getColorRed(index: index)
+                let green: Double = getColorGreen(index: index)
+                let blue: Double = getColorBlue(index: index)
+                HStack() {
+                    Button(intent: QuickToDoIntent(id: entry.items[index].uuid), label: {
+                        ZStack {
+                            Circle()
+                                .stroke(.black, lineWidth: 2)
+                                .frame(width: 35.0, height: 35.0)
+                            Circle()
+                                .stroke(Color(red: red/255, green: green/255, blue: blue/255))
+                                .frame(width: 25.0, height: 25.0)
+                        }
+                    }).buttonStyle(.borderless)
+                    Text(entry.items[index].word!)
+                        .scaledToFit()
+                    Spacer()
+                }.padding(1)
+            }
+            .containerBackground(for: .widget) {
+                Color.white
+            }
+            .modelContainer(sharedModelContainer)
         }
-        .containerBackground(for: .widget) {
-            Color.white
+        else {
+            Text("No more Items")
+                .containerBackground(for: .widget) {
+                    Color.white
+                }
+                .modelContainer(sharedModelContainer)
         }
-        .modelContainer(sharedModelContainer)
     }
 }
 
