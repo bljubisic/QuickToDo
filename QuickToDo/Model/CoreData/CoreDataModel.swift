@@ -117,8 +117,8 @@ extension CoreDataModelOld: StorageInputs {
     func getZone() -> CKRecordZone? {
         return nil
     }
-    func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
-        
+    func prepareShare() -> (CKShare?, CKContainer?) {
+        return (nil, nil)
     }
     
     func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?) {

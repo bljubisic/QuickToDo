@@ -48,6 +48,7 @@ extension QuickToDoModel: QuickToDoOutputs {
 
 // MARK: QuickToDoInputs
 extension QuickToDoModel: QuickToDoInputs {
+    
     func save(config: QuickToDoConfig) -> (Bool, Error?) {
         configPriv = QuickToDoConfig.showDoneItemsLens.set(config.showDoneItems, configPriv)
         if let encodedConfig = try? JSONEncoder().encode(configPriv) {
@@ -74,8 +75,8 @@ extension QuickToDoModel: QuickToDoInputs {
         return self.cloudKit.inputs.getZone()
     }
     
-    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
-        self.cloudKit.inputs.prepareShare(handler: handler)
+    func prepareSharing() async -> (CKShare?, CKContainer?) {
+        return await self.cloudKit.inputs.prepareShare()
     }
     
     func getItems() -> (Bool, Error?){

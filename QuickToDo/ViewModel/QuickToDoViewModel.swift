@@ -33,6 +33,7 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, ObservableObject {
 }
 //MARK: QuickToDoViewModelInputs
 extension QuickToDoViewModel: QuickToDoViewModelInputs {
+    
     func save(config: Bool) -> (Bool, Error?) {
         let config = QuickToDoConfig(showDoneItems: config)
         return self.model.inputs.save(config: config)
@@ -55,8 +56,8 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
         return self.model.inputs.getZone()
     }
     
-    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
-        self.model.inputs.prepareSharing(handler: handler)
+    func prepareSharing() async -> (CKShare?, CKContainer?) {
+        return await self.model.inputs.prepareSharing()
     }
     
     func add(_ newItem: Item) -> (Bool, Error?) {

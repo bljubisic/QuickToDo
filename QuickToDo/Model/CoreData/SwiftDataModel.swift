@@ -184,8 +184,8 @@ extension SwiftDataModel: StorageInputs {
 
     }
     
-    func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
-        
+    func prepareShare() -> (CKShare?, CKContainer?) {
+        return (nil, nil)
     }
     
     func getRootRecord() -> CKRecord? {

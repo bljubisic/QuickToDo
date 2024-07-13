@@ -11,6 +11,7 @@ import RxSwift
 import CloudKit
 import Combine
 import WidgetKit
+import UserNotifications
 
 public final class DebounceObject: ObservableObject {
     @Published var text: String = ""
@@ -43,6 +44,9 @@ struct MainView: View {
     @State private var text = ""
     @State private var shown: Bool = false
     @State private var selectedItem: Item?
+    @State private var isSharing = false
+    @State private var activeShare: CKShare?
+    @State private var activeContainer: CKContainer?
     
     init(viewModel: QuickToDoViewModelProtoocol) {
 //        self.viewModel = viewModel as! ViewModelMocked
@@ -67,14 +71,36 @@ struct MainView: View {
                             .resizable()
                             .frame(width: 20.0, height: 20.0)
                     })
-                    Text("Refresh")
+                    Text("Refresh all")
                         .fontWeight(.semibold)
                         .foregroundColor(Color.blue)
                         .font(.system(size: 12,  design: .rounded))
-                        .frame(width: 80.0, height: 20.0)
+                        .frame(width: 70.0, height: 20.0)
                 }
-                .padding()
-                Spacer()
+                VStack() {
+                    Button(action: {
+                        Task {
+                            let shareReturn = await self.viewModel.inputs.prepareSharing()
+                            if let share = shareReturn.0, let container = shareReturn.1 {
+                                activeShare = share
+                                activeContainer = container
+                                isSharing = true
+                            }
+                        }
+                    }, label: {
+                        Image(systemName: "square.and.arrow.up")
+                            .resizable()
+                            .frame(width: 20.0, height: 20.0)
+                    })
+                    Text("Share all")
+                        .fontWeight(.semibold)
+                        .foregroundColor(Color.blue)
+                        .font(.system(size: 12,  design: .rounded))
+                        .frame(width: 70.0, height: 20.0)
+                }
+                .sheet(isPresented: $isSharing) {
+                    shareView()
+                }
                 VStack() {
                     Button(action: {
                         _ = self.viewModel.inputs.clearList()
@@ -87,7 +113,7 @@ struct MainView: View {
                         .fontWeight(.semibold)
                         .foregroundColor(Color.blue)
                         .font(.system(size: 12,  design: .rounded))
-                        .frame(width: 80.0, height: 20.0)
+                        .frame(width: 70.0, height: 20.0)
                 }
 
                 VStack() {
@@ -103,7 +129,7 @@ struct MainView: View {
                         .fontWeight(.semibold)
                         .foregroundColor(Color.blue)
                         .font(.system(size: 12,  design: .rounded))
-                        .frame(width: 80.0, height: 20.0)
+                        .frame(width: 70.0, height: 20.0)
                 }
 
                 VStack() {
@@ -114,20 +140,20 @@ struct MainView: View {
                             .resizable()
                             .frame(width: 30.0, height: 20.0)
                     })
-                    Text("Update")
+                    Text("Update all")
                         .fontWeight(.semibold)
                         .foregroundColor(Color.blue)
                         .font(.system(size: 12,  design: .rounded))
-                        .frame(width: 80.0, height: 20.0)
+                        .frame(width: 70.0, height: 20.0)
                 }
 
             }
             .padding()
             List() {
                 ForEach(self.viewModel.outputs.itemsArray.enumerated().map({$0}), id: \.element.id) { index, item in
-                    let red: Double = (index > 8 ) ? ((index < 16) ? Double(32 * (8 - (index - 8)) ) : ((index < 24) ? Double(32 * (index - 16)) : 255)) : 255
-                    let green: Double = (index < 8) ? Double(32 * (8 - index)) : ((index > 8) ? 0 : ((index > 24) ? Double(32 * (index - 16)) : 0 ))
-                    let blue: Double = (index > 8 ) ? ((index < 16) ? Double(32 * (index - 8)) : ((index < 24) ? Double (32 * (8 - (index - 16))) : 0)) : 0
+                    let red: Double = getColorRed(index: index)
+                    let green: Double = getColorGreen(index: index)
+                    let blue: Double = getColorBlue(index: index)
                     if (((!shown && !item.done) || (shown)) && item.shown) {
                         HStack() {
                             Button(action: {
@@ -245,34 +271,50 @@ struct MainView: View {
                     }
                 }
             }
-//            .onAppear {
-//                let userDefaultsOptional = UserDefaults(suiteName: "group.QuickToDoSharingDefaults")
-//                if let userDefaults = userDefaultsOptional {
-//                    let itemsUserDefaultsWrapped: Dictionary<String, Data>? = (userDefaults.object(forKey: "com.persukibo.items") as? Dictionary<String, Data>)
-//                    if let itemsUserDefaults = itemsUserDefaultsWrapped {
-//                        do {
-//                            try itemsUserDefaults.forEach { (key: String, value: Data) in
-//                                NSKeyedUnarchiver.setClass(ItemUD.self, forClassName: "QuickToDoWidgetExtension.ItemUD")
-//                                let itemWrapped = try NSKeyedUnarchiver.unarchivedObject(ofClass: ItemUD.self, from: value )
-//                                if let itemUD = itemWrapped {
-//                                    let foundItemWrapped = viewModel.itemsArray.filter{ item in
-//                                        item.id.uuidString == itemUD.id
-//                                    }.first
-//                                    if let foundItem = foundItemWrapped {
-//                                        let modifiedItem = Item.itemDoneLens.set(itemUD.done, foundItem)
-//                                        _ = viewModel.update(foundItem, withItem: modifiedItem, completionBlock: {
-//                                            print("Done!")
-//                                        })
-//                                    }
-//                                }
-//                            }
-//                            userDefaults.removeObject(forKey: "com.persukibo.items")
-//                        } catch {
-//                            print(error)
-//                        }
-//                    }
-//                }
-//            }
+        }
+    }
+    
+    private func getColorRed(index: Int)-> Double {
+        if index > 8 {
+            if index < 16 {
+                return Double(32 * (8 - (index - 8)))
+            } else if  index < 24 {
+                return Double(32 * (index - 16))
+            } else {
+                return 255
+            }
+        } else {
+            return 255
+        }
+    }
+    
+    private func getColorGreen(index: Int) -> Double {
+        if index < 8 {
+            return Double(32 * (8 - index))
+        } else {
+            if index > 8 {
+                return 0
+            } else if index > 24 {
+                return Double (32 * (index - 16))
+            } else {
+                return 0
+            }
+        }
+    }
+    
+    private func getColorBlue(index: Int) -> Double {
+        if index > 8 {
+            if index < 16 {
+                return Double(32 * (index - 8))
+            } else {
+                if index < 24 {
+                    return Double (32 * (8 - (index - 16)))
+                } else {
+                    return 0
+                }
+            }
+        } else {
+            return 0
         }
     }
     
@@ -288,7 +330,17 @@ struct MainView: View {
             lastUsedAt: Date())
         )
     }
+    
+    private func shareView() -> CloudShareView? {
+        guard let share = activeShare, let container = activeContainer else {
+            return nil
+        }
+
+        return CloudShareView(container: container, share: share)
+    }
 }
+
+
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
@@ -319,8 +371,8 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
     func getRootRecord() -> CKRecord? {
         return nil
     }
-    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
-        
+    func prepareSharing() async -> (CKShare?, CKContainer?){
+        return (nil, nil)
     }
     
     func uploadToCloud(items: [Item]) -> (Bool, Error?) {
@@ -397,8 +449,8 @@ final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInpu
     func getRootRecord() -> CKRecord? {
         return nil
     }
-    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
-        
+    func prepareSharing() async -> (CKShare?, CKContainer?) {
+        return (nil, nil)
     }
     
     func add(_ newItem: Item) -> (Bool, Error?) {

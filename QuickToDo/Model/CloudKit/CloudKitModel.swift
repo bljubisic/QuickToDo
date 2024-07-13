@@ -38,10 +38,10 @@ final class CloudKitModel: StorageProtocol {
                 return
             }
             if(subscriptionsUnwrapped.isEmpty) {
-                let newSubscription = CKQuerySubscription(recordType: "Items", predicate: NSPredicate(value: true), options: [.firesOnRecordCreation, .firesOnRecordDeletion])
+                let newSubscription = CKQuerySubscription(recordType: "Items", predicate: NSPredicate(value: true), options: [.firesOnRecordCreation, .firesOnRecordDeletion, .firesOnRecordUpdate])
                 let notification = CKSubscription.NotificationInfo()
                 notification.shouldSendContentAvailable = true
-                notification.alertBody = "New Item has been added!!"
+                notification.alertBody = "ToDo list has been changed"
                 newSubscription.notificationInfo = notification
                 self.database.save(newSubscription) { (subscription, error) in
                     if let error = error {
@@ -103,6 +103,7 @@ final class CloudKitModel: StorageProtocol {
 }
 //MARK: StorageInputs extension
 extension CloudKitModel: StorageInputs {
+    
     func getItemWithId() -> itemProcessFindWithID {
         return { id in
 
@@ -147,21 +148,29 @@ extension CloudKitModel: StorageInputs {
         return(true, nil)
     }
     
-    func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
-        let share = CKShare(rootRecord: self.rootRecord)
-
-        share[CKShare.SystemFieldKey.title] = "Sharing list" as CKRecordValue?
-
-        share[CKShare.SystemFieldKey.shareType] = "QuickToDo" as CKRecordValue
-        
-        let modRecordsList = CKModifyRecordsOperation(recordsToSave: [self.rootRecord, share], recordIDsToDelete: nil)
-         
-        modRecordsList.modifyRecordsCompletionBlock = {
-            (record, recordID, error) in
-             
-            handler(share, CKContainer.default(), error)
+    func prepareShare() async -> (CKShare?, CKContainer?) {
+        do {
+            let share = CKShare(rootRecord: self.rootRecord)
+            
+            share[CKShare.SystemFieldKey.title] = "Sharing list" as CKRecordValue?
+            
+            share[CKShare.SystemFieldKey.shareType] = "QuickToDo" as CKRecordValue
+            
+            _ =  try await self.database.modifyRecords(saving:  [self.rootRecord, share], deleting: [])
+            
+            return (share, container)
+//            let modRecordsList = CKModifyRecordsOperation(recordsToSave: [self.rootRecord, share], recordIDsToDelete: nil)
+            
+        } catch {
+            print(error)
+            return (nil, nil)
         }
-        CKContainer.default().privateCloudDatabase.add(modRecordsList)
+//        modRecordsList.modifyRecordsCompletionBlock = {
+//            (record, recordID, error) in
+//             
+//            handler(share, CKContainer.default(), error)
+//        }
+//        CKContainer.default().privateCloudDatabase.add(modRecordsList)
     }
     
 

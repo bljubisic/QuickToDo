@@ -15,7 +15,7 @@ protocol QuickToDoInputs {
     func update(_ item: Item, withItem: Item) -> (Bool, Error?)
     func getHints(for itemName: String) -> Observable<String>
     func getItems() -> (Bool, Error?)
-    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) -> Void
+    func prepareSharing() async -> (CKShare?, CKContainer?)
     func getRootRecord() -> CKRecord?
     func getZone() -> CKRecordZone?
     func uploadToCloud(items: [Item]) -> (Bool, Error?)
@@ -47,7 +47,7 @@ protocol StorageInputs {
     func update() -> itemProcessUpdate
     func getItemWithId() -> itemProcessFindWithID
     func getHints(for itemName: String, withCompletion: @escaping(Item, Item) -> Void) -> Void
-    func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) -> Void
+    func prepareShare() async -> (CKShare?, CKContainer?)
     func getRootRecord() -> CKRecord?
     func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?)
     func getZone() -> CKRecordZone?
