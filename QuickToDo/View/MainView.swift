@@ -54,6 +54,54 @@ struct MainView: View {
         
     }
     
+    
+    private func getColorRed(index: Int)-> Double {
+        let indexUsed = (index > 24) ? (index % (24 * (index / 24))) : index
+        if indexUsed > 8 {
+            if indexUsed < 16 {
+                return Double(32 * (8 - (indexUsed - 8)))
+            } else if  indexUsed < 24 {
+                return Double(32 * (indexUsed - 16))
+            } else {
+                return 255
+            }
+        } else {
+            return 255
+        }
+    }
+    
+    private func getColorGreen(index: Int) -> Double {
+        let indexUsed = (index > 24) ? (index % (24 * (index / 24))) : index
+        if indexUsed < 8 {
+            return Double(32 * (8 - indexUsed))
+        } else {
+            if indexUsed > 8 {
+                return 0
+            } else if indexUsed > 24 {
+                return Double (32 * (indexUsed  - 16))
+            } else {
+                return 0
+            }
+        }
+    }
+    
+    private func getColorBlue(index: Int) -> Double {
+        let indexUsed = (index > 24) ? (index % (24 * (index / 24))) : index
+        if  indexUsed > 8 {
+            if indexUsed < 16 {
+                return Double(32 * (indexUsed - 8))
+            } else {
+                if indexUsed < 24 {
+                    return Double (32 * (8 - (indexUsed - 16)))
+                } else {
+                    return 0
+                }
+            }
+        } else {
+            return 0
+        }
+    }
+    
     var body: some View {
         VStack() {
             HStack() {
@@ -125,13 +173,13 @@ struct MainView: View {
             .padding()
             List() {
                 ForEach(self.viewModel.outputs.itemsArray.enumerated().map({$0}), id: \.element.id) { index, item in
-                    let red: Double = (index > 8 ) ? ((index < 16) ? Double(32 * (8 - (index - 8)) ) : ((index < 24) ? Double(32 * (index - 16)) : 255)) : 255
-                    let green: Double = (index < 8) ? Double(32 * (8 - index)) : ((index > 8) ? 0 : ((index > 24) ? Double(32 * (index - 16)) : 0 ))
-                    let blue: Double = (index > 8 ) ? ((index < 16) ? Double(32 * (index - 8)) : ((index < 24) ? Double (32 * (8 - (index - 16))) : 0)) : 0
+                    let red: Double = getColorRed(index: index)
+                    let green: Double = getColorGreen(index: index)
+                    let blue: Double = getColorBlue(index: index)
                     if (((!shown && !item.done) || (shown)) && item.shown) {
                         HStack() {
                             Button(action: {
-                                print("Tapped \(item.name): \(red) : \(green): \(blue)")
+//                                print("Tapped \(item.name) : \(index) \((index % (24 * (index / 24)))) : \(red) : \(green): \(blue)")
                                 let newItem = Item.itemDoneLens.set(!item.done, item)
                                 _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
                                         print("Done")

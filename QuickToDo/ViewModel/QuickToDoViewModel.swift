@@ -106,6 +106,11 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
     
     func update(_ item: Item, withItem: Item, completionBlock: @escaping () -> Void) -> (Bool, Error?) {
         _ = self.model.inputs.update(item, withItem: withItem)
+        if let i = itemsArray.firstIndex(where: { item in
+            item.id == withItem.id
+        }) {
+            itemsArray[i] = withItem
+        }
         completionBlock()
         return (true, nil)
     }
