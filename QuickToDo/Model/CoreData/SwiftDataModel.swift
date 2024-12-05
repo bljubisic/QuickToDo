@@ -57,6 +57,7 @@ extension SwiftDataModel: StorageInputs {
                 uuid: item.id.uuidString
             )
             self.modelContext.insert(itemSD)
+            try? self.modelContext.save()
             return (Item(id: UUID(uuidString: itemSD.uuid!)!,
                          name: itemSD.word!,
                         count: itemSD.count!,
