@@ -109,6 +109,7 @@ struct MainView: View {
                     Button(action: {
                         _ = self.viewModel.inputs.getItems {
                             print("called getItems")
+                            WidgetCenter.shared.reloadAllTimelines()
                         }
                     }, label: {
                         Image(systemName: "arrow.clockwise.circle")
@@ -126,6 +127,7 @@ struct MainView: View {
                 VStack() {
                     Button(action: {
                         _ = self.viewModel.inputs.clearList()
+                        WidgetCenter.shared.reloadAllTimelines()
                     }, label: {
                         Image(systemName: "cart.badge.minus")
                             .resizable()
@@ -225,6 +227,7 @@ struct MainView: View {
                                 let newItem = Item.itemShownLens.set(!item.shown, item)
                                 _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
                                     print("Done")
+                                    WidgetCenter.shared.reloadAllTimelines()
                                 })
                             }) {Label("Delete", systemImage: "trash")}
                         }
@@ -255,7 +258,7 @@ struct MainView: View {
                             } else {
                                 self.addItem(debounceObject.text)
                             }
-                            
+                            WidgetCenter.shared.reloadAllTimelines()
                             debounceObject.text = ""
                         }
                     HStack() {
@@ -280,6 +283,7 @@ struct MainView: View {
                 print("start refresh")
                 _ = self.viewModel.inputs.getItems {
                     print("called getItems")
+                    WidgetCenter.shared.reloadAllTimelines()
                 }
            }
             .onChange(of: scenePhase) { oldState, newState in
@@ -290,37 +294,10 @@ struct MainView: View {
                 } else if newState == .active {
                     _ = self.viewModel.inputs.getItems {
             //            print("called getItems")
+                        WidgetCenter.shared.reloadAllTimelines()
                     }
                 }
             }
-//            .onAppear {
-//                let userDefaultsOptional = UserDefaults(suiteName: "group.QuickToDoSharingDefaults")
-//                if let userDefaults = userDefaultsOptional {
-//                    let itemsUserDefaultsWrapped: Dictionary<String, Data>? = (userDefaults.object(forKey: "com.persukibo.items") as? Dictionary<String, Data>)
-//                    if let itemsUserDefaults = itemsUserDefaultsWrapped {
-//                        do {
-//                            try itemsUserDefaults.forEach { (key: String, value: Data) in
-//                                NSKeyedUnarchiver.setClass(ItemUD.self, forClassName: "QuickToDoWidgetExtension.ItemUD")
-//                                let itemWrapped = try NSKeyedUnarchiver.unarchivedObject(ofClass: ItemUD.self, from: value )
-//                                if let itemUD = itemWrapped {
-//                                    let foundItemWrapped = viewModel.itemsArray.filter{ item in
-//                                        item.id.uuidString == itemUD.id
-//                                    }.first
-//                                    if let foundItem = foundItemWrapped {
-//                                        let modifiedItem = Item.itemDoneLens.set(itemUD.done, foundItem)
-//                                        _ = viewModel.update(foundItem, withItem: modifiedItem, completionBlock: {
-//                                            print("Done!")
-//                                        })
-//                                    }
-//                                }
-//                            }
-//                            userDefaults.removeObject(forKey: "com.persukibo.items")
-//                        } catch {
-//                            print(error)
-//                        }
-//                    }
-//                }
-//            }
         }
     }
     

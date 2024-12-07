@@ -95,7 +95,7 @@ extension SwiftDataModel: StorageInputs {
     
     private func updateIntoContext(withItem item: Item, itemID: String) -> (ItemSD?, Bool) {
         let predicate = #Predicate<ItemSD> { itemFound in itemFound.uuid == itemID }
-        var descriptor = FetchDescriptor(predicate: predicate)
+        let descriptor = FetchDescriptor(predicate: predicate)
         if let oldItems = try? self.modelContext.fetch<ItemSD>(descriptor) {
             if let oldItem = oldItems.first {
                 oldItem.completed = item.done
