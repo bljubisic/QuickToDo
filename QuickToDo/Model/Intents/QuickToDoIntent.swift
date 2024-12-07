@@ -55,12 +55,13 @@ struct QuickToDoIntent: AppIntent, WidgetConfigurationIntent, CustomIntentMigrat
         }
         let predicate = #Predicate<ItemSD> {item in item.uuid == idUnwraped}
         let descriptor = FetchDescriptor(predicate: predicate)
+        let modelContext = ModelContext(sharedModelContainer)
         
         do {
-            if let item = try sharedModelContainer.mainContext.fetch<ItemSD>(descriptor).first {
+            if let item = try modelContext.fetch<ItemSD>(descriptor).first {
                 item.completed = true
                 item.lastUsed = .now
-                sharedModelContainer.mainContext.insert(item)
+//                sharedModelContainer.mainContext.insert(item)
             }
         } catch {
             print(error)

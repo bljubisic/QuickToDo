@@ -31,7 +31,7 @@ struct Provider: AppIntentTimelineProvider {
             let endIndex = (items.count > 3) ? 2 : items.count
             let subItems = items[0 ..< endIndex]
             
-            let entry = SimpleEntry(date: Date(), items: subItems)
+            let entry = SimpleEntry(date: Date.now, items: subItems)
             let timeline = Timeline(entries: [entry], policy: .atEnd)
             return timeline
         }
