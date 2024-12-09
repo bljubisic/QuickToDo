@@ -221,7 +221,7 @@ extension CloudKitModel: StorageInputs {
                                    uploadedToICloud: true,
                                    done: (recordUnwrapped.int(String(describing: ItemFields.done)) == 0) ? false : true,
                                    shown: (recordUnwrapped.int(String(describing: ItemFields.used)) == 0) ? false : true,
-                                   createdAt: Date(), lastUsedAt: Date())
+                                   createdAt: Date.now, lastUsedAt: Date.now)
                 } else {
                     itemRet = Item(id: UUID(uuidString: recordUnwrapped.string(String(describing: ItemFields.id))!)!,
                                    name: recordUnwrapped.string(String(describing: ItemFields.name))!,
@@ -229,7 +229,7 @@ extension CloudKitModel: StorageInputs {
                                    uploadedToICloud: false,
                                    done: (recordUnwrapped.int(String(describing: ItemFields.done)) == 0) ? false : true,
                                    shown: (recordUnwrapped.int(String(describing: ItemFields.used)) == 0) ? false : true,
-                                   createdAt: Date(), lastUsedAt: Date())
+                                   createdAt: Date.now, lastUsedAt: Date.now)
                 }
                 print("Record created!! \(itemRet.name)")
                 if itemRet.name == "Root" {
