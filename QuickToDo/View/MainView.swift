@@ -50,6 +50,7 @@ struct MainView: View {
         shown = viewModel.inputs.getConfig()
         _ = self.viewModel.inputs.getItems {
 //            print("called getItems")
+            WidgetCenter.shared.reloadAllTimelines()
         }
         
     }

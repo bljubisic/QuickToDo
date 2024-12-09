@@ -11,7 +11,7 @@ import SwiftUI
 import SwiftData
 
 
-struct Provider: AppIntentTimelineProvider {
+struct Provider: @preconcurrency AppIntentTimelineProvider {
     
     typealias Entry = SimpleEntry
     
@@ -24,10 +24,11 @@ struct Provider: AppIntentTimelineProvider {
     }
     
     @MainActor func timeline(for configuration: QuickToDoIntent, in context: Context) async -> Timeline<SimpleEntry> {
-        
+        let context = ModelContext(sharedModelContainer)
         let predicate = #Predicate<ItemSD> {item in item.completed == false}
         let descriptor = FetchDescriptor(predicate: predicate, sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
-        if let items = try? sharedModelContainer.mainContext.fetch(descriptor) {
+        if let items = try? context.fetch(descriptor) {
+//            let itemsUsed = items.filter{item in item.completed == false}
             let endIndex = (items.count > 3) ? 2 : items.count
             let subItems = items[0 ..< endIndex]
             
@@ -42,19 +43,21 @@ struct Provider: AppIntentTimelineProvider {
     @Query(sort: \ItemSD.lastUsed, animation: .smooth) private var items: [ItemSD]
     
     @MainActor init() {
+        let context = ModelContext(sharedModelContainer)
         let descriptor = FetchDescriptor(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
-        if let items = try? sharedModelContainer.mainContext.fetch(descriptor) {
+        if let items = try? context.fetch(descriptor) {
             let endIndex = (items.count > 3) ? 2 : items.count
             let subItems = items[0 ..< endIndex]
             
-            let entry = SimpleEntry(date: Date(), items: subItems)
+            _ = SimpleEntry(date: Date(), items: subItems)
         }
     }
     
     @MainActor func placeholder(in context: Context) -> SimpleEntry {
+        let context = ModelContext(sharedModelContainer)
         let descriptor = FetchDescriptor(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
         
-        if let items = try? sharedModelContainer.mainContext.fetch(descriptor) {
+        if let items = try? context.fetch(descriptor) {
             let endIndex = (items.count > 3) ? 2 : items.count
             let subItems = items[0 ..< endIndex]
             

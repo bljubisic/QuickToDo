@@ -26,7 +26,7 @@ final class SwiftDataModel: StorageProtocol {
 extension SwiftDataModel: StorageInputs {
     
     func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?) {
-        var descriptor = FetchDescriptor<ItemSD>(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
+        let descriptor = FetchDescriptor<ItemSD>(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
         let item = Item()
         
         if let items = try? self.modelContext.fetch<ItemSD>(descriptor) {
@@ -40,6 +40,9 @@ extension SwiftDataModel: StorageInputs {
                                    createdAt: item.lastUsed!,
                                    lastUsedAt: item.lastUsed!)
                 itemsPrivate.onNext(tmpItem)
+                if let withCompletion = withCompletion {
+                    withCompletion(tmpItem)
+                }
             }
         }
         return (true, nil)
@@ -100,11 +103,12 @@ extension SwiftDataModel: StorageInputs {
             if let oldItem = oldItems.first {
                 oldItem.completed = item.done
                 oldItem.count = item.count
-                oldItem.lastUsed = Date()
+                oldItem.lastUsed = Date.now
                 oldItem.used = item.shown
                 oldItem.word = item.name
                 oldItem.uploadedToICloud = item.uploadedToICloud
                 oldItem.uuid = item.id.uuidString
+                try? self.modelContext.save()
                 return (oldItem, true)
             }
         }

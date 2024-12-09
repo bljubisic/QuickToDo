@@ -79,18 +79,34 @@ extension QuickToDoModel: QuickToDoInputs {
     }
     
     func getItems() -> (Bool, Error?){
+        var items: [Item] = []
         Observable.merge([self.swiftData.outputs.items, self.cloudKit.outputs.items])
             .subscribe({(item) in
                 if let itemElement = item.element {
                     self.itemsPrivate.onNext(itemElement)
                 }
             }).disposed(by: disposeBag)
-        _ = self.swiftData.inputs.getItems(withCompletion: nil)
+        _ = self.swiftData.inputs.getItems{item in
+            items.append(item)
+        }
         _ = self.cloudKit.inputs.getItems() { item in
-            _ = self.items.filter{itemFiltered in itemFiltered.id == item.id}.map{itemMapped in
-                if (itemMapped.done != item.done || itemMapped.shown != item.shown) {
-                    let funcUpdate = self.swiftData.inputs.update()
-                    _ = funcUpdate(item, item)
+            _ = items
+                .filter{ itemFiltered in
+                    itemFiltered.id == item.id
+                }
+                .map{ itemMapped in
+                    if item.id == itemMapped.id {
+                        if (item.lastUsedAt < itemMapped.lastUsedAt) {
+                            let funcUpdate = self.swiftData.inputs.update()
+                            _ = funcUpdate(item, itemMapped)
+                        } else {
+                            let funcUpdate = self.cloudKit.inputs.update()
+                            _ = funcUpdate(itemMapped, item)
+                        }
+                    }
+                    if (itemMapped.done != item.done || itemMapped.shown != item.shown) {
+                        let funcUpdate = self.swiftData.inputs.update()
+                        _ = funcUpdate(item, itemMapped)
                 }
             }
         }

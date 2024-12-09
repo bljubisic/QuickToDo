@@ -10,6 +10,7 @@ import Foundation
 import AppIntents
 import SwiftData
 import CloudKit
+import WidgetKit
 
 @available(iOS 16.0, macOS 13.0, watchOS 9.0, tvOS 16.0, *)
 struct QuickToDoIntent: AppIntent, WidgetConfigurationIntent, CustomIntentMigratedAppIntent {
@@ -61,6 +62,8 @@ struct QuickToDoIntent: AppIntent, WidgetConfigurationIntent, CustomIntentMigrat
             if let item = try modelContext.fetch<ItemSD>(descriptor).first {
                 item.completed = true
                 item.lastUsed = .now
+                try? modelContext.save()
+                WidgetCenter.shared.reloadAllTimelines()
 //                sharedModelContainer.mainContext.insert(item)
             }
         } catch {
