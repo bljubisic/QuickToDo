@@ -74,8 +74,15 @@ extension QuickToDoModel: QuickToDoInputs {
         return self.cloudKit.inputs.getZone()
     }
     
-    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
-        self.cloudKit.inputs.prepareShare(handler: handler)
+    func prepareSharing(handler: @escaping (CKShare, CKContainer, Error?) -> Void) {
+        Task {
+            do {
+                try await self.cloudKit.inputs.prepareShare(handler: handler)
+            }
+            catch {
+                print("Error: \(error)")
+            }
+        }
     }
     
     func getItems() -> (Bool, Error?){

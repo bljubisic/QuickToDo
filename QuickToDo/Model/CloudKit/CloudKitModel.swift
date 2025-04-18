@@ -147,21 +147,23 @@ extension CloudKitModel: StorageInputs {
         return(true, nil)
     }
     
-    func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
-        let share = CKShare(rootRecord: self.rootRecord)
-
-        share[CKShare.SystemFieldKey.title] = "Sharing list" as CKRecordValue?
-
-        share[CKShare.SystemFieldKey.shareType] = "QuickToDo" as CKRecordValue
+    func prepareShare(handler: @escaping (CKShare, CKContainer, Error?) -> Void) async throws{
         
-        let modRecordsList = CKModifyRecordsOperation(recordsToSave: [self.rootRecord, share], recordIDsToDelete: nil)
-         
-        modRecordsList.modifyRecordsCompletionBlock = {
-            (record, recordID, error) in
-             
-            handler(share, CKContainer.default(), error)
+        guard let existingShare = self.zone.share else {
+            let share = CKShare(recordZoneID: self.zone.zoneID)
+            share[CKShare.SystemFieldKey.title] = "QuickToDo Share"
+            _ = try await database.modifyRecords(saving: [share], deleting: [])
+            handler(share, CKContainer.default(), nil)
+            return
         }
-        CKContainer.default().privateCloudDatabase.add(modRecordsList)
+        
+        guard let share = try await self.database.record(for: existingShare.recordID) as? CKShare else {
+            print("Invalid share")
+            return
+        }
+        
+        handler(share, CKContainer.default(), nil)
+
     }
     
 

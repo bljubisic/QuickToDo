@@ -35,7 +35,7 @@ struct MainView: View {
     
     @StateObject var debounceObject = DebounceObject()
     
-    @ObservedObject var viewModel: QuickToDoViewModel
+    @State var viewModel: QuickToDoViewModel
 //    @ObservedObject var viewModel: ViewModelMocked
     @State var hint1 = ""
     @State var hint2 = ""
@@ -43,6 +43,11 @@ struct MainView: View {
     @State private var text = ""
     @State private var shown: Bool = false
     @State private var selectedItem: Item?
+    @State private var isSharing = false
+    
+    
+    @State private var activeShare: CKShare?
+    @State private var activeContainer: CKContainer?
     
     init(viewModel: QuickToDoViewModelProtoocol) {
 //        self.viewModel = viewModel as! ViewModelMocked
@@ -105,75 +110,7 @@ struct MainView: View {
     
     var body: some View {
         VStack() {
-            HStack() {
-                VStack() {
-                    Button(action: {
-                        _ = self.viewModel.inputs.getItems {
-                            print("called getItems")
-                            WidgetCenter.shared.reloadAllTimelines()
-                        }
-                    }, label: {
-                        Image(systemName: "arrow.clockwise.circle")
-                            .resizable()
-                            .frame(width: 20.0, height: 20.0)
-                    })
-                    Text("Refresh")
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color.blue)
-                        .font(.system(size: 12,  design: .rounded))
-                        .frame(width: 80.0, height: 20.0)
-                }
-                .padding()
-                Spacer()
-                VStack() {
-                    Button(action: {
-                        _ = self.viewModel.inputs.clearList()
-                        WidgetCenter.shared.reloadAllTimelines()
-                    }, label: {
-                        Image(systemName: "cart.badge.minus")
-                            .resizable()
-                            .frame(width: 30.0, height: 20.0)
-                    })
-                    Text("Remove all")
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color.blue)
-                        .font(.system(size: 12,  design: .rounded))
-                        .frame(width: 80.0, height: 20.0)
-                }
-
-                VStack() {
-                    Button(action: {
-                        shown.toggle()
-                        _ = self.viewModel.inputs.save(config: shown)
-                    }, label: {
-                        ((shown) ? Image(systemName: "bag") : Image(systemName: "bag.fill"))
-                            .resizable()
-                            .frame(width: 20.0, height: 20.0)
-                    })
-                    ((shown) ? Text("Remove done") : Text("Show done"))
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color.blue)
-                        .font(.system(size: 12,  design: .rounded))
-                        .frame(width: 80.0, height: 20.0)
-                }
-
-                VStack() {
-                    Button(action: {
-                        _ = self.viewModel.inputs.uploadToCloud()
-                    }, label: {
-                        Image(systemName: "arrow.clockwise.icloud")
-                            .resizable()
-                            .frame(width: 30.0, height: 20.0)
-                    })
-                    Text("Update")
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color.blue)
-                        .font(.system(size: 12,  design: .rounded))
-                        .frame(width: 80.0, height: 20.0)
-                }
-
-            }
-            .padding()
+            Toolbar(viewModel: $viewModel, shown: $shown, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
             List() {
                 ForEach(self.viewModel.outputs.itemsArray.enumerated().map({$0}), id: \.element.id) { index, item in
                     let red: Double = getColorRed(index: index)
@@ -300,6 +237,16 @@ struct MainView: View {
                 }
             }
         }
+        .sheet(isPresented: $isSharing, content: { shareView() })
+    }
+    
+    /// Builds a `CloudSharingView` with state after processing a share.
+    private func shareView() -> CloudSharingView? {
+        guard let share = activeShare, let container = activeContainer else {
+            return nil
+        }
+
+        return CloudSharingView(container: container, share: share)
     }
     
     func addItem(_ sender: String) {
@@ -345,7 +292,7 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
     func getRootRecord() -> CKRecord? {
         return nil
     }
-    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
+    func prepareSharing(handler: @escaping (CKShare, CKContainer, Error?) -> Void) {
         
     }
     
@@ -423,7 +370,7 @@ final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInpu
     func getRootRecord() -> CKRecord? {
         return nil
     }
-    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
+    func prepareSharing(handler: @escaping (CKShare, CKContainer, Error?) -> Void) {
         
     }
     
