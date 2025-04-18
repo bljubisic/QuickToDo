@@ -36,7 +36,7 @@ struct MainView: View {
     
     @StateObject var debounceObject = DebounceObject()
     
-    @ObservedObject var viewModel: QuickToDoViewModel
+    @State var viewModel: QuickToDoViewModel
 //    @ObservedObject var viewModel: ViewModelMocked
     @State var hint1 = ""
     @State var hint2 = ""
@@ -45,6 +45,8 @@ struct MainView: View {
     @State private var shown: Bool = false
     @State private var selectedItem: Item?
     @State private var isSharing = false
+    
+    
     @State private var activeShare: CKShare?
     @State private var activeContainer: CKContainer?
     
@@ -54,101 +56,62 @@ struct MainView: View {
         shown = viewModel.inputs.getConfig()
         _ = self.viewModel.inputs.getItems {
 //            print("called getItems")
+            WidgetCenter.shared.reloadAllTimelines()
         }
         
     }
     
+    
+    private func getColorRed(index: Int)-> Double {
+        let indexUsed = (index > 24) ? (index % (24 * (index / 24))) : index
+        if indexUsed > 8 {
+            if indexUsed < 16 {
+                return Double(32 * (8 - (indexUsed - 8)))
+            } else if  indexUsed < 24 {
+                return Double(32 * (indexUsed - 16))
+            } else {
+                return 255
+            }
+        } else {
+            return 255
+        }
+    }
+    
+    private func getColorGreen(index: Int) -> Double {
+        let indexUsed = (index > 24) ? (index % (24 * (index / 24))) : index
+        if indexUsed < 8 {
+            return Double(32 * (8 - indexUsed))
+        } else {
+            if indexUsed > 8 {
+                return 0
+            } else if indexUsed > 24 {
+                return Double (32 * (indexUsed  - 16))
+            } else {
+                return 0
+            }
+        }
+    }
+    
+    private func getColorBlue(index: Int) -> Double {
+        let indexUsed = (index > 24) ? (index % (24 * (index / 24))) : index
+        if  indexUsed > 8 {
+            if indexUsed < 16 {
+                return Double(32 * (indexUsed - 8))
+            } else {
+                if indexUsed < 24 {
+                    return Double (32 * (8 - (indexUsed - 16)))
+                } else {
+                    return 0
+                }
+            }
+        } else {
+            return 0
+        }
+    }
+    
     var body: some View {
         VStack() {
-            HStack() {
-                VStack() {
-                    Button(action: {
-                        _ = self.viewModel.inputs.getItems {
-                            print("called getItems")
-                        }
-                    }, label: {
-                        Image(systemName: "arrow.clockwise.circle")
-                            .resizable()
-                            .frame(width: 20.0, height: 20.0)
-                    })
-                    Text("Refresh all")
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color.blue)
-                        .font(.system(size: 12,  design: .rounded))
-                        .frame(width: 70.0, height: 20.0)
-                }
-                VStack() {
-                    Button(action: {
-                        Task {
-                            let shareReturn = await self.viewModel.inputs.prepareSharing()
-                            if let share = shareReturn.0, let container = shareReturn.1 {
-                                activeShare = share
-                                activeContainer = container
-                                isSharing = true
-                            }
-                        }
-                    }, label: {
-                        Image(systemName: "square.and.arrow.up")
-                            .resizable()
-                            .frame(width: 20.0, height: 20.0)
-                    })
-                    Text("Share all")
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color.blue)
-                        .font(.system(size: 12,  design: .rounded))
-                        .frame(width: 70.0, height: 20.0)
-                }
-                .sheet(isPresented: $isSharing) {
-                    shareView()
-                }
-                VStack() {
-                    Button(action: {
-                        _ = self.viewModel.inputs.clearList()
-                    }, label: {
-                        Image(systemName: "cart.badge.minus")
-                            .resizable()
-                            .frame(width: 30.0, height: 20.0)
-                    })
-                    Text("Remove all")
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color.blue)
-                        .font(.system(size: 12,  design: .rounded))
-                        .frame(width: 70.0, height: 20.0)
-                }
-
-                VStack() {
-                    Button(action: {
-                        shown.toggle()
-                        _ = self.viewModel.inputs.save(config: shown)
-                    }, label: {
-                        ((shown) ? Image(systemName: "bag") : Image(systemName: "bag.fill"))
-                            .resizable()
-                            .frame(width: 20.0, height: 20.0)
-                    })
-                    ((shown) ? Text("Remove done") : Text("Show done"))
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color.blue)
-                        .font(.system(size: 12,  design: .rounded))
-                        .frame(width: 70.0, height: 20.0)
-                }
-
-                VStack() {
-                    Button(action: {
-                        _ = self.viewModel.inputs.uploadToCloud()
-                    }, label: {
-                        Image(systemName: "arrow.clockwise.icloud")
-                            .resizable()
-                            .frame(width: 30.0, height: 20.0)
-                    })
-                    Text("Update all")
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color.blue)
-                        .font(.system(size: 12,  design: .rounded))
-                        .frame(width: 70.0, height: 20.0)
-                }
-
-            }
-            .padding()
+            Toolbar(viewModel: $viewModel, shown: $shown, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
             List() {
                 ForEach(self.viewModel.outputs.itemsArray.enumerated().map({$0}), id: \.element.id) { index, item in
                     let red: Double = getColorRed(index: index)
@@ -157,7 +120,7 @@ struct MainView: View {
                     if (((!shown && !item.done) || (shown)) && item.shown) {
                         HStack() {
                             Button(action: {
-                                print("Tapped \(item.name): \(red) : \(green): \(blue)")
+//                                print("Tapped \(item.name) : \(index) \((index % (24 * (index / 24)))) : \(red) : \(green): \(blue)")
                                 let newItem = Item.itemDoneLens.set(!item.done, item)
                                 _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
                                         print("Done")
@@ -203,6 +166,7 @@ struct MainView: View {
                                 let newItem = Item.itemShownLens.set(!item.shown, item)
                                 _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
                                     print("Done")
+                                    WidgetCenter.shared.reloadAllTimelines()
                                 })
                             }) {Label("Delete", systemImage: "trash")}
                         }
@@ -233,7 +197,7 @@ struct MainView: View {
                             } else {
                                 self.addItem(debounceObject.text)
                             }
-                            
+                            WidgetCenter.shared.reloadAllTimelines()
                             debounceObject.text = ""
                         }
                     HStack() {
@@ -258,6 +222,7 @@ struct MainView: View {
                 print("start refresh")
                 _ = self.viewModel.inputs.getItems {
                     print("called getItems")
+                    WidgetCenter.shared.reloadAllTimelines()
                 }
            }
             .onChange(of: scenePhase) { oldState, newState in
@@ -268,54 +233,21 @@ struct MainView: View {
                 } else if newState == .active {
                     _ = self.viewModel.inputs.getItems {
             //            print("called getItems")
+                        WidgetCenter.shared.reloadAllTimelines()
                     }
                 }
             }
         }
+        .sheet(isPresented: $isSharing, content: { shareView() })
     }
     
-    private func getColorRed(index: Int)-> Double {
-        if index > 8 {
-            if index < 16 {
-                return Double(32 * (8 - (index - 8)))
-            } else if  index < 24 {
-                return Double(32 * (index - 16))
-            } else {
-                return 255
-            }
-        } else {
-            return 255
+    /// Builds a `CloudSharingView` with state after processing a share.
+    private func shareView() -> CloudSharingView? {
+        guard let share = activeShare, let container = activeContainer else {
+            return nil
         }
-    }
-    
-    private func getColorGreen(index: Int) -> Double {
-        if index < 8 {
-            return Double(32 * (8 - index))
-        } else {
-            if index > 8 {
-                return 0
-            } else if index > 24 {
-                return Double (32 * (index - 16))
-            } else {
-                return 0
-            }
-        }
-    }
-    
-    private func getColorBlue(index: Int) -> Double {
-        if index > 8 {
-            if index < 16 {
-                return Double(32 * (index - 8))
-            } else {
-                if index < 24 {
-                    return Double (32 * (8 - (index - 16)))
-                } else {
-                    return 0
-                }
-            }
-        } else {
-            return 0
-        }
+
+        return CloudSharingView(container: container, share: share)
     }
     
     func addItem(_ sender: String) {
@@ -371,8 +303,8 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
     func getRootRecord() -> CKRecord? {
         return nil
     }
-    func prepareSharing() async -> (CKShare?, CKContainer?){
-        return (nil, nil)
+    func prepareSharing(handler: @escaping (CKShare, CKContainer, Error?) -> Void) {
+        
     }
     
     func uploadToCloud(items: [Item]) -> (Bool, Error?) {
@@ -449,8 +381,8 @@ final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInpu
     func getRootRecord() -> CKRecord? {
         return nil
     }
-    func prepareSharing() async -> (CKShare?, CKContainer?) {
-        return (nil, nil)
+    func prepareSharing(handler: @escaping (CKShare, CKContainer, Error?) -> Void) {
+        
     }
     
     func add(_ newItem: Item) -> (Bool, Error?) {

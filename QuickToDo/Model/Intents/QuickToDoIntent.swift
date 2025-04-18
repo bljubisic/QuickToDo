@@ -10,6 +10,7 @@ import Foundation
 import AppIntents
 import SwiftData
 import CloudKit
+import WidgetKit
 
 @available(iOS 16.0, macOS 13.0, watchOS 9.0, tvOS 16.0, *)
 struct QuickToDoIntent: AppIntent, WidgetConfigurationIntent, CustomIntentMigratedAppIntent {
@@ -55,12 +56,15 @@ struct QuickToDoIntent: AppIntent, WidgetConfigurationIntent, CustomIntentMigrat
         }
         let predicate = #Predicate<ItemSD> {item in item.uuid == idUnwraped}
         let descriptor = FetchDescriptor(predicate: predicate)
+        let modelContext = ModelContext(sharedModelContainer)
         
         do {
-            if let item = try sharedModelContainer.mainContext.fetch<ItemSD>(descriptor).first {
+            if let item = try modelContext.fetch<ItemSD>(descriptor).first {
                 item.completed = true
                 item.lastUsed = .now
-                sharedModelContainer.mainContext.insert(item)
+                try? modelContext.save()
+                WidgetCenter.shared.reloadAllTimelines()
+//                sharedModelContainer.mainContext.insert(item)
             }
         } catch {
             print(error)

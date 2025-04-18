@@ -26,7 +26,7 @@ final class SwiftDataModel: StorageProtocol {
 extension SwiftDataModel: StorageInputs {
     
     func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?) {
-        var descriptor = FetchDescriptor<ItemSD>(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
+        let descriptor = FetchDescriptor<ItemSD>(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
         let item = Item()
         
         if let items = try? self.modelContext.fetch<ItemSD>(descriptor) {
@@ -40,6 +40,9 @@ extension SwiftDataModel: StorageInputs {
                                    createdAt: item.lastUsed!,
                                    lastUsedAt: item.lastUsed!)
                 itemsPrivate.onNext(tmpItem)
+                if let withCompletion = withCompletion {
+                    withCompletion(tmpItem)
+                }
             }
         }
         return (true, nil)
@@ -57,6 +60,7 @@ extension SwiftDataModel: StorageInputs {
                 uuid: item.id.uuidString
             )
             self.modelContext.insert(itemSD)
+            try? self.modelContext.save()
             return (Item(id: UUID(uuidString: itemSD.uuid!)!,
                          name: itemSD.word!,
                         count: itemSD.count!,
@@ -94,16 +98,17 @@ extension SwiftDataModel: StorageInputs {
     
     private func updateIntoContext(withItem item: Item, itemID: String) -> (ItemSD?, Bool) {
         let predicate = #Predicate<ItemSD> { itemFound in itemFound.uuid == itemID }
-        var descriptor = FetchDescriptor(predicate: predicate)
+        let descriptor = FetchDescriptor(predicate: predicate)
         if let oldItems = try? self.modelContext.fetch<ItemSD>(descriptor) {
             if let oldItem = oldItems.first {
                 oldItem.completed = item.done
                 oldItem.count = item.count
-                oldItem.lastUsed = Date()
+                oldItem.lastUsed = Date.now
                 oldItem.used = item.shown
                 oldItem.word = item.name
                 oldItem.uploadedToICloud = item.uploadedToICloud
                 oldItem.uuid = item.id.uuidString
+                try? self.modelContext.save()
                 return (oldItem, true)
             }
         }
@@ -184,8 +189,8 @@ extension SwiftDataModel: StorageInputs {
 
     }
     
-    func prepareShare() -> (CKShare?, CKContainer?) {
-        return (nil, nil)
+    func prepareShare(handler: @escaping (CKShare, CKContainer, Error?) -> Void) {
+        
     }
     
     func getRootRecord() -> CKRecord? {

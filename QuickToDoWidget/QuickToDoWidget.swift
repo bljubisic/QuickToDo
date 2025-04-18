@@ -11,7 +11,7 @@ import SwiftUI
 import SwiftData
 
 
-struct Provider: AppIntentTimelineProvider {
+struct Provider: @preconcurrency AppIntentTimelineProvider {
     
     typealias Entry = SimpleEntry
     
@@ -24,14 +24,15 @@ struct Provider: AppIntentTimelineProvider {
     }
     
     @MainActor func timeline(for configuration: QuickToDoIntent, in context: Context) async -> Timeline<SimpleEntry> {
-        
+        let context = ModelContext(sharedModelContainer)
         let predicate = #Predicate<ItemSD> {item in item.completed == false}
         let descriptor = FetchDescriptor(predicate: predicate, sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
-        if let items = try? sharedModelContainer.mainContext.fetch(descriptor) {
+        if let items = try? context.fetch(descriptor) {
+//            let itemsUsed = items.filter{item in item.completed == false}
             let endIndex = (items.count > 3) ? 2 : items.count
             let subItems = items[0 ..< endIndex]
             
-            let entry = SimpleEntry(date: Date(), items: subItems)
+            let entry = SimpleEntry(date: Date.now, items: subItems)
             let timeline = Timeline(entries: [entry], policy: .atEnd)
             return timeline
         }
@@ -42,19 +43,21 @@ struct Provider: AppIntentTimelineProvider {
     @Query(sort: \ItemSD.lastUsed, animation: .smooth) private var items: [ItemSD]
     
     @MainActor init() {
+        let context = ModelContext(sharedModelContainer)
         let descriptor = FetchDescriptor(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
-        if let items = try? sharedModelContainer.mainContext.fetch(descriptor) {
+        if let items = try? context.fetch(descriptor) {
             let endIndex = (items.count > 3) ? 2 : items.count
             let subItems = items[0 ..< endIndex]
             
-            let entry = SimpleEntry(date: Date(), items: subItems)
+            _ = SimpleEntry(date: Date(), items: subItems)
         }
     }
     
     @MainActor func placeholder(in context: Context) -> SimpleEntry {
+        let context = ModelContext(sharedModelContainer)
         let descriptor = FetchDescriptor(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
         
-        if let items = try? sharedModelContainer.mainContext.fetch(descriptor) {
+        if let items = try? context.fetch(descriptor) {
             let endIndex = (items.count > 3) ? 2 : items.count
             let subItems = items[0 ..< endIndex]
             
@@ -76,11 +79,12 @@ struct QuickToDoWidgetEntryView : View {
     var entry: Provider.Entry
     
     private func getColorRed(index: Int)-> Double {
-        if index > 8 {
-            if index < 16 {
-                return Double(32 * (8 - (index - 8)))
-            } else if  index < 24 {
-                return Double(32 * (index - 16))
+        let indexUsed = (index > 24) ? (index % (24 * (index / 24))) : index
+        if indexUsed > 8 {
+            if indexUsed < 16 {
+                return Double(32 * (8 - (indexUsed - 8)))
+            } else if  indexUsed < 24 {
+                return Double(32 * (indexUsed - 16))
             } else {
                 return 255
             }
@@ -90,13 +94,14 @@ struct QuickToDoWidgetEntryView : View {
     }
     
     private func getColorGreen(index: Int) -> Double {
-        if index < 8 {
-            return Double(32 * (8 - index))
+        let indexUsed = (index > 24) ? (index % (24 * (index / 24))) : index
+        if indexUsed < 8 {
+            return Double(32 * (8 - indexUsed))
         } else {
-            if index > 8 {
+            if indexUsed > 8 {
                 return 0
-            } else if index > 24 {
-                return Double (32 * (index - 16))
+            } else if indexUsed > 24 {
+                return Double (32 * (indexUsed  - 16))
             } else {
                 return 0
             }
@@ -104,12 +109,13 @@ struct QuickToDoWidgetEntryView : View {
     }
     
     private func getColorBlue(index: Int) -> Double {
-        if index > 8 {
-            if index < 16 {
-                return Double(32 * (index - 8))
+        let indexUsed = (index > 24) ? (index % (24 * (index / 24))) : index
+        if  indexUsed > 8 {
+            if indexUsed < 16 {
+                return Double(32 * (indexUsed - 8))
             } else {
-                if index < 24 {
-                    return Double (32 * (8 - (index - 16)))
+                if indexUsed < 24 {
+                    return Double (32 * (8 - (indexUsed - 16)))
                 } else {
                     return 0
                 }

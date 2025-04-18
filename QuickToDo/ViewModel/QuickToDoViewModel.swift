@@ -24,7 +24,7 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, ObservableObject {
     let disposeBag = DisposeBag()
     typealias returnVoid = () -> Void
     
-    init(_ withModel: QuickToDoProtocol) {
+    init(_ withModel: QuickToDoProtocol = ModelMocked()) {
         self.model = withModel
         items = self.model.outputs.items
         cloudStatus = self.model.outputs.cloudStatus
@@ -56,8 +56,8 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
         return self.model.inputs.getZone()
     }
     
-    func prepareSharing() async -> (CKShare?, CKContainer?) {
-        return await self.model.inputs.prepareSharing()
+    func prepareSharing(handler: @escaping (CKShare, CKContainer, Error?) -> Void) {
+        self.model.inputs.prepareSharing(handler: handler)
     }
     
     func add(_ newItem: Item) -> (Bool, Error?) {
@@ -107,6 +107,11 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
     
     func update(_ item: Item, withItem: Item, completionBlock: @escaping () -> Void) -> (Bool, Error?) {
         _ = self.model.inputs.update(item, withItem: withItem)
+        if let i = itemsArray.firstIndex(where: { item in
+            item.id == withItem.id
+        }) {
+            itemsArray[i] = withItem
+        }
         completionBlock()
         return (true, nil)
     }
