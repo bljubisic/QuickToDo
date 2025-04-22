@@ -112,5 +112,13 @@ struct Toolbar: View {
 #Preview {
     @Previewable @State var show: Bool = false
     @Previewable @State var viewModel: QuickToDoViewModel = QuickToDoViewModel()
-    Toolbar(viewModel: $viewModel, shown: $show)
+    @Previewable @State var isSharing: Bool = false
+    @Previewable @State var activeShare: CKShare? = nil
+    @Previewable @State var activeContainer: CKContainer? = nil
+    
+    Toolbar(viewModel: $viewModel, shown: $show, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
+        .padding()
+        .background(Color.white)
+        .environment(\.colorScheme, .light)
+        
 }

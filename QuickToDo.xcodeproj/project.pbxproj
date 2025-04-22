@@ -12,7 +12,6 @@
 		E4044A622AD1926700E0FC6A /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */; };
 		E4044A642AD3351E00E0FC6A /* SwiftData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4044A632AD3351E00E0FC6A /* SwiftData.framework */; };
 		E42C85F423E8603600AB6CDD /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42C85F323E8603600AB6CDD /* MainView.swift */; };
-		E435ECE521680E0300E68960 /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE421680E0300E68960 /* CoreDataModel.swift */; };
 		E435ECE72169327000E68960 /* ManagedObjectTypeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE62169327000E68960 /* ManagedObjectTypeProtocol.swift */; };
 		E435ECE9216932FB00E68960 /* ItemMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE8216932FA00E68960 /* ItemMO.swift */; };
 		E435ECEB21729EB700E68960 /* QuickToDoViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECEA21729EB700E68960 /* QuickToDoViewModelProtocol.swift */; };
@@ -49,6 +48,7 @@
 		E4C893982838F56D002B860A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01519E7EA63003A89F7 /* Main.storyboard */; };
 		E4C986622C40750B006BCD07 /* CloudShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C986612C40750B006BCD07 /* CloudShareView.swift */; };
 		E4F014C81AC8887B00264AD5 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = E4F014C71AC8887B00264AD5 /* Config.plist */; };
+		E4F67FD82DB6468A00901DF9 /* ItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F67FD72DB6467E00901DF9 /* ItemsView.swift */; };
 		E4F9A3791A5C146900CC0573 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4F9A3781A5C146900CC0573 /* CoreData.framework */; };
 		E4FBC6DA215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */; };
 		E4FBC6DC215AD63300F1B6E2 /* DataStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */; };
@@ -92,7 +92,6 @@
 		E404A39F1A8EBA34008D32A5 /* QuickToDo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = QuickToDo.entitlements; sourceTree = "<group>"; };
 		E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		E42C85F323E8603600AB6CDD /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
-		E435ECE421680E0300E68960 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
 		E435ECE62169327000E68960 /* ManagedObjectTypeProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedObjectTypeProtocol.swift; sourceTree = "<group>"; };
 		E435ECE8216932FA00E68960 /* ItemMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemMO.swift; sourceTree = "<group>"; };
 		E435ECEA21729EB700E68960 /* QuickToDoViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoViewModelProtocol.swift; sourceTree = "<group>"; };
@@ -131,6 +130,7 @@
 		E4C6E01B19E7EA63003A89F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		E4C986612C40750B006BCD07 /* CloudShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudShareView.swift; sourceTree = "<group>"; };
 		E4F014C71AC8887B00264AD5 /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Config.plist; sourceTree = "<group>"; };
+		E4F67FD72DB6467E00901DF9 /* ItemsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsView.swift; sourceTree = "<group>"; };
 		E4F9A3781A5C146900CC0573 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoModelProtocol.swift; sourceTree = "<group>"; };
 		E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStructures.swift; sourceTree = "<group>"; };
@@ -190,7 +190,6 @@
 			children = (
 				E44C26C12A6DAE7400ECD7B6 /* SwiftDataModel.swift */,
 				E44E38C72AB8E723001ED038 /* ItemSD.swift */,
-				E435ECE421680E0300E68960 /* CoreDataModel.swift */,
 				E435ECE62169327000E68960 /* ManagedObjectTypeProtocol.swift */,
 				E435ECE8216932FA00E68960 /* ItemMO.swift */,
 				E4761D942BFB3C980092408C /* AppModelContainer.swift */,
@@ -259,6 +258,7 @@
 		E4AFEE3E215AB0620001AEDA /* View */ = {
 			isa = PBXGroup;
 			children = (
+				E4F67FD72DB6467E00901DF9 /* ItemsView.swift */,
 				50AB71102DB10D2C008EA327 /* CloudSharingView.swift */,
 				50A1BF1A2DAFD8A8000D2647 /* Toolbar.swift */,
 				E48B68D9215D5C3C0062B08C /* MainViewController.swift */,
@@ -514,7 +514,6 @@
 				E435ECEF21890A6A00E68960 /* ItemTableViewCell.swift in Sources */,
 				E49F65FB22C379E7008D59FA /* CloudKitModel.swift in Sources */,
 				E435ECF121890A7900E68960 /* AddItemTableViewCell.swift in Sources */,
-				E435ECE521680E0300E68960 /* CoreDataModel.swift in Sources */,
 				E4FBC6DA215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift in Sources */,
 				E435ECE72169327000E68960 /* ManagedObjectTypeProtocol.swift in Sources */,
 				E44E38C92AB8E784001ED038 /* SwiftDataModel.swift in Sources */,
@@ -522,6 +521,7 @@
 				E4861BC0215FA0010085CFB8 /* AppDelegate.swift in Sources */,
 				E4C986622C40750B006BCD07 /* CloudShareView.swift in Sources */,
 				E44E38C82AB8E723001ED038 /* ItemSD.swift in Sources */,
+				E4F67FD82DB6468A00901DF9 /* ItemsView.swift in Sources */,
 				E42C85F423E8603600AB6CDD /* MainView.swift in Sources */,
 				50A1BF1B2DAFD8AE000D2647 /* Toolbar.swift in Sources */,
 				E48B68DA215D5C3C0062B08C /* MainViewController.swift in Sources */,
