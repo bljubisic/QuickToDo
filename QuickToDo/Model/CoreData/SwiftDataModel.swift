@@ -189,7 +189,7 @@ extension SwiftDataModel: StorageInputs {
 
     }
     
-    func prepareShare(handler: @escaping (CKShare, CKContainer, Error?) -> Void) {
+    func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
         
     }
     

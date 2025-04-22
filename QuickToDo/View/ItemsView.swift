@@ -103,15 +103,6 @@ struct ItemsView: View {
         )
     }
     
-    /// Builds a `CloudSharingView` with state after processing a share.
-    private func shareView() -> CloudSharingView? {
-        guard let share = activeShare, let container = activeContainer else {
-            return nil
-        }
-
-        return CloudSharingView(container: container, share: share)
-    }
-    
     var body: some View {
         VStack {
             List() {
@@ -253,6 +244,12 @@ struct ItemsView: View {
     
     
     ItemsView(viewModel: $viewModel, shown: $show, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
+        .onAppear() {
+            viewModel.inputs.getItems {
+                print("called getItems")
+                WidgetCenter.shared.reloadAllTimelines()
+            }
+        }
         
 }
 

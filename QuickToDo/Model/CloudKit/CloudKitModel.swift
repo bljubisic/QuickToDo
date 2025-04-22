@@ -148,7 +148,7 @@ extension CloudKitModel: StorageInputs {
         return(true, nil)
     }
     
-    func prepareShare(handler: @escaping (CKShare, CKContainer, Error?) -> Void) async throws{
+    func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) async throws{
         
         guard let existingShare = self.zone.share else {
             let share = CKShare(recordZoneID: self.zone.zoneID)

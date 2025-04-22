@@ -56,7 +56,7 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
         return self.model.inputs.getZone()
     }
     
-    func prepareSharing(handler: @escaping (CKShare, CKContainer, Error?) -> Void) {
+    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
         self.model.inputs.prepareSharing(handler: handler)
     }
     

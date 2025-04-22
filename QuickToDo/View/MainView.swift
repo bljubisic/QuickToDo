@@ -43,17 +43,28 @@ struct MainView: View {
         
     }
     
+    /// Builds a `CloudSharingView` with state after processing a share.
+    private func shareView() -> CloudSharingView? {
+        print("Displaying sheet")
+        guard let share = activeShare, let container = activeContainer else {
+            return nil
+        }
+
+        return CloudSharingView(container: container, share: share)
+    }
+    
     
     var body: some View {
         VStack() {
             Toolbar(viewModel: $viewModel, shown: $shown, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
             ItemsView(viewModel: $viewModel, shown: $shown, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
                 .onAppear {
-                    self.viewModel.inputs.getItems {
+                    _ = self.viewModel.inputs.getItems {
                         print("called getItems")
                         WidgetCenter.shared.reloadAllTimelines()
                     }
                 }
+                .sheet(isPresented: $isSharing, content: { shareView() })
         }
     }
 }
@@ -88,8 +99,8 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
     func getRootRecord() -> CKRecord? {
         return nil
     }
-    func prepareSharing(handler: @escaping (CKShare, CKContainer, Error?) -> Void) {
-        
+    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
+        handler(nil, nil, nil)
     }
     
     func uploadToCloud(items: [Item]) -> (Bool, Error?) {
@@ -166,8 +177,8 @@ final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInpu
     func getRootRecord() -> CKRecord? {
         return nil
     }
-    func prepareSharing(handler: @escaping (CKShare, CKContainer, Error?) -> Void) {
-        
+    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
+        handler(nil, nil, nil)
     }
     
     func add(_ newItem: Item) -> (Bool, Error?) {

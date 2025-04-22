@@ -40,10 +40,12 @@ struct Toolbar: View {
             VStack() {
                 Button(action: {
                     Task {
+                        print("Called Share")
                         _ = viewModel.inputs.prepareSharing(handler: { activityItems, container, error  in
                             activeShare = activityItems
                             activeContainer = container
                             isSharing = true
+                            print("isSharing - \(isSharing)")
                         })
                     }
                 }, label: {
@@ -105,7 +107,6 @@ struct Toolbar: View {
             }
 
         }
-        .padding()
     }
 }
 
