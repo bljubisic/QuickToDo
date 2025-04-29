@@ -45,11 +45,11 @@ struct MainView: View {
     
     /// Builds a `CloudSharingView` with state after processing a share.
     private func shareView() -> CloudSharingView? {
-        print("Displaying sheet")
+        
         guard let share = activeShare, let container = activeContainer else {
             return nil
         }
-
+        print("Displaying sheet")
         return CloudSharingView(container: container, share: share)
     }
     
