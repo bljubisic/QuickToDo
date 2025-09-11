@@ -40,6 +40,7 @@
 		E49125AE2AC7642D00DF090C /* QuickToDoIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49125AC2AC7642D00DF090C /* QuickToDoIntent.swift */; };
 		E49DE916289737EC00B70245 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = E49DE915289737EC00B70245 /* .gitignore */; };
 		E49F65FB22C379E7008D59FA /* CloudKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49F65FA22C379E7008D59FA /* CloudKitModel.swift */; };
+		E4A90C8A2DF6392600FEA0EB /* CloudKitShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A90C892DF6391A00FEA0EB /* CloudKitShareManager.swift */; };
 		E4BF3E6E21A04AFC00302EB8 /* QuickToDoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4BF3E6D21A04AFC00302EB8 /* QuickToDoViewModel.swift */; };
 		E4C11E572ABF61AA00C788E6 /* DataStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */; };
 		E4C6E01219E7EA63003A89F7 /* QuickToDo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E4C6E01019E7EA63003A89F7 /* QuickToDo.xcdatamodeld */; };
@@ -52,6 +53,7 @@
 		E4F9A3791A5C146900CC0573 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4F9A3781A5C146900CC0573 /* CoreData.framework */; };
 		E4FBC6DA215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */; };
 		E4FBC6DC215AD63300F1B6E2 /* DataStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */; };
+		E4FD7D562DD6846700777F1A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FD7D552DD6846700777F1A /* SceneDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,6 +123,7 @@
 		E49125AC2AC7642D00DF090C /* QuickToDoIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoIntent.swift; sourceTree = "<group>"; };
 		E49DE915289737EC00B70245 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		E49F65FA22C379E7008D59FA /* CloudKitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitModel.swift; sourceTree = "<group>"; };
+		E4A90C892DF6391A00FEA0EB /* CloudKitShareManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitShareManager.swift; sourceTree = "<group>"; };
 		E4BF3E6D21A04AFC00302EB8 /* QuickToDoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoViewModel.swift; sourceTree = "<group>"; };
 		E4C6E00919E7EA62003A89F7 /* QuickToDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuickToDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4C6E00D19E7EA62003A89F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -134,6 +137,7 @@
 		E4F9A3781A5C146900CC0573 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoModelProtocol.swift; sourceTree = "<group>"; };
 		E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStructures.swift; sourceTree = "<group>"; };
+		E4FD7D552DD6846700777F1A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -258,6 +262,7 @@
 		E4AFEE3E215AB0620001AEDA /* View */ = {
 			isa = PBXGroup;
 			children = (
+				E4A90C892DF6391A00FEA0EB /* CloudKitShareManager.swift */,
 				E4F67FD72DB6467E00901DF9 /* ItemsView.swift */,
 				50AB71102DB10D2C008EA327 /* CloudSharingView.swift */,
 				50A1BF1A2DAFD8A8000D2647 /* Toolbar.swift */,
@@ -303,6 +308,7 @@
 				E4AFEE3E215AB0620001AEDA /* View */,
 				E404A39F1A8EBA34008D32A5 /* QuickToDo.entitlements */,
 				E4861BBF215FA0010085CFB8 /* AppDelegate.swift */,
+				E4FD7D552DD6846700777F1A /* SceneDelegate.swift */,
 				E4C6E00C19E7EA62003A89F7 /* Supporting Files */,
 			);
 			path = QuickToDo;
@@ -505,6 +511,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4A90C8A2DF6392600FEA0EB /* CloudKitShareManager.swift in Sources */,
 				E4BF3E6E21A04AFC00302EB8 /* QuickToDoViewModel.swift in Sources */,
 				E435ECE9216932FB00E68960 /* ItemMO.swift in Sources */,
 				E4FBC6DC215AD63300F1B6E2 /* DataStructures.swift in Sources */,
@@ -512,6 +519,7 @@
 				E435ECEB21729EB700E68960 /* QuickToDoViewModelProtocol.swift in Sources */,
 				E4761D952BFB3C980092408C /* AppModelContainer.swift in Sources */,
 				E435ECEF21890A6A00E68960 /* ItemTableViewCell.swift in Sources */,
+				E4FD7D562DD6846700777F1A /* SceneDelegate.swift in Sources */,
 				E49F65FB22C379E7008D59FA /* CloudKitModel.swift in Sources */,
 				E435ECF121890A7900E68960 /* AddItemTableViewCell.swift in Sources */,
 				E4FBC6DA215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift in Sources */,
@@ -928,7 +936,7 @@
 				E46E6E7623F2A80600D26E00 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		E477E6A02A76B2C7003C7FCB /* Build configuration list for PBXNativeTarget "QuickToDoWidgetExtension" */ = {
 			isa = XCConfigurationList;
@@ -937,7 +945,7 @@
 				E477E6A22A76B2C7003C7FCB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		E4C6E00419E7EA62003A89F7 /* Build configuration list for PBXProject "QuickToDo" */ = {
 			isa = XCConfigurationList;
@@ -946,7 +954,7 @@
 				E42C85F523E8615200AB6CDD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		E4C6E02B19E7EA63003A89F7 /* Build configuration list for PBXNativeTarget "QuickToDo" */ = {
 			isa = XCConfigurationList;
@@ -955,7 +963,7 @@
 				E42C85F623E8615200AB6CDD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

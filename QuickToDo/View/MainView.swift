@@ -16,10 +16,7 @@ import UserNotifications
 
 struct MainView: View {
     
-    
-    
-    
-    
+    @EnvironmentObject var shareManager: CloudKitShareManager
     @State var viewModel: QuickToDoViewModel
 //    @ObservedObject var viewModel: ViewModelMocked
     
@@ -57,14 +54,25 @@ struct MainView: View {
     var body: some View {
         VStack() {
             Toolbar(viewModel: $viewModel, shown: $shown, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
-            ItemsView(viewModel: $viewModel, shown: $shown, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
-                .onAppear {
-                    _ = self.viewModel.inputs.getItems {
-                        print("called getItems")
-                        WidgetCenter.shared.reloadAllTimelines()
-                    }
+            TabView {
+                NavigationStack {
+                    ItemsView(viewModel: $viewModel, shown: $shown, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
+                        .onAppear {
+                            _ = self.viewModel.inputs.getItems {
+                                print("called getItems")
+                                WidgetCenter.shared.reloadAllTimelines()
+                            }
+                        }
+                        .sheet(isPresented: $isSharing, content: { shareView() })
                 }
-                .sheet(isPresented: $isSharing, content: { shareView() })
+                .tabItem {
+                    Label("Items", systemImage: "list.bullet")
+                }
+                Text("Tab 2")
+                    .tabItem {
+                        Label("Shared Items", systemImage: "person.crop.circle")
+                    }
+            }
         }
     }
 }

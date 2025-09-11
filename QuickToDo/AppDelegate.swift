@@ -12,9 +12,10 @@ import CloudKit
 import SwiftUI
 
 //@UIApplicationMain
+//@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    
-    var window: UIWindow?
+//    
+//    var window: UIWindow?
     
     
 //    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
@@ -31,79 +32,78 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        window?.makeKeyAndVisible()
 //        return true
 //    }
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        UNUserNotificationCenter.current().requestAuthorization(options:
-            [[.alert, .sound, .badge]],
-                completionHandler: { (granted, error) in
-                    // Handle Error
-            })
-        application.registerForRemoteNotifications()
-
-        return true
-    }
+//    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+//        return true
+//    }
+//    
+//    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+//        // Called when a new scene session is being created.
+//        // Use this method to select a configuration to create the new scene with.
+//        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+//    }
     
-    func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
-        
-        guard cloudKitShareMetadata.containerIdentifier == Config.containerIdentifier else {
-            print("Shared container identifier \(cloudKitShareMetadata.containerIdentifier) did not match known identifier.")
-            return
-        }
-        let container = CKContainer(identifier: Config.containerIdentifier)
-        let acceptSharesOperation = CKAcceptSharesOperation(shareMetadatas: [cloudKitShareMetadata])
-        
-        window = UIWindow(frame: UIScreen.main.bounds)
-        let swiftData = SwiftDataModel()
-        let cloudKit = CloudKitModel()
-        let model = QuickToDoModel(swiftData, cloudKit)
-
-        
-        let viewController: MainViewController = MainViewController()
-        viewController.insert(withModel: model)
-        window?.rootViewController = viewController
-        window?.makeKeyAndVisible()
-        
-        acceptSharesOperation.perShareResultBlock = {metadata, result in
-            let shareRecordType = metadata.share.recordType
-
-            switch result {
-            case .failure(let error):
-                debugPrint("Error accepting share: \(error)")
-
-            case .success:
-                debugPrint("Accepted CloudKit share with type: \(shareRecordType)")
-            }
-        }
-        
-        acceptSharesOperation.acceptSharesResultBlock = { result in
-            if case .failure(let error) = result {
-                debugPrint("Error accepting CloudKit Share: \(error)")
-            }
-        }
-        
-        acceptSharesOperation.qualityOfService = .utility
-        container.add(acceptSharesOperation)
-    }
+//    func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
+//        
+//        guard cloudKitShareMetadata.containerIdentifier == Config.containerIdentifier else {
+//            print("Shared container identifier \(cloudKitShareMetadata.containerIdentifier) did not match known identifier.")
+//            return
+//        }
+//        let container = CKContainer(identifier: Config.containerIdentifier)
+//        let acceptSharesOperation = CKAcceptSharesOperation(shareMetadatas: [cloudKitShareMetadata])
+//        
+//        window = UIWindow(frame: UIScreen.main.bounds)
+//        let swiftData = SwiftDataModel()
+//        let cloudKit = CloudKitModel()
+//        let model = QuickToDoModel(swiftData, cloudKit)
+//
+//        
+//        let viewController: MainViewController = MainViewController()
+//        viewController.insert(withModel: model)
+//        window?.rootViewController = viewController
+//        window?.makeKeyAndVisible()
+//        
+//        acceptSharesOperation.perShareResultBlock = {metadata, result in
+//            let shareRecordType = metadata.share.recordType
+//
+//            switch result {
+//            case .failure(let error):
+//                debugPrint("Error accepting share: \(error)")
+//
+//            case .success:
+//                debugPrint("Accepted CloudKit share with type: \(shareRecordType)")
+//            }
+//        }
+//        
+//        acceptSharesOperation.acceptSharesResultBlock = { result in
+//            if case .failure(let error) = result {
+//                debugPrint("Error accepting CloudKit Share: \(error)")
+//            }
+//        }
+//        
+//        acceptSharesOperation.qualityOfService = .utility
+//        container.add(acceptSharesOperation)
+//    }
     
-    func showAlertInvitationOnMainViewController(record: CKRecord) {
-        
-    }
+//    func showAlertInvitationOnMainViewController(record: CKRecord) {
+//        
+//    }
+//    
+//    
+//    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+//        if let notification = CKNotification(fromRemoteNotificationDictionary: userInfo) {
+//            print("CloudKit database changed")
+//            NotificationCenter.default.post(name: .NSPersistentStoreRemoteChange, object: nil)
+//            completionHandler(.newData)
+//            return
+//        }
+//        completionHandler(.noData)
+//    }
     
-    
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        if let notification = CKNotification(fromRemoteNotificationDictionary: userInfo) {
-            print("CloudKit database changed")
-            NotificationCenter.default.post(name: .NSPersistentStoreRemoteChange, object: nil)
-            completionHandler(.newData)
-            return
-        }
-        completionHandler(.noData)
-    }
-    
-    func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-        // Saves changes in the application's managed object context before the application terminates.
-//        saveContext()
-    }
+//    func applicationWillTerminate(_ application: UIApplication) {
+//        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+//        // Saves changes in the application's managed object context before the application terminates.
+////        saveContext()
+//    }
     
 //    var persistentContainer: NSPersistentContainer = {
 //        /*
@@ -153,6 +153,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 struct QuickToDoApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @StateObject private var shareManager = CloudKitShareManager()
     
     var body: some Scene {
         WindowGroup {
@@ -162,6 +163,10 @@ struct QuickToDoApp: App {
                 let model = QuickToDoModel(swiftData, cloudKit)
                 let viewModel = QuickToDoViewModel(model)
                 MainView(viewModel: viewModel)
+            }
+            .environmentObject(shareManager)
+            .onOpenURL { url in
+                shareManager.handleIncomingURL(url)
             }
         }
     }

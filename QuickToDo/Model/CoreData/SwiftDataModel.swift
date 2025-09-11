@@ -189,8 +189,10 @@ extension SwiftDataModel: StorageInputs {
 
     }
     
+    /// This method is unimplemented here. Actual iCloud sharing is provided in CloudKitModel.
     func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
-        
+        let error = NSError(domain: "SwiftDataModel", code: -1, userInfo: [NSLocalizedDescriptionKey: "iCloud sharing not supported in local model."])
+        handler(nil, nil, error)
     }
     
     func getRootRecord() -> CKRecord? {
@@ -220,3 +222,4 @@ extension SwiftDataModel: StorageOutputs {
     var outputs: StorageOutputs { return self }
     
 }
+
