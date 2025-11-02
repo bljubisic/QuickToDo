@@ -11,7 +11,7 @@ import CloudKit
 
 struct Toolbar: View {
     
-    @Binding var viewModel: QuickToDoViewModel
+    @ObservedObject var viewModel: QuickToDoViewModel
     @Binding var shown: Bool
     @Binding var isSharing: Bool
     @Binding var activeShare: CKShare?
@@ -112,12 +112,12 @@ struct Toolbar: View {
 
 #Preview {
     @Previewable @State var show: Bool = false
-    @Previewable @State var viewModel: QuickToDoViewModel = QuickToDoViewModel()
+    @Previewable var viewModel: QuickToDoViewModel = QuickToDoViewModel()
     @Previewable @State var isSharing: Bool = false
     @Previewable @State var activeShare: CKShare? = nil
     @Previewable @State var activeContainer: CKContainer? = nil
     
-    Toolbar(viewModel: $viewModel, shown: $show, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
+    Toolbar(viewModel: viewModel, shown: $show, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
         .padding()
         .background(Color.white)
         .environment(\.colorScheme, .light)

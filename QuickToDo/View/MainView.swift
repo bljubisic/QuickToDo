@@ -17,7 +17,7 @@ import UserNotifications
 struct MainView: View {
     
     @EnvironmentObject var shareManager: CloudKitShareManager
-    @State var viewModel: QuickToDoViewModel
+    @StateObject var viewModel: QuickToDoViewModel
 //    @ObservedObject var viewModel: ViewModelMocked
     
     @State private var text = ""
@@ -31,9 +31,9 @@ struct MainView: View {
     
     init(viewModel: QuickToDoViewModelProtoocol) {
 //        self.viewModel = viewModel as! ViewModelMocked
-        self.viewModel = viewModel as! QuickToDoViewModel
+        _viewModel = StateObject(wrappedValue: viewModel as! QuickToDoViewModel)
         shown = viewModel.inputs.getConfig()
-        _ = self.viewModel.inputs.getItems {
+        _ = (viewModel as! QuickToDoViewModel).inputs.getItems {
 //            print("called getItems")
             WidgetCenter.shared.reloadAllTimelines()
         }
@@ -53,10 +53,10 @@ struct MainView: View {
     
     var body: some View {
         VStack() {
-            Toolbar(viewModel: $viewModel, shown: $shown, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
+            Toolbar(viewModel: viewModel, shown: $shown, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
             TabView {
                 NavigationStack {
-                    ItemsView(viewModel: $viewModel, shown: $shown, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
+                    ItemsView(viewModel: viewModel, shown: $shown, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
                         .onAppear {
                             _ = self.viewModel.inputs.getItems {
                                 print("called getItems")
@@ -88,6 +88,7 @@ struct MainView_Previews: PreviewProvider {
 }
 
 final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
+    
     typealias Observable = RxSwift.Observable
     
     func save(config: QuickToDoConfig) -> (Bool, Error?) {
@@ -107,8 +108,21 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
     func getRootRecord() -> CKRecord? {
         return nil
     }
+    
     func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
         handler(nil, nil, nil)
+    }
+    
+    func getCurrentShareStatus() -> CKShare? {
+        return nil
+    }
+    
+    func isListCurrentlyShared() -> Bool {
+        return false
+    }
+    
+    func refreshShareStatus() async throws -> CKShare? {
+        return nil
     }
     
     func uploadToCloud(items: [Item]) -> (Bool, Error?) {
@@ -154,6 +168,18 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
 }
 
 final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInputs, QuickToDoViewModelOutputs, ObservableObject {
+    func getCurrentShareStatus() -> CKShare? {
+        return nil
+    }
+    
+    func isListCurrentlyShared() -> Bool {
+        return false
+    }
+    
+    func refreshShareStatus() async throws -> CKShare? {
+        return nil
+    }
+    
     typealias Observable = RxSwift.Observable
     
     func save(config: Bool) -> (Bool, Error?) {

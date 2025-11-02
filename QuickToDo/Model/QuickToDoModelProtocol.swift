@@ -18,6 +18,9 @@ protocol QuickToDoInputs {
     func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) -> Void
     func getRootRecord() -> CKRecord?
     func getZone() -> CKRecordZone?
+    func getCurrentShareStatus() -> CKShare?
+    func isListCurrentlyShared() -> Bool
+    func refreshShareStatus() async throws -> CKShare?
     func uploadToCloud(items: [Item]) -> (Bool, Error?)
     func save(config: QuickToDoConfig) -> (Bool, Error?)
     func getConfig() -> QuickToDoConfig?
@@ -51,6 +54,9 @@ protocol StorageInputs {
     func getRootRecord() -> CKRecord?
     func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?)
     func getZone() -> CKRecordZone?
+    func getCurrentShareStatus() -> CKShare?
+    func isListCurrentlyShared() -> Bool
+    func refreshShareStatus() async throws -> CKShare?
 }
 
 protocol StorageOutputs {

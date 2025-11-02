@@ -11,7 +11,7 @@ import RxSwift
 import SwiftyCloudKit
 import CloudKit
 //MARK: StorageProtocol
-final class CloudKitModel: StorageProtocol {
+final class CloudKitModel: StorageProtocol, @unchecked Sendable {
     
     private var itemsPrivate: PublishSubject<Item?>
     private var itemsRecords: [CKRecord]
@@ -19,7 +19,43 @@ final class CloudKitModel: StorageProtocol {
     private var database: CKDatabase
     private var sharedDatabase: CKDatabase
     private var zone: CKRecordZone
-    private var rootRecord: CKRecord!
+    private var _rootRecord: CKRecord?
+    private var _cachedShare: CKShare?
+    private var _sharePreparationInProgress: Bool = false
+    private let synchronizationQueue = DispatchQueue(label: "com.quicktodo.cloudkit.sync", attributes: .concurrent)
+    
+    private var rootRecord: CKRecord? {
+        get {
+            synchronizationQueue.sync { _rootRecord }
+        }
+        set {
+            synchronizationQueue.async(flags: .barrier) {
+                self._rootRecord = newValue
+            }
+        }
+    }
+    
+    private var cachedShare: CKShare? {
+        get {
+            synchronizationQueue.sync { _cachedShare }
+        }
+        set {
+            synchronizationQueue.async(flags: .barrier) {
+                self._cachedShare = newValue
+            }
+        }
+    }
+    
+    private var sharePreparationInProgress: Bool {
+        get {
+            synchronizationQueue.sync { _sharePreparationInProgress }
+        }
+        set {
+            synchronizationQueue.async(flags: .barrier) {
+                self._sharePreparationInProgress = newValue
+            }
+        }
+    }
     
     var items: Observable<Item?> {
         return itemsPrivate.subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
@@ -38,7 +74,8 @@ final class CloudKitModel: StorageProtocol {
                 return
             }
             if(subscriptionsUnwrapped.isEmpty) {
-                let newSubscription = CKQuerySubscription(recordType: "Items", predicate: NSPredicate(value: true), options: [.firesOnRecordCreation, .firesOnRecordDeletion, .firesOnRecordUpdate])
+                let subscriptionID = "Items-subscription-\(UUID().uuidString)"
+                let newSubscription = CKQuerySubscription(recordType: "Items", predicate: NSPredicate(value: true), subscriptionID: subscriptionID, options: [.firesOnRecordCreation, .firesOnRecordDeletion, .firesOnRecordUpdate])
                 let notification = CKSubscription.NotificationInfo()
                 notification.shouldSendContentAvailable = true
                 notification.alertBody = "ToDo list has been changed"
@@ -61,7 +98,15 @@ final class CloudKitModel: StorageProtocol {
                 print("Zone not created: \(err)")
             } else {
                 self.zone = newZone!
-                self.findOrCreateRootRecord()
+                // Initialize root record asynchronously
+                Task {
+                    do {
+                        let rootRecord = try await self.findOrCreateRootRecord()
+                        self.rootRecord = rootRecord
+                    } catch {
+                        print("Failed to initialize root record: \(error)")
+                    }
+                }
             }
         }
     }
@@ -87,33 +132,127 @@ final class CloudKitModel: StorageProtocol {
         }
     }
     
-    private func findOrCreateRootRecord()  {
+    private func findOrCreateRootRecord() async throws -> CKRecord {
+        // If we already have a root record, return it
+        if let existingRoot = self.rootRecord {
+            return existingRoot
+        }
+        
+        // First, try to find existing root record
         let predicate = NSPredicate(format: "Name = %@", "Root")
         let query = CKQuery(recordType: "Items", predicate: predicate)
         
-        self.database.fetch(withQuery: query, inZoneWith: zone.zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
-            switch result {
-            case .success(let (matchResults, _)):
-                for (_, matchResult) in matchResults {
-                    if case let .success(record) = matchResult {
-                        self.rootRecord = record
+        return try await withCheckedThrowingContinuation { continuation in
+            let database = self.database
+            let zone = self.zone
+            
+            database.fetch(withQuery: query, inZoneWith: zone.zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
+                switch result {
+                case .success(let (matchResults, _)):
+                    // Look for existing root record
+                    for (_, matchResult) in matchResults {
+                        if case let .success(record) = matchResult {
+                            self.rootRecord = record
+                            continuation.resume(returning: record)
+                            return
+                        }
                     }
-                }
-                if self.rootRecord == nil {
-                    let item = Item(id: UUID(), name: "Root", count: 0, uploadedToICloud: true, done: true, shown: false, createdAt: Date(), lastUsedAt: Date())
-                    let insertFunction = self.insert()
-                    _ = insertFunction(item) { (newItem, error) in
-                        self.findRootRecord()
+                    
+                    // No root record found, create one
+                    self.createRootRecord { record, error in
+                        if let error = error {
+                            continuation.resume(throwing: error)
+                        } else if let record = record {
+                            self.rootRecord = record
+                            continuation.resume(returning: record)
+                        } else {
+                            let createError = NSError(domain: "CloudKitModel", code: -4, userInfo: [NSLocalizedDescriptionKey: "Failed to create root record"])
+                            continuation.resume(throwing: createError)
+                        }
                     }
+                    
+                case .failure(let error):
+                    print("findOrCreateRootRecord fetch error: \(error)")
+                    continuation.resume(throwing: error)
                 }
-            case .failure(let error):
-                print("findOrCreateRootRecord fetch error: \(error)")
             }
+        }
+    }
+    
+    private func createRootRecord(completion: @escaping (CKRecord?, Error?) -> Void) {
+        let newRecord = CKRecord(recordType: "Items", recordID: CKRecord.ID(zoneID: self.zone.zoneID))
+        let rootItem = Item(id: UUID(), name: "Root", count: 0, uploadedToICloud: true, done: true, shown: false, createdAt: Date(), lastUsedAt: Date())
+        
+        newRecord.set(string: rootItem.id.uuidString, key: String(describing: ItemFields.id))
+        newRecord.set(string: rootItem.name, key: String(describing: ItemFields.name))
+        newRecord.set(int: rootItem.done ? 1 : 0, key: String(describing: ItemFields.done))
+        newRecord.set(int: rootItem.count, key: String(describing: ItemFields.count))
+        newRecord.set(int: rootItem.shown ? 1 : 0, key: String(describing: ItemFields.used))
+        
+        self.database.save(newRecord) { record, error in
+            completion(record, error)
         }
     }
 }
 //MARK: StorageInputs extension
 extension CloudKitModel: StorageInputs {
+    func getCurrentShareStatus() -> CKShare? {
+        guard self.rootRecord != nil else {
+            return nil
+        }
+        
+        // The share reference points to a CKShare, but we need to fetch it to get the actual CKShare object
+        // For now, we'll return nil and let the prepareShare method handle the full fetch
+        // This method is primarily used for checking if sharing is available
+        return nil
+    }
+    
+    func isListCurrentlyShared() -> Bool {
+        return rootRecord?.share != nil
+    }
+    
+    func invalidateShareCache() {
+        cachedShare = nil
+    }
+    
+    func refreshShareStatus() async throws -> CKShare? {
+        guard let rootRecord = self.rootRecord,
+              let shareRef = rootRecord.share else {
+            return nil
+        }
+        
+        let database = self.database
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            let fetchOp = CKFetchRecordsOperation(recordIDs: [shareRef.recordID])
+            fetchOp.perRecordResultBlock = { recordID, result in
+                switch result {
+                case .success(let shareRecord):
+                    if let fetchedShare = shareRecord as? CKShare {
+                        self.cachedShare = fetchedShare
+                        continuation.resume(returning: fetchedShare)
+                    } else {
+                        let error = NSError(domain: "CloudKitModel", code: -3, userInfo: [NSLocalizedDescriptionKey: "Fetched record is not a CKShare."])
+                        continuation.resume(throwing: error)
+                    }
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+            
+            fetchOp.fetchRecordsResultBlock = { result in
+                switch result {
+                case .success:
+                    break // Success handled in perRecordResultBlock
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+            
+            database.add(fetchOp)
+        }
+    }
+    
     
     func getItemWithId() -> itemProcessFindWithID {
         return { id in
@@ -134,8 +273,10 @@ extension CloudKitModel: StorageInputs {
     func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?) {
         let predicate = NSPredicate(format: "Root = %@", root.recordID)
         let query = CKQuery(recordType: "Items", predicate: predicate)
+        let sharedDatabase = self.sharedDatabase
+        let zone = self.zone
         
-        self.sharedDatabase.fetch(withQuery: query, inZoneWith: zone.zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
+        sharedDatabase.fetch(withQuery: query, inZoneWith: zone.zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
             switch result {
             case .success(let (matchResults, _)):
                 guard let completionUnwraped = completion else { return }
@@ -180,51 +321,133 @@ extension CloudKitModel: StorageInputs {
      Calls the handler with the CKShare, CKContainer, and any error.
      */
     func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) async throws {
-        // Ensure the root record exists or is created.
-        if self.rootRecord == nil {
-            self.findOrCreateRootRecord()
-            // Wait briefly for rootRecord to be created, real code should await completion.
-            try await Task.sleep(nanoseconds: 500_000_000) // 0.5s, adjust as needed
-            if self.rootRecord == nil {
-                let error = NSError(domain: "CloudKitModel", code: -2, userInfo: [NSLocalizedDescriptionKey: "Root record not available."])
-                handler(nil, nil, error)
-                return
-            }
-        }
-
-        // Try to find or create a CKShare for the root record.
-        if let shareRef = self.rootRecord.share {
-            // Fetch existing share
-            let fetchOp = CKFetchRecordsOperation(recordIDs: [shareRef.recordID])
-            fetchOp.perRecordResultBlock = { recordID, result in
-                switch result {
-                case .success(let shareRecord):
-                    if let fetchedShare = shareRecord as? CKShare {
-                        handler(fetchedShare, self.container, nil)
-                    } else {
-                        handler(nil, self.container, NSError(domain: "CloudKitModel", code: -3, userInfo: [NSLocalizedDescriptionKey: "Fetched record is not a CKShare."]))
-                    }
-                case .failure(let error):
-                    handler(nil, self.container, error)
-                }
-            }
-            self.database.add(fetchOp)
+        // Prevent multiple simultaneous share preparation requests
+        if sharePreparationInProgress {
+            let error = NSError(domain: "CloudKitModel", code: -5, userInfo: [NSLocalizedDescriptionKey: "Share preparation already in progress"])
+            handler(nil, self.container, error)
             return
         }
-        // Create new share
-        let share = CKShare(rootRecord: self.rootRecord)
+        
+        sharePreparationInProgress = true
+        defer { sharePreparationInProgress = false }
+        
+        do {
+            // Ensure the root record exists with proper async handling
+            let rootRecord = try await findOrCreateRootRecord()
+            self.rootRecord = rootRecord
+            
+            // Check if we have a cached share that's still valid
+            if let cachedShare = self.cachedShare,
+               let shareRef = rootRecord.share,
+               cachedShare.recordID == shareRef.recordID {
+                handler(cachedShare, self.container, nil)
+                return
+            }
+            
+            // Try to find existing share
+            if let shareRef = rootRecord.share {
+                await fetchExistingShare(shareRef: shareRef, handler: handler)
+                return
+            }
+            
+            // Create new share
+            await createNewShare(rootRecord: rootRecord, handler: handler)
+            
+        } catch {
+            handler(nil, self.container, error)
+        }
+    }
+    
+    private func fetchExistingShare(shareRef: CKRecord.Reference, handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) async {
+        let fetchOp = CKFetchRecordsOperation(recordIDs: [shareRef.recordID])
+        let database = self.database
+        let container = self.container
+        
+        fetchOp.perRecordResultBlock = { recordID, result in
+            switch result {
+            case .success(let shareRecord):
+                if let fetchedShare = shareRecord as? CKShare {
+                    self.cachedShare = fetchedShare
+                    handler(fetchedShare, container, nil)
+                } else {
+                    let error = NSError(domain: "CloudKitModel", code: -3, userInfo: [NSLocalizedDescriptionKey: "Fetched record is not a CKShare."])
+                    handler(nil, container, error)
+                }
+            case .failure(let error):
+                handler(nil, container, error)
+            }
+        }
+        
+        fetchOp.fetchRecordsResultBlock = { result in
+            switch result {
+            case .success:
+                break // Success handled in perRecordResultBlock
+            case .failure(let error):
+                handler(nil, container, error)
+            }
+        }
+        
+        database.add(fetchOp)
+    }
+    
+    private func createNewShare(rootRecord: CKRecord, handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) async {
+        let share = CKShare(rootRecord: rootRecord)
         share[CKShare.SystemFieldKey.title] = "QuickToDo Share"
-        let modifyOp = CKModifyRecordsOperation(recordsToSave: [self.rootRecord, share], recordIDsToDelete: nil)
-        // iOS 15+: use modifyRecordsResultBlock instead of the deprecated modifyRecordsCompletionBlock
+        
+        // Configure share permissions
+        share.publicPermission = .none
+        share[CKShare.SystemFieldKey.shareType] = "com.bratislavljubisic.QuickToDo.share"
+        
+        let modifyOp = CKModifyRecordsOperation(recordsToSave: [rootRecord, share], recordIDsToDelete: nil)
+        let database = self.database
+        let container = self.container
+        
         modifyOp.modifyRecordsResultBlock = { result in
             switch result {
             case .success:
-                handler(share, self.container, nil)
+                self.cachedShare = share
+                handler(share, container, nil)
             case .failure(let error):
-                handler(nil, self.container, error)
+                handler(nil, container, error)
             }
         }
-        self.database.add(modifyOp)
+        
+        modifyOp.perRecordSaveBlock = { (recordID: CKRecord.ID, result: Result<CKRecord, Error>) in
+            switch result {
+            case .success(let record):
+                if let share = record as? CKShare {
+                    self.cachedShare = share
+                }
+            case .failure(let error):
+                print("Error saving record \(recordID): \(error.localizedDescription)")
+            }
+        }
+        
+        database.add(modifyOp)
+    }
+    
+    func removeShare() async throws {
+        guard let rootRecord = self.rootRecord,
+              let shareRef = rootRecord.share else {
+            return // No share to remove
+        }
+        
+        let deleteOp = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: [shareRef.recordID])
+        let database = self.database
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            deleteOp.modifyRecordsResultBlock = { result in
+                switch result {
+                case .success:
+                    self.cachedShare = nil
+                    continuation.resume()
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+            
+            database.add(deleteOp)
+        }
     }
     
 
@@ -232,8 +455,10 @@ extension CloudKitModel: StorageInputs {
     func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?) {
         let predicate = NSPredicate(format: "Used = 1")
         let query = CKQuery(recordType: "Items", predicate: predicate)
+        let database = self.database
+        let zone = self.zone
         
-        self.database.fetch(withQuery: query, inZoneWith: zone.zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
+        database.fetch(withQuery: query, inZoneWith: zone.zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
             switch result {
             case .success(let (matchResults, _)):
                 guard let completion = withCompletion else { return }
@@ -276,23 +501,26 @@ extension CloudKitModel: StorageInputs {
         return { item, completionHandler in
             let newRecord = CKRecord(recordType: "Items", recordID:  CKRecord.ID(zoneID: self.zone.zoneID))
             var itemRet = Item()
-            let error: Error? = nil
-            self.findRootRecord()
-            if self.rootRecord != nil {
-                let rootReference = CKRecord.Reference(recordID: self.rootRecord.recordID, action: .deleteSelf)
-                newRecord.setObject(rootReference, forKey: "Root")
-                newRecord.setParent(self.rootRecord)
-            }
-            newRecord.set(string: item.id.uuidString, key: String(describing: ItemFields.id))
-            newRecord.set(string: item.name, key: String(describing: ItemFields.name))
-            newRecord.set(int: (item.done) ? 1 : 0, key: String(describing: ItemFields.done))
-            newRecord.set(int: item.count, key: String(describing: ItemFields.count))
-            newRecord.set(int: (item.shown) ? 1 : 0, key: String(describing: ItemFields.used))
-            self.database.save(newRecord) { (record, errorReceived) in
-                guard let recordUnwrapped = record else {
-                    return
-                }
-                if (errorReceived == nil) {
+            
+            // Use async task to ensure root record exists
+            Task {
+                do {
+                    if item.name != "Root" {
+                        let rootRecord = try await self.findOrCreateRootRecord()
+                        let rootReference = CKRecord.Reference(recordID: rootRecord.recordID, action: .deleteSelf)
+                        newRecord.setObject(rootReference, forKey: "Root")
+                        newRecord.setParent(rootRecord)
+                    }
+                    
+                    newRecord.set(string: item.id.uuidString, key: String(describing: ItemFields.id))
+                    newRecord.set(string: item.name, key: String(describing: ItemFields.name))
+                    newRecord.set(int: (item.done) ? 1 : 0, key: String(describing: ItemFields.done))
+                    newRecord.set(int: item.count, key: String(describing: ItemFields.count))
+                    newRecord.set(int: (item.shown) ? 1 : 0, key: String(describing: ItemFields.used))
+                    
+                    // Use async/await instead of callback-based save
+                    let recordUnwrapped = try await self.database.save(newRecord)
+                    
                     itemRet = Item(id: UUID(uuidString: recordUnwrapped.string(String(describing: ItemFields.id))!)!,
                                    name: recordUnwrapped.string(String(describing: ItemFields.name))!,
                                    count: recordUnwrapped.int(String(describing: ItemFields.count))!,
@@ -300,27 +528,31 @@ extension CloudKitModel: StorageInputs {
                                    done: (recordUnwrapped.int(String(describing: ItemFields.done)) == 0) ? false : true,
                                    shown: (recordUnwrapped.int(String(describing: ItemFields.used)) == 0) ? false : true,
                                    createdAt: Date.now, lastUsedAt: Date.now)
-                } else {
-                    itemRet = Item(id: UUID(uuidString: recordUnwrapped.string(String(describing: ItemFields.id))!)!,
-                                   name: recordUnwrapped.string(String(describing: ItemFields.name))!,
-                                   count: recordUnwrapped.int(String(describing: ItemFields.count))!,
+                    
+                    print("Record created!! \(itemRet.name)")
+                    if itemRet.name == "Root" {
+                        self.rootRecord = recordUnwrapped
+                    }
+                    self.itemsRecords.append(recordUnwrapped)
+                    completionHandler?(itemRet, nil)
+                    
+                } catch {
+                    print("Failed to save record: \(error)")
+                    // Create item with uploadedToICloud set to false on error
+                    itemRet = Item(id: item.id,
+                                   name: item.name,
+                                   count: item.count,
                                    uploadedToICloud: false,
-                                   done: (recordUnwrapped.int(String(describing: ItemFields.done)) == 0) ? false : true,
-                                   shown: (recordUnwrapped.int(String(describing: ItemFields.used)) == 0) ? false : true,
-                                   createdAt: Date.now, lastUsedAt: Date.now)
+                                   done: item.done,
+                                   shown: item.shown,
+                                   createdAt: Date.now,
+                                   lastUsedAt: Date.now)
+                    completionHandler?(itemRet, error)
                 }
-                print("Record created!! \(itemRet.name)")
-                if itemRet.name == "Root" {
-                    self.rootRecord = record!
-                }
-                completionHandler?(itemRet, error)
-               
             }
-            if error == nil {
-                return (itemRet, true)
-            } else {
-                return (nil, false)
-            }
+            
+            // Return a placeholder - actual result is handled via completion handler
+            return (itemRet, true)
         }
     }
     
@@ -337,8 +569,10 @@ extension CloudKitModel: StorageInputs {
             
             let predicate = NSPredicate(format: "(Id == %@)", item.id.uuidString)
             let query = CKQuery(recordType: "Items", predicate: predicate)
+            let database = self.database
+            let zone = self.zone
             
-            self.database.fetch(withQuery: query, inZoneWith: self.zone.zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
+            database.fetch(withQuery: query, inZoneWith: zone.zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
                 var modifiedRecords = [CKRecord]()
                 switch result {
                 case .success(let (matchResults, _)):
@@ -355,12 +589,16 @@ extension CloudKitModel: StorageInputs {
                     }
                     if !modifiedRecords.isEmpty {
                         let updateOperation = CKModifyRecordsOperation(recordsToSave: modifiedRecords, recordIDsToDelete: nil)
-                        updateOperation.perRecordCompletionBlock = {record, errorReceived in
-                            if let error = errorReceived {
-                                print("Unable to modify record: \(record). Error: \(error.localizedDescription)")
+                        updateOperation.perRecordSaveBlock = { recordID, result in
+                            switch result {
+                            case .success:
+                                // Record updated successfully
+                                break
+                            case .failure(let error):
+                                print("Unable to modify record: \(recordID). Error: \(error.localizedDescription)")
                             }
                         }
-                        self.database.add(updateOperation)
+                        database.add(updateOperation)
                     }
                 case .failure(let error):
                     print("update fetch error: \(error)")

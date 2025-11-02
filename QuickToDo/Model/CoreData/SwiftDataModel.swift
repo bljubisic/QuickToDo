@@ -27,9 +27,8 @@ extension SwiftDataModel: StorageInputs {
     
     func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?) {
         let descriptor = FetchDescriptor<ItemSD>(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
-        let item = Item()
         
-        if let items = try? self.modelContext.fetch<ItemSD>(descriptor) {
+        if let items = try? self.modelContext.fetch(descriptor) {
             for item in items {
                 let tmpItem = Item(id: UUID(uuidString: item.uuid!)!,
                                    name: item.word!,
@@ -77,9 +76,9 @@ extension SwiftDataModel: StorageInputs {
             let item = Item()
             
             let predicate = #Predicate<ItemSD> {item in item.word == itemWord}
-            var descriptor = FetchDescriptor(predicate: predicate)
+            let descriptor = FetchDescriptor(predicate: predicate)
 
-            if let fetchedItems =  try? self.modelContext.fetch<ItemSD>(descriptor) {
+            if let fetchedItems =  try? self.modelContext.fetch(descriptor) {
                 if let itemSD = fetchedItems.first {
                     return (Item(id: UUID(uuidString: itemSD.uuid!)!,
                                 name: itemSD.word!,
@@ -99,7 +98,7 @@ extension SwiftDataModel: StorageInputs {
     private func updateIntoContext(withItem item: Item, itemID: String) -> (ItemSD?, Bool) {
         let predicate = #Predicate<ItemSD> { itemFound in itemFound.uuid == itemID }
         let descriptor = FetchDescriptor(predicate: predicate)
-        if let oldItems = try? self.modelContext.fetch<ItemSD>(descriptor) {
+        if let oldItems = try? self.modelContext.fetch(descriptor) {
             if let oldItem = oldItems.first {
                 oldItem.completed = item.done
                 oldItem.count = item.count
@@ -141,7 +140,7 @@ extension SwiftDataModel: StorageInputs {
             let descriptor = FetchDescriptor(predicate: predicate)
             let item = Item()
             
-            if let items = try? self.modelContext.fetch<ItemSD>(descriptor) {
+            if let items = try? self.modelContext.fetch(descriptor) {
                 if let item = items.first {
                     return (Item(id: UUID(uuidString: item.uuid!)!,
                                  name: item.word!,
@@ -159,14 +158,14 @@ extension SwiftDataModel: StorageInputs {
         
     }
     
-    func getHints(for itemName: String, withCompletion: (Item, Item) -> Void) {
+    func getHints(for itemName: String, withCompletion: @escaping (Item, Item) -> Void) {
         var items: [Item] = [Item]()
         
         let predicate = #Predicate<ItemSD> {item in item.word!.starts(with: itemName)}
         let descriptor = FetchDescriptor(predicate: predicate)
         
 
-        if let fetchedItems = try? self.modelContext.fetch<ItemSD>(descriptor) {
+        if let fetchedItems = try? self.modelContext.fetch(descriptor) {
             for itemMO in fetchedItems.filter({(item) in item === ItemSD.self}) {
                 let tmpItem: Item = Item(id: UUID(uuidString: itemMO.uuid!)!,
                                          name: itemMO.word!,
@@ -190,7 +189,7 @@ extension SwiftDataModel: StorageInputs {
     }
     
     /// This method is unimplemented here. Actual iCloud sharing is provided in CloudKitModel.
-    func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
+    func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) async throws {
         let error = NSError(domain: "SwiftDataModel", code: -1, userInfo: [NSLocalizedDescriptionKey: "iCloud sharing not supported in local model."])
         handler(nil, nil, error)
     }
@@ -204,6 +203,18 @@ extension SwiftDataModel: StorageInputs {
     }
     
     func getZone() -> CKRecordZone? {
+        return nil
+    }
+    
+    func getCurrentShareStatus() -> CKShare? {
+        return nil
+    }
+    
+    func isListCurrentlyShared() -> Bool {
+        return false
+    }
+    
+    func refreshShareStatus() async throws -> CKShare? {
         return nil
     }
     

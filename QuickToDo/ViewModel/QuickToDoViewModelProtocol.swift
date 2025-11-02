@@ -22,6 +22,9 @@ protocol QuickToDoViewModelInputs {
     func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) -> Void
     func getRootRecord() -> CKRecord?
     func getZone() -> CKRecordZone?
+    func getCurrentShareStatus() -> CKShare?
+    func isListCurrentlyShared() -> Bool
+    func refreshShareStatus() async throws -> CKShare?
     func clearList() -> Bool
     func uploadToCloud() -> (Bool, Error?)
     func getConfig() -> Bool

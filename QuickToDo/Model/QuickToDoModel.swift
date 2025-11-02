@@ -75,6 +75,18 @@ extension QuickToDoModel: QuickToDoInputs {
         return self.cloudKit.inputs.getZone()
     }
     
+    func getCurrentShareStatus() -> CKShare? {
+        return self.cloudKit.inputs.getCurrentShareStatus()
+    }
+    
+    func isListCurrentlyShared() -> Bool {
+        return self.cloudKit.inputs.isListCurrentlyShared()
+    }
+    
+    func refreshShareStatus() async throws -> CKShare? {
+        return try await self.cloudKit.inputs.refreshShareStatus()
+    }
+    
     func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
         Task {
             do {

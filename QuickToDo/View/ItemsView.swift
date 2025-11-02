@@ -31,7 +31,7 @@ struct ItemsView: View {
     
     @Environment(\.scenePhase) var scenePhase
     
-    @Binding var viewModel: QuickToDoViewModel
+    @ObservedObject var viewModel: QuickToDoViewModel
     @Binding var shown: Bool
     @Binding var isSharing: Bool
     @Binding var activeShare: CKShare?
@@ -42,6 +42,8 @@ struct ItemsView: View {
     @State private var selectedItem: Item?
     @State var hint1 = ""
     @State var hint2 = ""
+    @State private var sharingError: String?
+    @State private var showingSharingError = false
     
     private func getColorRed(index: Int)-> Double {
         let indexUsed = (index > 24) ? (index % (24 * (index / 24))) : index
@@ -103,8 +105,42 @@ struct ItemsView: View {
         )
     }
     
+    private func isListShared() -> Bool {
+        return viewModel.inputs.isListCurrentlyShared()
+    }
+    
+    private func shareButtonTitle() -> String {
+        if isListShared() {
+            return "Manage Share"
+        } else {
+            return "Share List"
+        }
+    }
+    
     var body: some View {
         VStack {
+            // Sharing status indicator
+            if activeShare != nil {
+                HStack {
+                    Image(systemName: "person.2.fill")
+                        .foregroundColor(.green)
+                    Text("List is shared with others")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Button("Manage Share") {
+                        isSharing = true
+                    }
+                    .font(.caption)
+                    .foregroundColor(.blue)
+                }
+                .padding(.horizontal)
+                .padding(.vertical, 4)
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
+                .padding(.horizontal)
+            }
+            
             List() {
                 ForEach(self.viewModel.outputs.itemsArray.enumerated().map({$0}), id: \.element.id) { index, item in
                     let red: Double = getColorRed(index: index)
@@ -153,6 +189,59 @@ struct ItemsView: View {
                         .onTapGesture {
                             selectedItem = item
                             debounceObject.text = selectedItem!.name
+                        }
+                        .contextMenu {
+                            Button(action: {
+                                selectedItem = item
+                                debounceObject.text = selectedItem!.name
+                            }) {
+                                Label("Edit", systemImage: "pencil")
+                            }
+                            
+                            Button(action: {
+                                let newItem = Item.itemDoneLens.set(!item.done, item)
+                                _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
+                                    print("Done")
+                                    WidgetCenter.shared.reloadAllTimelines()
+                                })
+                            }) {
+                                Label(item.done ? "Mark as Undone" : "Mark as Done", 
+                                      systemImage: item.done ? "circle" : "checkmark.circle")
+                            }
+                            
+                            Divider()
+                            
+                            Button(action: {
+                                Task {
+                                    _ = viewModel.inputs.prepareSharing(handler: { share, container, error in
+                                        DispatchQueue.main.async {
+                                            if let error = error {
+                                                print("Error preparing share: \(error.localizedDescription)")
+                                                sharingError = error.localizedDescription
+                                                showingSharingError = true
+                                                return
+                                            }
+                                            activeShare = share
+                                            activeContainer = container
+                                            isSharing = true
+                                        }
+                                    })
+                                }
+                            }) {
+                                Label(shareButtonTitle(), systemImage: isListShared() ? "person.2.fill" : "square.and.arrow.up")
+                            }
+                            
+                            Divider()
+                            
+                            Button(role: .destructive, action: {
+                                let newItem = Item.itemShownLens.set(!item.shown, item)
+                                _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
+                                    print("Done")
+                                    WidgetCenter.shared.reloadAllTimelines()
+                                })
+                            }) {
+                                Label("Delete", systemImage: "trash")
+                            }
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button(role: .destructive, action: {
@@ -211,6 +300,73 @@ struct ItemsView: View {
                 }
             }
             .navigationTitle("Quick ToDo List!!!")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        Task {
+                            print("Called Share from ItemsView")
+                            _ = viewModel.inputs.prepareSharing(handler: { share, container, error in
+                                DispatchQueue.main.async {
+                                    if let error = error {
+                                        print("Error preparing share: \(error.localizedDescription)")
+                                        sharingError = error.localizedDescription
+                                        showingSharingError = true
+                                        return
+                                    }
+                                    activeShare = share
+                                    activeContainer = container
+                                    isSharing = true
+                                    print("Sharing prepared successfully")
+                                }
+                            })
+                        }
+                    }) {
+                        Image(systemName: isListShared() ? "person.2.fill" : "square.and.arrow.up")
+                            .foregroundColor(isListShared() ? .green : .blue)
+                    }
+                    .disabled(viewModel.outputs.itemsArray.isEmpty)
+                }
+                
+                ToolbarItem(placement: .navigationBarLeading) {
+                    HStack {
+                        if isSharing {
+                            ProgressView()
+                                .scaleEffect(0.8)
+                        }
+                        
+                        if activeShare != nil {
+                            Image(systemName: "person.2.fill")
+                                .foregroundColor(.green)
+                                .font(.caption)
+                        }
+                    }
+                }
+            }
+            .sheet(isPresented: $isSharing) {
+                if let share = activeShare, let container = activeContainer {
+                    NavigationView {
+                        CloudSharingView(container: container, share: share)
+                            .navigationTitle("Share Todo List")
+                            .navigationBarTitleDisplayMode(.inline)
+                            .toolbar {
+                                ToolbarItem(placement: .navigationBarTrailing) {
+                                    Button("Done") {
+                                        isSharing = false
+                                    }
+                                }
+                            }
+                    }
+                } else {
+                    VStack {
+                        ProgressView("Preparing share...")
+                            .padding()
+                        Button("Cancel") {
+                            isSharing = false
+                        }
+                        .padding()
+                    }
+                }
+            }
             .refreshable {
                 print("start refresh")
                 _ = self.viewModel.inputs.getItems {
@@ -228,7 +384,21 @@ struct ItemsView: View {
             //            print("called getItems")
                         WidgetCenter.shared.reloadAllTimelines()
                     }
+                    
+                    // Refresh sharing status when app becomes active
+                    Task {
+                        do {
+                            _ = try await self.viewModel.inputs.refreshShareStatus()
+                        } catch {
+                            print("Failed to refresh share status: \(error)")
+                        }
+                    }
                 }
+            }
+            .alert("Sharing Error", isPresented: $showingSharingError) {
+                Button("OK") { }
+            } message: {
+                Text(sharingError ?? "An unknown error occurred while preparing to share.")
             }
         }
     }
@@ -236,20 +406,19 @@ struct ItemsView: View {
 
 #Preview {
     @Previewable @State var show: Bool = false
-    @Previewable @State var viewModel: QuickToDoViewModel = QuickToDoViewModel()
+    @Previewable var viewModel: QuickToDoViewModel = QuickToDoViewModel()
     @Previewable @State var isSharing: Bool = false
     @Previewable @State var activeShare: CKShare? = nil
     @Previewable @State var activeContainer: CKContainer? = nil
     @Previewable @State var selectedItem: Item? = nil
     
     
-    ItemsView(viewModel: $viewModel, shown: $show, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
+    ItemsView(viewModel: viewModel, shown: $show, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
         .onAppear() {
-            viewModel.inputs.getItems {
+            _ = viewModel.inputs.getItems {
                 print("called getItems")
                 WidgetCenter.shared.reloadAllTimelines()
             }
         }
         
 }
-

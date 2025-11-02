@@ -56,6 +56,18 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
         return self.model.inputs.getZone()
     }
     
+    func getCurrentShareStatus() -> CKShare? {
+        return self.model.inputs.getCurrentShareStatus()
+    }
+    
+    func isListCurrentlyShared() -> Bool {
+        return self.model.inputs.isListCurrentlyShared()
+    }
+    
+    func refreshShareStatus() async throws -> CKShare? {
+        return try await self.model.inputs.refreshShareStatus()
+    }
+    
     func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
         self.model.inputs.prepareSharing(handler: handler)
     }
