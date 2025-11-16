@@ -274,9 +274,11 @@ extension CloudKitModel: StorageInputs {
         let predicate = NSPredicate(format: "Root = %@", root.recordID)
         let query = CKQuery(recordType: "Items", predicate: predicate)
         let sharedDatabase = self.sharedDatabase
-        let zone = self.zone
         
-        sharedDatabase.fetch(withQuery: query, inZoneWith: zone.zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
+        // Important: Use the zone from the root record, not our local zone
+        let sharedZoneID = root.recordID.zoneID
+        
+        sharedDatabase.fetch(withQuery: query, inZoneWith: sharedZoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
             switch result {
             case .success(let (matchResults, _)):
                 guard let completionUnwraped = completion else { return }
@@ -313,6 +315,75 @@ extension CloudKitModel: StorageInputs {
             }
         }
         return(true, nil)
+    }
+    
+    /// Fetches all shared items from all accepted shares
+    func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?) {
+        let sharedDatabase = self.sharedDatabase
+        
+        // First, fetch all zones in the shared database to find accepted shares
+        sharedDatabase.fetchAllRecordZones { zones, error in
+            if let error = error {
+                print("Error fetching shared zones: \(error)")
+                return
+            }
+            
+            guard let zones = zones else {
+                print("No shared zones found")
+                return
+            }
+            
+            // For each zone, query for items
+            for zone in zones {
+                // Skip default zone as it won't contain our shared data
+                if zone.zoneID == CKRecordZone.default().zoneID {
+                    continue
+                }
+                
+                // Query for all Items in this zone
+                let predicate = NSPredicate(value: true)
+                let query = CKQuery(recordType: "Items", predicate: predicate)
+                
+                sharedDatabase.fetch(withQuery: query, inZoneWith: zone.zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
+                    switch result {
+                    case .success(let (matchResults, _)):
+                        for (_, matchResult) in matchResults {
+                            if case let .success(record) = matchResult {
+                                // Skip the root record itself
+                                if record.string(String(describing: ItemFields.name)) == "Root" {
+                                    continue
+                                }
+                                
+                                if let idString = record.string(String(describing: ItemFields.id)),
+                                   let uuid = UUID(uuidString: idString),
+                                   let name = record.string(String(describing: ItemFields.name)),
+                                   let count = record.int(String(describing: ItemFields.count)),
+                                   let doneInt = record.int(String(describing: ItemFields.done)),
+                                   let usedInt = record.int(String(describing: ItemFields.used)),
+                                   let creationDate = record.creationDate,
+                                   let modificationDate = record.modificationDate {
+                                    
+                                    let tempItem = Item(id: uuid,
+                                                        name: name,
+                                                        count: count,
+                                                        uploadedToICloud: true,
+                                                        done: (doneInt == 1),
+                                                        shown: (usedInt == 1),
+                                                        createdAt: creationDate,
+                                                        lastUsedAt: modificationDate)
+                                    completion(tempItem)
+                                    self.itemsPrivate.onNext(tempItem)
+                                }
+                            }
+                        }
+                    case .failure(let error):
+                        print("Error fetching shared items from zone \(zone.zoneID): \(error)")
+                    }
+                }
+            }
+        }
+        
+        return (true, nil)
     }
     
     /**

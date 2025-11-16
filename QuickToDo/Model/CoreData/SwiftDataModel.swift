@@ -218,6 +218,11 @@ extension SwiftDataModel: StorageInputs {
         return nil
     }
     
+    func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?) {
+        // SwiftData doesn't handle CloudKit shares directly, so return empty
+        return (true, nil)
+    }
+    
     
 }
 

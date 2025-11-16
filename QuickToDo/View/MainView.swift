@@ -54,9 +54,10 @@ struct MainView: View {
     var body: some View {
         VStack() {
             Toolbar(viewModel: viewModel, shown: $shown, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
+            SharingStatusView(activeShare: $activeShare, isSharing: $isSharing)
             TabView {
                 NavigationStack {
-                    ItemsView(viewModel: viewModel, shown: $shown, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
+                    ItemsView(viewModel: viewModel, shown: $shown, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer, mode: .regular)
                         .onAppear {
                             _ = self.viewModel.inputs.getItems {
                                 print("called getItems")
@@ -68,10 +69,23 @@ struct MainView: View {
                 .tabItem {
                     Label("Items", systemImage: "list.bullet")
                 }
-                Text("Tab 2")
-                    .tabItem {
-                        Label("Shared Items", systemImage: "person.crop.circle")
-                    }
+                NavigationStack {
+                    ItemsView(viewModel: viewModel, shown: $shown, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer, mode: .shared)
+                        .onAppear {
+                            // Refresh share status when shared items tab appears
+                            Task {
+                                do {
+                                    _ = try await self.viewModel.inputs.refreshShareStatus()
+                                } catch {
+                                    print("Failed to refresh share status: \(error)")
+                                }
+                            }
+                        }
+                        .sheet(isPresented: $isSharing, content: { shareView() })
+                }
+                .tabItem {
+                    Label("Shared Items", systemImage: viewModel.inputs.isListCurrentlyShared() ? "person.2.fill" : "person.crop.circle")
+                }
             }
         }
     }
@@ -153,6 +167,14 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
         return (true, nil)
     }
     
+    func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?) {
+        return (true, nil)
+    }
+    
+    func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?) {
+        return (true, nil)
+    }
+    
     var items: Observable<Item> {
       return itemsPrivate.compactMap{ $0 }
     }
@@ -178,6 +200,10 @@ final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInpu
     
     func refreshShareStatus() async throws -> CKShare? {
         return nil
+    }
+    
+    func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?) {
+        return (true, nil)
     }
     
     typealias Observable = RxSwift.Observable

@@ -25,6 +25,7 @@ protocol QuickToDoViewModelInputs {
     func getCurrentShareStatus() -> CKShare?
     func isListCurrentlyShared() -> Bool
     func refreshShareStatus() async throws -> CKShare?
+    func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?)
     func clearList() -> Bool
     func uploadToCloud() -> (Bool, Error?)
     func getConfig() -> Bool

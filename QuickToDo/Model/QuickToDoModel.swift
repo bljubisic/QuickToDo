@@ -71,6 +71,14 @@ extension QuickToDoModel: QuickToDoInputs {
         return self.cloudKit.inputs.getRootRecord()
     }
     
+    func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?) {
+        return self.cloudKit.inputs.getSharedItems(for: root, with: completion)
+    }
+    
+    func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?) {
+        return self.cloudKit.inputs.fetchAllSharedItems(completion: completion)
+    }
+    
     func getZone() -> CKRecordZone? {
         return self.cloudKit.inputs.getZone()
     }

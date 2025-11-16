@@ -240,6 +240,10 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
     func uploadToCloud() -> (Bool, Error?) {
         return model.inputs.uploadToCloud(items: itemsArray.filter{item in !item.uploadedToICloud})
     }
+    
+    func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?) {
+        return self.model.inputs.fetchAllSharedItems(completion: completion)
+    }
 }
 //MARK: QuickToDoOutputs
 extension QuickToDoViewModel: QuickToDoViewModelOutputs {

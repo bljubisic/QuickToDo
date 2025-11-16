@@ -7,12 +7,14 @@
 //
 
 import CloudKit
+import Combine
 
 // MARK: - CloudKit Share Manager
 class CloudKitShareManager: ObservableObject {
     @Published var pendingShare: CKShare?
     @Published var showingAlert = false
     @Published var alertMessage = ""
+    @Published var shareAccepted = false
     
     private let container = CKContainer.default()
     private var shareMetadata: CKShare.Metadata?
@@ -42,41 +44,55 @@ class CloudKitShareManager: ObservableObject {
                 
                 self?.shareMetadata = metadata
                 self?.pendingShare = metadata.share
+                
+                // Automatically accept the share
+                self?.acceptShareWithMetadata(metadata)
             }
         }
     }
     
-    // Accept the share
-    func acceptShare(_ share: CKShare) {
-        guard let metadata = shareMetadata else {
-            showAlert("No share metadata available")
-            return
-        }
-        
+    // Accept the share using metadata directly
+    private func acceptShareWithMetadata(_ metadata: CKShare.Metadata) {
         let operation = CKAcceptSharesOperation(shareMetadatas: [metadata])
+        
+        operation.perShareResultBlock = { [weak self] metadata, result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let share):
+                    print("Successfully accepted share: \(share)")
+                    self?.showAlert("Share accepted successfully! Pull to refresh to see shared items.")
+                    self?.shareAccepted = true
+                case .failure(let error):
+                    print("Failed to accept share for metadata \(metadata): \(error)")
+                    self?.showAlert("Failed to accept share: \(error.localizedDescription)")
+                }
+            }
+        }
         
         operation.acceptSharesResultBlock = { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success:
-                    self?.showAlert("Share accepted successfully!")
                     self?.clearPendingShare()
+                    // Post notification to refresh shared items
+                    NotificationCenter.default.post(name: NSNotification.Name("RefreshSharedItems"), object: nil)
                 case .failure(let error):
                     self?.showAlert("Failed to accept share: \(error.localizedDescription)")
                 }
             }
         }
         
-        operation.perShareResultBlock = { metadata, result in
-            switch result {
-            case .success(let share):
-                print("Successfully accepted share: \(share)")
-            case .failure(let error):
-                print("Failed to accept share for metadata \(metadata): \(error)")
-            }
+        container.add(operation)
+    }
+    
+    // Accept the share (legacy - kept for compatibility)
+    func acceptShare(_ share: CKShare) {
+        guard let metadata = shareMetadata else {
+            showAlert("No share metadata available")
+            return
         }
         
-        container.add(operation)
+        acceptShareWithMetadata(metadata)
     }
     
     // Decline the share
@@ -97,14 +113,8 @@ class CloudKitShareManager: ObservableObject {
         showingAlert = true
     }
     
-    // Simulate incoming share for demo purposes
-    func simulateIncomingShare() {
-        // Create a mock share for demonstration
-        let recordZone = CKRecordZone(zoneName: "SharedZone")
-        let share = CKShare(recordZoneID: recordZone.zoneID)
-        
-        // In a real app, this would come from an actual CloudKit share URL
-        pendingShare = share
-        showAlert("Simulated share invitation received!")
+    // Reset share accepted flag
+    func resetShareAccepted() {
+        shareAccepted = false
     }
 }

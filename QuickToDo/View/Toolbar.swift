@@ -35,7 +35,7 @@ struct Toolbar: View {
                     .fontWeight(.semibold)
                     .foregroundColor(Color.blue)
                     .font(.system(size: 12,  design: .rounded))
-                    .frame(width: 80.0, height: 20.0)
+                    .frame(width: 70.0, height: 20.0)
             }
             VStack() {
                 Button(action: {
@@ -57,7 +57,7 @@ struct Toolbar: View {
                     .fontWeight(.semibold)
                     .foregroundColor(.blue)
                     .font(.system(size: 12, design: .rounded))
-                    .frame(width: 80.0, height: 20.0)
+                    .frame(width: 70.0, height: 20.0)
             }
             VStack() {
                 Button(action: {
@@ -72,7 +72,7 @@ struct Toolbar: View {
                     .fontWeight(.semibold)
                     .foregroundColor(Color.blue)
                     .font(.system(size: 12,  design: .rounded))
-                    .frame(width: 80.0, height: 20.0)
+                    .frame(width: 70.0, height: 20.0)
             }
 
             VStack() {
@@ -88,7 +88,7 @@ struct Toolbar: View {
                     .fontWeight(.semibold)
                     .foregroundColor(Color.blue)
                     .font(.system(size: 12,  design: .rounded))
-                    .frame(width: 80.0, height: 20.0)
+                    .frame(width: 70.0, height: 20.0)
             }
 
             VStack() {
@@ -103,10 +103,11 @@ struct Toolbar: View {
                     .fontWeight(.semibold)
                     .foregroundColor(Color.blue)
                     .font(.system(size: 12,  design: .rounded))
-                    .frame(width: 80.0, height: 20.0)
+                    .frame(width: 60.0, height: 20.0)
             }
 
         }
+        .padding(.horizontal, 16)
     }
 }
 
