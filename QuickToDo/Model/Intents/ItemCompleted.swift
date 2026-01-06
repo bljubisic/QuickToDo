@@ -10,7 +10,6 @@ import Foundation
 import AppIntents
 import SwiftData
 
-
 @available(iOS 16.0, macOS 13.0, watchOS 9.0, tvOS 16.0, *)
 struct ItemCompleted: AppIntent, WidgetConfigurationIntent, CustomIntentMigratedAppIntent, PredictableIntent {
     static let intentClassName = "ItemCompletedIntent"
@@ -35,7 +34,7 @@ struct ItemCompleted: AppIntent, WidgetConfigurationIntent, CustomIntentMigrated
     }
 
     static var predictionConfiguration: some IntentPredictionConfiguration {
-        IntentPrediction(parameters: (\.$id)) { id in
+        IntentPrediction(parameters: (\.$id)) { _ in
             DisplayRepresentation(
                 title: "",
                 subtitle: ""
@@ -70,4 +69,3 @@ fileprivate extension IntentDialog {
         "Just to confirm, you wanted ‘\(id)’?"
     }
 }
-

@@ -10,17 +10,16 @@ import WidgetKit
 import CloudKit
 
 struct Toolbar: View {
-    
+
     @ObservedObject var viewModel: QuickToDoViewModel
     @Binding var shown: Bool
     @Binding var isSharing: Bool
     @Binding var activeShare: CKShare?
     @Binding var activeContainer: CKContainer?
-    
-    
+
     var body: some View {
-        HStack() {
-            VStack() {
+        HStack {
+            VStack {
                 Button(action: {
                     _ = self.viewModel.inputs.getItems {
                         print("called getItems")
@@ -34,14 +33,14 @@ struct Toolbar: View {
                 Text("Refresh")
                     .fontWeight(.semibold)
                     .foregroundColor(Color.blue)
-                    .font(.system(size: 12,  design: .rounded))
+                    .font(.system(size: 12, design: .rounded))
                     .frame(width: 70.0, height: 20.0)
             }
-            VStack() {
+            VStack {
                 Button(action: {
                     Task {
                         print("Called Share")
-                        _ = viewModel.inputs.prepareSharing(handler: { activityItems, container, error  in
+                        _ = viewModel.inputs.prepareSharing(handler: { activityItems, container, _  in
                             activeShare = activityItems
                             activeContainer = container
                             isSharing = true
@@ -51,7 +50,7 @@ struct Toolbar: View {
                 }, label: {
                     Image(systemName: "square.and.arrow.up")
                         .resizable()
-                        .frame(width:20.0, height: 20.0)
+                        .frame(width: 20.0, height: 20.0)
                 })
                 Text("Share")
                     .fontWeight(.semibold)
@@ -59,7 +58,7 @@ struct Toolbar: View {
                     .font(.system(size: 12, design: .rounded))
                     .frame(width: 70.0, height: 20.0)
             }
-            VStack() {
+            VStack {
                 Button(action: {
                     _ = self.viewModel.inputs.clearList()
                     WidgetCenter.shared.reloadAllTimelines()
@@ -71,11 +70,11 @@ struct Toolbar: View {
                 Text("Remove all")
                     .fontWeight(.semibold)
                     .foregroundColor(Color.blue)
-                    .font(.system(size: 12,  design: .rounded))
+                    .font(.system(size: 12, design: .rounded))
                     .frame(width: 70.0, height: 20.0)
             }
 
-            VStack() {
+            VStack {
                 Button(action: {
                     shown.toggle()
                     _ = self.viewModel.inputs.save(config: shown)
@@ -87,11 +86,11 @@ struct Toolbar: View {
                 ((shown) ? Text("Remove done") : Text("Show done"))
                     .fontWeight(.semibold)
                     .foregroundColor(Color.blue)
-                    .font(.system(size: 12,  design: .rounded))
+                    .font(.system(size: 12, design: .rounded))
                     .frame(width: 70.0, height: 20.0)
             }
 
-            VStack() {
+            VStack {
                 Button(action: {
                     _ = self.viewModel.inputs.uploadToCloud()
                 }, label: {
@@ -102,7 +101,7 @@ struct Toolbar: View {
                 Text("Update")
                     .fontWeight(.semibold)
                     .foregroundColor(Color.blue)
-                    .font(.system(size: 12,  design: .rounded))
+                    .font(.system(size: 12, design: .rounded))
                     .frame(width: 60.0, height: 20.0)
             }
 
@@ -115,12 +114,12 @@ struct Toolbar: View {
     @Previewable @State var show: Bool = false
     @Previewable var viewModel: QuickToDoViewModel = QuickToDoViewModel()
     @Previewable @State var isSharing: Bool = false
-    @Previewable @State var activeShare: CKShare? = nil
-    @Previewable @State var activeContainer: CKContainer? = nil
-    
+    @Previewable @State var activeShare: CKShare?
+    @Previewable @State var activeContainer: CKContainer?
+
     Toolbar(viewModel: viewModel, shown: $show, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
         .padding()
         .background(Color.white)
         .environment(\.colorScheme, .light)
-        
+
 }

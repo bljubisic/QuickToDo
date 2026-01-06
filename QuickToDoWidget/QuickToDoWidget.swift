@@ -10,19 +10,17 @@ import WidgetKit
 import SwiftUI
 import SwiftData
 
-
 struct Provider: @preconcurrency AppIntentTimelineProvider {
-    
+
     typealias Entry = SimpleEntry
-    
+
     typealias Intent = QuickToDoIntent
-    
-    
+
     @MainActor func snapshot(for configuration: QuickToDoIntent, in context: Context) async -> SimpleEntry {
         let entry = SimpleEntry(date: Date(), items: [])
         return entry
     }
-    
+
     @MainActor func timeline(for configuration: QuickToDoIntent, in context: Context) async -> Timeline<SimpleEntry> {
         let context = ModelContext(sharedModelContainer)
         let predicate = #Predicate<ItemSD> {item in item.completed == false}
@@ -31,36 +29,35 @@ struct Provider: @preconcurrency AppIntentTimelineProvider {
 //            let itemsUsed = items.filter{item in item.completed == false}
             let endIndex = (items.count > 3) ? 2 : items.count
             let subItems = items[0 ..< endIndex]
-            
+
             let entry = SimpleEntry(date: Date.now, items: subItems)
             let timeline = Timeline(entries: [entry], policy: .atEnd)
             return timeline
         }
         return Timeline(entries: [], policy: .atEnd)
     }
-    
-    
+
     @Query(sort: \ItemSD.lastUsed, animation: .smooth) private var items: [ItemSD]
-    
+
     @MainActor init() {
         let context = ModelContext(sharedModelContainer)
         let descriptor = FetchDescriptor(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
         if let items = try? context.fetch(descriptor) {
             let endIndex = (items.count > 3) ? 2 : items.count
             let subItems = items[0 ..< endIndex]
-            
+
             _ = SimpleEntry(date: Date(), items: subItems)
         }
     }
-    
+
     @MainActor func placeholder(in context: Context) -> SimpleEntry {
         let context = ModelContext(sharedModelContainer)
         let descriptor = FetchDescriptor(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
-        
+
         if let items = try? context.fetch(descriptor) {
             let endIndex = (items.count > 3) ? 2 : items.count
             let subItems = items[0 ..< endIndex]
-            
+
             let entry = SimpleEntry(date: Date(), items: subItems)
             return entry
         }
@@ -68,17 +65,15 @@ struct Provider: @preconcurrency AppIntentTimelineProvider {
     }
 }
 
-
-
 struct SimpleEntry: TimelineEntry {
     var date: Date
     let items: ArraySlice<ItemSD>
 }
 
-struct QuickToDoWidgetEntryView : View {
+struct QuickToDoWidgetEntryView: View {
     var entry: Provider.Entry
-    
-    private func getColorRed(index: Int)-> Double {
+
+    private func getColorRed(index: Int) -> Double {
         let indexUsed = (index > 24) ? (index % (24 * (index / 24))) : index
         if indexUsed > 8 {
             if indexUsed < 16 {
@@ -92,7 +87,7 @@ struct QuickToDoWidgetEntryView : View {
             return 255
         }
     }
-    
+
     private func getColorGreen(index: Int) -> Double {
         let indexUsed = (index > 24) ? (index % (24 * (index / 24))) : index
         if indexUsed < 8 {
@@ -101,13 +96,13 @@ struct QuickToDoWidgetEntryView : View {
             if indexUsed > 8 {
                 return 0
             } else if indexUsed > 24 {
-                return Double (32 * (indexUsed  - 16))
+                return Double(32 * (indexUsed  - 16))
             } else {
                 return 0
             }
         }
     }
-    
+
     private func getColorBlue(index: Int) -> Double {
         let indexUsed = (index > 24) ? (index % (24 * (index / 24))) : index
         if  indexUsed > 8 {
@@ -115,7 +110,7 @@ struct QuickToDoWidgetEntryView : View {
                 return Double(32 * (indexUsed - 8))
             } else {
                 if indexUsed < 24 {
-                    return Double (32 * (8 - (indexUsed - 16)))
+                    return Double(32 * (8 - (indexUsed - 16)))
                 } else {
                     return 0
                 }
@@ -124,14 +119,14 @@ struct QuickToDoWidgetEntryView : View {
             return 0
         }
     }
-    
+
     var body: some View {
-        if(entry.items.count > 0) {
+        if entry.items.count > 0 {
             ForEach(0 ..< entry.items.count) { index in
                 let red: Double = getColorRed(index: index)
                 let green: Double = getColorGreen(index: index)
                 let blue: Double = getColorBlue(index: index)
-                HStack() {
+                HStack {
                     Button(intent: QuickToDoIntent(id: entry.items[index].uuid), label: {
                         ZStack {
                             Circle()
@@ -151,8 +146,7 @@ struct QuickToDoWidgetEntryView : View {
                 Color.white
             }
             .modelContainer(sharedModelContainer)
-        }
-        else {
+        } else {
             Text("No more Items")
                 .containerBackground(for: .widget) {
                     Color.white
@@ -164,9 +158,9 @@ struct QuickToDoWidgetEntryView : View {
 
 struct QuickToDoWidget: Widget {
     let kind: String = "QuickToDoWidget"
-    
+
     private let container: ModelContainer
-    
+
     var families: [WidgetFamily] {
         if #available(iOSApplicationExtension 16.0, watchOS 9.0, *) {
             return [.accessoryCircular, .accessoryInline, .systemSmall]
@@ -174,7 +168,7 @@ struct QuickToDoWidget: Widget {
             return [.systemSmall]
         }
     }
-    
+
     init() {
         let appGroupContainerID = "group.QuickToDoSharingDefaults"
         guard let appGroupContainer = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupContainerID) else {

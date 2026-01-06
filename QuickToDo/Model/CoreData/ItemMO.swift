@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 public final class ItemMO: ManagedObject {
-    
+
     @NSManaged public private(set) var completed: Bool
     @NSManaged public private(set) var count: Int
     @NSManaged public private(set) var lastused: Date
@@ -18,7 +18,7 @@ public final class ItemMO: ManagedObject {
     @NSManaged public private(set) var word: String
     @NSManaged public private(set) var uploadedToICloud: Bool
     @NSManaged public private(set) var id: String
-    
+
     public static func insertIntoContext(moc: NSManagedObjectContext, item: Item) -> ItemMO {
         let localItemMO: ItemMO = moc.insertObject()
         localItemMO.completed = item.done
@@ -31,7 +31,7 @@ public final class ItemMO: ManagedObject {
         _ = moc.saveOrRollback()
         return localItemMO
     }
-    
+
     public static func updateIntoContext(moc: NSManagedObjectContext, item: Item) -> (ItemMO?, Bool) {
         let predicate: NSPredicate = NSPredicate(format: "%K == %@", "id", item.id.uuidString)
         let oldItemMOWrapped: ItemMO? = ItemMO.findOrFetchInContext(moc: moc, matchingPredicate: predicate)
@@ -55,7 +55,7 @@ extension ItemMO: ManagedObjectType {
     public static var entityName: String {
         return "Item"
     }
-    
+
     public static var defaultSortDescriptors: [NSSortDescriptor] {
         return [NSSortDescriptor(key: "lastused", ascending: false)]
     }

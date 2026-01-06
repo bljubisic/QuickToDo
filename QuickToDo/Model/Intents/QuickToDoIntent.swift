@@ -16,16 +16,14 @@ import WidgetKit
 struct QuickToDoIntent: AppIntent, WidgetConfigurationIntent, CustomIntentMigratedAppIntent {
     init() {
     }
-    
 
     static let intentClassName = "QuickToDoIntent"
-    
+
     static var title: LocalizedStringResource = "QuickToDo Intent"
     static var description = IntentDescription("Complete item in the list")
-    
+
     @Parameter(title: "item id", optionsProvider: StringOptionsProvider())
     var id: String?
-    
 
     struct StringOptionsProvider: DynamicOptionsProvider {
         func results() async throws -> [String] {
@@ -39,17 +37,17 @@ struct QuickToDoIntent: AppIntent, WidgetConfigurationIntent, CustomIntentMigrat
             \.$id
         }
     }
-    
+
     init(id: String? = nil) {
         self.id = id
     }
-    
+
     func perform() async throws -> some IntentResult {
 
-        let _ = await self.performDbUpdate()
+        _ = await self.performDbUpdate()
         return .result()
     }
-    
+
     @MainActor private func performDbUpdate() async -> Bool {
         guard  let idUnwraped = id else {
             return false
@@ -57,11 +55,11 @@ struct QuickToDoIntent: AppIntent, WidgetConfigurationIntent, CustomIntentMigrat
         let predicate = #Predicate<ItemSD> {item in item.uuid == idUnwraped}
         let descriptor = FetchDescriptor(predicate: predicate)
         let modelContext = ModelContext(sharedModelContainer)
-        
+
         do {
             if let item = try modelContext.fetch<ItemSD>(descriptor).first {
                 item.completed = true
-                item.lastUsed = .now
+                item.lastUsed = Date.now
                 try? modelContext.save()
                 WidgetCenter.shared.reloadAllTimelines()
 //                sharedModelContainer.mainContext.insert(item)
@@ -70,8 +68,8 @@ struct QuickToDoIntent: AppIntent, WidgetConfigurationIntent, CustomIntentMigrat
             print(error)
             return false
         }
-        
+
         return true
     }
-    
+
 }

@@ -32,32 +32,33 @@ enum ItemsViewMode {
     case shared
 }
 
+// swiftlint:disable type_body_length
 struct ItemsView: View {
-    
+
     @Environment(\.scenePhase) var scenePhase
-    
+
     @ObservedObject var viewModel: QuickToDoViewModel
     @Binding var shown: Bool
     @Binding var isSharing: Bool
     @Binding var activeShare: CKShare?
     @Binding var activeContainer: CKContainer?
-    
+
     let mode: ItemsViewMode
-    
+
     @StateObject var debounceObject = DebounceObject()
     @State private var sharedItems: [Item] = []
     @State private var isLoadingSharedItems = false
-    
+
     @State private var selectedItem: Item?
     @State var hint1 = ""
     @State var hint2 = ""
     @State private var sharingError: String?
     @State private var showingSharingError = false
-    
+
     // Notification observer
     @State private var refreshSharedItemsObserver: NSObjectProtocol?
-    
-    private func getColorRed(index: Int)-> Double {
+
+    private func getColorRed(index: Int) -> Double {
         let indexUsed = (index > 24) ? (index % (24 * (index / 24))) : index
         if indexUsed > 8 {
             if indexUsed < 16 {
@@ -71,7 +72,7 @@ struct ItemsView: View {
             return 255
         }
     }
-    
+
     private func getColorGreen(index: Int) -> Double {
         let indexUsed = (index > 24) ? (index % (24 * (index / 24))) : index
         if indexUsed < 8 {
@@ -80,13 +81,13 @@ struct ItemsView: View {
             if indexUsed > 8 {
                 return 0
             } else if indexUsed > 24 {
-                return Double (32 * (indexUsed  - 16))
+                return Double(32 * (indexUsed  - 16))
             } else {
                 return 0
             }
         }
     }
-    
+
     private func getColorBlue(index: Int) -> Double {
         let indexUsed = (index > 24) ? (index % (24 * (index / 24))) : index
         if  indexUsed > 8 {
@@ -94,7 +95,7 @@ struct ItemsView: View {
                 return Double(32 * (indexUsed - 8))
             } else {
                 if indexUsed < 24 {
-                    return Double (32 * (8 - (indexUsed - 16)))
+                    return Double(32 * (8 - (indexUsed - 16)))
                 } else {
                     return 0
                 }
@@ -103,7 +104,7 @@ struct ItemsView: View {
             return 0
         }
     }
-    
+
     func addItem(_ sender: String) {
         let newItem = Item(
             id: UUID(),
@@ -117,13 +118,13 @@ struct ItemsView: View {
         )
         _ = self.viewModel.inputs.add(newItem)
     }
-    
+
     private func loadSharedItems() {
         guard mode == .shared else { return }
-        
+
         isLoadingSharedItems = true
         sharedItems = []
-        
+
         // Fetch all shared items from the shared database
         _ = viewModel.inputs.fetchAllSharedItems { item in
             DispatchQueue.main.async {
@@ -133,14 +134,14 @@ struct ItemsView: View {
                 }
             }
         }
-        
+
         // Allow a short delay for items to be fetched
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.isLoadingSharedItems = false
             print("Loaded \(self.sharedItems.count) shared items")
         }
     }
-    
+
     private func currentItems() -> [Item] {
         switch mode {
         case .regular:
@@ -149,7 +150,7 @@ struct ItemsView: View {
             return sharedItems
         }
     }
-    
+
     private func navigationTitle() -> String {
         switch mode {
         case .regular:
@@ -158,7 +159,7 @@ struct ItemsView: View {
             return "Shared Items"
         }
     }
-    
+
     private func addItemPlaceholder() -> String {
         switch mode {
         case .regular:
@@ -167,11 +168,11 @@ struct ItemsView: View {
             return "Add new shared item"
         }
     }
-    
+
     private func isListShared() -> Bool {
         return viewModel.inputs.isListCurrentlyShared()
     }
-    
+
     private func shareButtonTitle() -> String {
         if isListShared() {
             return "Manage Share"
@@ -179,7 +180,7 @@ struct ItemsView: View {
             return "Share List"
         }
     }
-    
+
     var body: some View {
         VStack {
             if mode == .shared && isLoadingSharedItems {
@@ -205,7 +206,7 @@ struct ItemsView: View {
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
-                    
+
                     Button("Share Current List") {
                         Task {
                             viewModel.inputs.prepareSharing(handler: { share, container, error in
@@ -244,13 +245,13 @@ struct ItemsView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-            List() {
+            List {
                 ForEach(self.currentItems().enumerated().map({$0}), id: \.element.id) { index, item in
                     let red: Double = getColorRed(index: index)
                     let green: Double = getColorGreen(index: index)
                     let blue: Double = getColorBlue(index: index)
-                    if (((!shown && !item.done) || (shown)) && item.shown) {
-                        HStack() {
+                    if ((!shown && !item.done) || (shown)) && item.shown {
+                        HStack {
                             Button(action: {
 //                                print("Tapped \(item.name) : \(index) \((index % (24 * (index / 24)))) : \(red) : \(green): \(blue)")
                                 let newItem = Item.itemDoneLens.set(!item.done, item)
@@ -269,8 +270,7 @@ struct ItemsView: View {
                                             .foregroundColor(Color(red: red/255, green: green/255, blue: blue/255))
                                             .frame(width: 25.0, height: 25.0)
                                     }
-                                }
-                                else {
+                                } else {
                                     ZStack {
                                         Circle()
                                             .stroke(.black, lineWidth: 2)
@@ -308,7 +308,7 @@ struct ItemsView: View {
                             }) {
                                 Label("Edit", systemImage: "pencil")
                             }
-                            
+
                             Button(action: {
                                 let newItem = Item.itemDoneLens.set(!item.done, item)
                                 _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
@@ -319,9 +319,9 @@ struct ItemsView: View {
                                 Label(item.done ? "Mark as Undone" : "Mark as Done",
                                       systemImage: item.done ? "circle" : "checkmark.circle")
                             }
-                            
+
                             Divider()
-                            
+
                             Button(action: {
                                 Task {
                                     _ = viewModel.inputs.prepareSharing(handler: { share, container, error in
@@ -341,9 +341,9 @@ struct ItemsView: View {
                             }) {
                                 Label(shareButtonTitle(), systemImage: isListShared() ? "person.2.fill" : "square.and.arrow.up")
                             }
-                            
+
                             Divider()
-                            
+
                             Button(role: .destructive, action: {
                                 let newItem = Item.itemShownLens.set(!item.shown, item)
                                 _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
@@ -365,9 +365,9 @@ struct ItemsView: View {
                         }
                     }
                 }
-                VStack() {
+                VStack {
                     TextField(addItemPlaceholder(), text: $debounceObject.text)
-                        .onAppear() {
+                        .onAppear {
                             guard let selItem = selectedItem else {
                                 return
                             }
@@ -393,7 +393,7 @@ struct ItemsView: View {
                             WidgetCenter.shared.reloadAllTimelines()
                             debounceObject.text = ""
                         }
-                    HStack() {
+                    HStack {
                         Button(action: {
                             debounceObject.text = hint1
                         }) {
@@ -443,14 +443,14 @@ struct ItemsView: View {
                         .disabled(viewModel.outputs.itemsArray.isEmpty)
                     }
                 }
-                
+
                 ToolbarItem(placement: .navigationBarLeading) {
                     HStack {
                         if isSharing {
                             ProgressView()
                                 .scaleEffect(0.8)
                         }
-                        
+
                         if activeShare != nil {
                             Image(systemName: "person.2.fill")
                                 .foregroundColor(.green)
@@ -495,7 +495,7 @@ struct ItemsView: View {
                     }
                 }
            }
-            .onChange(of: scenePhase) { oldState, newState in
+            .onChange(of: scenePhase) { _, newState in
                 if newState == .background {
                     print("Entered background")
                 } else if newState == .inactive {
@@ -509,7 +509,7 @@ struct ItemsView: View {
                             WidgetCenter.shared.reloadAllTimelines()
                         }
                     }
-                    
+
                     // Refresh sharing status when app becomes active
                     Task {
                         do {
@@ -554,17 +554,16 @@ struct ItemsView: View {
     @Previewable @State var show: Bool = false
     @Previewable var viewModel: QuickToDoViewModel = QuickToDoViewModel()
     @Previewable @State var isSharing: Bool = false
-    @Previewable @State var activeShare: CKShare? = nil
-    @Previewable @State var activeContainer: CKContainer? = nil
-    @Previewable @State var selectedItem: Item? = nil
-    
-    
+    @Previewable @State var activeShare: CKShare?
+    @Previewable @State var activeContainer: CKContainer?
+    @Previewable @State var selectedItem: Item?
+
     ItemsView(viewModel: viewModel, shown: $show, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer, mode: .regular)
-        .onAppear() {
+        .onAppear {
             _ = viewModel.inputs.getItems {
                 print("called getItems")
                 WidgetCenter.shared.reloadAllTimelines()
             }
         }
-        
+
 }

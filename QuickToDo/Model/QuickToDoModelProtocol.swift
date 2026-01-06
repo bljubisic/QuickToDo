@@ -17,7 +17,7 @@ protocol QuickToDoInputs {
     func getItems() -> (Bool, Error?)
     func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?)
     func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?)
-    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) -> Void
+    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void)
     func getRootRecord() -> CKRecord?
     func getZone() -> CKRecordZone?
     func getCurrentShareStatus() -> CKShare?
@@ -37,22 +37,22 @@ protocol QuickToDoOutputs {
 protocol QuickToDoProtocol {
     var inputs: QuickToDoInputs { get }
     var outputs: QuickToDoOutputs { get }
-    
+
 }
 protocol StorageInputs {
-    
-    typealias itemProcess = (Item, ((Item, Error?) -> Void)?) -> (Item?, Bool)
-    typealias itemProcessUpdate = (Item, Item) -> (Item?, Bool)
-    typealias itemProcessFind = (String) -> (Item?, Bool)
-    typealias itemProcessFindWithID = (UUID) -> (Item?, Bool)
-    
+
+    typealias ItemProcess = (Item, ((Item, Error?) -> Void)?) -> (Item?, Bool)
+    typealias ItemProcessUpdate = (Item, Item) -> (Item?, Bool)
+    typealias ItemProcessFind = (String) -> (Item?, Bool)
+    typealias ItemProcessFindWithID = (UUID) -> (Item?, Bool)
+
     func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?)
-    func insert() -> itemProcess
-    func getItemWith() -> itemProcessFind
-    func update() -> itemProcessUpdate
-    func getItemWithId() -> itemProcessFindWithID
-    func getHints(for itemName: String, withCompletion: @escaping(Item, Item) -> Void) -> Void
-    func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) async throws -> Void
+    func insert() -> ItemProcess
+    func getItemWith() -> ItemProcessFind
+    func update() -> ItemProcessUpdate
+    func getItemWithId() -> ItemProcessFindWithID
+    func getHints(for itemName: String, withCompletion: @escaping (Item, Item) -> Void)
+    func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) async throws
     func getRootRecord() -> CKRecord?
     func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?)
     func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?)

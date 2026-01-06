@@ -11,13 +11,12 @@ import CoreData
 import CloudKit
 import SwiftUI
 
-//@UIApplicationMain
-//@main
+// @UIApplicationMain
+// @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 //    
 //    var window: UIWindow?
-    
-    
+
 //    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 //        // Override point for customization after application launch.
 //        window = UIWindow(frame: UIScreen.main.bounds)
@@ -41,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        // Use this method to select a configuration to create the new scene with.
 //        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
 //    }
-    
+
 //    func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
 //        
 //        guard cloudKitShareMetadata.containerIdentifier == Config.containerIdentifier else {
@@ -83,13 +82,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        acceptSharesOperation.qualityOfService = .utility
 //        container.add(acceptSharesOperation)
 //    }
-    
+
 //    func showAlertInvitationOnMainViewController(record: CKRecord) {
 //        
 //    }
 //    
 //    
-//    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+//    func application(
+//        _ application: UIApplication,
+//        didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+//        fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
+//    ) {
 //        if let notification = CKNotification(fromRemoteNotificationDictionary: userInfo) {
 //            print("CloudKit database changed")
 //            NotificationCenter.default.post(name: .NSPersistentStoreRemoteChange, object: nil)
@@ -98,13 +101,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        }
 //        completionHandler(.noData)
 //    }
-    
+
 //    func applicationWillTerminate(_ application: UIApplication) {
 //        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 //        // Saves changes in the application's managed object context before the application terminates.
 ////        saveContext()
 //    }
-    
+
 //    var persistentContainer: NSPersistentContainer = {
 //        /*
 //         The persistent container for the application. This implementation
@@ -116,7 +119,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
 //            if let error = error as NSError? {
 //                // Replace this implementation with code to handle the error appropriately.
-//                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//                // fatalError() causes the application to generate a crash log and terminate.
+//                // You should not use this function in a shipping application,
+//                // although it may be useful during development.
 //
 //                /*
 //                 Typical reasons for an error here include:
@@ -131,7 +136,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        })
 //        return container
 //    }()
-    
+
     // MARK: - Core Data Saving support
 //    func saveContext () {
 //        let context = persistentContainer.viewContext
@@ -140,21 +145,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //                try context.save()
 //            } catch {
 //                // Replace this implementation with code to handle the error appropriately.
-//                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//                // fatalError() causes the application to generate a crash log and terminate.
+//                // You should not use this function in a shipping application,
+//                // although it may be useful during development.
 //                let nserror = error as NSError
 //                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
 //            }
 //        }
 //    }
-    
+
 }
 
 @main
 struct QuickToDoApp: App {
-    
+
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var shareManager = CloudKitShareManager()
-    
+
     var body: some Scene {
         WindowGroup {
             NavigationView {
@@ -171,4 +178,3 @@ struct QuickToDoApp: App {
         }
     }
 }
-

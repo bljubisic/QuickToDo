@@ -11,7 +11,7 @@ import SwiftData
 
 @Model
 class ItemSD {
-    
+
     var completed: Bool?
     var count: Int?
     var lastUsed: Date?
@@ -19,7 +19,7 @@ class ItemSD {
     var word: String?
     var uploadedToICloud: Bool?
     var uuid: String?
-    
+
     public init(
         completed: Bool = false,
         count: Int = 0,
@@ -37,7 +37,7 @@ class ItemSD {
         self.uploadedToICloud = uploadedToICloud
         self.uuid = uuid
     }
-    
+
     public init() {
         self.completed = false
         self.count = 0
@@ -47,5 +47,5 @@ class ItemSD {
         self.uploadedToICloud = false
         self.uuid = ""
     }
-    
+
 }

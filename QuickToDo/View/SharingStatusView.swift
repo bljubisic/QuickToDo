@@ -12,7 +12,7 @@ import CloudKit
 struct SharingStatusView: View {
     @Binding var activeShare: CKShare?
     @Binding var isSharing: Bool
-    
+
     var body: some View {
         if activeShare != nil {
             HStack {
@@ -40,7 +40,7 @@ struct SharingStatusView: View {
 #Preview {
     @Previewable @State var hasActiveShare: Bool = true
     @Previewable @State var isSharing: Bool = false
-    
+
     VStack(spacing: 20) {
         // Simulate shared state by using a mock CKShare (we'll use nil and show manually)
         if hasActiveShare {
@@ -64,10 +64,10 @@ struct SharingStatusView: View {
             .cornerRadius(8)
             .padding(.horizontal)
         }
-        
+
         // Show the actual component with no active share
         SharingStatusView(activeShare: .constant(nil), isSharing: $isSharing)
-        
+
         Button("Toggle Share State") {
             hasActiveShare.toggle()
         }

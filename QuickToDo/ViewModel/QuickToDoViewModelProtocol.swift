@@ -16,10 +16,10 @@ protocol QuickToDoViewModelInputs {
     func getItems(completionBlock: @escaping () -> Void) -> (Bool, Error?)
     func getItemsArray(withFilter: Bool) -> [Item]
     func getItemsSize() -> Int
-    func getHints(for itemName: String, withCompletion: @escaping (String, String) -> Void) -> Void
+    func getHints(for itemName: String, withCompletion: @escaping (String, String) -> Void)
     func getItemsNumbers() -> Observable<(Int, Int)>
     func showOrHideAllDoneItems(shown: Bool) -> Bool
-    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) -> Void
+    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void)
     func getRootRecord() -> CKRecord?
     func getZone() -> CKRecordZone?
     func getCurrentShareStatus() -> CKShare?

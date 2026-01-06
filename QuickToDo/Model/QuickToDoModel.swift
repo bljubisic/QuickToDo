@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 import CloudKit
 
-//MARK: QuickToDoProtocol and Variables
+// MARK: QuickToDoProtocol and Variables
 class QuickToDoModel: QuickToDoProtocol {
     private let itemsPrivate: PublishSubject<Item?> = PublishSubject()
     private let cloudStatusPrivate: PublishSubject<CloudStatus> = PublishSubject()
@@ -20,7 +20,7 @@ class QuickToDoModel: QuickToDoProtocol {
 //    private var coreData: StorageProtocol
     private var swiftData: StorageProtocol
     private var cloudKit: StorageProtocol
-    
+
     init(_ withSwiftData: StorageProtocol, _ withCloudKit: StorageProtocol) {
         swiftData = withSwiftData
         cloudKit = withCloudKit
@@ -34,21 +34,21 @@ extension QuickToDoModel: QuickToDoOutputs {
         }
     }
     var items: Observable<Item> {
-      return itemsPrivate.compactMap{ $0 }
+      return itemsPrivate.compactMap { $0 }
     }
-    
+
     var cloudStatus: Observable<CloudStatus> {
         return cloudStatusPrivate
     }
-    
+
     var inputs: QuickToDoInputs { return self }
-    
+
     var outputs: QuickToDoOutputs { return self }
 }
 
 // MARK: QuickToDoInputs
 extension QuickToDoModel: QuickToDoInputs {
-    
+
     func save(config: QuickToDoConfig) -> (Bool, Error?) {
         configPriv = QuickToDoConfig.showDoneItemsLens.set(config.showDoneItems, configPriv)
         if let encodedConfig = try? JSONEncoder().encode(configPriv) {
@@ -56,7 +56,7 @@ extension QuickToDoModel: QuickToDoInputs {
         }
         return (true, nil)
     }
-    
+
     func getConfig() -> QuickToDoConfig? {
         if let decodedData = UserDefaults.standard.object(forKey: "Config") as? Data {
            if let config = try? JSONDecoder().decode(QuickToDoConfig.self, from: decodedData) {
@@ -66,47 +66,46 @@ extension QuickToDoModel: QuickToDoInputs {
         }
         return nil
     }
-    
+
     func getRootRecord() -> CKRecord? {
         return self.cloudKit.inputs.getRootRecord()
     }
-    
+
     func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?) {
         return self.cloudKit.inputs.getSharedItems(for: root, with: completion)
     }
-    
+
     func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?) {
         return self.cloudKit.inputs.fetchAllSharedItems(completion: completion)
     }
-    
+
     func getZone() -> CKRecordZone? {
         return self.cloudKit.inputs.getZone()
     }
-    
+
     func getCurrentShareStatus() -> CKShare? {
         return self.cloudKit.inputs.getCurrentShareStatus()
     }
-    
+
     func isListCurrentlyShared() -> Bool {
         return self.cloudKit.inputs.isListCurrentlyShared()
     }
-    
+
     func refreshShareStatus() async throws -> CKShare? {
         return try await self.cloudKit.inputs.refreshShareStatus()
     }
-    
+
     func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
         Task {
             do {
                 try await self.cloudKit.inputs.prepareShare(handler: handler)
-            }
-            catch {
+            } catch {
                 print("Error: \(error)")
             }
         }
     }
-    
-    func getItems() -> (Bool, Error?){
+
+    func getItems() -> (Bool, Error?) {
         var items: [Item] = []
         Observable.merge([self.swiftData.outputs.items, self.cloudKit.outputs.items])
             .subscribe({(item) in
@@ -114,17 +113,17 @@ extension QuickToDoModel: QuickToDoInputs {
                     self.itemsPrivate.onNext(itemElement)
                 }
             }).disposed(by: disposeBag)
-        _ = self.swiftData.inputs.getItems{item in
+        _ = self.swiftData.inputs.getItems {item in
             items.append(item)
         }
-        _ = self.cloudKit.inputs.getItems() { item in
+        _ = self.cloudKit.inputs.getItems { item in
             _ = items
-                .filter{ itemFiltered in
+                .filter { itemFiltered in
                     itemFiltered.id == item.id
                 }
-                .map{ itemMapped in
+                .map { itemMapped in
                     if item.id == itemMapped.id {
-                        if (item.lastUsedAt < itemMapped.lastUsedAt) {
+                        if item.lastUsedAt < itemMapped.lastUsedAt {
                             let funcUpdate = self.swiftData.inputs.update()
                             _ = funcUpdate(item, itemMapped)
                         } else {
@@ -132,7 +131,7 @@ extension QuickToDoModel: QuickToDoInputs {
                             _ = funcUpdate(itemMapped, item)
                         }
                     }
-                    if (itemMapped.done != item.done || itemMapped.shown != item.shown) {
+                    if itemMapped.done != item.done || itemMapped.shown != item.shown {
                         let funcUpdate = self.swiftData.inputs.update()
                         _ = funcUpdate(item, itemMapped)
                 }
@@ -140,13 +139,13 @@ extension QuickToDoModel: QuickToDoInputs {
         }
         return (true, nil)
     }
-    
+
     func add(_ item: Item, addToCloud: Bool) -> (Bool, Error?) {
         let newInsertFunction = self.swiftData.inputs.insert()
         let ckInsertFunctiomn = self.cloudKit.inputs.insert()
         self.itemsPrivate.onNext(newInsertFunction(item, nil).0)
         if addToCloud {
-            _ = ckInsertFunctiomn(item) { (newItem, error) in
+            _ = ckInsertFunctiomn(item) { (newItem, _) in
                 let updateFunction = self.swiftData.inputs.update()
                 _ = updateFunction(item, newItem)
                 self.itemsPrivate.onNext(newItem)
@@ -154,35 +153,35 @@ extension QuickToDoModel: QuickToDoInputs {
         }
         return (true, nil)
     }
-    
+
     func update(_ item: Item, withItem newItem: Item) -> (Bool, Error?) {
         _ = self.updateToCloudKit(item, withItem: newItem)
         _ = self.updateToSwiftData(item, withItem: newItem)
         return (true, nil)
     }
-    
+
     private func updateToCloudKit(_ item: Item, withItem newItem: Item) -> (Bool, Error?) {
         let superNewItem = self.cloudKit.inputs.update()
         self.itemsPrivate.onNext(superNewItem(item, newItem).0)
         return (true, nil)
     }
-    
+
     private func updateToSwiftData(_ item: Item, withItem newItem: Item) -> (Bool, Error?) {
         let superNewItem = self.swiftData.inputs.update()
         self.itemsPrivate.onNext(superNewItem(item, newItem).0)
         return(true, nil)
     }
-    
+
     func getHints(for itemName: String) -> Observable<String> {
         return self.getHintsFromSwiftData(for: itemName)
             .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
             .observe(on: MainScheduler.instance)
     }
-    
+
     func uploadToCloud(items: [Item]) -> (Bool, Error?) {
         let ckInsertFunctiomn = self.cloudKit.inputs.insert()
-        items.forEach{item in
-            _ = ckInsertFunctiomn(item){(newItem, error) in
+        items.forEach {item in
+            _ = ckInsertFunctiomn(item) {(newItem, _) in
                 let updateFunction = self.swiftData.inputs.update()
                 _ = updateFunction(item, newItem)
                 self.itemsPrivate.onNext(newItem)
@@ -190,7 +189,7 @@ extension QuickToDoModel: QuickToDoInputs {
         }
         return(true, nil)
     }
-    
+
     private func getHintsFromCloudKit(for itemName: String) -> Observable<String> {
         return Observable.create({ (observer) -> Disposable in
             self.cloudKit.inputs.getHints(for: itemName) { (firstItem, secondItem) in
@@ -201,7 +200,7 @@ extension QuickToDoModel: QuickToDoInputs {
             return Disposables.create()
         })
     }
-    
+
     private func getHintsFromSwiftData(for itemName: String) -> Observable<String> {
         return Observable.create({ (observer) -> Disposable in
             self.swiftData.inputs.getHints(for: itemName) { (firstItem, secondItem) in
@@ -213,4 +212,3 @@ extension QuickToDoModel: QuickToDoInputs {
         })
     }
 }
-

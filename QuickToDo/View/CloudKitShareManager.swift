@@ -15,19 +15,19 @@ class CloudKitShareManager: ObservableObject {
     @Published var showingAlert = false
     @Published var alertMessage = ""
     @Published var shareAccepted = false
-    
+
     private let container = CKContainer.default()
     private var shareMetadata: CKShare.Metadata?
-    
+
     // Handle incoming URL (from share invitation)
     func handleIncomingURL(_ url: URL) {
         guard url.scheme == "https" && url.host?.contains("icloud.com") == true else {
             return
         }
-        
+
         fetchShareMetadata(from: url)
     }
-    
+
     // Fetch share metadata from URL
     private func fetchShareMetadata(from url: URL) {
         container.fetchShareMetadata(with: url) { [weak self] metadata, error in
@@ -36,25 +36,25 @@ class CloudKitShareManager: ObservableObject {
                     self?.showAlert("Failed to fetch share metadata: \(error.localizedDescription)")
                     return
                 }
-                
+
                 guard let metadata = metadata else {
                     self?.showAlert("No share metadata found")
                     return
                 }
-                
+
                 self?.shareMetadata = metadata
                 self?.pendingShare = metadata.share
-                
+
                 // Automatically accept the share
                 self?.acceptShareWithMetadata(metadata)
             }
         }
     }
-    
+
     // Accept the share using metadata directly
     private func acceptShareWithMetadata(_ metadata: CKShare.Metadata) {
         let operation = CKAcceptSharesOperation(shareMetadatas: [metadata])
-        
+
         operation.perShareResultBlock = { [weak self] metadata, result in
             DispatchQueue.main.async {
                 switch result {
@@ -68,7 +68,7 @@ class CloudKitShareManager: ObservableObject {
                 }
             }
         }
-        
+
         operation.acceptSharesResultBlock = { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
@@ -81,38 +81,38 @@ class CloudKitShareManager: ObservableObject {
                 }
             }
         }
-        
+
         container.add(operation)
     }
-    
+
     // Accept the share (legacy - kept for compatibility)
     func acceptShare(_ share: CKShare) {
         guard let metadata = shareMetadata else {
             showAlert("No share metadata available")
             return
         }
-        
+
         acceptShareWithMetadata(metadata)
     }
-    
+
     // Decline the share
     func declineShare() {
         clearPendingShare()
         showAlert("Share declined")
     }
-    
+
     // Clear pending share
     private func clearPendingShare() {
         pendingShare = nil
         shareMetadata = nil
     }
-    
+
     // Show alert with message
     private func showAlert(_ message: String) {
         alertMessage = message
         showingAlert = true
     }
-    
+
     // Reset share accepted flag
     func resetShareAccepted() {
         shareAccepted = false

@@ -17,16 +17,15 @@ enum CloudStatus {
 
 enum RecordZones: CustomStringConvertible {
 
-    
     case quickToDoZone
     case sharedZone
-    
+
     var description: String {
         switch self {
         case .quickToDoZone: return "QuickToDoZone"
         case .sharedZone: return "SharedZone"
         }
-        
+
     }
 }
 
@@ -35,13 +34,13 @@ enum Config {
 }
 
 enum ItemFields: CustomStringConvertible {
-    
+
     case name
     case count
     case done
     case used
     case id
-    
+
     var description: String {
         switch self {
         case .name: return "Name"
@@ -54,7 +53,7 @@ enum ItemFields: CustomStringConvertible {
 }
 
 public struct QuickToDoError: Error {
-    
+
 }
 
 public struct QuickToDoConfig: Codable {
@@ -68,25 +67,25 @@ extension QuickToDoConfig {
 }
 
 extension QuickToDoConfig {
-    static let showDoneItemsLens = Lens<QuickToDoConfig, Bool> (
+    static let showDoneItemsLens = Lens<QuickToDoConfig, Bool>(
         get: { $0.showDoneItems },
-        set: {(showDoneItems, oldConfig) in QuickToDoConfig(showDoneItems: showDoneItems) }
+        set: {(showDoneItems, _) in QuickToDoConfig(showDoneItems: showDoneItems) }
     )
 }
 
 public class ItemUD: NSObject, NSSecureCoding {
     public static var supportsSecureCoding: Bool = true
-    
+
     let id: String
     let word: String
     var done: Bool
-    
+
     public init(id: String, word: String, done: Bool) {
         self.id = id
         self.word = word
         self.done = done
     }
-    
+
     public override init() {
         self.done = false
         self.word = ""
@@ -105,7 +104,7 @@ public class ItemUD: NSObject, NSSecureCoding {
 }
 
 public struct Item {
-    
+
     public let id: UUID
     let name: String
     let count: Int
@@ -114,7 +113,7 @@ public struct Item {
     let shown: Bool
     let createdAt: Date
     let lastUsedAt: Date
-    
+
 }
 
 extension Item {
@@ -136,20 +135,20 @@ struct Lens<Whole, Part> {
 }
 
 extension Item {
-    
-    static let itemNameLens = Lens<Item, String> (
+
+    static let itemNameLens = Lens<Item, String>(
         get: { $0.name },
         set: { (name, oldItem) in Item(id: oldItem.id,
                                        name: name,
                                        count: oldItem.count,
-                                       uploadedToICloud:oldItem.uploadedToICloud,
+                                       uploadedToICloud: oldItem.uploadedToICloud,
                                        done: oldItem.done,
                                        shown: oldItem.shown,
-                                       createdAt:oldItem.createdAt,
+                                       createdAt: oldItem.createdAt,
                                        lastUsedAt: oldItem.lastUsedAt) }
     )
-    
-    static let itemUploadedToICloudLens = Lens<Item, Bool> (
+
+    static let itemUploadedToICloudLens = Lens<Item, Bool>(
         get: { $0.uploadedToICloud },
         set: { (uploadedToICloud, oldItem) in Item(id: oldItem.id,
                                                    name: oldItem.name,
@@ -160,7 +159,7 @@ extension Item {
                                                    createdAt: oldItem.createdAt,
                                                    lastUsedAt: oldItem.lastUsedAt)}
     )
-    static let itemDoneLens = Lens<Item, Bool> (
+    static let itemDoneLens = Lens<Item, Bool>(
         get: { $0.done },
         set: { (done, oldItem) in Item(id: oldItem.id,
                                        name: oldItem.name,
@@ -171,7 +170,7 @@ extension Item {
                                        createdAt: oldItem.createdAt,
                                        lastUsedAt: oldItem.lastUsedAt)}
     )
-    static let itemShownLens = Lens<Item, Bool> (
+    static let itemShownLens = Lens<Item, Bool>(
         get: { $0.shown },
         set: { (shown, oldItem) in Item(id: oldItem.id,
                                         name: oldItem.name,
@@ -182,7 +181,7 @@ extension Item {
                                         createdAt: oldItem.createdAt,
                                         lastUsedAt: oldItem.lastUsedAt)}
     )
-    static let itemCountLens = Lens<Item, Int> (
+    static let itemCountLens = Lens<Item, Int>(
         get: { $0.count },
         set: { (count, oldItem) in Item(id: oldItem.id,
                                         name: oldItem.name,

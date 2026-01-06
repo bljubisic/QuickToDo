@@ -6,7 +6,6 @@
 //  Copyright © 2025 Bratislav Ljubisic. All rights reserved.
 //
 
-
 //
 //  SceneDelegate.swift
 //  (cloudkit-samples) Zone Sharing
