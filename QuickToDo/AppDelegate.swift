@@ -10,10 +10,26 @@ import UIKit
 import CoreData
 import CloudKit
 import SwiftUI
+import UserNotifications
 
 // @UIApplicationMain
 // @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        // Request permission for notifications
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if granted {
+                DispatchQueue.main.async {
+                    application.registerForRemoteNotifications()
+                }
+            }
+            if let error = error {
+                print("Error requesting notification permissions: \(error)")
+            }
+        }
+        return true
+    }
 //    
 //    var window: UIWindow?
 
@@ -88,19 +104,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //    }
 //    
 //    
-//    func application(
-//        _ application: UIApplication,
-//        didReceiveRemoteNotification userInfo: [AnyHashable: Any],
-//        fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
-//    ) {
-//        if let notification = CKNotification(fromRemoteNotificationDictionary: userInfo) {
-//            print("CloudKit database changed")
-//            NotificationCenter.default.post(name: .NSPersistentStoreRemoteChange, object: nil)
-//            completionHandler(.newData)
-//            return
-//        }
-//        completionHandler(.noData)
-//    }
+    func application(
+        _ application: UIApplication,
+        didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+        fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
+    ) {
+        if let notification = CKNotification(fromRemoteNotificationDictionary: userInfo) {
+            print("CloudKit database changed - Notification type: \(notification.notificationType)")
+            
+            // Post notification for different types of CloudKit changes
+            switch notification.notificationType {
+            case .query:
+                // Handle query subscription notifications (private database changes)
+                NotificationCenter.default.post(name: NSNotification.Name("CloudKitPrivateDataChanged"), object: notification)
+            case .database:
+                // Handle database subscription notifications (shared database changes)
+                NotificationCenter.default.post(name: NSNotification.Name("CloudKitSharedDataChanged"), object: notification)
+            case .recordZone:
+                // Handle record zone subscription notifications
+                NotificationCenter.default.post(name: NSNotification.Name("CloudKitRecordZoneChanged"), object: notification)
+            default:
+                break
+            }
+            
+            // Also post the generic notification for backward compatibility
+            NotificationCenter.default.post(name: .NSPersistentStoreRemoteChange, object: nil)
+            completionHandler(.newData)
+            return
+        }
+        completionHandler(.noData)
+    }
 
 //    func applicationWillTerminate(_ application: UIApplication) {
 //        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
