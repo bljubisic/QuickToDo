@@ -55,8 +55,9 @@ struct ItemsView: View {
     @State private var sharingError: String?
     @State private var showingSharingError = false
 
-    // Notification observer
+    // Notification observers
     @State private var refreshSharedItemsObserver: NSObjectProtocol?
+    @State private var privateDataChangedObserver: NSObjectProtocol?
 
     private func getColorRed(index: Int) -> Double {
         let indexUsed = (index > 24) ? (index % (24 * (index / 24))) : index
@@ -78,13 +79,7 @@ struct ItemsView: View {
         if indexUsed < 8 {
             return Double(32 * (8 - indexUsed))
         } else {
-            if indexUsed > 8 {
-                return 0
-            } else if indexUsed > 24 {
-                return Double(32 * (indexUsed  - 16))
-            } else {
-                return 0
-            }
+            return 0
         }
     }
 
@@ -110,13 +105,25 @@ struct ItemsView: View {
             id: UUID(),
             name: sender,
             count: 1,
-            uploadedToICloud: mode == .shared, // Shared items should be uploaded to cloud
+            uploadedToICloud: mode == .shared,
             done: false,
             shown: true,
             createdAt: Date(),
             lastUsedAt: Date()
         )
-        _ = self.viewModel.inputs.add(newItem)
+        if mode == .shared {
+            viewModel.inputs.addToSharedZone(newItem) { savedItem, error in
+                if let error = error {
+                    print("Error adding to shared zone: \(error.localizedDescription)")
+                    return
+                }
+                if !self.sharedItems.contains(where: { $0.id == savedItem.id }) {
+                    self.sharedItems.append(savedItem)
+                }
+            }
+        } else {
+            _ = self.viewModel.inputs.add(newItem)
+        }
     }
 
     private func loadSharedItems() {
@@ -125,9 +132,13 @@ struct ItemsView: View {
         isLoadingSharedItems = true
         sharedItems = []
 
+        // Track whether we've received any items
+        var receivedItems = false
+
         // Fetch all shared items from the shared database
         _ = viewModel.inputs.fetchAllSharedItems { item in
             DispatchQueue.main.async {
+                receivedItems = true
                 // Avoid duplicates
                 if !self.sharedItems.contains(where: { $0.id == item.id }) {
                     self.sharedItems.append(item)
@@ -135,10 +146,11 @@ struct ItemsView: View {
             }
         }
 
-        // Allow a short delay for items to be fetched
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        // Use a reasonable timeout - CloudKit zone fetches may take a few seconds
+        // Check periodically and stop loading once items stop arriving
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             self.isLoadingSharedItems = false
-            print("Loaded \(self.sharedItems.count) shared items")
+            print("Loaded \(self.sharedItems.count) shared items (receivedItems: \(receivedItems))")
         }
     }
 
@@ -299,12 +311,12 @@ struct ItemsView: View {
                         }
                         .onTapGesture {
                             selectedItem = item
-                            debounceObject.text = selectedItem!.name
+                            debounceObject.text = item.name
                         }
                         .contextMenu {
                             Button(action: {
                                 selectedItem = item
-                                debounceObject.text = selectedItem!.name
+                                debounceObject.text = item.name
                             }) {
                                 Label("Edit", systemImage: "pencil")
                             }
@@ -526,23 +538,38 @@ struct ItemsView: View {
                 Text(sharingError ?? "An unknown error occurred while preparing to share.")
             }
             .onAppear {
-                // Set up notification observer for shared items refresh
                 if mode == .shared {
+                    // Set up notification observer for shared items refresh
                     loadSharedItems()
                     refreshSharedItemsObserver = NotificationCenter.default.addObserver(
-                        forName: NSNotification.Name("RefreshSharedItems"),
+                        forName: .refreshSharedItems,
                         object: nil,
                         queue: .main
                     ) { _ in
                         loadSharedItems()
                     }
+                } else {
+                    // Set up observer for private database changes (remote sync)
+                    privateDataChangedObserver = NotificationCenter.default.addObserver(
+                        forName: .cloudKitPrivateDataChanged,
+                        object: nil,
+                        queue: .main
+                    ) { _ in
+                        _ = self.viewModel.inputs.getItems {
+                            WidgetCenter.shared.reloadAllTimelines()
+                        }
+                    }
                 }
             }
             .onDisappear {
-                // Remove observer when view disappears
+                // Remove observers when view disappears
                 if let observer = refreshSharedItemsObserver {
                     NotificationCenter.default.removeObserver(observer)
                     refreshSharedItemsObserver = nil
+                }
+                if let observer = privateDataChangedObserver {
+                    NotificationCenter.default.removeObserver(observer)
+                    privateDataChangedObserver = nil
                 }
             }
             }

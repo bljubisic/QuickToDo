@@ -12,6 +12,7 @@ import CloudKit
 
 protocol QuickToDoViewModelInputs {
     func add(_ newItem: Item) -> (Bool, Error?)
+    func addToSharedZone(_ item: Item, completion: @escaping (Item, Error?) -> Void)
     func update(_ item: Item, withItem: Item, completionBlock: @escaping () -> Void) -> (Bool, Error?)
     func getItems(completionBlock: @escaping () -> Void) -> (Bool, Error?)
     func getItemsArray(withFilter: Bool) -> [Item]

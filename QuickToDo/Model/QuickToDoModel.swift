@@ -24,6 +24,14 @@ class QuickToDoModel: QuickToDoProtocol {
     init(_ withSwiftData: StorageProtocol, _ withCloudKit: StorageProtocol) {
         swiftData = withSwiftData
         cloudKit = withCloudKit
+
+        // Set up the merge subscription once to forward storage emissions to itemsPrivate.
+        // This must not be repeated per-call to avoid duplicate subscriptions.
+        Observable.merge([swiftData.outputs.items, cloudKit.outputs.items])
+            .subscribe(onNext: { [weak self] item in
+                self?.itemsPrivate.onNext(item)
+            })
+            .disposed(by: disposeBag)
     }
 }
 // MARK: QuickToDoOutputs
@@ -106,38 +114,38 @@ extension QuickToDoModel: QuickToDoInputs {
     }
 
     func getItems() -> (Bool, Error?) {
-        var items: [Item] = []
-        Observable.merge([self.swiftData.outputs.items, self.cloudKit.outputs.items])
-            .subscribe({(item) in
-                if let itemElement = item.element {
-                    self.itemsPrivate.onNext(itemElement)
-                }
-            }).disposed(by: disposeBag)
-        _ = self.swiftData.inputs.getItems {item in
-            items.append(item)
+        // Collect SwiftData items first for conflict resolution
+        var localItems: [Item] = []
+        _ = self.swiftData.inputs.getItems { item in
+            localItems.append(item)
         }
-        _ = self.cloudKit.inputs.getItems { item in
-            _ = items
-                .filter { itemFiltered in
-                    itemFiltered.id == item.id
-                }
-                .map { itemMapped in
-                    if item.id == itemMapped.id {
-                        if item.lastUsedAt < itemMapped.lastUsedAt {
-                            let funcUpdate = self.swiftData.inputs.update()
-                            _ = funcUpdate(item, itemMapped)
-                        } else {
-                            let funcUpdate = self.cloudKit.inputs.update()
-                            _ = funcUpdate(itemMapped, item)
-                        }
-                    }
-                    if itemMapped.done != item.done || itemMapped.shown != item.shown {
-                        let funcUpdate = self.swiftData.inputs.update()
-                        _ = funcUpdate(item, itemMapped)
-                }
+
+        // Fetch CloudKit items and resolve conflicts against local data.
+        // Rule: the source with the newer lastUsedAt wins.
+        _ = self.cloudKit.inputs.getItems { cloudItem in
+            guard let localMatch = localItems.first(where: { $0.id == cloudItem.id }) else {
+                return // No local copy — CloudKit item is new, already forwarded via merge subscription
+            }
+
+            if cloudItem.lastUsedAt > localMatch.lastUsedAt {
+                // CloudKit is newer — update SwiftData with CloudKit's data
+                let funcUpdate = self.swiftData.inputs.update()
+                _ = funcUpdate(localMatch, cloudItem)
+            } else if cloudItem.lastUsedAt < localMatch.lastUsedAt {
+                // SwiftData is newer — update CloudKit with SwiftData's data
+                let funcUpdate = self.cloudKit.inputs.update()
+                _ = funcUpdate(cloudItem, localMatch)
+            } else if localMatch.done != cloudItem.done || localMatch.shown != cloudItem.shown {
+                // Same timestamp but different state — prefer CloudKit (it is the shared source of truth)
+                let funcUpdate = self.swiftData.inputs.update()
+                _ = funcUpdate(localMatch, cloudItem)
             }
         }
         return (true, nil)
+    }
+
+    func addToSharedZone(_ item: Item, completion: @escaping (Item, Error?) -> Void) {
+        self.cloudKit.inputs.insertToSharedZone(item, completion: completion)
     }
 
     func add(_ item: Item, addToCloud: Bool) -> (Bool, Error?) {

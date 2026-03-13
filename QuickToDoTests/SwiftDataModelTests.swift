@@ -415,4 +415,99 @@ class SwiftDataModelTests: XCTestCase {
         XCTAssertTrue(convertedItem?.shown ?? false)
         XCTAssertTrue(convertedItem?.uploadedToICloud ?? false)
     }
+
+    // MARK: - ItemSD.toItem() Edge Case Tests
+
+    func testItemSDToItemNilUUIDReturnsNil() {
+        let itemSD = ItemSD()
+        itemSD.uuid = nil
+        itemSD.word = "ValidWord"
+
+        let result = itemSD.toItem()
+        XCTAssertNil(result, "toItem() should return nil when uuid is nil")
+    }
+
+    func testItemSDToItemNilWordReturnsNil() {
+        let itemSD = ItemSD()
+        itemSD.uuid = UUID().uuidString
+        itemSD.word = nil
+
+        let result = itemSD.toItem()
+        XCTAssertNil(result, "toItem() should return nil when word is nil")
+    }
+
+    func testItemSDToItemInvalidUUIDStringReturnsNil() {
+        let itemSD = ItemSD()
+        itemSD.uuid = "not-a-valid-uuid"
+        itemSD.word = "ValidWord"
+
+        let result = itemSD.toItem()
+        XCTAssertNil(result, "toItem() should return nil when uuid is not a valid UUID string")
+    }
+
+    func testItemSDToItemEmptyUUIDStringReturnsNil() {
+        let itemSD = ItemSD()
+        itemSD.uuid = ""
+        itemSD.word = "ValidWord"
+
+        let result = itemSD.toItem()
+        XCTAssertNil(result, "toItem() should return nil when uuid is an empty string")
+    }
+
+    func testItemSDToItemNilOptionalFieldsUseDefaults() {
+        let uuid = UUID()
+        let itemSD = ItemSD()
+        itemSD.uuid = uuid.uuidString
+        itemSD.word = "TestWord"
+        itemSD.count = nil
+        itemSD.uploadedToICloud = nil
+        itemSD.completed = nil
+        itemSD.used = nil
+        itemSD.lastUsed = nil
+
+        let result = itemSD.toItem()
+        XCTAssertNotNil(result, "toItem() should succeed when only uuid and word are set")
+        XCTAssertEqual(result?.id, uuid)
+        XCTAssertEqual(result?.name, "TestWord")
+        XCTAssertEqual(result?.count, 0, "nil count should default to 0")
+        XCTAssertFalse(result?.uploadedToICloud ?? true, "nil uploadedToICloud should default to false")
+        XCTAssertFalse(result?.done ?? true, "nil completed should default to false")
+        XCTAssertFalse(result?.shown ?? true, "nil used should default to false")
+        XCTAssertNotNil(result?.createdAt, "nil lastUsed should default to a Date")
+        XCTAssertNotNil(result?.lastUsedAt, "nil lastUsed should default to a Date")
+    }
+
+    func testItemSDToItemBothUUIDAndWordNilReturnsNil() {
+        let itemSD = ItemSD()
+        itemSD.uuid = nil
+        itemSD.word = nil
+
+        let result = itemSD.toItem()
+        XCTAssertNil(result, "toItem() should return nil when both uuid and word are nil")
+    }
+
+    func testItemSDToItemValidConversion() {
+        let uuid = UUID()
+        let date = Date()
+        let itemSD = ItemSD(
+            completed: false,
+            count: 42,
+            lastUsed: date,
+            used: true,
+            word: "Groceries",
+            uploadedToICloud: true,
+            uuid: uuid.uuidString
+        )
+
+        let result = itemSD.toItem()
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result?.id, uuid)
+        XCTAssertEqual(result?.name, "Groceries")
+        XCTAssertEqual(result?.count, 42)
+        XCTAssertTrue(result?.uploadedToICloud ?? false)
+        XCTAssertFalse(result?.done ?? true)
+        XCTAssertTrue(result?.shown ?? false)
+        XCTAssertEqual(result?.createdAt, date)
+        XCTAssertEqual(result?.lastUsedAt, date)
+    }
 }

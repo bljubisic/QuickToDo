@@ -33,6 +33,13 @@ enum Config {
     static let containerIdentifier = "iCloud.Persukibo.QuickToDo"
 }
 
+extension Notification.Name {
+    static let cloudKitPrivateDataChanged = Notification.Name("CloudKitPrivateDataChanged")
+    static let cloudKitSharedDataChanged = Notification.Name("CloudKitSharedDataChanged")
+    static let cloudKitRecordZoneChanged = Notification.Name("CloudKitRecordZoneChanged")
+    static let refreshSharedItems = Notification.Name("RefreshSharedItems")
+}
+
 enum ItemFields: CustomStringConvertible {
 
     case name

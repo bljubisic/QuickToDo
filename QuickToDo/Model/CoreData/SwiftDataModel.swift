@@ -30,18 +30,9 @@ extension SwiftDataModel: StorageInputs {
 
         if let items = try? self.modelContext.fetch(descriptor) {
             for item in items {
-                let tmpItem = Item(id: UUID(uuidString: item.uuid!)!,
-                                   name: item.word!,
-                                   count: item.count!,
-                                   uploadedToICloud: item.uploadedToICloud!,
-                                   done: item.completed!,
-                                   shown: item.used!,
-                                   createdAt: item.lastUsed!,
-                                   lastUsedAt: item.lastUsed!)
+                guard let tmpItem = item.toItem() else { continue }
                 itemsPrivate.onNext(tmpItem)
-                if let withCompletion = withCompletion {
-                    withCompletion(tmpItem)
-                }
+                withCompletion?(tmpItem)
             }
         }
         return (true, nil)
@@ -60,38 +51,25 @@ extension SwiftDataModel: StorageInputs {
             )
             self.modelContext.insert(itemSD)
             try? self.modelContext.save()
-            return (Item(id: UUID(uuidString: itemSD.uuid!)!,
-                         name: itemSD.word!,
-                        count: itemSD.count!,
-                        uploadedToICloud: itemSD.uploadedToICloud!,
-                        done: itemSD.completed!,
-                        shown: itemSD.used!,
-                        createdAt: itemSD.lastUsed!,
-                        lastUsedAt: itemSD.lastUsed!), true)
+            guard let savedItem = itemSD.toItem() else {
+                return (item, true)
+            }
+            return (savedItem, true)
         }
     }
 
     func getItemWith() -> ItemProcessFind {
         return { itemWord in
-            let item = Item()
-
             let predicate = #Predicate<ItemSD> {item in item.word == itemWord}
             let descriptor = FetchDescriptor(predicate: predicate)
 
-            if let fetchedItems =  try? self.modelContext.fetch(descriptor) {
-                if let itemSD = fetchedItems.first {
-                    return (Item(id: UUID(uuidString: itemSD.uuid!)!,
-                                name: itemSD.word!,
-                                count: itemSD.count!,
-                                uploadedToICloud: itemSD.uploadedToICloud!,
-                                done: itemSD.completed!,
-                                shown: itemSD.used!,
-                                createdAt: itemSD.lastUsed!,
-                                lastUsedAt: itemSD.lastUsed!), true)
-                }
+            if let fetchedItems = try? self.modelContext.fetch(descriptor),
+               let itemSD = fetchedItems.first,
+               let foundItem = itemSD.toItem() {
+                return (foundItem, true)
             }
 
-            return (item, false)
+            return (Item(), false)
         }
     }
 
@@ -117,18 +95,10 @@ extension SwiftDataModel: StorageInputs {
     func update() -> ItemProcessUpdate {
         return { (_, withItem) in
             let resultValue: (ItemSD?, Bool) = self.updateIntoContext(withItem: withItem, itemID: withItem.id.uuidString)
-            if resultValue.1 == true {
-                guard let itemMO = resultValue.0 else {
-                    return (Item(), false)
-                }
-                return (Item(id: UUID(uuidString: itemMO.uuid!)!,
-                            name: itemMO.word!,
-                            count: itemMO.count!,
-                            uploadedToICloud: itemMO.uploadedToICloud!,
-                            done: itemMO.completed!,
-                            shown: itemMO.used!,
-                            createdAt: itemMO.lastUsed!,
-                            lastUsedAt: itemMO.lastUsed!), true)
+            if resultValue.1,
+               let itemSD = resultValue.0,
+               let updatedItem = itemSD.toItem() {
+                return (updatedItem, true)
             }
             return (Item(), false)
         }
@@ -136,44 +106,28 @@ extension SwiftDataModel: StorageInputs {
 
     func getItemWithId() -> ItemProcessFindWithID {
         return { id in
-            let predicate = #Predicate<ItemSD> {item in item.uuid! == id.uuidString}
+            let idString = id.uuidString
+            let predicate = #Predicate<ItemSD> { item in item.uuid == idString }
             let descriptor = FetchDescriptor(predicate: predicate)
-            let item = Item()
 
-            if let items = try? self.modelContext.fetch(descriptor) {
-                if let item = items.first {
-                    return (Item(id: UUID(uuidString: item.uuid!)!,
-                                 name: item.word!,
-                                 count: item.count!,
-                                 uploadedToICloud: item.uploadedToICloud!,
-                                 done: item.completed!,
-                                 shown: item.used!,
-                                 createdAt: item.lastUsed!,
-                                 lastUsedAt: item.lastUsed!), true)
-                }
-                return (item, false)
+            if let items = try? self.modelContext.fetch(descriptor),
+               let itemSD = items.first,
+               let foundItem = itemSD.toItem() {
+                return (foundItem, true)
             }
-            return (item, false)
+            return (Item(), false)
         }
-
     }
 
     func getHints(for itemName: String, withCompletion: @escaping (Item, Item) -> Void) {
-        var items: [Item] = [Item]()
+        var items: [Item] = []
 
-        let predicate = #Predicate<ItemSD> {item in item.word!.starts(with: itemName)}
+        let predicate = #Predicate<ItemSD> { item in item.word?.starts(with: itemName) ?? false }
         let descriptor = FetchDescriptor(predicate: predicate)
 
         if let fetchedItems = try? self.modelContext.fetch(descriptor) {
-            for itemMO in fetchedItems.filter({(item) in item === ItemSD.self}) {
-                let tmpItem: Item = Item(id: UUID(uuidString: itemMO.uuid!)!,
-                                         name: itemMO.word!,
-                                         count: itemMO.count!,
-                                         uploadedToICloud: itemMO.uploadedToICloud!,
-                                         done: itemMO.completed!,
-                                         shown: itemMO.used!,
-                                         createdAt: itemMO.lastUsed!,
-                                         lastUsedAt: itemMO.lastUsed!)
+            for itemSD in fetchedItems {
+                guard let tmpItem = itemSD.toItem() else { continue }
                 items.append(tmpItem)
             }
         }
@@ -184,7 +138,6 @@ extension SwiftDataModel: StorageInputs {
         } else {
             withCompletion(Item(), Item())
         }
-
     }
 
     /// This method is unimplemented here. Actual iCloud sharing is provided in CloudKitModel.
@@ -220,6 +173,12 @@ extension SwiftDataModel: StorageInputs {
     func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?) {
         // SwiftData doesn't handle CloudKit shares directly, so return empty
         return (true, nil)
+    }
+
+    func insertToSharedZone(_ item: Item, completion: @escaping (Item, Error?) -> Void) {
+        // SwiftData doesn't handle CloudKit shared zones directly
+        let error = NSError(domain: "SwiftDataModel", code: -1, userInfo: [NSLocalizedDescriptionKey: "Shared zone insert not supported in local model."])
+        completion(item, error)
     }
 
 }

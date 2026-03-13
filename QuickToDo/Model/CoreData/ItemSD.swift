@@ -48,4 +48,23 @@ class ItemSD {
         self.uuid = ""
     }
 
+    /// Safely converts this SwiftData model to an Item struct, returning nil if required fields are missing or invalid.
+    func toItem() -> Item? {
+        guard let uuidString = uuid,
+              let id = UUID(uuidString: uuidString),
+              let name = word else {
+            return nil
+        }
+        return Item(
+            id: id,
+            name: name,
+            count: count ?? 0,
+            uploadedToICloud: uploadedToICloud ?? false,
+            done: completed ?? false,
+            shown: used ?? false,
+            createdAt: lastUsed ?? Date(),
+            lastUsedAt: lastUsed ?? Date()
+        )
+    }
+
 }

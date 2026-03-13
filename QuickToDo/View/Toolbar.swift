@@ -40,11 +40,17 @@ struct Toolbar: View {
                 Button(action: {
                     Task {
                         print("Called Share")
-                        _ = viewModel.inputs.prepareSharing(handler: { activityItems, container, _  in
-                            activeShare = activityItems
-                            activeContainer = container
-                            isSharing = true
-                            print("isSharing - \(isSharing)")
+                        viewModel.inputs.prepareSharing(handler: { share, container, error in
+                            DispatchQueue.main.async {
+                                if let error = error {
+                                    print("Error preparing share: \(error.localizedDescription)")
+                                    return
+                                }
+                                activeShare = share
+                                activeContainer = container
+                                isSharing = true
+                                print("isSharing - \(isSharing)")
+                            }
                         })
                     }
                 }, label: {

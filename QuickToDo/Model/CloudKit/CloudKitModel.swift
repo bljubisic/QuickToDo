@@ -14,7 +14,6 @@ import CloudKit
 final class CloudKitModel: StorageProtocol, @unchecked Sendable {
 
     private var itemsPrivate: PublishSubject<Item?>
-    private var itemsRecords: [CKRecord]
     private var container: CKContainer!
     private var database: CKDatabase
     private var sharedDatabase: CKDatabase
@@ -69,7 +68,6 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
         zone = CKRecordZone(zoneName: String(describing: RecordZones.quickToDoZone))
         database = container.privateCloudDatabase
         sharedDatabase = container.sharedCloudDatabase
-        itemsRecords = []
         
         // Load saved change tokens
         loadChangeTokens()
@@ -175,7 +173,7 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handlePrivateDataChanged(_:)),
-            name: NSNotification.Name("CloudKitPrivateDataChanged"),
+            name: .cloudKitPrivateDataChanged,
             object: nil
         )
         
@@ -183,7 +181,7 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleSharedDataChanged(_:)),
-            name: NSNotification.Name("CloudKitSharedDataChanged"),
+            name: .cloudKitSharedDataChanged,
             object: nil
         )
         
@@ -484,7 +482,7 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
             
             // Post notification to refresh UI
             if database == self.sharedDatabase {
-                NotificationCenter.default.post(name: NSNotification.Name("RefreshSharedItems"), object: nil)
+                NotificationCenter.default.post(name: .refreshSharedItems, object: nil)
             }
         }
     }
@@ -496,10 +494,7 @@ extension CloudKitModel: StorageInputs {
             return nil
         }
 
-        // The share reference points to a CKShare, but we need to fetch it to get the actual CKShare object
-        // For now, we'll return nil and let the prepareShare method handle the full fetch
-        // This method is primarily used for checking if sharing is available
-        return nil
+        return self.cachedShare
     }
 
     func isListCurrentlyShared() -> Bool {
@@ -519,19 +514,35 @@ extension CloudKitModel: StorageInputs {
         let database = self.database
 
         return try await withCheckedThrowingContinuation { continuation in
+            var hasResumed = false
+            let resumeLock = NSLock()
+
+            func safeResume(with result: Result<CKShare?, Error>) {
+                resumeLock.lock()
+                defer { resumeLock.unlock() }
+                guard !hasResumed else { return }
+                hasResumed = true
+                switch result {
+                case .success(let share):
+                    continuation.resume(returning: share)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+
             let fetchOp = CKFetchRecordsOperation(recordIDs: [shareRef.recordID])
             fetchOp.perRecordResultBlock = { _, result in
                 switch result {
                 case .success(let shareRecord):
                     if let fetchedShare = shareRecord as? CKShare {
                         self.cachedShare = fetchedShare
-                        continuation.resume(returning: fetchedShare)
+                        safeResume(with: .success(fetchedShare))
                     } else {
                         let error = NSError(domain: "CloudKitModel", code: -3, userInfo: [NSLocalizedDescriptionKey: "Fetched record is not a CKShare."])
-                        continuation.resume(throwing: error)
+                        safeResume(with: .failure(error))
                     }
                 case .failure(let error):
-                    continuation.resume(throwing: error)
+                    safeResume(with: .failure(error))
                 }
             }
 
@@ -540,7 +551,7 @@ extension CloudKitModel: StorageInputs {
                 case .success:
                     break // Success handled in perRecordResultBlock
                 case .failure(let error):
-                    continuation.resume(throwing: error)
+                    safeResume(with: .failure(error))
                 }
             }
 
@@ -596,7 +607,6 @@ extension CloudKitModel: StorageInputs {
                                                 shown: (usedInt == 1),
                                                 createdAt: creationDate,
                                                 lastUsedAt: modificationDate)
-                            self.itemsRecords.append(record)
                             completionUnwraped(tempItem)
                             self.itemsPrivate.onNext(tempItem)
                         }
@@ -634,8 +644,8 @@ extension CloudKitModel: StorageInputs {
                     continue
                 }
 
-                // Query for all Items in this zone
-                let predicate = NSPredicate(value: true)
+                // Query for shown Items in this zone
+                let predicate = NSPredicate(format: "Used = 1")
                 let query = CKQuery(recordType: "Items", predicate: predicate)
 
                 sharedDatabase.fetch(withQuery: query, inZoneWith: zone.zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
@@ -678,6 +688,64 @@ extension CloudKitModel: StorageInputs {
         }
 
         return (true, nil)
+    }
+
+    func insertToSharedZone(_ item: Item, completion: @escaping (Item, Error?) -> Void) {
+        let sharedDatabase = self.sharedDatabase
+
+        // Find the shared zone to insert into
+        sharedDatabase.fetchAllRecordZones { zones, error in
+            if let error = error {
+                print("Error fetching shared zones for insert: \(error)")
+                completion(item, error)
+                return
+            }
+
+            guard let zones = zones else {
+                let noZoneError = NSError(domain: "CloudKitModel", code: -6, userInfo: [NSLocalizedDescriptionKey: "No shared zones found"])
+                completion(item, noZoneError)
+                return
+            }
+
+            // Find the first non-default shared zone
+            guard let sharedZone = zones.first(where: { $0.zoneID != CKRecordZone.default().zoneID }) else {
+                let noZoneError = NSError(domain: "CloudKitModel", code: -7, userInfo: [NSLocalizedDescriptionKey: "No shared zone available"])
+                completion(item, noZoneError)
+                return
+            }
+
+            let newRecord = CKRecord(recordType: "Items", recordID: CKRecord.ID(zoneID: sharedZone.zoneID))
+            newRecord.set(string: item.id.uuidString, key: String(describing: ItemFields.id))
+            newRecord.set(string: item.name, key: String(describing: ItemFields.name))
+            newRecord.set(int: (item.done) ? 1 : 0, key: String(describing: ItemFields.done))
+            newRecord.set(int: item.count, key: String(describing: ItemFields.count))
+            newRecord.set(int: (item.shown) ? 1 : 0, key: String(describing: ItemFields.used))
+
+            sharedDatabase.save(newRecord) { savedRecord, saveError in
+                if let saveError = saveError {
+                    print("Error saving to shared zone: \(saveError)")
+                    completion(item, saveError)
+                    return
+                }
+
+                guard let savedRecord = savedRecord else {
+                    completion(item, nil)
+                    return
+                }
+
+                let savedItem = Item(
+                    id: UUID(uuidString: savedRecord.string(String(describing: ItemFields.id)) ?? "") ?? item.id,
+                    name: savedRecord.string(String(describing: ItemFields.name)) ?? item.name,
+                    count: savedRecord.int(String(describing: ItemFields.count)) ?? item.count,
+                    uploadedToICloud: true,
+                    done: (savedRecord.int(String(describing: ItemFields.done)) == 1),
+                    shown: (savedRecord.int(String(describing: ItemFields.used)) == 1),
+                    createdAt: savedRecord.creationDate ?? Date(),
+                    lastUsedAt: savedRecord.modificationDate ?? Date()
+                )
+                completion(savedItem, nil)
+            }
+        }
     }
 
     /**
@@ -727,19 +795,29 @@ extension CloudKitModel: StorageInputs {
         let fetchOp = CKFetchRecordsOperation(recordIDs: [shareRef.recordID])
         let database = self.database
         let container = self.container
+        var hasCalledHandler = false
+        let handlerLock = NSLock()
+
+        func safeHandler(_ share: CKShare?, _ cont: CKContainer?, _ error: Error?) {
+            handlerLock.lock()
+            defer { handlerLock.unlock() }
+            guard !hasCalledHandler else { return }
+            hasCalledHandler = true
+            handler(share, cont, error)
+        }
 
         fetchOp.perRecordResultBlock = { _, result in
             switch result {
             case .success(let shareRecord):
                 if let fetchedShare = shareRecord as? CKShare {
                     self.cachedShare = fetchedShare
-                    handler(fetchedShare, container, nil)
+                    safeHandler(fetchedShare, container, nil)
                 } else {
                     let error = NSError(domain: "CloudKitModel", code: -3, userInfo: [NSLocalizedDescriptionKey: "Fetched record is not a CKShare."])
-                    handler(nil, container, error)
+                    safeHandler(nil, container, error)
                 }
             case .failure(let error):
-                handler(nil, container, error)
+                safeHandler(nil, container, error)
             }
         }
 
@@ -748,7 +826,7 @@ extension CloudKitModel: StorageInputs {
             case .success:
                 break // Success handled in perRecordResultBlock
             case .failure(let error):
-                handler(nil, container, error)
+                safeHandler(nil, container, error)
             }
         }
 
@@ -845,7 +923,6 @@ extension CloudKitModel: StorageInputs {
                                                 shown: (usedInt == 1),
                                                 createdAt: creationDate,
                                                 lastUsedAt: modificationDate)
-                            self.itemsRecords.append(record)
                             completion(tempItem)
                             self.itemsPrivate.onNext(tempItem)
                         }
@@ -896,7 +973,6 @@ extension CloudKitModel: StorageInputs {
                     if itemRet.name == "Root" {
                         self.rootRecord = recordUnwrapped
                     }
-                    self.itemsRecords.append(recordUnwrapped)
                     completionHandler?(itemRet, nil)
 
                 } catch {
@@ -945,6 +1021,7 @@ extension CloudKitModel: StorageInputs {
                             record.set(int: (newItem.shown) ? 1 : 0, key: String(describing: ItemFields.used))
                             record.set(int: (newItem.done) ? 1 : 0, key: String(describing: ItemFields.done))
                             record.set(string: newItem.name, key: String(describing: ItemFields.name))
+                            record.set(int: newItem.count, key: String(describing: ItemFields.count))
                             modifiedRecords.append(record)
                         case .failure:
                             break

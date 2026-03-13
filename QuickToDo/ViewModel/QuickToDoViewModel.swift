@@ -10,7 +10,6 @@ import Foundation
 import RxSwift
 import Combine
 import CloudKit
-import CoreMedia
 // MARK: QuickToDoViewModelProtocol
 class QuickToDoViewModel: QuickToDoViewModelProtoocol, ObservableObject {
     var model: QuickToDoProtocol
@@ -74,6 +73,17 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
     func add(_ newItem: Item) -> (Bool, Error?) {
 //        print("Calling add with: \(newItem)")
         return self.model.inputs.add(newItem, addToCloud: true)
+    }
+
+    func addToSharedZone(_ item: Item, completion: @escaping (Item, Error?) -> Void) {
+        self.model.inputs.addToSharedZone(item) { savedItem, error in
+            DispatchQueue.main.async {
+                if error == nil {
+                    self.itemsArray.append(savedItem)
+                }
+                completion(savedItem, error)
+            }
+        }
     }
 
     private func getFilteredItemsNum(filterImpl done: Bool) -> Observable<Int> {
@@ -221,12 +231,10 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
     }
 
     func clearList() -> Bool {
-        let updatedList = self.itemsArray.map({(item) -> Item in
-            return Item.itemShownLens.set(false, item)
-        })
-        updatedList.forEach({item in
-            _ = self.model.inputs.update(item, withItem: item)
-        })
+        for item in self.itemsArray {
+            let updatedItem = Item.itemShownLens.set(false, item)
+            _ = self.model.inputs.update(item, withItem: updatedItem)
+        }
         self.itemsArray.removeAll()
         return true
     }

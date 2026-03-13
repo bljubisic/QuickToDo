@@ -149,6 +149,10 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
         return (true, nil)
     }
 
+    func addToSharedZone(_ item: Item, completion: @escaping (Item, Error?) -> Void) {
+        completion(item, nil)
+    }
+
     func update(_ item: Item, withItem: Item) -> (Bool, Error?) {
       self.itemsPrivate.onNext(withItem)
         return (true, nil)
@@ -239,6 +243,10 @@ final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInpu
 
     func add(_ newItem: Item) -> (Bool, Error?) {
         return (true, nil)
+    }
+
+    func addToSharedZone(_ item: Item, completion: @escaping (Item, Error?) -> Void) {
+        completion(item, nil)
     }
 
     func update(_ item: Item, withItem: Item, completionBlock: @escaping () -> Void) -> (Bool, Error?) {

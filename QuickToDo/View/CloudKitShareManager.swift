@@ -75,7 +75,7 @@ class CloudKitShareManager: ObservableObject {
                 case .success:
                     self?.clearPendingShare()
                     // Post notification to refresh shared items
-                    NotificationCenter.default.post(name: NSNotification.Name("RefreshSharedItems"), object: nil)
+                    NotificationCenter.default.post(name: .refreshSharedItems, object: nil)
                 case .failure(let error):
                     self?.showAlert("Failed to accept share: \(error.localizedDescription)")
                 }

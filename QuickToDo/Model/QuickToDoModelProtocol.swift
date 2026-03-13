@@ -12,6 +12,7 @@ import CloudKit
 
 protocol QuickToDoInputs {
     func add(_ item: Item, addToCloud: Bool) -> (Bool, Error?)
+    func addToSharedZone(_ item: Item, completion: @escaping (Item, Error?) -> Void)
     func update(_ item: Item, withItem: Item) -> (Bool, Error?)
     func getHints(for itemName: String) -> Observable<String>
     func getItems() -> (Bool, Error?)
@@ -48,6 +49,7 @@ protocol StorageInputs {
 
     func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?)
     func insert() -> ItemProcess
+    func insertToSharedZone(_ item: Item, completion: @escaping (Item, Error?) -> Void)
     func getItemWith() -> ItemProcessFind
     func update() -> ItemProcessUpdate
     func getItemWithId() -> ItemProcessFindWithID

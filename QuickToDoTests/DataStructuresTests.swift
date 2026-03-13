@@ -275,4 +275,42 @@ class DataStructuresTests: XCTestCase {
         XCTAssertTrue(step3.done)
         XCTAssertEqual(step3.id, originalItem.id)
     }
+
+    // MARK: - Notification.Name Constants Tests
+
+    func testCloudKitPrivateDataChangedNotificationName() {
+        XCTAssertEqual(Notification.Name.cloudKitPrivateDataChanged.rawValue, "CloudKitPrivateDataChanged")
+    }
+
+    func testCloudKitSharedDataChangedNotificationName() {
+        XCTAssertEqual(Notification.Name.cloudKitSharedDataChanged.rawValue, "CloudKitSharedDataChanged")
+    }
+
+    func testCloudKitRecordZoneChangedNotificationName() {
+        XCTAssertEqual(Notification.Name.cloudKitRecordZoneChanged.rawValue, "CloudKitRecordZoneChanged")
+    }
+
+    func testRefreshSharedItemsNotificationName() {
+        XCTAssertEqual(Notification.Name.refreshSharedItems.rawValue, "RefreshSharedItems")
+    }
+
+    func testNotificationNamesAreDistinct() {
+        let names: [Notification.Name] = [
+            .cloudKitPrivateDataChanged,
+            .cloudKitSharedDataChanged,
+            .cloudKitRecordZoneChanged,
+            .refreshSharedItems
+        ]
+        // All notification names should be unique
+        let uniqueNames = Set(names)
+        XCTAssertEqual(uniqueNames.count, names.count, "All notification names must be unique")
+    }
+
+    // MARK: - QuickToDoError Tests
+
+    func testQuickToDoErrorIsError() {
+        let error: Error = QuickToDoError()
+        XCTAssertNotNil(error)
+        XCTAssertTrue(error is QuickToDoError)
+    }
 }
