@@ -48,7 +48,23 @@ struct MainView: View {
             return nil
         }
         print("Displaying sheet")
-        return CloudSharingView(container: container, share: share)
+        return CloudSharingView(container: container, share: share,
+                                onSaveShare: { refreshActiveShare() },
+                                onStopSharing: {
+                                    activeShare = nil
+                                    refreshActiveShare()
+                                })
+    }
+
+    /// Reloads the zone share from iCloud so the cached share state and sharing badges stay current
+    private func refreshActiveShare() {
+        Task { @MainActor in
+            do {
+                activeShare = try await viewModel.inputs.refreshShareStatus()
+            } catch {
+                print("Failed to refresh share status: \(error)")
+            }
+        }
     }
 
     var body: some View {

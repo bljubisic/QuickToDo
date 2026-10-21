@@ -154,6 +154,17 @@ struct ItemsView: View {
         }
     }
 
+    /// Reloads the zone share from iCloud so the cached share state and sharing badges stay current
+    private func refreshActiveShare() {
+        Task { @MainActor in
+            do {
+                activeShare = try await viewModel.inputs.refreshShareStatus()
+            } catch {
+                print("Failed to refresh share status: \(error)")
+            }
+        }
+    }
+
     private func currentItems() -> [Item] {
         switch mode {
         case .regular:
@@ -474,7 +485,12 @@ struct ItemsView: View {
             .sheet(isPresented: $isSharing) {
                 if let share = activeShare, let container = activeContainer {
                     NavigationView {
-                        CloudSharingView(container: container, share: share)
+                        CloudSharingView(container: container, share: share,
+                                         onSaveShare: { refreshActiveShare() },
+                                         onStopSharing: {
+                                             activeShare = nil
+                                             refreshActiveShare()
+                                         })
                             .navigationTitle("Share Todo List")
                             .navigationBarTitleDisplayMode(.inline)
                             .toolbar {

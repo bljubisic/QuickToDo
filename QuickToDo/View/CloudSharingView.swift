@@ -13,6 +13,10 @@ import UIKit
 struct CloudSharingView: UIViewControllerRepresentable {
     let container: CKContainer
     let share: CKShare
+    /// Called after the share was saved (participants or permissions changed)
+    var onSaveShare: () -> Void = {}
+    /// Called after the owner stopped sharing (or a participant left)
+    var onStopSharing: () -> Void = {}
 
     func makeUIViewController(context: Context) -> UICloudSharingController {
         let controller = UICloudSharingController(share: share, container: container)
@@ -26,12 +30,28 @@ struct CloudSharingView: UIViewControllerRepresentable {
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator()
+        Coordinator(onSaveShare: onSaveShare, onStopSharing: onStopSharing)
     }
 
     class Coordinator: NSObject, UICloudSharingControllerDelegate {
+        private let onSaveShare: () -> Void
+        private let onStopSharing: () -> Void
+
+        init(onSaveShare: @escaping () -> Void, onStopSharing: @escaping () -> Void) {
+            self.onSaveShare = onSaveShare
+            self.onStopSharing = onStopSharing
+        }
+
         func cloudSharingController(_ csc: UICloudSharingController, failedToSaveShareWithError error: Error) {
             print("Failed to save share: \(error.localizedDescription)")
+        }
+
+        func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) {
+            onSaveShare()
+        }
+
+        func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) {
+            onStopSharing()
         }
 
         func itemTitle(for csc: UICloudSharingController) -> String? {

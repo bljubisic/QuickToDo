@@ -110,17 +110,22 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
                 print("Zone not created: \(err)")
             } else {
                 self.zone = newZone!
-                // Initialize root record asynchronously
+                // Legacy root record is only looked up (never created) - the whole zone is shared now
+                self.findRootRecord()
                 Task {
                     do {
-                        let rootRecord = try await self.findOrCreateRootRecord()
-                        self.rootRecord = rootRecord
+                        _ = try await self.refreshShareStatus()
                     } catch {
-                        print("Failed to initialize root record: \(error)")
+                        print("Failed to load zone share status: \(error)")
                     }
                 }
             }
         }
+    }
+
+    /// Record ID of the zone-wide share for `QuickToDoZone`
+    private var zoneShareID: CKRecord.ID {
+        CKRecord.ID(recordName: CKRecordNameZoneWideShare, zoneID: zone.zoneID)
     }
 
     private func setupSharedDatabaseSubscription() {
@@ -234,68 +239,27 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
         }
     }
 
-    private func findOrCreateRootRecord() async throws -> CKRecord {
-        // If we already have a root record, return it
-        if let existingRoot = self.rootRecord {
-            return existingRoot
+    /// Deletes record-level shares created by the old root-record sharing.
+    /// A zone-wide share cannot be saved while the zone still contains a record-level share.
+    /// The root record itself is kept: items reference it with `.deleteSelf`, so deleting it would delete them.
+    private func removeLegacyRootShare() async throws {
+        let query = CKQuery(recordType: "Items", predicate: NSPredicate(format: "Name = %@", "Root"))
+        guard let result = try? await database.records(matching: query, inZoneWith: zone.zoneID) else {
+            return
         }
 
-        // First, try to find existing root record
-        let predicate = NSPredicate(format: "Name = %@", "Root")
-        let query = CKQuery(recordType: "Items", predicate: predicate)
-
-        return try await withCheckedThrowingContinuation { continuation in
-            let database = self.database
-            let zone = self.zone
-
-            database.fetch(withQuery: query, inZoneWith: zone.zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
-                switch result {
-                case .success(let (matchResults, _)):
-                    // Look for existing root record
-                    for (_, matchResult) in matchResults {
-                        if case let .success(record) = matchResult {
-                            self.rootRecord = record
-                            continuation.resume(returning: record)
-                            return
-                        }
-                    }
-
-                    // No root record found, create one
-                    self.createRootRecord { record, error in
-                        if let error = error {
-                            continuation.resume(throwing: error)
-                        } else if let record = record {
-                            self.rootRecord = record
-                            continuation.resume(returning: record)
-                        } else {
-                            let createError = NSError(domain: "CloudKitModel", code: -4, userInfo: [NSLocalizedDescriptionKey: "Failed to create root record"])
-                            continuation.resume(throwing: createError)
-                        }
-                    }
-
-                case .failure(let error):
-                    print("findOrCreateRootRecord fetch error: \(error)")
-                    continuation.resume(throwing: error)
-                }
-            }
+        let legacyShareIDs = result.matchResults.compactMap { try? $0.1.get().share?.recordID }
+        guard !legacyShareIDs.isEmpty else {
+            return
         }
+
+        let (_, deleteResults) = try await database.modifyRecords(saving: [], deleting: legacyShareIDs)
+        for (_, result) in deleteResults {
+            try result.get()
+        }
+        print("Removed \(legacyShareIDs.count) legacy root record share(s)")
     }
 
-    private func createRootRecord(completion: @escaping (CKRecord?, Error?) -> Void) {
-        let newRecord = CKRecord(recordType: "Items", recordID: CKRecord.ID(zoneID: self.zone.zoneID))
-        let rootItem = Item(id: UUID(), name: "Root", count: 0, uploadedToICloud: true, done: true, shown: false, createdAt: Date(), lastUsedAt: Date())
-
-        newRecord.set(string: rootItem.id.uuidString, key: String(describing: ItemFields.id))
-        newRecord.set(string: rootItem.name, key: String(describing: ItemFields.name))
-        newRecord.set(int: rootItem.done ? 1 : 0, key: String(describing: ItemFields.done))
-        newRecord.set(int: rootItem.count, key: String(describing: ItemFields.count))
-        newRecord.set(int: rootItem.shown ? 1 : 0, key: String(describing: ItemFields.used))
-
-        self.database.save(newRecord) { record, error in
-            completion(record, error)
-        }
-    }
-    
     // MARK: - Change Token Management
     
     private func loadChangeTokens() {
@@ -490,72 +454,30 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
 // MARK: StorageInputs extension
 extension CloudKitModel: StorageInputs {
     func getCurrentShareStatus() -> CKShare? {
-        guard self.rootRecord != nil else {
-            return nil
-        }
-
         return self.cachedShare
     }
 
     func isListCurrentlyShared() -> Bool {
-        return rootRecord?.share != nil
+        return cachedShare != nil
     }
 
     func invalidateShareCache() {
         cachedShare = nil
     }
 
+    /// Fetches the zone-wide share from the server and updates the cache.
+    /// Returns nil when the zone is not shared (or there is no iCloud account, so it cannot be).
     func refreshShareStatus() async throws -> CKShare? {
-        guard let rootRecord = self.rootRecord,
-              let shareRef = rootRecord.share else {
+        do {
+            let record = try await database.record(for: zoneShareID)
+            guard let share = record as? CKShare else {
+                throw NSError(domain: "CloudKitModel", code: -3, userInfo: [NSLocalizedDescriptionKey: "Fetched record is not a CKShare."])
+            }
+            cachedShare = share
+            return share
+        } catch let error as CKError where [.unknownItem, .zoneNotFound, .notAuthenticated].contains(error.code) {
+            cachedShare = nil
             return nil
-        }
-
-        let database = self.database
-
-        return try await withCheckedThrowingContinuation { continuation in
-            var hasResumed = false
-            let resumeLock = NSLock()
-
-            func safeResume(with result: Result<CKShare?, Error>) {
-                resumeLock.lock()
-                defer { resumeLock.unlock() }
-                guard !hasResumed else { return }
-                hasResumed = true
-                switch result {
-                case .success(let share):
-                    continuation.resume(returning: share)
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
-            }
-
-            let fetchOp = CKFetchRecordsOperation(recordIDs: [shareRef.recordID])
-            fetchOp.perRecordResultBlock = { _, result in
-                switch result {
-                case .success(let shareRecord):
-                    if let fetchedShare = shareRecord as? CKShare {
-                        self.cachedShare = fetchedShare
-                        safeResume(with: .success(fetchedShare))
-                    } else {
-                        let error = NSError(domain: "CloudKitModel", code: -3, userInfo: [NSLocalizedDescriptionKey: "Fetched record is not a CKShare."])
-                        safeResume(with: .failure(error))
-                    }
-                case .failure(let error):
-                    safeResume(with: .failure(error))
-                }
-            }
-
-            fetchOp.fetchRecordsResultBlock = { result in
-                switch result {
-                case .success:
-                    break // Success handled in perRecordResultBlock
-                case .failure(let error):
-                    safeResume(with: .failure(error))
-                }
-            }
-
-            database.add(fetchOp)
         }
     }
 
@@ -749,8 +671,8 @@ extension CloudKitModel: StorageInputs {
     }
 
     /**
-     Prepares a CKShare for the root record (creating the root record if needed),
-     then saves both the root record and the share together as required by CloudKit.
+     Returns the zone-wide share for `QuickToDoZone`, creating it if the zone is not shared yet.
+     Sharing the whole zone means every item in it is shared, without parent/root bookkeeping.
      Calls the handler with the CKShare, CKContainer, and any error.
      */
     func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) async throws {
@@ -765,132 +687,36 @@ extension CloudKitModel: StorageInputs {
         defer { sharePreparationInProgress = false }
 
         do {
-            // Ensure the root record exists with proper async handling
-            let rootRecord = try await findOrCreateRootRecord()
-            self.rootRecord = rootRecord
-
-            // Check if we have a cached share that's still valid
-            if let cachedShare = self.cachedShare,
-               let shareRef = rootRecord.share,
-               cachedShare.recordID == shareRef.recordID {
-                handler(cachedShare, self.container, nil)
+            if let existingShare = try await refreshShareStatus() {
+                handler(existingShare, self.container, nil)
                 return
             }
 
-            // Try to find existing share
-            if let shareRef = rootRecord.share {
-                await fetchExistingShare(shareRef: shareRef, handler: handler)
-                return
-            }
+            // The zone is created asynchronously in init, so make sure it exists before sharing it
+            self.zone = try await database.save(zone)
+            try await removeLegacyRootShare()
 
-            // Create new share
-            await createNewShare(rootRecord: rootRecord, handler: handler)
+            let share = CKShare(recordZoneID: zone.zoneID)
+            share[CKShare.SystemFieldKey.title] = "QuickToDo Share"
+            share.publicPermission = .none
 
+            let savedShare = try await database.save(share) as? CKShare ?? share
+            cachedShare = savedShare
+            handler(savedShare, self.container, nil)
         } catch {
             handler(nil, self.container, error)
         }
     }
 
-    private func fetchExistingShare(shareRef: CKRecord.Reference, handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) async {
-        let fetchOp = CKFetchRecordsOperation(recordIDs: [shareRef.recordID])
-        let database = self.database
-        let container = self.container
-        var hasCalledHandler = false
-        let handlerLock = NSLock()
-
-        func safeHandler(_ share: CKShare?, _ cont: CKContainer?, _ error: Error?) {
-            handlerLock.lock()
-            defer { handlerLock.unlock() }
-            guard !hasCalledHandler else { return }
-            hasCalledHandler = true
-            handler(share, cont, error)
-        }
-
-        fetchOp.perRecordResultBlock = { _, result in
-            switch result {
-            case .success(let shareRecord):
-                if let fetchedShare = shareRecord as? CKShare {
-                    self.cachedShare = fetchedShare
-                    safeHandler(fetchedShare, container, nil)
-                } else {
-                    let error = NSError(domain: "CloudKitModel", code: -3, userInfo: [NSLocalizedDescriptionKey: "Fetched record is not a CKShare."])
-                    safeHandler(nil, container, error)
-                }
-            case .failure(let error):
-                safeHandler(nil, container, error)
-            }
-        }
-
-        fetchOp.fetchRecordsResultBlock = { result in
-            switch result {
-            case .success:
-                break // Success handled in perRecordResultBlock
-            case .failure(let error):
-                safeHandler(nil, container, error)
-            }
-        }
-
-        database.add(fetchOp)
-    }
-
-    private func createNewShare(rootRecord: CKRecord, handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) async {
-        let share = CKShare(rootRecord: rootRecord)
-        share[CKShare.SystemFieldKey.title] = "QuickToDo Share"
-
-        // Configure share permissions
-        share.publicPermission = .none
-        share[CKShare.SystemFieldKey.shareType] = "com.bratislavljubisic.QuickToDo.share"
-
-        let modifyOp = CKModifyRecordsOperation(recordsToSave: [rootRecord, share], recordIDsToDelete: nil)
-        let database = self.database
-        let container = self.container
-
-        modifyOp.modifyRecordsResultBlock = { result in
-            switch result {
-            case .success:
-                self.cachedShare = share
-                handler(share, container, nil)
-            case .failure(let error):
-                handler(nil, container, error)
-            }
-        }
-
-        modifyOp.perRecordSaveBlock = { (recordID: CKRecord.ID, result: Result<CKRecord, Error>) in
-            switch result {
-            case .success(let record):
-                if let share = record as? CKShare {
-                    self.cachedShare = share
-                }
-            case .failure(let error):
-                print("Error saving record \(recordID): \(error.localizedDescription)")
-            }
-        }
-
-        database.add(modifyOp)
-    }
-
     func removeShare() async throws {
-        guard let rootRecord = self.rootRecord,
-              let shareRef = rootRecord.share else {
-            return // No share to remove
+        let shareID = zoneShareID
+        let (_, deleteResults) = try await database.modifyRecords(saving: [], deleting: [shareID])
+        do {
+            try deleteResults[shareID]?.get()
+        } catch let error as CKError where error.code == .unknownItem {
+            // Zone was not shared - nothing to remove
         }
-
-        let deleteOp = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: [shareRef.recordID])
-        let database = self.database
-
-        return try await withCheckedThrowingContinuation { continuation in
-            deleteOp.modifyRecordsResultBlock = { result in
-                switch result {
-                case .success:
-                    self.cachedShare = nil
-                    continuation.resume()
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
-            }
-
-            database.add(deleteOp)
-        }
+        cachedShare = nil
     }
 
     func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?) {
@@ -942,16 +768,9 @@ extension CloudKitModel: StorageInputs {
             let newRecord = CKRecord(recordType: "Items", recordID: CKRecord.ID(zoneID: self.zone.zoneID))
             var itemRet = Item()
 
-            // Use async task to ensure root record exists
+            // No parent record needed: the whole zone is shared
             Task {
                 do {
-                    if item.name != "Root" {
-                        let rootRecord = try await self.findOrCreateRootRecord()
-                        let rootReference = CKRecord.Reference(recordID: rootRecord.recordID, action: .deleteSelf)
-                        newRecord.setObject(rootReference, forKey: "Root")
-                        newRecord.setParent(rootRecord)
-                    }
-
                     newRecord.set(string: item.id.uuidString, key: String(describing: ItemFields.id))
                     newRecord.set(string: item.name, key: String(describing: ItemFields.name))
                     newRecord.set(int: (item.done) ? 1 : 0, key: String(describing: ItemFields.done))
