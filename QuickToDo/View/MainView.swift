@@ -15,6 +15,7 @@ import UserNotifications
 
 struct MainView: View {
 
+    @Environment(\.scenePhase) private var scenePhase
     @EnvironmentObject var shareManager: CloudKitShareManager
     @StateObject var viewModel: QuickToDoViewModel
 //    @ObservedObject var viewModel: ViewModelMocked
@@ -22,10 +23,11 @@ struct MainView: View {
     @State private var text = ""
     @State private var shown: Bool = false
 
+    // Sharing state lives only here: one sheet and one error alert for every Share button
     @State private var isSharing = false
-
     @State private var activeShare: CKShare?
     @State private var activeContainer: CKContainer?
+    @State private var sharingError: String?
 
     init(viewModel: QuickToDoViewModelProtoocol) {
 //        self.viewModel = viewModel as! ViewModelMocked
@@ -41,19 +43,20 @@ struct MainView: View {
 
     }
 
-    /// Builds a `CloudSharingView` with state after processing a share.
-    private func shareView() -> CloudSharingView? {
-
-        guard let share = activeShare, let container = activeContainer else {
-            return nil
+    /// Creates (or loads) the zone share and opens the system share sheet
+    private func startSharing() {
+        viewModel.inputs.prepareSharing { share, container, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("Error preparing share: \(error.localizedDescription)")
+                    sharingError = error.localizedDescription
+                    return
+                }
+                activeShare = share
+                activeContainer = container
+                isSharing = true
+            }
         }
-        print("Displaying sheet")
-        return CloudSharingView(container: container, share: share,
-                                onSaveShare: { refreshActiveShare() },
-                                onStopSharing: {
-                                    activeShare = nil
-                                    refreshActiveShare()
-                                })
     }
 
     /// Reloads the zone share from iCloud so the cached share state and sharing badges stay current
@@ -69,45 +72,59 @@ struct MainView: View {
 
     var body: some View {
         VStack {
-            Toolbar(viewModel: viewModel, shown: $shown, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
-            SharingStatusView(activeShare: $activeShare, isSharing: $isSharing)
+            Toolbar(viewModel: viewModel, shown: $shown, onShare: startSharing)
+            SharingStatusView(isShared: activeShare != nil, onManageShare: startSharing)
             TabView {
                 NavigationStack {
-                    ItemsView(viewModel: viewModel, shown: $shown, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer, mode: .regular)
+                    ItemsView(viewModel: viewModel, shown: $shown, activeShare: activeShare, onShare: startSharing, mode: .regular)
                         .onAppear {
                             _ = self.viewModel.inputs.getItems {
                                 print("called getItems")
                                 WidgetCenter.shared.reloadAllTimelines()
                             }
                         }
-                        .sheet(isPresented: $isSharing, content: { shareView() })
                 }
                 .tabItem {
                     Label("Items", systemImage: "list.bullet")
                 }
                 NavigationStack {
-                    ItemsView(viewModel: viewModel, shown: $shown, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer, mode: .shared)
-                        .onAppear {
-                            // Refresh share status when shared items tab appears
-                            Task {
-                                do {
-                                    _ = try await self.viewModel.inputs.refreshShareStatus()
-                                } catch {
-                                    print("Failed to refresh share status: \(error)")
-                                }
-                            }
-                        }
-                        .sheet(isPresented: $isSharing, content: { shareView() })
+                    ItemsView(viewModel: viewModel, shown: $shown, activeShare: activeShare, onShare: startSharing, mode: .shared)
+                        .onAppear(perform: refreshActiveShare)
                 }
                 .tabItem {
                     Label("Shared Items", systemImage: viewModel.inputs.isListCurrentlyShared() ? "person.2.fill" : "person.crop.circle")
                 }
+            }
+            .alert("Sharing Error", isPresented: Binding(get: { sharingError != nil },
+                                                         set: { if !$0 { sharingError = nil } })) {
+                Button("OK") { }
+            } message: {
+                Text(sharingError ?? "")
+            }
+        }
+        .sheet(isPresented: $isSharing) {
+            if let share = activeShare, let container = activeContainer {
+                CloudSharingView(container: container, share: share,
+                                 onSaveShare: refreshActiveShare,
+                                 onStopSharing: {
+                                     activeShare = nil
+                                     refreshActiveShare()
+                                 })
             }
         }
         .alert("Sharing", isPresented: $shareManager.showingAlert) {
             Button("OK") { }
         } message: {
             Text(shareManager.alertMessage)
+        }
+        .task {
+            // Show the sharing banner right away if the list was shared in an earlier session
+            refreshActiveShare()
+        }
+        .onChange(of: scenePhase) { _, newState in
+            if newState == .active {
+                refreshActiveShare()
+            }
         }
     }
 }
@@ -136,10 +153,6 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
     var config: QuickToDoConfig
 
     func getZone() -> CKRecordZone? {
-        return nil
-    }
-
-    func getRootRecord() -> CKRecord? {
         return nil
     }
 
@@ -191,11 +204,8 @@ final class ModelMocked: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
         return (true, nil)
     }
 
-    func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?) {
-        return (true, nil)
-    }
-
-    func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?) {
+    func fetchAllSharedItems(completion: @escaping ([Item], Error?) -> Void) -> (Bool, Error?) {
+        completion([], nil)
         return (true, nil)
     }
 
@@ -226,7 +236,8 @@ final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInpu
         return nil
     }
 
-    func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?) {
+    func fetchAllSharedItems(completion: @escaping ([Item], Error?) -> Void) -> (Bool, Error?) {
+        completion([], nil)
         return (true, nil)
     }
 
@@ -256,9 +267,6 @@ final class ViewModelMocked: QuickToDoViewModelProtoocol, QuickToDoViewModelInpu
         return(true, nil)
     }
 
-    func getRootRecord() -> CKRecord? {
-        return nil
-    }
     func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
         handler(nil, nil, nil)
     }

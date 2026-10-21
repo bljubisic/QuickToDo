@@ -13,9 +13,8 @@ struct Toolbar: View {
 
     @ObservedObject var viewModel: QuickToDoViewModel
     @Binding var shown: Bool
-    @Binding var isSharing: Bool
-    @Binding var activeShare: CKShare?
-    @Binding var activeContainer: CKContainer?
+    /// Opens the share sheet (MainView owns the sheet)
+    let onShare: () -> Void
 
     var body: some View {
         HStack {
@@ -37,23 +36,7 @@ struct Toolbar: View {
                     .frame(width: 70.0, height: 20.0)
             }
             VStack {
-                Button(action: {
-                    Task {
-                        print("Called Share")
-                        viewModel.inputs.prepareSharing(handler: { share, container, error in
-                            DispatchQueue.main.async {
-                                if let error = error {
-                                    print("Error preparing share: \(error.localizedDescription)")
-                                    return
-                                }
-                                activeShare = share
-                                activeContainer = container
-                                isSharing = true
-                                print("isSharing - \(isSharing)")
-                            }
-                        })
-                    }
-                }, label: {
+                Button(action: onShare, label: {
                     Image(systemName: "square.and.arrow.up")
                         .resizable()
                         .frame(width: 20.0, height: 20.0)
@@ -119,11 +102,8 @@ struct Toolbar: View {
 #Preview {
     @Previewable @State var show: Bool = false
     @Previewable var viewModel: QuickToDoViewModel = QuickToDoViewModel()
-    @Previewable @State var isSharing: Bool = false
-    @Previewable @State var activeShare: CKShare?
-    @Previewable @State var activeContainer: CKContainer?
 
-    Toolbar(viewModel: viewModel, shown: $show, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer)
+    Toolbar(viewModel: viewModel, shown: $show, onShare: {})
         .padding()
         .background(Color.white)
         .environment(\.colorScheme, .light)

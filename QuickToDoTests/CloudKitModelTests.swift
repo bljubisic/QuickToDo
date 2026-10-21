@@ -64,14 +64,7 @@ class CloudKitModelTests: XCTestCase {
         XCTAssertNil(model.getCurrentShareStatus())
     }
 
-    // MARK: - Root Record Tests
-
-    func testGetRootRecordInitially() {
-        let rootRecord = model.getRootRecord()
-        // Root record may be nil initially or set asynchronously
-        // We're just testing the method doesn't crash
-        _ = rootRecord
-    }
+    // MARK: - Zone Tests
 
     func testGetZoneReturnsZone() {
         let zone = model.getZone()
@@ -315,40 +308,21 @@ class CloudKitModelTests: XCTestCase {
 
     // MARK: - Shared Items Tests
 
-    func testGetSharedItemsReturnsSuccess() {
-        let mockRecord = CKRecord(recordType: "Items")
-        let (success, error) = model.getSharedItems(for: mockRecord, with: nil)
+    func testFetchAllSharedItemsCallsCompletionOnce() {
+        let expectation = XCTestExpectation(description: "Completion called once with all shared items")
+        expectation.assertForOverFulfill = true
 
-        XCTAssertTrue(success)
-        XCTAssertNil(error)
-    }
-
-    func testFetchAllSharedItemsReturnsSuccess() {
-        var itemCount = 0
-        let (success, error) = model.fetchAllSharedItems { _ in
-            itemCount += 1
+        let (success, error) = model.fetchAllSharedItems { items, _ in
+            XCTAssertTrue(items.allSatisfy { $0.scope == .shared })
+            expectation.fulfill()
         }
 
         XCTAssertTrue(success)
         XCTAssertNil(error)
+        wait(for: [expectation], timeout: 15.0)
     }
 
     // MARK: - Thread Safety Tests
-
-    func testConcurrentRootRecordAccess() {
-        let expectation = XCTestExpectation(description: "Concurrent access completes")
-        expectation.expectedFulfillmentCount = 10
-
-        // Simulate concurrent access to rootRecord
-        for _ in 1...10 {
-            DispatchQueue.global().async {
-                _ = self.model.getRootRecord()
-                expectation.fulfill()
-            }
-        }
-
-        wait(for: [expectation], timeout: 5.0)
-    }
 
     func testConcurrentShareStatusAccess() {
         let expectation = XCTestExpectation(description: "Concurrent share status access")

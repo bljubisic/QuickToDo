@@ -97,9 +97,10 @@ extension MockStorageProtocol: StorageInputs {
         handler(nil, nil, nil)
     }
 
-    func getRootRecord() -> CKRecord? { return nil }
-    func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?) { return (true, nil) }
-    func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?) { return (true, nil) }
+    func fetchAllSharedItems(completion: @escaping ([Item], Error?) -> Void) -> (Bool, Error?) {
+        completion([], nil)
+        return (true, nil)
+    }
     func getZone() -> CKRecordZone? { return nil }
     func getCurrentShareStatus() -> CKShare? { return nil }
     func isListCurrentlyShared() -> Bool { return false }
@@ -411,12 +412,6 @@ class QuickToDoModelTests: XCTestCase {
 
     // MARK: - CloudKit Delegation Tests
 
-    func testGetRootRecord() {
-        _ = model.getRootRecord()
-        // Should delegate to CloudKit
-        // Since mock returns nil, we just verify it doesn't crash
-    }
-
     func testGetZone() {
         let zone = model.getZone()
         XCTAssertNil(zone) // Mock returns nil
@@ -450,20 +445,13 @@ class QuickToDoModelTests: XCTestCase {
         wait(for: [expectation], timeout: 2.0)
     }
 
-    func testGetSharedItems() {
-        let mockRecord = CKRecord(recordType: "Items")
-        let (success, error) = model.getSharedItems(for: mockRecord, with: nil)
-
-        XCTAssertTrue(success)
-        XCTAssertNil(error)
-    }
-
     func testFetchAllSharedItems() {
-        var itemCount = 0
-        let (success, error) = model.fetchAllSharedItems { _ in
-            itemCount += 1
+        var completionCalls = 0
+        let (success, error) = model.fetchAllSharedItems { _, _ in
+            completionCalls += 1
         }
 
+        XCTAssertEqual(completionCalls, 1, "Should forward the storage's single completion call")
         XCTAssertTrue(success)
         XCTAssertNil(error)
     }

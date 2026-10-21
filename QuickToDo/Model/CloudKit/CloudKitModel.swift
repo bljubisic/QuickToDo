@@ -18,21 +18,9 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
     private var database: CKDatabase
     private var sharedDatabase: CKDatabase
     private var zone: CKRecordZone
-    private var _rootRecord: CKRecord?
     private var _cachedShare: CKShare?
     private var _sharePreparationInProgress: Bool = false
     private let synchronizationQueue = DispatchQueue(label: "com.quicktodo.cloudkit.sync", attributes: .concurrent)
-
-    private var rootRecord: CKRecord? {
-        get {
-            synchronizationQueue.sync { _rootRecord }
-        }
-        set {
-            synchronizationQueue.async(flags: .barrier) {
-                self._rootRecord = newValue
-            }
-        }
-    }
 
     private var cachedShare: CKShare? {
         get {
@@ -82,8 +70,6 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
                 print("Zone not created: \(err)")
             } else {
                 self.zone = newZone!
-                // Legacy root record is only looked up (never created) - the whole zone is shared now
-                self.findRootRecord()
                 Task {
                     do {
                         _ = try await self.refreshShareStatus()
@@ -171,27 +157,6 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
             } catch {
                 print("Error syncing \(isShared ? "shared" : "private") database: \(error)")
                 completion?.finish(.failed)
-            }
-        }
-    }
-
-    private func findRootRecord() {
-        let predicate = NSPredicate(format: "Name = %@", "Root")
-        let query = CKQuery(recordType: "Items", predicate: predicate)
-
-        self.database.fetch(withQuery: query, inZoneWith: zone.zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
-            switch result {
-            case .success(let (matchResults, _)):
-                for (_, matchResult) in matchResults {
-                    switch matchResult {
-                    case .success(let record):
-                        self.rootRecord = record
-                    case .failure:
-                        break
-                    }
-                }
-            case .failure(let error):
-                print("findRootRecord fetch error: \(error)")
             }
         }
     }
@@ -378,86 +343,44 @@ extension CloudKitModel: StorageInputs {
         }
     }
 
-    func getRootRecord() -> CKRecord? {
-        return self.rootRecord
-    }
-
     func getZone() -> CKRecordZone? {
         return self.zone
     }
 
-    func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?) {
-        let predicate = NSPredicate(format: "Root = %@", root.recordID)
-        let query = CKQuery(recordType: "Items", predicate: predicate)
+    /// Fetches the shown items of every list shared with us. Calls `completion` once, with all items.
+    /// A zone that fails (e.g. it was just unshared) is skipped instead of failing the whole fetch.
+    func fetchAllSharedItems(completion: @escaping ([Item], Error?) -> Void) -> (Bool, Error?) {
         let sharedDatabase = self.sharedDatabase
 
-        // Important: Use the zone from the root record, not our local zone
-        let sharedZoneID = root.recordID.zoneID
-
-        sharedDatabase.fetch(withQuery: query, inZoneWith: sharedZoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
-            switch result {
-            case .success(let (matchResults, _)):
-                guard let completionUnwraped = completion else { return }
-                for (_, matchResult) in matchResults {
-                    if case let .success(record) = matchResult,
-                       let item = Item(record: record, scope: .shared) {
-                        completionUnwraped(item)
-                    }
-                }
-            case .failure(let error):
-                print("getSharedItems fetch error: \(error)")
-            }
-        }
-        return(true, nil)
-    }
-
-    /// Fetches all shared items from all accepted shares
-    func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?) {
-        let sharedDatabase = self.sharedDatabase
-
-        // First, fetch all zones in the shared database to find accepted shares
-        sharedDatabase.fetchAllRecordZones { zones, error in
-            if let error = error {
+        Task {
+            let zones: [CKRecordZone]
+            do {
+                zones = try await sharedDatabase.allRecordZones()
+            } catch {
                 print("Error fetching shared zones: \(error)")
+                completion([], error)
                 return
             }
 
-            guard let zones = zones else {
-                print("No shared zones found")
-                return
-            }
-
-            // For each zone, query for items
-            for zone in zones {
-                // Skip default zone as it won't contain our shared data
-                if zone.zoneID == CKRecordZone.default().zoneID {
-                    continue
-                }
-
-                // Query for shown Items in this zone
-                let predicate = NSPredicate(format: "Used = 1")
-                let query = CKQuery(recordType: "Items", predicate: predicate)
-
-                sharedDatabase.fetch(withQuery: query, inZoneWith: zone.zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
-                    switch result {
-                    case .success(let (matchResults, _)):
-                        for (_, matchResult) in matchResults {
-                            if case let .success(record) = matchResult {
-                                // Skip the root record itself
-                                if record.string(String(describing: ItemFields.name)) == "Root" {
-                                    continue
-                                }
-
-                                if let item = Item(record: record, scope: .shared) {
-                                    completion(item)
-                                }
-                            }
-                        }
-                    case .failure(let error):
-                        print("Error fetching shared items from zone \(zone.zoneID): \(error)")
+            var items: [Item] = []
+            // The default zone never holds shared data
+            for zone in zones where zone.zoneID != CKRecordZone.default().zoneID {
+                do {
+                    let query = CKQuery(recordType: "Items", predicate: NSPredicate(format: "Used = 1"))
+                    var page = try await sharedDatabase.records(matching: query, inZoneWith: zone.zoneID)
+                    var records = page.matchResults.compactMap { try? $0.1.get() }
+                    while let cursor = page.queryCursor {
+                        page = try await sharedDatabase.records(continuingMatchFrom: cursor)
+                        records += page.matchResults.compactMap { try? $0.1.get() }
                     }
+                    items += records
+                        .filter { $0.string(String(describing: ItemFields.name)) != "Root" } // legacy root record
+                        .compactMap { Item(record: $0, scope: .shared) }
+                } catch {
+                    print("Error fetching shared items from zone \(zone.zoneID.zoneName): \(error)")
                 }
             }
+            completion(items, nil)
         }
 
         return (true, nil)
@@ -589,9 +512,6 @@ extension CloudKitModel: StorageInputs {
                     let savedItem = Item(record: savedRecord, scope: .private) ?? item
 
                     print("Record created!! \(savedItem.name)")
-                    if savedItem.name == "Root" {
-                        self.rootRecord = savedRecord
-                    }
                     completionHandler?(savedItem, nil)
 
                 } catch {

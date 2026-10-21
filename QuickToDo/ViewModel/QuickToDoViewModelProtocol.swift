@@ -21,12 +21,11 @@ protocol QuickToDoViewModelInputs {
     func getItemsNumbers() -> Observable<(Int, Int)>
     func showOrHideAllDoneItems(shown: Bool) -> Bool
     func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void)
-    func getRootRecord() -> CKRecord?
     func getZone() -> CKRecordZone?
     func getCurrentShareStatus() -> CKShare?
     func isListCurrentlyShared() -> Bool
     func refreshShareStatus() async throws -> CKShare?
-    func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?)
+    func fetchAllSharedItems(completion: @escaping ([Item], Error?) -> Void) -> (Bool, Error?)
     func clearList() -> Bool
     func uploadToCloud() -> (Bool, Error?)
     func getConfig() -> Bool

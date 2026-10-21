@@ -347,10 +347,6 @@ class SwiftDataModelTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: 1.0)
     }
 
-    func testGetRootRecordReturnsNil() {
-        XCTAssertNil(model.getRootRecord())
-    }
-
     func testGetZoneReturnsNil() {
         XCTAssertNil(model.getZone())
     }
@@ -368,16 +364,13 @@ class SwiftDataModelTests: XCTestCase {
         XCTAssertNil(result)
     }
 
-    func testGetSharedItemsReturnsSuccess() {
-        let mockRecord = CKRecord(recordType: "Mock")
-        let (success, error) = model.getSharedItems(for: mockRecord, with: nil)
-
-        XCTAssertTrue(success)
-        XCTAssertNil(error)
-    }
-
     func testFetchAllSharedItemsReturnsSuccess() {
-        let (success, error) = model.fetchAllSharedItems { _ in }
+        var receivedItems: [Item]?
+        let (success, error) = model.fetchAllSharedItems { items, _ in
+            receivedItems = items
+        }
+
+        XCTAssertEqual(receivedItems?.count, 0)
 
         XCTAssertTrue(success)
         XCTAssertNil(error)

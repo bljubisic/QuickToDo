@@ -37,10 +37,9 @@ QuickToDo/
 │   ├── Toolbar.swift            # Action buttons (refresh, share, clear, toggle done)
 │   ├── SharingStatusView.swift  # Sharing badge UI
 │   ├── CloudSharingView.swift   # CloudKit native sharing sheet
-│   └── CloudKitShareManager.swift  # EnvironmentObject for share acceptance
-├── AppDelegate.swift            # Notifications, CloudKit share acceptance, remote notifications
-├── SceneDelegate.swift          # Scene lifecycle
-├── Config.plist                 # sharingEnabled flag, sharingList array
+│   └── CloudKitShareManager.swift  # Accepts share invitations (singleton, also EnvironmentObject)
+├── AppDelegate.swift            # Remote notifications, installs SceneDelegate, RemoteSyncCompletion
+├── SceneDelegate.swift          # Receives CloudKit share invitations
 ├── QuickToDo.xcdatamodeld/      # Legacy CoreData schema (SwiftData is active)
 └── Images.xcassets/
 QuickToDoWidget/                 # Home screen widget (reads from shared App Group)
@@ -76,12 +75,13 @@ open QuickToDo.xcodeproj    # Open in Xcode
 - **Intents**: Siri Shortcuts use `QuickToDoIntent` / `ItemCompleted` in the Intents extension. Keep intent parameter types compatible with the shared `Item` struct.
 
 ## Important Notes
-- `Config.plist` controls the `sharingEnabled` flag — check it when debugging sharing features
+- Sharing is zone-wide: one `CKShare(recordZoneID:)` shares all of `QuickToDoZone`. Items have no parent/root record; legacy "Root" records still exist in old zones and must not be deleted (items reference them with `.deleteSelf`)
+- `Item.scope` (`.private` / `.shared`) and `Item.cloudRecord` route updates to the private or shared database; shared items are never stored in SwiftData
 - `QuickToDoViewModelProtoocol` has a typo ("Protoocol" with double 'o') — do not fix without updating all references
 - `ItemMO` and `QuickToDo.xcdatamodeld` are legacy CoreData artifacts kept for historical reference; SwiftData (`ItemSD`) is the active persistence layer
 - Background modes enabled: `fetch` and `remote-notification` — remote push drives CloudKit sync
 - The app supports `CKSharingSupported` (Info.plist) for CloudKit share sheet presentation
-- `CloudKitModel` is ~1,066 lines and handles all iCloud concerns; be careful when modifying threading or change-token logic
+- `CloudKitModel` (~650 lines) handles all iCloud concerns; be careful when modifying threading or change-token logic
 - Bundle ID: `Persukibo.QuickToDo`, Version: 3.2.2
 
 ## Common Mistakes to Avoid

@@ -46,10 +46,6 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
         return configUnWrapped.showDoneItems
     }
 
-    func getRootRecord() -> CKRecord? {
-        return self.model.inputs.getRootRecord()
-    }
-
     func getZone() -> CKRecordZone? {
         return self.model.inputs.getZone()
     }
@@ -248,7 +244,7 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
         return model.inputs.uploadToCloud(items: itemsArray.filter {item in !item.uploadedToICloud})
     }
 
-    func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?) {
+    func fetchAllSharedItems(completion: @escaping ([Item], Error?) -> Void) -> (Bool, Error?) {
         return self.model.inputs.fetchAllSharedItems(completion: completion)
     }
 }

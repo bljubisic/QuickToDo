@@ -151,14 +151,6 @@ extension SwiftDataModel: StorageInputs {
         handler(nil, nil, error)
     }
 
-    func getRootRecord() -> CKRecord? {
-        return nil
-    }
-
-    func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?) {
-        return(true, nil)
-    }
-
     func getZone() -> CKRecordZone? {
         return nil
     }
@@ -175,8 +167,9 @@ extension SwiftDataModel: StorageInputs {
         return nil
     }
 
-    func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?) {
+    func fetchAllSharedItems(completion: @escaping ([Item], Error?) -> Void) -> (Bool, Error?) {
         // SwiftData doesn't handle CloudKit shares directly, so return empty
+        completion([], nil)
         return (true, nil)
     }
 

@@ -351,10 +351,6 @@ class QuickToDoViewModelTests: XCTestCase {
 
     // MARK: - CloudKit Delegation Tests
 
-    func testGetRootRecord() {
-        XCTAssertNil(viewModel.inputs.getRootRecord())
-    }
-
     func testGetZone() {
         XCTAssertNil(viewModel.inputs.getZone())
     }
@@ -575,11 +571,8 @@ class MockQuickToDoModel: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
         return (true, nil)
     }
 
-    func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?) {
-        return (true, nil)
-    }
-
-    func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?) {
+    func fetchAllSharedItems(completion: @escaping ([Item], Error?) -> Void) -> (Bool, Error?) {
+        completion([], nil)
         return (true, nil)
     }
 
@@ -587,7 +580,6 @@ class MockQuickToDoModel: QuickToDoProtocol, QuickToDoInputs, QuickToDoOutputs {
         handler(nil, nil, nil)
     }
 
-    func getRootRecord() -> CKRecord? { return nil }
     func getZone() -> CKRecordZone? { return nil }
     func getCurrentShareStatus() -> CKShare? { return nil }
     func isListCurrentlyShared() -> Bool { return false }

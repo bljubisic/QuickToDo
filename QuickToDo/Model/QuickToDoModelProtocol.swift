@@ -16,10 +16,8 @@ protocol QuickToDoInputs {
     func update(_ item: Item, withItem: Item) -> (Bool, Error?)
     func getHints(for itemName: String) -> Observable<String>
     func getItems() -> (Bool, Error?)
-    func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?)
-    func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?)
+    func fetchAllSharedItems(completion: @escaping ([Item], Error?) -> Void) -> (Bool, Error?)
     func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void)
-    func getRootRecord() -> CKRecord?
     func getZone() -> CKRecordZone?
     func getCurrentShareStatus() -> CKShare?
     func isListCurrentlyShared() -> Bool
@@ -55,9 +53,7 @@ protocol StorageInputs {
     func getItemWithId() -> ItemProcessFindWithID
     func getHints(for itemName: String, withCompletion: @escaping (Item, Item) -> Void)
     func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) async throws
-    func getRootRecord() -> CKRecord?
-    func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?)
-    func fetchAllSharedItems(completion: @escaping (Item) -> Void) -> (Bool, Error?)
+    func fetchAllSharedItems(completion: @escaping ([Item], Error?) -> Void) -> (Bool, Error?)
     func getZone() -> CKRecordZone?
     func getCurrentShareStatus() -> CKShare?
     func isListCurrentlyShared() -> Bool

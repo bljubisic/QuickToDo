@@ -39,9 +39,10 @@ struct ItemsView: View {
 
     @ObservedObject var viewModel: QuickToDoViewModel
     @Binding var shown: Bool
-    @Binding var isSharing: Bool
-    @Binding var activeShare: CKShare?
-    @Binding var activeContainer: CKContainer?
+    /// The zone share of the user's own list, if it is shared (owned by MainView)
+    let activeShare: CKShare?
+    /// Opens the share sheet for the user's own list (MainView owns the sheet)
+    let onShare: () -> Void
 
     let mode: ItemsViewMode
 
@@ -52,8 +53,8 @@ struct ItemsView: View {
     @State private var selectedItem: Item?
     @State var hint1 = ""
     @State var hint2 = ""
-    @State private var sharingError: String?
-    @State private var showingSharingError = false
+    @State private var addItemError: String?
+    @State private var showingAddItemError = false
 
     // Notification observers
     @State private var refreshSharedItemsObserver: NSObjectProtocol?
@@ -115,8 +116,8 @@ struct ItemsView: View {
             viewModel.inputs.addToSharedZone(newItem) { savedItem, error in
                 if let error = error {
                     print("Error adding to shared zone: \(error.localizedDescription)")
-                    sharingError = error.localizedDescription
-                    showingSharingError = true
+                    addItemError = error.localizedDescription
+                    showingAddItemError = true
                     return
                 }
                 if !self.sharedItems.contains(where: { $0.id == savedItem.id }) {
@@ -132,27 +133,15 @@ struct ItemsView: View {
         guard mode == .shared else { return }
 
         isLoadingSharedItems = true
-        sharedItems = []
-
-        // Track whether we've received any items
-        var receivedItems = false
-
-        // Fetch all shared items from the shared database
-        _ = viewModel.inputs.fetchAllSharedItems { item in
+        _ = viewModel.inputs.fetchAllSharedItems { items, error in
             DispatchQueue.main.async {
-                receivedItems = true
-                // Avoid duplicates
-                if !self.sharedItems.contains(where: { $0.id == item.id }) {
-                    self.sharedItems.append(item)
+                if let error = error {
+                    print("Failed to load shared items: \(error)")
+                } else {
+                    self.sharedItems = items
                 }
+                self.isLoadingSharedItems = false
             }
-        }
-
-        // Use a reasonable timeout - CloudKit zone fetches may take a few seconds
-        // Check periodically and stop loading once items stop arriving
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            self.isLoadingSharedItems = false
-            print("Loaded \(self.sharedItems.count) shared items (receivedItems: \(receivedItems))")
         }
     }
 
@@ -166,17 +155,6 @@ struct ItemsView: View {
             sharedItems[index] = newItem
         } else {
             sharedItems.remove(at: index)
-        }
-    }
-
-    /// Reloads the zone share from iCloud so the cached share state and sharing badges stay current
-    private func refreshActiveShare() {
-        Task { @MainActor in
-            do {
-                activeShare = try await viewModel.inputs.refreshShareStatus()
-            } catch {
-                print("Failed to refresh share status: \(error)")
-            }
         }
     }
 
@@ -211,14 +189,6 @@ struct ItemsView: View {
         return viewModel.inputs.isListCurrentlyShared()
     }
 
-    private func shareButtonTitle() -> String {
-        if isListShared() {
-            return "Manage Share"
-        } else {
-            return "Share List"
-        }
-    }
-
     var body: some View {
         VStack {
             if mode == .shared && isLoadingSharedItems {
@@ -245,25 +215,9 @@ struct ItemsView: View {
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
 
-                    Button("Share Current List") {
-                        Task {
-                            viewModel.inputs.prepareSharing(handler: { share, container, error in
-                                DispatchQueue.main.async {
-                                    if let error = error {
-                                        print("Error preparing share: \(error.localizedDescription)")
-                                        sharingError = error.localizedDescription
-                                        showingSharingError = true
-                                        return
-                                    }
-                                    activeShare = share
-                                    activeContainer = container
-                                    isSharing = true
-                                }
-                            })
-                        }
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .padding(.top)
+                    Button("Share Current List", action: onShare)
+                        .buttonStyle(.borderedProminent)
+                        .padding(.top)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if mode == .shared && sharedItems.isEmpty {
@@ -360,28 +314,6 @@ struct ItemsView: View {
 
                             Divider()
 
-                            Button(action: {
-                                Task {
-                                    _ = viewModel.inputs.prepareSharing(handler: { share, container, error in
-                                        DispatchQueue.main.async {
-                                            if let error = error {
-                                                print("Error preparing share: \(error.localizedDescription)")
-                                                sharingError = error.localizedDescription
-                                                showingSharingError = true
-                                                return
-                                            }
-                                            activeShare = share
-                                            activeContainer = container
-                                            isSharing = true
-                                        }
-                                    })
-                                }
-                            }) {
-                                Label(shareButtonTitle(), systemImage: isListShared() ? "person.2.fill" : "square.and.arrow.up")
-                            }
-
-                            Divider()
-
                             Button(role: .destructive, action: {
                                 let newItem = Item.itemShownLens.set(!item.shown, item)
                                 self.update(item, to: newItem, completionBlock: {
@@ -456,25 +388,7 @@ struct ItemsView: View {
                             loadSharedItems()
                         }
                     } else {
-                        Button(action: {
-                            Task {
-                                print("Called Share from ItemsView")
-                                _ = viewModel.inputs.prepareSharing(handler: { share, container, error in
-                                    DispatchQueue.main.async {
-                                        if let error = error {
-                                            print("Error preparing share: \(error.localizedDescription)")
-                                            sharingError = error.localizedDescription
-                                            showingSharingError = true
-                                            return
-                                        }
-                                        activeShare = share
-                                        activeContainer = container
-                                        isSharing = true
-                                        print("Sharing prepared successfully")
-                                    }
-                                })
-                            }
-                        }) {
+                        Button(action: onShare) {
                             Image(systemName: isListShared() ? "person.2.fill" : "square.and.arrow.up")
                                 .foregroundColor(isListShared() ? .green : .blue)
                         }
@@ -483,47 +397,10 @@ struct ItemsView: View {
                 }
 
                 ToolbarItem(placement: .navigationBarLeading) {
-                    HStack {
-                        if isSharing {
-                            ProgressView()
-                                .scaleEffect(0.8)
-                        }
-
-                        if activeShare != nil {
-                            Image(systemName: "person.2.fill")
-                                .foregroundColor(.green)
-                                .font(.caption)
-                        }
-                    }
-                }
-            }
-            .sheet(isPresented: $isSharing) {
-                if let share = activeShare, let container = activeContainer {
-                    NavigationView {
-                        CloudSharingView(container: container, share: share,
-                                         onSaveShare: { refreshActiveShare() },
-                                         onStopSharing: {
-                                             activeShare = nil
-                                             refreshActiveShare()
-                                         })
-                            .navigationTitle("Share Todo List")
-                            .navigationBarTitleDisplayMode(.inline)
-                            .toolbar {
-                                ToolbarItem(placement: .navigationBarTrailing) {
-                                    Button("Done") {
-                                        isSharing = false
-                                    }
-                                }
-                            }
-                        }
-                } else {
-                    VStack {
-                        ProgressView("Preparing share...")
-                            .padding()
-                        Button("Cancel") {
-                            isSharing = false
-                        }
-                        .padding()
+                    if activeShare != nil {
+                        Image(systemName: "person.2.fill")
+                            .foregroundColor(.green)
+                            .font(.caption)
                     }
                 }
             }
@@ -552,21 +429,12 @@ struct ItemsView: View {
                             WidgetCenter.shared.reloadAllTimelines()
                         }
                     }
-
-                    // Refresh sharing status when app becomes active
-                    Task {
-                        do {
-                            _ = try await self.viewModel.inputs.refreshShareStatus()
-                        } catch {
-                            print("Failed to refresh share status: \(error)")
-                        }
-                    }
                 }
             }
-            .alert("Sharing Error", isPresented: $showingSharingError) {
+            .alert("Could Not Add Item", isPresented: $showingAddItemError) {
                 Button("OK") { }
             } message: {
-                Text(sharingError ?? "An unknown error occurred while preparing to share.")
+                Text(addItemError ?? "An unknown error occurred.")
             }
             .onAppear {
                 if mode == .shared {
@@ -611,12 +479,9 @@ struct ItemsView: View {
 #Preview {
     @Previewable @State var show: Bool = false
     @Previewable var viewModel: QuickToDoViewModel = QuickToDoViewModel()
-    @Previewable @State var isSharing: Bool = false
-    @Previewable @State var activeShare: CKShare?
-    @Previewable @State var activeContainer: CKContainer?
     @Previewable @State var selectedItem: Item?
 
-    ItemsView(viewModel: viewModel, shown: $show, isSharing: $isSharing, activeShare: $activeShare, activeContainer: $activeContainer, mode: .regular)
+    ItemsView(viewModel: viewModel, shown: $show, activeShare: nil, onShare: {}, mode: .regular)
         .onAppear {
             _ = viewModel.inputs.getItems {
                 print("called getItems")
