@@ -47,21 +47,55 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         print("CloudKit database changed - Notification type: \(notification.notificationType)")
 
+        // CloudKitModel finishes this once its sync is done, so iOS keeps the app running until then
+        let completion = RemoteSyncCompletion(completionHandler)
+        let syncInfo = [RemoteSyncCompletion.userInfoKey: completion]
+
         switch notification {
         case let databaseNotification as CKDatabaseNotification:
             let name: Notification.Name = databaseNotification.databaseScope == .shared
                 ? .cloudKitSharedDataChanged
                 : .cloudKitPrivateDataChanged
-            NotificationCenter.default.post(name: name, object: notification)
+            NotificationCenter.default.post(name: name, object: notification, userInfo: syncInfo)
         case is CKQueryNotification:
             // Legacy private query subscription - deleted on the next launch
-            NotificationCenter.default.post(name: .cloudKitPrivateDataChanged, object: notification)
+            NotificationCenter.default.post(name: .cloudKitPrivateDataChanged, object: notification, userInfo: syncInfo)
         case is CKRecordZoneNotification:
             NotificationCenter.default.post(name: .cloudKitRecordZoneChanged, object: notification)
+            completion.finish(.noData)
         default:
-            break
+            completion.finish(.noData)
         }
-        completionHandler(.newData)
+
+        // iOS allows about 30 seconds. Finish before that even if no sync ran (e.g. the model is not loaded yet).
+        DispatchQueue.main.asyncAfter(deadline: .now() + 25) {
+            completion.finish(.noData)
+        }
+    }
+}
+
+/// Hands the background-fetch completion handler of a CloudKit push to the code that performs the sync.
+/// The handler is called exactly once: when the sync finishes, or by the push handler's fallback timer.
+final class RemoteSyncCompletion {
+    static let userInfoKey = "RemoteSyncCompletion"
+
+    private let queue = DispatchQueue(label: "com.quicktodo.remote-sync-completion")
+    private var handler: ((UIBackgroundFetchResult) -> Void)?
+
+    init(_ handler: @escaping (UIBackgroundFetchResult) -> Void) {
+        self.handler = handler
+    }
+
+    func finish(_ result: UIBackgroundFetchResult) {
+        let pendingHandler: ((UIBackgroundFetchResult) -> Void)? = queue.sync {
+            defer { handler = nil }
+            return handler
+        }
+        pendingHandler?(result)
+    }
+
+    static func from(_ notification: Notification) -> RemoteSyncCompletion? {
+        return notification.userInfo?[userInfoKey] as? RemoteSyncCompletion
     }
 }
 

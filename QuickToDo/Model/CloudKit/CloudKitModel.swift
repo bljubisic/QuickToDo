@@ -22,8 +22,6 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
     private var _cachedShare: CKShare?
     private var _sharePreparationInProgress: Bool = false
     private let synchronizationQueue = DispatchQueue(label: "com.quicktodo.cloudkit.sync", attributes: .concurrent)
-    private var privateChangeToken: CKServerChangeToken?
-    private var sharedChangeToken: CKServerChangeToken?
 
     private var rootRecord: CKRecord? {
         get {
@@ -68,9 +66,6 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
         zone = CKRecordZone(zoneName: String(describing: RecordZones.quickToDoZone))
         database = container.privateCloudDatabase
         sharedDatabase = container.sharedCloudDatabase
-        
-        // Load saved change tokens
-        loadChangeTokens()
 
         // One database subscription per database: it covers custom zones (QuickToDoZone) and,
         // for the shared database, every zone shared with us
@@ -161,15 +156,23 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
     }
 
     @objc private func handlePrivateDataChanged(_ notification: Notification) {
-        print("Private database changed - using change tokens for efficient sync")
-        // Use change tokens for efficient sync instead of fetching all items
-        self.fetchDatabaseChanges(for: database, isShared: false)
+        sync(isShared: false, reportingTo: RemoteSyncCompletion.from(notification))
     }
 
     @objc private func handleSharedDataChanged(_ notification: Notification) {
-        print("Shared database changed - using change tokens for efficient sync")
-        // Use change tokens for efficient sync
-        self.fetchDatabaseChanges(for: sharedDatabase, isShared: true)
+        sync(isShared: true, reportingTo: RemoteSyncCompletion.from(notification))
+    }
+
+    private func sync(isShared: Bool, reportingTo completion: RemoteSyncCompletion?) {
+        Task {
+            do {
+                let changed = try await self.syncChanges(isShared: isShared)
+                completion?.finish(changed ? .newData : .noData)
+            } catch {
+                print("Error syncing \(isShared ? "shared" : "private") database: \(error)")
+                completion?.finish(.failed)
+            }
+        }
     }
 
     private func findRootRecord() {
@@ -215,174 +218,126 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
     }
 
     // MARK: - Change Token Management
-    
-    private func loadChangeTokens() {
-        // Load private database change token
-        if let tokenData = UserDefaults.standard.data(forKey: "privateChangeToken") {
-            do {
-                if let token = try NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: tokenData) {
-                    self.privateChangeToken = token
-                    print("Loaded private change token")
-                }
-            } catch {
-                print("Failed to load private change token: \(error)")
-            }
+    // Tokens live only in UserDefaults (no in-memory copy), so concurrent syncs share no mutable state.
+
+    private func changeToken(forKey key: String) -> CKServerChangeToken? {
+        guard let data = UserDefaults.standard.data(forKey: key) else {
+            return nil
         }
-        
-        // Load shared database change token
-        if let tokenData = UserDefaults.standard.data(forKey: "sharedChangeToken") {
-            do {
-                if let token = try NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: tokenData) {
-                    self.sharedChangeToken = token
-                    print("Loaded shared change token")
-                }
-            } catch {
-                print("Failed to load shared change token: \(error)")
-            }
-        }
+        return try? NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: data)
     }
-    
-    private func savePrivateChangeToken(_ token: CKServerChangeToken?) {
-        guard let token = token else {
-            UserDefaults.standard.removeObject(forKey: "privateChangeToken")
+
+    private func saveChangeToken(_ token: CKServerChangeToken?, forKey key: String) {
+        guard let token = token,
+              let data = try? NSKeyedArchiver.archivedData(withRootObject: token, requiringSecureCoding: true) else {
+            UserDefaults.standard.removeObject(forKey: key)
             return
         }
-        
-        do {
-            let data = try NSKeyedArchiver.archivedData(withRootObject: token, requiringSecureCoding: true)
-            UserDefaults.standard.set(data, forKey: "privateChangeToken")
-            self.privateChangeToken = token
-            print("Saved private change token")
-        } catch {
-            print("Failed to save private change token: \(error)")
-        }
+        UserDefaults.standard.set(data, forKey: key)
     }
-    
-    private func saveSharedChangeToken(_ token: CKServerChangeToken?) {
-        guard let token = token else {
-            UserDefaults.standard.removeObject(forKey: "sharedChangeToken")
-            return
-        }
-        
-        do {
-            let data = try NSKeyedArchiver.archivedData(withRootObject: token, requiringSecureCoding: true)
-            UserDefaults.standard.set(data, forKey: "sharedChangeToken")
-            self.sharedChangeToken = token
-            print("Saved shared change token")
-        } catch {
-            print("Failed to save shared change token: \(error)")
-        }
+
+    private func databaseTokenKey(isShared: Bool) -> String {
+        return isShared ? "sharedChangeToken" : "privateChangeToken"
     }
-    
+
+    private func zoneTokenKey(_ zoneID: CKRecordZone.ID, isShared: Bool) -> String {
+        return "zoneChangeToken-\(isShared ? "shared" : "private")-\(zoneID.ownerName)-\(zoneID.zoneName)"
+    }
+
     // MARK: - Efficient Sync with Change Tokens
-    
-    func fetchDatabaseChanges(for database: CKDatabase, isShared: Bool) {
-        let changeToken = isShared ? sharedChangeToken : privateChangeToken
-        let operation = CKFetchDatabaseChangesOperation(previousServerChangeToken: changeToken)
-        
-        var changedRecordZoneIDs: [CKRecordZone.ID] = []
-        
-        operation.recordZoneWithIDChangedBlock = { zoneID in
-            changedRecordZoneIDs.append(zoneID)
+
+    /// Fetches everything that changed in the private or shared database since the last sync.
+    /// Changed private items are emitted on `items`; any shared change posts `.refreshSharedItems` once.
+    /// The database token is only advanced after every changed zone was fetched, so a failed
+    /// zone fetch is retried on the next sync instead of being skipped.
+    /// - Returns: true if anything changed
+    func syncChanges(isShared: Bool) async throws -> Bool {
+        let database = isShared ? sharedDatabase : self.database
+        let tokenKey = databaseTokenKey(isShared: isShared)
+        var changed = false
+        var moreComing = true
+
+        while moreComing {
+            let changes: (modifications: [CKDatabase.DatabaseChange.Modification],
+                          deletions: [CKDatabase.DatabaseChange.Deletion],
+                          changeToken: CKServerChangeToken,
+                          moreComing: Bool)
+            do {
+                changes = try await database.databaseChanges(since: changeToken(forKey: tokenKey))
+            } catch let error as CKError where error.code == .changeTokenExpired && changeToken(forKey: tokenKey) != nil {
+                saveChangeToken(nil, forKey: tokenKey)
+                continue
+            }
+
+            for deletion in changes.deletions {
+                // Shared database: the owner stopped sharing or we left the list.
+                // Private database: QuickToDoZone was deleted or reset; it is recreated on the next launch.
+                print("Zone \(deletion.zoneID.zoneName) was removed (\(deletion.reason))")
+                saveChangeToken(nil, forKey: zoneTokenKey(deletion.zoneID, isShared: isShared))
+                changed = true
+            }
+
+            for modification in changes.modifications {
+                if try await syncZone(modification.zoneID, in: database, isShared: isShared) {
+                    changed = true
+                }
+            }
+
+            saveChangeToken(changes.changeToken, forKey: tokenKey)
+            moreComing = changes.moreComing
         }
-        
-        operation.recordZoneWithIDWasDeletedBlock = { zoneID in
-            print("Record zone deleted: \(zoneID)")
-        }
-        
-        operation.recordZoneWithIDWasDeletedDueToUserEncryptedDataResetBlock = { zoneID in
-            print("Record zone deleted due to encrypted data reset: \(zoneID)")
-        }
-        
-        operation.recordZoneWithIDWasPurgedBlock = { zoneID in
-            print("Record zone purged: \(zoneID)")
-        }
-        
-        operation.changeTokenUpdatedBlock = { token in
-            if isShared {
-                self.saveSharedChangeToken(token)
-            } else {
-                self.savePrivateChangeToken(token)
+
+        if isShared && changed {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .refreshSharedItems, object: nil)
             }
         }
-        
-        operation.fetchDatabaseChangesResultBlock = { result in
-            switch result {
-            case .success(let (serverChangeToken, _)):
-                if isShared {
-                    self.saveSharedChangeToken(serverChangeToken)
-                } else {
-                    self.savePrivateChangeToken(serverChangeToken)
-                }
-                
-                // Fetch changes for each changed zone
-                for zoneID in changedRecordZoneIDs {
-                    self.fetchZoneChanges(for: zoneID, in: database)
-                }
-                
-            case .failure(let error):
-                print("Error fetching database changes: \(error)")
-                
-                // If token expired, reset and try again
-                if let ckError = error as? CKError,
-                   ckError.code == .changeTokenExpired {
-                    if isShared {
-                        self.saveSharedChangeToken(nil)
-                    } else {
-                        self.savePrivateChangeToken(nil)
+        return changed
+    }
+
+    /// Fetches the changes of one zone since its own change token.
+    /// - Returns: true if any record changed or was deleted
+    private func syncZone(_ zoneID: CKRecordZone.ID, in database: CKDatabase, isShared: Bool) async throws -> Bool {
+        let tokenKey = zoneTokenKey(zoneID, isShared: isShared)
+        var changed = false
+        var moreComing = true
+
+        while moreComing {
+            let changes: (modificationResultsByID: [CKRecord.ID: Result<CKDatabase.RecordZoneChange.Modification, Error>],
+                          deletions: [CKDatabase.RecordZoneChange.Deletion],
+                          changeToken: CKServerChangeToken,
+                          moreComing: Bool)
+            do {
+                changes = try await database.recordZoneChanges(inZoneWith: zoneID, since: changeToken(forKey: tokenKey))
+            } catch let error as CKError where error.code == .changeTokenExpired && changeToken(forKey: tokenKey) != nil {
+                saveChangeToken(nil, forKey: tokenKey)
+                continue
+            }
+
+            for (recordID, result) in changes.modificationResultsByID {
+                switch result {
+                case .success(let modification):
+                    changed = true
+                    // Shared items are reloaded by the Shared tab after the sync
+                    if !isShared, let item = Item(record: modification.record, scope: .private) {
+                        itemsPrivate.onNext(item)
                     }
-                    // Retry without token
-                    self.fetchDatabaseChanges(for: database, isShared: isShared)
+                case .failure(let error):
+                    print("Error fetching changed record \(recordID.recordName): \(error)")
                 }
             }
-        }
-        
-        database.add(operation)
-    }
-    
-    private func fetchZoneChanges(for zoneID: CKRecordZone.ID, in database: CKDatabase) {
-        let configuration = CKFetchRecordZoneChangesOperation.ZoneConfiguration()
-        configuration.previousServerChangeToken = nil // Could store per-zone tokens if needed
-        
-        let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: [zoneID], configurationsByRecordZoneID: [zoneID: configuration])
-        
-        operation.recordWasChangedBlock = { _, result in
-            switch result {
-            case .success(let record):
-                // Process changed record
-                if record.recordType == "Items" {
-                    self.processItemRecord(record, from: database)
-                }
-            case .failure(let error):
-                print("Error processing record change: \(error)")
+
+            // The app never deletes item records itself (removing an item only hides it), so
+            // deletions come from another client; the Shared tab reloads, the private list keeps its copy.
+            if !changes.deletions.isEmpty {
+                print("\(changes.deletions.count) record(s) deleted in zone \(zoneID.zoneName)")
+                changed = true
             }
+
+            saveChangeToken(changes.changeToken, forKey: tokenKey)
+            moreComing = changes.moreComing
         }
-        
-        operation.recordWithIDWasDeletedBlock = { recordID, recordType in
-            print("Record deleted: \(recordID) of type: \(recordType)")
-            // Handle deletion if needed
-        }
-        
-        operation.recordZoneFetchResultBlock = { zoneID, result in
-            switch result {
-            case .success(let (serverChangeToken, _, _)):
-                print("Successfully fetched changes for zone: \(zoneID)")
-                // Could save per-zone change token here if needed
-            case .failure(let error):
-                print("Error fetching zone changes: \(error)")
-            }
-        }
-        
-        database.add(operation)
-    }
-    
-    private func processItemRecord(_ record: CKRecord, from database: CKDatabase) {
-        if database == self.sharedDatabase {
-            // Shared items must not reach the private items stream - the Shared tab reloads them itself
-            NotificationCenter.default.post(name: .refreshSharedItems, object: nil)
-        } else if let item = Item(record: record, scope: .private) {
-            self.itemsPrivate.onNext(item)
-        }
+        return changed
     }
 }
 // MARK: StorageInputs extension
