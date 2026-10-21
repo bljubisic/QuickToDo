@@ -68,14 +68,14 @@ open QuickToDo.xcodeproj    # Open in Xcode
 ## Project-Specific Rules
 - **Storage**: All persistence goes through `StorageProtocol`. Never write directly to SwiftData/CloudKit from the ViewModel or View.
 - **App Group**: SwiftData SQLite lives in `group.QuickToDoSharingDefaults` container — this is shared with the Widget. Never move or rename this container.
-- **CloudKit**: iCloud container is `iCloud.Persukibo.QuickToDo`. Zone names `QuickToDoZone` and `SharedZone` are hardcoded and must not change.
+- **CloudKit**: iCloud container is `iCloud.Persukibo.QuickToDo`. Private items live in `QuickToDoListZone` (created with `.zoneWideSharing`). `QuickToDoZone` is the legacy zone: created before iOS 15, it cannot hold a zone-wide share, so `CloudKitZoneMigrator` copies its items (same record names) into `QuickToDoListZone` and never modifies it. Zone names `QuickToDoListZone`, `QuickToDoZone` and `SharedZone` are hardcoded and must not change.
 - **Reactive bridge**: RxSwift Observables are used in the Model layer; ViewModel converts them to `@Published` for SwiftUI. Do not use RxSwift directly in Views.
 - **Conflict resolution**: In `QuickToDoModel`, CloudKit wins if its `lastUsedAt` is newer. Preserve this logic when modifying merge code.
 - **Widget data**: The Widget reads from the same App Group container. SwiftData changes from the main app are immediately visible to the widget.
 - **Intents**: Siri Shortcuts use `QuickToDoIntent` / `ItemCompleted` in the Intents extension. Keep intent parameter types compatible with the shared `Item` struct.
 
 ## Important Notes
-- Sharing is zone-wide: one `CKShare(recordZoneID:)` shares all of `QuickToDoZone`. Items have no parent/root record; legacy "Root" records still exist in old zones and must not be deleted (items reference them with `.deleteSelf`)
+- Sharing is zone-wide: one `CKShare(recordZoneID:)` shares all of `QuickToDoListZone`. Stored `cloudRecord` refs may still point to `QuickToDoZone`; `CloudKitModel.recordID(for:scope:)` maps them to the same record name in the list zone after migration. Items have no parent/root record; legacy "Root" records still exist in old zones and must not be deleted (items reference them with `.deleteSelf`)
 - `Item.scope` (`.private` / `.shared`) and `Item.cloudRecord` route updates to the private or shared database; shared items are never stored in SwiftData
 - `QuickToDoViewModelProtoocol` has a typo ("Protoocol" with double 'o') — do not fix without updating all references
 - `ItemMO` and `QuickToDo.xcdatamodeld` are legacy CoreData artifacts kept for historical reference; SwiftData (`ItemSD`) is the active persistence layer

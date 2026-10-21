@@ -18,6 +18,8 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
     private var database: CKDatabase
     private var sharedDatabase: CKDatabase
     private var zone: CKRecordZone
+    private static let legacyZoneID = CKRecordZone.ID(zoneName: String(describing: RecordZones.quickToDoZone))
+    private let zoneMigrator: CloudKitZoneMigrator
     private var _cachedShare: CKShare?
     private var _sharePreparationInProgress: Bool = false
     private let synchronizationQueue = DispatchQueue(label: "com.quicktodo.cloudkit.sync", attributes: .concurrent)
@@ -51,11 +53,12 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
     init() {
         itemsPrivate = PublishSubject()
         container = CKContainer.default()
-        zone = CKRecordZone(zoneName: String(describing: RecordZones.quickToDoZone))
+        zone = CKRecordZone(zoneName: String(describing: RecordZones.quickToDoListZone))
         database = container.privateCloudDatabase
         sharedDatabase = container.sharedCloudDatabase
+        zoneMigrator = CloudKitZoneMigrator(database: database, legacyZoneID: Self.legacyZoneID, targetZone: zone)
 
-        // One database subscription per database: it covers custom zones (QuickToDoZone) and,
+        // One database subscription per database: it covers custom zones (QuickToDoListZone) and,
         // for the shared database, every zone shared with us
         setupDatabaseSubscription(in: database,
                                   subscriptionID: "private-database-changes",
@@ -65,23 +68,50 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
                                   alertBody: "Shared list has been updated")
         registerForCloudKitNotifications()
 
-        self.database.save(zone) { newZone, error in
-            if let err = error {
-                print("Zone not created: \(err)")
-            } else {
-                self.zone = newZone!
-                Task {
-                    do {
-                        _ = try await self.refreshShareStatus()
-                    } catch {
-                        print("Failed to load zone share status: \(error)")
-                    }
-                }
-            }
+        Task {
+            await self.prepareZone()
         }
     }
 
-    /// Record ID of the zone-wide share for `QuickToDoZone`
+    /// Creates the list zone, migrates the legacy items into it, and loads the share status
+    private func prepareZone() async {
+        let wasMigrated = CloudKitZoneMigrator.isCompleted
+        do {
+            zone = try await zoneMigrator.prepareTargetZone()
+        } catch {
+            print("Zone not ready: \(error)")
+            return
+        }
+        if !wasMigrated {
+            // Reload the Items tab from the new zone (also syncs it via handlePrivateDataChanged)
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .cloudKitPrivateDataChanged, object: nil)
+            }
+        }
+        do {
+            _ = try await refreshShareStatus()
+        } catch {
+            print("Failed to load zone share status: \(error)")
+        }
+    }
+
+    /// Zone that private items are read from and written to. Until this device migrated, that is
+    /// still the legacy zone, so edits made before the migration are copied along with it.
+    private var privateItemsZoneID: CKRecordZone.ID {
+        CloudKitZoneMigrator.isCompleted ? zone.zoneID : Self.legacyZoneID
+    }
+
+    /// Maps a stored record reference to the record it now lives in. Migrated records keep their
+    /// record name, so a reference into the legacy zone points to the same name in the list zone.
+    private func recordID(for ref: CloudRecordRef, scope: ItemScope) -> CKRecord.ID {
+        let recordID = CKRecord.ID(ref)
+        guard scope == .private, recordID.zoneID == Self.legacyZoneID else {
+            return recordID
+        }
+        return CKRecord.ID(recordName: ref.recordName, zoneID: privateItemsZoneID)
+    }
+
+    /// Record ID of the zone-wide share for `QuickToDoListZone`
     private var zoneShareID: CKRecord.ID {
         CKRecord.ID(recordName: CKRecordNameZoneWideShare, zoneID: zone.zoneID)
     }
@@ -161,16 +191,16 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
         }
     }
 
-    /// Deletes record-level shares created by the old root-record sharing.
-    /// A zone-wide share cannot be saved while the zone still contains a record-level share.
-    /// The root record itself is kept: items reference it with `.deleteSelf`, so deleting it would delete them.
-    private func removeLegacyRootShare() async throws {
-        let query = CKQuery(recordType: "Items", predicate: NSPredicate(format: "Name = %@", "Root"))
-        guard let result = try? await database.records(matching: query, inZoneWith: zone.zoneID) else {
+    /// Deletes record-level shares created by the old root-record sharing in the legacy zone,
+    /// so earlier participants stop seeing the old copy of the list once it is shared again.
+    /// Only the shares are deleted: the root record is kept because items reference it with `.deleteSelf`.
+    private func removeLegacyRecordShares() async throws {
+        let legacyShareIDs: [CKRecord.ID]
+        do {
+            legacyShareIDs = try await fetchRecordShareIDs(in: Self.legacyZoneID)
+        } catch let error as CKError where error.code == .zoneNotFound {
             return
         }
-
-        let legacyShareIDs = result.matchResults.compactMap { try? $0.1.get().share?.recordID }
         guard !legacyShareIDs.isEmpty else {
             return
         }
@@ -179,7 +209,30 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
         for (_, result) in deleteResults {
             try result.get()
         }
-        print("Removed \(legacyShareIDs.count) legacy root record share(s)")
+        print("Removed \(legacyShareIDs.count) legacy record share(s)")
+    }
+
+    /// Reads every record in the zone (no change token) and returns the IDs of record-level shares.
+    /// A full zone read is used instead of a query so it works without queryable indexes.
+    private func fetchRecordShareIDs(in zoneID: CKRecordZone.ID) async throws -> [CKRecord.ID] {
+        var shareIDs = Set<CKRecord.ID>()
+        var token: CKServerChangeToken?
+        var moreComing = true
+
+        while moreComing {
+            let changes = try await database.recordZoneChanges(inZoneWith: zoneID, since: token)
+            for (recordID, result) in changes.modificationResultsByID {
+                guard let record = try? result.get().record else { continue }
+                if record is CKShare {
+                    shareIDs.insert(recordID)
+                } else if let shareID = record.share?.recordID {
+                    shareIDs.insert(shareID)
+                }
+            }
+            token = changes.changeToken
+            moreComing = changes.moreComing
+        }
+        return Array(shareIDs)
     }
 
     // MARK: - Change Token Management
@@ -236,13 +289,17 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
 
             for deletion in changes.deletions {
                 // Shared database: the owner stopped sharing or we left the list.
-                // Private database: QuickToDoZone was deleted or reset; it is recreated on the next launch.
+                // Private database: QuickToDoListZone was deleted or reset; it is recreated on the next launch.
                 print("Zone \(deletion.zoneID.zoneName) was removed (\(deletion.reason))")
                 saveChangeToken(nil, forKey: zoneTokenKey(deletion.zoneID, isShared: isShared))
                 changed = true
             }
 
             for modification in changes.modifications {
+                // Old app versions may still write the legacy zone; once migrated, its items are not shown
+                if !isShared && modification.zoneID == Self.legacyZoneID && CloudKitZoneMigrator.isCompleted {
+                    continue
+                }
                 if try await syncZone(modification.zoneID, in: database, isShared: isShared) {
                     changed = true
                 }
@@ -362,20 +419,21 @@ extension CloudKitModel: StorageInputs {
                 return
             }
 
+            print("Shared database has \(zones.count) zone(s): \(zones.map { "\($0.zoneID.zoneName) (owner \($0.zoneID.ownerName))" })")
             var items: [Item] = []
             // The default zone never holds shared data
             for zone in zones where zone.zoneID != CKRecordZone.default().zoneID {
                 do {
-                    let query = CKQuery(recordType: "Items", predicate: NSPredicate(format: "Used = 1"))
-                    var page = try await sharedDatabase.records(matching: query, inZoneWith: zone.zoneID)
-                    var records = page.matchResults.compactMap { try? $0.1.get() }
-                    while let cursor = page.queryCursor {
-                        page = try await sharedDatabase.records(continuingMatchFrom: cursor)
-                        records += page.matchResults.compactMap { try? $0.1.get() }
-                    }
-                    items += records
+                    // Read the zone's records directly instead of querying: it needs no queryable
+                    // index, and a query returned no records for the zone-wide shared zone
+                    let records = try await allRecords(in: zone.zoneID, from: sharedDatabase)
+                    let zoneItems = records
+                        .filter { $0.recordType == "Items" }
                         .filter { $0.string(String(describing: ItemFields.name)) != "Root" } // legacy root record
                         .compactMap { Item(record: $0, scope: .shared) }
+                        .filter(\.shown)
+                    print("Shared zone \(zone.zoneID.zoneName): \(records.count) record(s), \(zoneItems.count) shown item(s)")
+                    items += zoneItems
                 } catch {
                     print("Error fetching shared items from zone \(zone.zoneID.zoneName): \(error)")
                 }
@@ -384,6 +442,28 @@ extension CloudKitModel: StorageInputs {
         }
 
         return (true, nil)
+    }
+
+    /// Reads every record of a zone without a change token. Records that fail to load are logged and skipped.
+    private func allRecords(in zoneID: CKRecordZone.ID, from database: CKDatabase) async throws -> [CKRecord] {
+        var records: [CKRecord] = []
+        var token: CKServerChangeToken?
+        var moreComing = true
+
+        while moreComing {
+            let changes = try await database.recordZoneChanges(inZoneWith: zoneID, since: token)
+            for (recordID, result) in changes.modificationResultsByID {
+                switch result {
+                case .success(let modification):
+                    records.append(modification.record)
+                case .failure(let error):
+                    print("Error fetching record \(recordID.recordName) in zone \(zoneID.zoneName): \(error)")
+                }
+            }
+            token = changes.changeToken
+            moreComing = changes.moreComing
+        }
+        return records
     }
 
     /// Saves a new item into the list shared with us. Fails if the user joined no shared list,
@@ -428,7 +508,7 @@ extension CloudKitModel: StorageInputs {
     }
 
     /**
-     Returns the zone-wide share for `QuickToDoZone`, creating it if the zone is not shared yet.
+     Returns the zone-wide share for `QuickToDoListZone`, creating it if the zone is not shared yet.
      Sharing the whole zone means every item in it is shared, without parent/root bookkeeping.
      Calls the handler with the CKShare, CKContainer, and any error.
      */
@@ -449,9 +529,9 @@ extension CloudKitModel: StorageInputs {
                 return
             }
 
-            // The zone is created asynchronously in init, so make sure it exists before sharing it
-            self.zone = try await database.save(zone)
-            try await removeLegacyRootShare()
+            // The zone is prepared asynchronously in init; sharing needs the migrated list zone
+            self.zone = try await zoneMigrator.prepareTargetZone()
+            try await removeLegacyRecordShares()
 
             let share = CKShare(recordZoneID: zone.zoneID)
             share[CKShare.SystemFieldKey.title] = "QuickToDo Share"
@@ -463,6 +543,10 @@ extension CloudKitModel: StorageInputs {
         } catch {
             handler(nil, self.container, error)
         }
+    }
+
+    func publishLocalItems(_ items: [Item]) async throws -> Int {
+        return try await zoneMigrator.publishLocalItems(items)
     }
 
     func removeShare() async throws {
@@ -480,9 +564,9 @@ extension CloudKitModel: StorageInputs {
         let predicate = NSPredicate(format: "Used = 1")
         let query = CKQuery(recordType: "Items", predicate: predicate)
         let database = self.database
-        let zone = self.zone
+        let zoneID = privateItemsZoneID
 
-        database.fetch(withQuery: query, inZoneWith: zone.zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
+        database.fetch(withQuery: query, inZoneWith: zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
             switch result {
             case .success(let (matchResults, _)):
                 guard let completion = withCompletion else { return }
@@ -502,7 +586,7 @@ extension CloudKitModel: StorageInputs {
 
     func insert() -> ItemProcess {
         return { item, completionHandler in
-            let newRecord = CKRecord(recordType: "Items", recordID: CKRecord.ID(zoneID: self.zone.zoneID))
+            let newRecord = CKRecord(recordType: "Items", recordID: CKRecord.ID(zoneID: self.privateItemsZoneID))
             newRecord.apply(item)
 
             // No parent record needed: the whole zone is shared
@@ -544,7 +628,7 @@ extension CloudKitModel: StorageInputs {
                 return (Item(), true)
             }
 
-            database.fetch(withRecordID: CKRecord.ID(ref)) { record, error in
+            database.fetch(withRecordID: self.recordID(for: ref, scope: item.scope)) { record, error in
                 guard let record = record else {
                     print("update fetch error: \(String(describing: error))")
                     return
@@ -561,7 +645,7 @@ extension CloudKitModel: StorageInputs {
         let query = CKQuery(recordType: "Items", predicate: predicate)
         let database = self.database
 
-        database.fetch(withQuery: query, inZoneWith: zone.zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
+        database.fetch(withQuery: query, inZoneWith: privateItemsZoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
             switch result {
             case .success(let (matchResults, _)):
                 let modifiedRecords = matchResults.compactMap { _, matchResult in try? matchResult.get() }

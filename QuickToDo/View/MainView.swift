@@ -36,11 +36,8 @@ struct MainView: View {
         }
         _viewModel = StateObject(wrappedValue: concreteViewModel)
         shown = viewModel.inputs.getConfig()
-        _ = concreteViewModel.inputs.getItems {
-//            print("called getItems")
-            WidgetCenter.shared.reloadAllTimelines()
-        }
-
+        // Items are loaded by the Items tab's onAppear; loading here would publish
+        // changes while SwiftUI is still evaluating the parent's body.
     }
 
     /// Creates (or loads) the zone share and opens the system share sheet

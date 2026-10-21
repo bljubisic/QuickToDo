@@ -185,9 +185,6 @@ struct ItemsView: View {
         }
     }
 
-    private func isListShared() -> Bool {
-        return viewModel.inputs.isListCurrentlyShared()
-    }
 
     var body: some View {
         VStack {
@@ -200,7 +197,7 @@ struct ItemsView: View {
                         .font(.caption)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else if mode == .shared && sharedItems.isEmpty && !viewModel.inputs.isListCurrentlyShared() {
+            } else if mode == .shared && sharedItems.isEmpty && activeShare == nil {
                 VStack {
                     Image(systemName: "square.and.arrow.up")
                         .font(.system(size: 50))
@@ -380,30 +377,6 @@ struct ItemsView: View {
                     }
                 }
             }
-            .navigationTitle(navigationTitle())
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    if mode == .shared {
-                        Button("Refresh") {
-                            loadSharedItems()
-                        }
-                    } else {
-                        Button(action: onShare) {
-                            Image(systemName: isListShared() ? "person.2.fill" : "square.and.arrow.up")
-                                .foregroundColor(isListShared() ? .green : .blue)
-                        }
-                        .disabled(viewModel.outputs.itemsArray.isEmpty)
-                    }
-                }
-
-                ToolbarItem(placement: .navigationBarLeading) {
-                    if activeShare != nil {
-                        Image(systemName: "person.2.fill")
-                            .foregroundColor(.green)
-                            .font(.caption)
-                    }
-                }
-            }
             .refreshable {
                 print("start refresh")
                 if mode == .shared {
@@ -415,62 +388,76 @@ struct ItemsView: View {
                     }
                 }
            }
-            .onChange(of: scenePhase) { _, newState in
-                if newState == .background {
-                    print("Entered background")
-                } else if newState == .inactive {
-                    print("Became inactive")
-                } else if newState == .active {
-                    if mode == .shared {
+            }
+        }
+        // Lifecycle modifiers sit on the VStack, not the List: the List is not created while a
+        // placeholder is shown, so onAppear (loading items, registering observers) would never run.
+        .navigationTitle(navigationTitle())
+        .toolbar {
+            // Sharing status and the Share button live in MainView's toolbar and banner.
+            // The Shared tab keeps Refresh: its empty placeholder cannot be pulled to refresh.
+            if mode == .shared {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Refresh") {
                         loadSharedItems()
-                    } else {
-                        _ = self.viewModel.inputs.getItems {
-                //            print("called getItems")
-                            WidgetCenter.shared.reloadAllTimelines()
-                        }
                     }
                 }
             }
-            .alert("Could Not Add Item", isPresented: $showingAddItemError) {
-                Button("OK") { }
-            } message: {
-                Text(addItemError ?? "An unknown error occurred.")
-            }
-            .onAppear {
+        }
+        .onChange(of: scenePhase) { _, newState in
+            if newState == .background {
+                print("Entered background")
+            } else if newState == .inactive {
+                print("Became inactive")
+            } else if newState == .active {
                 if mode == .shared {
-                    // Set up notification observer for shared items refresh
                     loadSharedItems()
-                    refreshSharedItemsObserver = NotificationCenter.default.addObserver(
-                        forName: .refreshSharedItems,
-                        object: nil,
-                        queue: .main
-                    ) { _ in
-                        loadSharedItems()
-                    }
                 } else {
-                    // Set up observer for private database changes (remote sync)
-                    privateDataChangedObserver = NotificationCenter.default.addObserver(
-                        forName: .cloudKitPrivateDataChanged,
-                        object: nil,
-                        queue: .main
-                    ) { _ in
-                        _ = self.viewModel.inputs.getItems {
-                            WidgetCenter.shared.reloadAllTimelines()
-                        }
+                    _ = self.viewModel.inputs.getItems {
+            //            print("called getItems")
+                        WidgetCenter.shared.reloadAllTimelines()
                     }
                 }
             }
-            .onDisappear {
-                // Remove observers when view disappears
-                if let observer = refreshSharedItemsObserver {
-                    NotificationCenter.default.removeObserver(observer)
-                    refreshSharedItemsObserver = nil
+        }
+        .alert("Could Not Add Item", isPresented: $showingAddItemError) {
+            Button("OK") { }
+        } message: {
+            Text(addItemError ?? "An unknown error occurred.")
+        }
+        .onAppear {
+            if mode == .shared {
+                // Set up notification observer for shared items refresh
+                loadSharedItems()
+                refreshSharedItemsObserver = NotificationCenter.default.addObserver(
+                    forName: .refreshSharedItems,
+                    object: nil,
+                    queue: .main
+                ) { _ in
+                    loadSharedItems()
                 }
-                if let observer = privateDataChangedObserver {
-                    NotificationCenter.default.removeObserver(observer)
-                    privateDataChangedObserver = nil
+            } else {
+                // Set up observer for private database changes (remote sync)
+                privateDataChangedObserver = NotificationCenter.default.addObserver(
+                    forName: .cloudKitPrivateDataChanged,
+                    object: nil,
+                    queue: .main
+                ) { _ in
+                    _ = self.viewModel.inputs.getItems {
+                        WidgetCenter.shared.reloadAllTimelines()
+                    }
                 }
             }
+        }
+        .onDisappear {
+            // Remove observers when view disappears
+            if let observer = refreshSharedItemsObserver {
+                NotificationCenter.default.removeObserver(observer)
+                refreshSharedItemsObserver = nil
+            }
+            if let observer = privateDataChangedObserver {
+                NotificationCenter.default.removeObserver(observer)
+                privateDataChangedObserver = nil
             }
         }
     }

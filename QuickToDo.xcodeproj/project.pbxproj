@@ -43,6 +43,7 @@
 		E49125AF2AC7642D00DF090D /* QuickToDoIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49125AC2AC7642D00DF090C /* QuickToDoIntent.swift */; };
 		E49DE916289737EC00B70245 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = E49DE915289737EC00B70245 /* .gitignore */; };
 		E49F65FB22C379E7008D59FA /* CloudKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49F65FA22C379E7008D59FA /* CloudKitModel.swift */; };
+		E4C0FFEE2E9A000100A1B2C3 /* CloudKitZoneMigrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C0FFEE2E9A000200A1B2C3 /* CloudKitZoneMigrator.swift */; };
 		E4A5F7352ECFD1E700823C32 /* SwiftDataModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A5F7342ECFD1E700823C32 /* SwiftDataModelTests.swift */; };
 		E4A5F7362ECFD1E700823C32 /* ItemMOTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A5F7322ECFD1E700823C32 /* ItemMOTests.swift */; };
 		E4A5F7372ECFD1E700823C32 /* IntentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A5F7312ECFD1E700823C32 /* IntentsTests.swift */; };
@@ -134,6 +135,7 @@
 		E49125AC2AC7642D00DF090C /* QuickToDoIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoIntent.swift; sourceTree = "<group>"; };
 		E49DE915289737EC00B70245 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		E49F65FA22C379E7008D59FA /* CloudKitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitModel.swift; sourceTree = "<group>"; };
+		E4C0FFEE2E9A000200A1B2C3 /* CloudKitZoneMigrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitZoneMigrator.swift; sourceTree = "<group>"; };
 		E4A5F72F2ECFD1E700823C32 /* CloudKitModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitModelTests.swift; sourceTree = "<group>"; };
 		E4A5F7302ECFD1E700823C32 /* DataStructuresTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStructuresTests.swift; sourceTree = "<group>"; };
 		E4A5F7312ECFD1E700823C32 /* IntentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentsTests.swift; sourceTree = "<group>"; };
@@ -258,6 +260,7 @@
 			isa = PBXGroup;
 			children = (
 				E49F65FA22C379E7008D59FA /* CloudKitModel.swift */,
+				E4C0FFEE2E9A000200A1B2C3 /* CloudKitZoneMigrator.swift */,
 			);
 			path = CloudKit;
 			sourceTree = "<group>";
@@ -556,6 +559,7 @@
 				E435ECEF21890A6A00E68960 /* ItemTableViewCell.swift in Sources */,
 				E4FD7D562DD6846700777F1A /* SceneDelegate.swift in Sources */,
 				E49F65FB22C379E7008D59FA /* CloudKitModel.swift in Sources */,
+				E4C0FFEE2E9A000100A1B2C3 /* CloudKitZoneMigrator.swift in Sources */,
 				E435ECF121890A7900E68960 /* AddItemTableViewCell.swift in Sources */,
 				E4FBC6DA215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift in Sources */,
 				E435ECE72169327000E68960 /* ManagedObjectTypeProtocol.swift in Sources */,

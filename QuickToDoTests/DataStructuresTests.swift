@@ -242,6 +242,7 @@ class DataStructuresTests: XCTestCase {
 
     func testRecordZonesDescription() {
         XCTAssertEqual(RecordZones.quickToDoZone.description, "QuickToDoZone")
+        XCTAssertEqual(RecordZones.quickToDoListZone.description, "QuickToDoListZone")
         XCTAssertEqual(RecordZones.sharedZone.description, "SharedZone")
     }
 

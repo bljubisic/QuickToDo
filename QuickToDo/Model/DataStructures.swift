@@ -17,12 +17,16 @@ enum CloudStatus {
 
 enum RecordZones: CustomStringConvertible {
 
+    /// Legacy private zone, created before zone-wide sharing existed; kept read-only as a backup
     case quickToDoZone
+    /// Private zone holding the list; created with `.zoneWideSharing`
+    case quickToDoListZone
     case sharedZone
 
     var description: String {
         switch self {
         case .quickToDoZone: return "QuickToDoZone"
+        case .quickToDoListZone: return "QuickToDoListZone"
         case .sharedZone: return "SharedZone"
         }
 

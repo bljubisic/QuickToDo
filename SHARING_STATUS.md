@@ -14,6 +14,16 @@ Temporary note for continuing the list-sharing work on another machine. Delete i
 
 Everything compiles (app and tests). **Nothing has been run yet**: unit tests could not run (simulator software out of date), and sharing needs real devices.
 
+## Zone migration (uncommitted)
+
+The existing `QuickToDoZone` reports capabilities `7` (no `.zoneWideSharing`), so the server rejects the zone share with "share type inconsistent with zone capabilities". Zone capabilities cannot change, so the list moves to `QuickToDoListZone`:
+
+- `CloudKitZoneMigrator` creates the zone, checks `.zoneWideSharing`, and copies items that the new zone does not have yet (same record names, item fields only). It runs on launch and before sharing. The legacy zone is never modified, except that Share still deletes its old Root record shares.
+- Until a device has migrated (`UserDefaults` flag `zoneMigrationCompleted-QuickToDoListZone`), it keeps reading and writing the legacy zone.
+- Copied records get new server timestamps, so `lastUsedAt` of every item becomes the migration time.
+- Devices still running an older build keep writing `QuickToDoZone`; those edits do not reach migrated devices.
+- The legacy zone held stale state (all 104 items `Used = 0` while the device showed them), so the copy alone shared an empty list. `publishLocalItems` then writes the SwiftData items into `QuickToDoListZone` once per device (flag `localItemsPublished-QuickToDoListZone`), overriding "newer wins" for that one step. It runs on `getItems()` and before sharing.
+
 ## Test checklist (two real devices, different iCloud accounts)
 
 1. Device A: Share, invite B's account. Items that existed before sharing should be included.

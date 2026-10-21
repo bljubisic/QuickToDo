@@ -38,7 +38,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "E32A0163-B4E0-404D-9A0A-EB1FDA4BD3AE"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "QuickToDo/AppDelegate.swift"
@@ -46,38 +46,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "42"
             endingLineNumber = "42"
-            landmarkName = "AppDelegate"
-            landmarkType = "3">
-            <Locations>
-               <Location
-                  uuid = "E32A0163-B4E0-404D-9A0A-EB1FDA4BD3AE - 9f23969c5ea2119b"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (__C.CKShareMetadata, Swift.Result&lt;__C.CKShare, Swift.Error&gt;) -&gt; () in QuickToDo.AppDelegate.application(_: __C.UIApplication, userDidAcceptCloudKitShareWith: __C.CKShareMetadata) -&gt; ()"
-                  moduleName = "QuickToDo.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/AppDelegate.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "42"
-                  endingLineNumber = "42">
-               </Location>
-               <Location
-                  uuid = "E32A0163-B4E0-404D-9A0A-EB1FDA4BD3AE - 9f23969c5ea2119b"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (__C.CKShareMetadata, Swift.Result&lt;__C.CKShare, Swift.Error&gt;) -&gt; () in QuickToDo.AppDelegate.application(_: __C.UIApplication, userDidAcceptCloudKitShareWith: __C.CKShareMetadata) -&gt; ()"
-                  moduleName = "QuickToDo.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/gandalf/Developer/QuickToDo/QuickToDo/AppDelegate.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "42"
-                  endingLineNumber = "42">
-               </Location>
-            </Locations>
+            landmarkName = "application(_:didReceiveRemoteNotification:fetchCompletionHandler:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

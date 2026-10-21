@@ -429,13 +429,55 @@ class QuickToDoViewModelTests: XCTestCase {
             expectation.fulfill()
         }
 
-        // Allow time for the RxSwift subscription to process
+        wait(for: [expectation], timeout: 2.0)
+        XCTAssertEqual(viewModel.itemsArray.first?.name, "New")
+    }
+
+    func testGetItemsDoesNotPublishSynchronously() {
+        mockModel.itemsToEmit = [makeItem(name: "Deferred")]
+
+        _ = viewModel.inputs.getItems {}
+
+        // Writes must land in a later run-loop turn, never inside the caller (e.g. a view update)
+        XCTAssertTrue(viewModel.itemsArray.isEmpty)
+
+        let expectation = XCTestExpectation(description: "Processing")
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             expectation.fulfill()
         }
-
         wait(for: [expectation], timeout: 2.0)
-        XCTAssertEqual(viewModel.itemsArray.first?.name, "New")
+        XCTAssertEqual(viewModel.itemsArray.count, 1)
+    }
+
+    func testRepeatedGetItemsDoesNotDuplicateItems() {
+        mockModel.itemsToEmit = [makeItem(name: "A"), makeItem(name: "B")]
+
+        _ = viewModel.inputs.getItems {}
+        _ = viewModel.inputs.getItems {}
+        _ = viewModel.inputs.getItems {}
+
+        let expectation = XCTestExpectation(description: "Processing")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 2.0)
+        XCTAssertEqual(viewModel.itemsArray.count, 2)
+    }
+
+    func testGetItemsCallsCompletionOncePerLoad() {
+        mockModel.itemsToEmit = [makeItem(name: "A"), makeItem(name: "B"), makeItem(name: "C")]
+        var completionCount = 0
+
+        _ = viewModel.inputs.getItems {
+            completionCount += 1
+        }
+
+        let expectation = XCTestExpectation(description: "Processing")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 2.0)
+        XCTAssertEqual(completionCount, 1)
     }
 
     func testGetItemsDoesNotUpdateWhenOlder() {

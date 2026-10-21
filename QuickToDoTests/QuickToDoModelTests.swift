@@ -18,6 +18,7 @@ class MockStorageProtocol: StorageProtocol {
     var insertCallCount = 0
     var updateCallCount = 0
     var getItemsCallCount = 0
+    var publishedItems: [Item]?
     private let itemsSubject = PublishSubject<Item?>()
 
     var inputs: StorageInputs { return self }
@@ -105,6 +106,11 @@ extension MockStorageProtocol: StorageInputs {
     func getCurrentShareStatus() -> CKShare? { return nil }
     func isListCurrentlyShared() -> Bool { return false }
     func refreshShareStatus() async throws -> CKShare? { return nil }
+
+    func publishLocalItems(_ items: [Item]) async throws -> Int {
+        publishedItems = items
+        return items.count
+    }
 }
 
 extension MockStorageProtocol: StorageOutputs {
@@ -430,6 +436,21 @@ class QuickToDoModelTests: XCTestCase {
     func testRefreshShareStatus() async throws {
         let share = try await model.refreshShareStatus()
         XCTAssertNil(share) // Mock returns nil
+    }
+
+    func testGetItemsPublishesLocalItemsToCloudKit() {
+        let item = Item(id: UUID(), name: "Local", count: 1, uploadedToICloud: true, done: false, shown: true, createdAt: Date(), lastUsedAt: Date())
+        mockSwiftData.mockItems = [item]
+
+        _ = model.getItems()
+
+        let expectation = XCTestExpectation(description: "Publish task ran")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 2.0)
+        XCTAssertEqual(mockCloudKit.publishedItems?.map(\.id), [item.id])
+        XCTAssertNil(mockSwiftData.publishedItems)
     }
 
     func testPrepareSharing() {

@@ -167,6 +167,11 @@ extension SwiftDataModel: StorageInputs {
         return nil
     }
 
+    func publishLocalItems(_ items: [Item]) async throws -> Int {
+        // SwiftData is the local source, there is nothing to publish to
+        return 0
+    }
+
     func fetchAllSharedItems(completion: @escaping ([Item], Error?) -> Void) -> (Bool, Error?) {
         // SwiftData doesn't handle CloudKit shares directly, so return empty
         completion([], nil)

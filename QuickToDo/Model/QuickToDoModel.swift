@@ -96,7 +96,11 @@ extension QuickToDoModel: QuickToDoInputs {
     }
 
     func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
+        // Read SwiftData on the calling (main) thread; its context must not be used from a background task
+        let localItems = self.localItems()
         Task {
+            // Participants must see the list as it is on this device; a failure here is retried later
+            await self.publishLocalItems(localItems)
             do {
                 try await self.cloudKit.inputs.prepareShare(handler: handler)
             } catch {
@@ -105,11 +109,31 @@ extension QuickToDoModel: QuickToDoInputs {
         }
     }
 
+    private func localItems() -> [Item] {
+        var localItems: [Item] = []
+        _ = self.swiftData.inputs.getItems { item in
+            localItems.append(item)
+        }
+        return localItems
+    }
+
+    /// Pushes the SwiftData items into CloudKit once per device (see `CloudKitZoneMigrator`)
+    private func publishLocalItems(_ localItems: [Item]) async {
+        do {
+            _ = try await self.cloudKit.inputs.publishLocalItems(localItems)
+        } catch {
+            print("Failed to publish local items: \(error)")
+        }
+    }
+
     func getItems() -> (Bool, Error?) {
         // Collect SwiftData items first for conflict resolution
         var localItems: [Item] = []
         _ = self.swiftData.inputs.getItems { item in
             localItems.append(item)
+        }
+        Task { [localItems] in
+            await self.publishLocalItems(localItems)
         }
 
         // Fetch CloudKit items and resolve conflicts against local data.

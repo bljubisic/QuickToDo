@@ -23,11 +23,54 @@ class QuickToDoViewModel: QuickToDoViewModelProtoocol, ObservableObject {
     let disposeBag = DisposeBag()
     typealias ReturnVoid = () -> Void
 
+    /// How long the items stream must stay quiet before a load counts as finished
+    private static let itemsLoadSettleInterval: RxTimeInterval = .milliseconds(300)
+
+    /// Called once after a burst of item changes (e.g. to reload the widget)
+    private var itemsLoadedCompletion: ReturnVoid?
+    private let itemsChanged = PublishSubject<Void>()
+
     init(_ withModel: QuickToDoProtocol = ModelMocked()) {
         self.model = withModel
         items = self.model.outputs.items
         cloudStatus = self.model.outputs.cloudStatus
         itemsArray = [Item]()
+        bindItems()
+    }
+
+    /// Subscribes to the model's items exactly once for the ViewModel's lifetime.
+    /// `MainScheduler.asyncInstance` always hops to a later run-loop turn, so the
+    /// `@Published` writes never happen while SwiftUI is evaluating a view body.
+    private func bindItems() {
+        model.outputs.items
+            .observe(on: MainScheduler.asyncInstance)
+            .filter { !$0.name.isEmpty }
+            .subscribe(onNext: { [weak self] newItem in
+                self?.merge(newItem)
+            }, onError: { error in
+                print("Items stream failed: \(error)")
+            })
+            .disposed(by: disposeBag)
+
+        itemsChanged
+            .debounce(Self.itemsLoadSettleInterval, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.itemsLoadedCompletion?()
+            })
+            .disposed(by: disposeBag)
+    }
+
+    /// Appends a new item or replaces an existing one when the incoming copy is newer
+    private func merge(_ newItem: Item) {
+        guard let index = itemsArray.firstIndex(where: { $0.id == newItem.id }) else {
+            itemsArray.append(newItem)
+            itemsChanged.onNext(())
+            return
+        }
+        if itemsArray[index].lastUsedAt < newItem.lastUsedAt {
+            itemsArray[index] = newItem
+            itemsChanged.onNext(())
+        }
     }
 }
 // MARK: QuickToDoViewModelInputs
@@ -134,35 +177,9 @@ extension QuickToDoViewModel: QuickToDoViewModelInputs {
     }
 
     func getItems(completionBlock: @escaping () -> Void) -> (Bool, Error?) {
-        self.model.outputs.items
-            .observe(on: MainScheduler.instance)
-            .filter({ (item) -> Bool in
-                return item.name != ""
-            })
-            .subscribe(onNext: { (newItem) in
-                if !self.itemsArray.contains(where: { (item) -> Bool in
-                    item.id == newItem.id
-                }) {
-                    self.itemsArray.append(newItem)
-                    DispatchQueue.main.async {
-                        completionBlock()
-                    }
-
-                } else {
-                    if let index = self.itemsArray.firstIndex(where: { (item) -> Bool in
-                        item.id == newItem.id
-                    }) {
-                        let item = self.itemsArray[index]
-                        if item.lastUsedAt < newItem.lastUsedAt {
-                            self.itemsArray[index] = newItem
-                        }
-                    }
-                }
-            }, onError: { (error) in
-                print(error)
-            }, onDisposed: {
-            }).disposed(by: disposeBag)
-//        self.removeShownItems()
+        // The items subscription lives in bindItems(); this only remembers who to notify
+        // and asks the model to emit its items again.
+        itemsLoadedCompletion = completionBlock
         return self.model.inputs.getItems()
     }
 

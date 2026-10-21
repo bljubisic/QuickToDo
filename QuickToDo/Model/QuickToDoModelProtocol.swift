@@ -58,6 +58,9 @@ protocol StorageInputs {
     func getCurrentShareStatus() -> CKShare?
     func isListCurrentlyShared() -> Bool
     func refreshShareStatus() async throws -> CKShare?
+    /// Writes the local items into the cloud list once per device, overwriting stale cloud copies.
+    /// Returns the number of records written (0 when already done or not supported).
+    func publishLocalItems(_ items: [Item]) async throws -> Int
 }
 
 protocol StorageOutputs {

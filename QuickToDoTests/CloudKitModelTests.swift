@@ -69,7 +69,7 @@ class CloudKitModelTests: XCTestCase {
     func testGetZoneReturnsZone() {
         let zone = model.getZone()
         XCTAssertNotNil(zone)
-        XCTAssertEqual(zone?.zoneID.zoneName, "QuickToDoZone")
+        XCTAssertEqual(zone?.zoneID.zoneName, "QuickToDoListZone")
     }
 
     // MARK: - ItemProcessFindWithID Tests
