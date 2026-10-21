@@ -423,31 +423,11 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
     }
     
     private func processItemRecord(_ record: CKRecord, from database: CKDatabase) {
-        if let idString = record.string(String(describing: ItemFields.id)),
-           let uuid = UUID(uuidString: idString),
-           let name = record.string(String(describing: ItemFields.name)),
-           let count = record.int(String(describing: ItemFields.count)),
-           let doneInt = record.int(String(describing: ItemFields.done)),
-           let usedInt = record.int(String(describing: ItemFields.used)),
-           let creationDate = record.creationDate,
-           let modificationDate = record.modificationDate {
-            
-            let tempItem = Item(id: uuid,
-                                name: name,
-                                count: count,
-                                uploadedToICloud: true,
-                                done: (doneInt == 1),
-                                shown: (usedInt == 1),
-                                createdAt: creationDate,
-                                lastUsedAt: modificationDate)
-            
-            // Update local cache and notify observers
-            self.itemsPrivate.onNext(tempItem)
-            
-            // Post notification to refresh UI
-            if database == self.sharedDatabase {
-                NotificationCenter.default.post(name: .refreshSharedItems, object: nil)
-            }
+        if database == self.sharedDatabase {
+            // Shared items must not reach the private items stream - the Shared tab reloads them itself
+            NotificationCenter.default.post(name: .refreshSharedItems, object: nil)
+        } else if let item = Item(record: record, scope: .private) {
+            self.itemsPrivate.onNext(item)
         }
     }
 }
@@ -510,30 +490,9 @@ extension CloudKitModel: StorageInputs {
             case .success(let (matchResults, _)):
                 guard let completionUnwraped = completion else { return }
                 for (_, matchResult) in matchResults {
-                    switch matchResult {
-                    case .success(let record):
-                        if let idString = record.string(String(describing: ItemFields.id)),
-                           let uuid = UUID(uuidString: idString),
-                           let name = record.string(String(describing: ItemFields.name)),
-                           let count = record.int(String(describing: ItemFields.count)),
-                           let doneInt = record.int(String(describing: ItemFields.done)),
-                           let usedInt = record.int(String(describing: ItemFields.used)),
-                           let creationDate = record.creationDate,
-                           let modificationDate = record.modificationDate {
-
-                            let tempItem = Item(id: uuid,
-                                                name: name,
-                                                count: count,
-                                                uploadedToICloud: true,
-                                                done: (doneInt == 1),
-                                                shown: (usedInt == 1),
-                                                createdAt: creationDate,
-                                                lastUsedAt: modificationDate)
-                            completionUnwraped(tempItem)
-                            self.itemsPrivate.onNext(tempItem)
-                        }
-                    case .failure:
-                        break
+                    if case let .success(record) = matchResult,
+                       let item = Item(record: record, scope: .shared) {
+                        completionUnwraped(item)
                     }
                 }
             case .failure(let error):
@@ -580,25 +539,8 @@ extension CloudKitModel: StorageInputs {
                                     continue
                                 }
 
-                                if let idString = record.string(String(describing: ItemFields.id)),
-                                   let uuid = UUID(uuidString: idString),
-                                   let name = record.string(String(describing: ItemFields.name)),
-                                   let count = record.int(String(describing: ItemFields.count)),
-                                   let doneInt = record.int(String(describing: ItemFields.done)),
-                                   let usedInt = record.int(String(describing: ItemFields.used)),
-                                   let creationDate = record.creationDate,
-                                   let modificationDate = record.modificationDate {
-
-                                    let tempItem = Item(id: uuid,
-                                                        name: name,
-                                                        count: count,
-                                                        uploadedToICloud: true,
-                                                        done: (doneInt == 1),
-                                                        shown: (usedInt == 1),
-                                                        createdAt: creationDate,
-                                                        lastUsedAt: modificationDate)
-                                    completion(tempItem)
-                                    self.itemsPrivate.onNext(tempItem)
+                                if let item = Item(record: record, scope: .shared) {
+                                    completion(item)
                                 }
                             }
                         }
@@ -612,36 +554,14 @@ extension CloudKitModel: StorageInputs {
         return (true, nil)
     }
 
+    /// Saves a new item into the list shared with us. Fails if the user joined no shared list,
+    /// or several (the UI cannot pick a list yet).
     func insertToSharedZone(_ item: Item, completion: @escaping (Item, Error?) -> Void) {
         let sharedDatabase = self.sharedDatabase
 
-        // Find the shared zone to insert into
-        sharedDatabase.fetchAllRecordZones { zones, error in
-            if let error = error {
-                print("Error fetching shared zones for insert: \(error)")
-                completion(item, error)
-                return
-            }
-
-            guard let zones = zones else {
-                let noZoneError = NSError(domain: "CloudKitModel", code: -6, userInfo: [NSLocalizedDescriptionKey: "No shared zones found"])
-                completion(item, noZoneError)
-                return
-            }
-
-            // Find the first non-default shared zone
-            guard let sharedZone = zones.first(where: { $0.zoneID != CKRecordZone.default().zoneID }) else {
-                let noZoneError = NSError(domain: "CloudKitModel", code: -7, userInfo: [NSLocalizedDescriptionKey: "No shared zone available"])
-                completion(item, noZoneError)
-                return
-            }
-
-            let newRecord = CKRecord(recordType: "Items", recordID: CKRecord.ID(zoneID: sharedZone.zoneID))
-            newRecord.set(string: item.id.uuidString, key: String(describing: ItemFields.id))
-            newRecord.set(string: item.name, key: String(describing: ItemFields.name))
-            newRecord.set(int: (item.done) ? 1 : 0, key: String(describing: ItemFields.done))
-            newRecord.set(int: item.count, key: String(describing: ItemFields.count))
-            newRecord.set(int: (item.shown) ? 1 : 0, key: String(describing: ItemFields.used))
+        let save: (CKRecordZone.ID) -> Void = { zoneID in
+            let newRecord = CKRecord(recordType: "Items", recordID: CKRecord.ID(zoneID: zoneID))
+            newRecord.apply(item)
 
             sharedDatabase.save(newRecord) { savedRecord, saveError in
                 if let saveError = saveError {
@@ -649,23 +569,28 @@ extension CloudKitModel: StorageInputs {
                     completion(item, saveError)
                     return
                 }
-
-                guard let savedRecord = savedRecord else {
-                    completion(item, nil)
-                    return
-                }
-
-                let savedItem = Item(
-                    id: UUID(uuidString: savedRecord.string(String(describing: ItemFields.id)) ?? "") ?? item.id,
-                    name: savedRecord.string(String(describing: ItemFields.name)) ?? item.name,
-                    count: savedRecord.int(String(describing: ItemFields.count)) ?? item.count,
-                    uploadedToICloud: true,
-                    done: (savedRecord.int(String(describing: ItemFields.done)) == 1),
-                    shown: (savedRecord.int(String(describing: ItemFields.used)) == 1),
-                    createdAt: savedRecord.creationDate ?? Date(),
-                    lastUsedAt: savedRecord.modificationDate ?? Date()
-                )
+                let savedItem = savedRecord.flatMap { Item(record: $0, scope: .shared) } ?? item
                 completion(savedItem, nil)
+            }
+        }
+
+        sharedDatabase.fetchAllRecordZones { zones, error in
+            if let error = error {
+                print("Error fetching shared zones for insert: \(error)")
+                completion(item, error)
+                return
+            }
+
+            let sharedZones = (zones ?? []).filter { $0.zoneID != CKRecordZone.default().zoneID }
+            switch sharedZones.count {
+            case 0:
+                let noZoneError = NSError(domain: "CloudKitModel", code: -7, userInfo: [NSLocalizedDescriptionKey: "No shared list available"])
+                completion(item, noZoneError)
+            case 1:
+                save(sharedZones[0].zoneID)
+            default:
+                let ambiguousError = NSError(domain: "CloudKitModel", code: -8, userInfo: [NSLocalizedDescriptionKey: "You joined several shared lists - choose which list to add the item to"])
+                completion(item, ambiguousError)
             }
         }
     }
@@ -730,30 +655,10 @@ extension CloudKitModel: StorageInputs {
             case .success(let (matchResults, _)):
                 guard let completion = withCompletion else { return }
                 for (_, matchResult) in matchResults {
-                    switch matchResult {
-                    case .success(let record):
-                        if let idString = record.string(String(describing: ItemFields.id)),
-                           let uuid = UUID(uuidString: idString),
-                           let name = record.string(String(describing: ItemFields.name)),
-                           let count = record.int(String(describing: ItemFields.count)),
-                           let doneInt = record.int(String(describing: ItemFields.done)),
-                           let usedInt = record.int(String(describing: ItemFields.used)),
-                           let creationDate = record.creationDate,
-                           let modificationDate = record.modificationDate {
-
-                            let tempItem = Item(id: uuid,
-                                                name: name,
-                                                count: count,
-                                                uploadedToICloud: true,
-                                                done: (doneInt == 1),
-                                                shown: (usedInt == 1),
-                                                createdAt: creationDate,
-                                                lastUsedAt: modificationDate)
-                            completion(tempItem)
-                            self.itemsPrivate.onNext(tempItem)
-                        }
-                    case .failure:
-                        break
+                    if case let .success(record) = matchResult,
+                       let item = Item(record: record, scope: .private) {
+                        completion(item)
+                        self.itemsPrivate.onNext(item)
                     }
                 }
             case .failure(let error):
@@ -766,51 +671,28 @@ extension CloudKitModel: StorageInputs {
     func insert() -> ItemProcess {
         return { item, completionHandler in
             let newRecord = CKRecord(recordType: "Items", recordID: CKRecord.ID(zoneID: self.zone.zoneID))
-            var itemRet = Item()
+            newRecord.apply(item)
 
             // No parent record needed: the whole zone is shared
             Task {
                 do {
-                    newRecord.set(string: item.id.uuidString, key: String(describing: ItemFields.id))
-                    newRecord.set(string: item.name, key: String(describing: ItemFields.name))
-                    newRecord.set(int: (item.done) ? 1 : 0, key: String(describing: ItemFields.done))
-                    newRecord.set(int: item.count, key: String(describing: ItemFields.count))
-                    newRecord.set(int: (item.shown) ? 1 : 0, key: String(describing: ItemFields.used))
+                    let savedRecord = try await self.database.save(newRecord)
+                    let savedItem = Item(record: savedRecord, scope: .private) ?? item
 
-                    // Use async/await instead of callback-based save
-                    let recordUnwrapped = try await self.database.save(newRecord)
-
-                    itemRet = Item(id: UUID(uuidString: recordUnwrapped.string(String(describing: ItemFields.id))!)!,
-                                   name: recordUnwrapped.string(String(describing: ItemFields.name))!,
-                                   count: recordUnwrapped.int(String(describing: ItemFields.count))!,
-                                   uploadedToICloud: true,
-                                   done: (recordUnwrapped.int(String(describing: ItemFields.done)) == 0) ? false : true,
-                                   shown: (recordUnwrapped.int(String(describing: ItemFields.used)) == 0) ? false : true,
-                                   createdAt: Date.now, lastUsedAt: Date.now)
-
-                    print("Record created!! \(itemRet.name)")
-                    if itemRet.name == "Root" {
-                        self.rootRecord = recordUnwrapped
+                    print("Record created!! \(savedItem.name)")
+                    if savedItem.name == "Root" {
+                        self.rootRecord = savedRecord
                     }
-                    completionHandler?(itemRet, nil)
+                    completionHandler?(savedItem, nil)
 
                 } catch {
                     print("Failed to save record: \(error)")
-                    // Create item with uploadedToICloud set to false on error
-                    itemRet = Item(id: item.id,
-                                   name: item.name,
-                                   count: item.count,
-                                   uploadedToICloud: false,
-                                   done: item.done,
-                                   shown: item.shown,
-                                   createdAt: Date.now,
-                                   lastUsedAt: Date.now)
-                    completionHandler?(itemRet, error)
+                    completionHandler?(Item.itemUploadedToICloudLens.set(false, item), error)
                 }
             }
 
             // Return a placeholder - actual result is handled via completion handler
-            return (itemRet, true)
+            return (Item(), true)
         }
     }
 
@@ -822,49 +704,56 @@ extension CloudKitModel: StorageInputs {
         }
     }
 
+    /// Updates the record backing `item` in the database matching its scope (private or shared).
+    /// Items saved before record references were stored are looked up by their `Id` field in the private zone.
     func update() -> ItemProcessUpdate {
         return { (item, newItem) in
+            let database = (item.scope == .shared) ? self.sharedDatabase : self.database
 
-            let predicate = NSPredicate(format: "(Id == %@)", item.id.uuidString)
-            let query = CKQuery(recordType: "Items", predicate: predicate)
-            let database = self.database
-            let zone = self.zone
+            guard let ref = newItem.cloudRecord ?? item.cloudRecord else {
+                self.updateByQuery(item, with: newItem)
+                return (Item(), true)
+            }
 
-            database.fetch(withQuery: query, inZoneWith: zone.zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
-                var modifiedRecords = [CKRecord]()
-                switch result {
-                case .success(let (matchResults, _)):
-                    for (_, matchResult) in matchResults {
-                        switch matchResult {
-                        case .success(let record):
-                            record.set(int: (newItem.shown) ? 1 : 0, key: String(describing: ItemFields.used))
-                            record.set(int: (newItem.done) ? 1 : 0, key: String(describing: ItemFields.done))
-                            record.set(string: newItem.name, key: String(describing: ItemFields.name))
-                            record.set(int: newItem.count, key: String(describing: ItemFields.count))
-                            modifiedRecords.append(record)
-                        case .failure:
-                            break
-                        }
-                    }
-                    if !modifiedRecords.isEmpty {
-                        let updateOperation = CKModifyRecordsOperation(recordsToSave: modifiedRecords, recordIDsToDelete: nil)
-                        updateOperation.perRecordSaveBlock = { recordID, result in
-                            switch result {
-                            case .success:
-                                // Record updated successfully
-                                break
-                            case .failure(let error):
-                                print("Unable to modify record: \(recordID). Error: \(error.localizedDescription)")
-                            }
-                        }
-                        database.add(updateOperation)
-                    }
-                case .failure(let error):
-                    print("update fetch error: \(error)")
+            database.fetch(withRecordID: CKRecord.ID(ref)) { record, error in
+                guard let record = record else {
+                    print("update fetch error: \(String(describing: error))")
+                    return
                 }
+                record.apply(newItem)
+                self.save([record], to: database)
             }
             return (Item(), true)
         }
+    }
+
+    private func updateByQuery(_ item: Item, with newItem: Item) {
+        let predicate = NSPredicate(format: "(Id == %@)", item.id.uuidString)
+        let query = CKQuery(recordType: "Items", predicate: predicate)
+        let database = self.database
+
+        database.fetch(withQuery: query, inZoneWith: zone.zoneID, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { result in
+            switch result {
+            case .success(let (matchResults, _)):
+                let modifiedRecords = matchResults.compactMap { _, matchResult in try? matchResult.get() }
+                modifiedRecords.forEach { $0.apply(newItem) }
+                if !modifiedRecords.isEmpty {
+                    self.save(modifiedRecords, to: database)
+                }
+            case .failure(let error):
+                print("update fetch error: \(error)")
+            }
+        }
+    }
+
+    private func save(_ records: [CKRecord], to database: CKDatabase) {
+        let updateOperation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
+        updateOperation.perRecordSaveBlock = { recordID, result in
+            if case let .failure(error) = result {
+                print("Unable to modify record: \(recordID). Error: \(error.localizedDescription)")
+            }
+        }
+        database.add(updateOperation)
     }
 
     func getHints(for itemName: String, withCompletion: (Item, Item) -> Void) {
@@ -877,4 +766,55 @@ extension CloudKitModel: StorageOutputs {
     var inputs: StorageInputs { return self }
 
     var outputs: StorageOutputs { return self }
+}
+
+// MARK: Item <-> CKRecord mapping
+extension CloudRecordRef {
+    init(_ recordID: CKRecord.ID) {
+        self.init(recordName: recordID.recordName,
+                  zoneName: recordID.zoneID.zoneName,
+                  zoneOwnerName: recordID.zoneID.ownerName)
+    }
+}
+
+extension CKRecord.ID {
+    convenience init(_ ref: CloudRecordRef) {
+        self.init(recordName: ref.recordName,
+                  zoneID: CKRecordZone.ID(zoneName: ref.zoneName, ownerName: ref.zoneOwnerName))
+    }
+}
+
+extension Item {
+    /// Builds an item from an `Items` record; nil if a required field is missing
+    init?(record: CKRecord, scope: ItemScope) {
+        guard let idString = record.string(String(describing: ItemFields.id)),
+              let uuid = UUID(uuidString: idString),
+              let name = record.string(String(describing: ItemFields.name)),
+              let count = record.int(String(describing: ItemFields.count)),
+              let doneInt = record.int(String(describing: ItemFields.done)),
+              let usedInt = record.int(String(describing: ItemFields.used)) else {
+            return nil
+        }
+        self.init(id: uuid,
+                  name: name,
+                  count: count,
+                  uploadedToICloud: true,
+                  done: doneInt == 1,
+                  shown: usedInt == 1,
+                  createdAt: record.creationDate ?? Date(),
+                  lastUsedAt: record.modificationDate ?? Date(),
+                  scope: scope,
+                  cloudRecord: CloudRecordRef(record.recordID))
+    }
+}
+
+extension CKRecord {
+    /// Writes the item's fields into this `Items` record
+    func apply(_ item: Item) {
+        set(string: item.id.uuidString, key: String(describing: ItemFields.id))
+        set(string: item.name, key: String(describing: ItemFields.name))
+        set(int: item.done ? 1 : 0, key: String(describing: ItemFields.done))
+        set(int: item.count, key: String(describing: ItemFields.count))
+        set(int: item.shown ? 1 : 0, key: String(describing: ItemFields.used))
+    }
 }

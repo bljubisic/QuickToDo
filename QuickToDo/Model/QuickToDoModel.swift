@@ -164,7 +164,10 @@ extension QuickToDoModel: QuickToDoInputs {
 
     func update(_ item: Item, withItem newItem: Item) -> (Bool, Error?) {
         _ = self.updateToCloudKit(item, withItem: newItem)
-        _ = self.updateToSwiftData(item, withItem: newItem)
+        // Shared items live only in the owner's CloudKit zone, never in the local store
+        if item.scope == .private {
+            _ = self.updateToSwiftData(item, withItem: newItem)
+        }
         return (true, nil)
     }
 

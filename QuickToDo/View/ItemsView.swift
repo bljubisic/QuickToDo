@@ -115,6 +115,8 @@ struct ItemsView: View {
             viewModel.inputs.addToSharedZone(newItem) { savedItem, error in
                 if let error = error {
                     print("Error adding to shared zone: \(error.localizedDescription)")
+                    sharingError = error.localizedDescription
+                    showingSharingError = true
                     return
                 }
                 if !self.sharedItems.contains(where: { $0.id == savedItem.id }) {
@@ -151,6 +153,19 @@ struct ItemsView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             self.isLoadingSharedItems = false
             print("Loaded \(self.sharedItems.count) shared items (receivedItems: \(receivedItems))")
+        }
+    }
+
+    /// Saves an edit; in the Shared tab also reflects it in the locally held shared items
+    private func update(_ item: Item, to newItem: Item, completionBlock: @escaping () -> Void) {
+        _ = viewModel.update(item, withItem: newItem, completionBlock: completionBlock)
+        guard mode == .shared, let index = sharedItems.firstIndex(where: { $0.id == item.id }) else {
+            return
+        }
+        if newItem.shown {
+            sharedItems[index] = newItem
+        } else {
+            sharedItems.remove(at: index)
         }
     }
 
@@ -278,7 +293,7 @@ struct ItemsView: View {
                             Button(action: {
 //                                print("Tapped \(item.name) : \(index) \((index % (24 * (index / 24)))) : \(red) : \(green): \(blue)")
                                 let newItem = Item.itemDoneLens.set(!item.done, item)
-                                _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
+                                self.update(item, to: newItem, completionBlock: {
                                         print("Done")
                                         WidgetCenter.shared.reloadAllTimelines()
                                     })
@@ -334,7 +349,7 @@ struct ItemsView: View {
 
                             Button(action: {
                                 let newItem = Item.itemDoneLens.set(!item.done, item)
-                                _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
+                                self.update(item, to: newItem, completionBlock: {
                                     print("Done")
                                     WidgetCenter.shared.reloadAllTimelines()
                                 })
@@ -369,7 +384,7 @@ struct ItemsView: View {
 
                             Button(role: .destructive, action: {
                                 let newItem = Item.itemShownLens.set(!item.shown, item)
-                                _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
+                                self.update(item, to: newItem, completionBlock: {
                                     print("Done")
                                     WidgetCenter.shared.reloadAllTimelines()
                                 })
@@ -380,7 +395,7 @@ struct ItemsView: View {
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button(role: .destructive, action: {
                                 let newItem = Item.itemShownLens.set(!item.shown, item)
-                                _ = self.viewModel.update(item, withItem: newItem, completionBlock: {
+                                self.update(item, to: newItem, completionBlock: {
                                     print("Done")
                                     WidgetCenter.shared.reloadAllTimelines()
                                 })
@@ -406,7 +421,7 @@ struct ItemsView: View {
                         .onSubmit {
                             if let selItem = selectedItem {
                                 let newItem = Item.itemNameLens.set(debounceObject.text, selItem)
-                                _ = self.viewModel.update(selItem, withItem: newItem, completionBlock: {
+                                self.update(selItem, to: newItem, completionBlock: {
                                     print("Done!")
                                     self.selectedItem = nil
                                 })

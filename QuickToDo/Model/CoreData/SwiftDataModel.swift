@@ -49,6 +49,7 @@ extension SwiftDataModel: StorageInputs {
                 uploadedToICloud: item.uploadedToICloud,
                 uuid: item.id.uuidString
             )
+            itemSD.cloudRecord = item.cloudRecord
             self.modelContext.insert(itemSD)
             try? self.modelContext.save()
             guard let savedItem = itemSD.toItem() else {
@@ -85,6 +86,10 @@ extension SwiftDataModel: StorageInputs {
                 oldItem.word = item.name
                 oldItem.uploadedToICloud = item.uploadedToICloud
                 oldItem.uuid = item.id.uuidString
+                // Updates coming from the UI may not carry the record reference - never erase a known one
+                if let cloudRecord = item.cloudRecord {
+                    oldItem.cloudRecord = cloudRecord
+                }
                 try? self.modelContext.save()
                 return (oldItem, true)
             }

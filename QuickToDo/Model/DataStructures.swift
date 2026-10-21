@@ -110,6 +110,22 @@ public class ItemUD: NSObject, NSSecureCoding {
     }
 }
 
+/// Which CloudKit database an item lives in
+enum ItemScope: String {
+    /// The user's own list (private database, `QuickToDoZone`)
+    case `private`
+    /// A list another user shared with us (shared database, owner's zone)
+    case shared
+}
+
+/// Identifies the CloudKit record backing an item. Kept as plain strings so the
+/// Widget, which compiles this file, does not need CloudKit.
+struct CloudRecordRef: Equatable {
+    let recordName: String
+    let zoneName: String
+    let zoneOwnerName: String
+}
+
 public struct Item {
 
     public let id: UUID
@@ -120,6 +136,8 @@ public struct Item {
     let shown: Bool
     let createdAt: Date
     let lastUsedAt: Date
+    var scope: ItemScope = .private
+    var cloudRecord: CloudRecordRef?
 
 }
 
@@ -143,61 +161,44 @@ struct Lens<Whole, Part> {
 
 extension Item {
 
+    /// Copies the item, replacing only the given fields. Scope and CloudKit record are always preserved.
+    private func copy(name: String? = nil,
+                      count: Int? = nil,
+                      uploadedToICloud: Bool? = nil,
+                      done: Bool? = nil,
+                      shown: Bool? = nil) -> Item {
+        return Item(id: id,
+                    name: name ?? self.name,
+                    count: count ?? self.count,
+                    uploadedToICloud: uploadedToICloud ?? self.uploadedToICloud,
+                    done: done ?? self.done,
+                    shown: shown ?? self.shown,
+                    createdAt: createdAt,
+                    lastUsedAt: lastUsedAt,
+                    scope: scope,
+                    cloudRecord: cloudRecord)
+    }
+
     static let itemNameLens = Lens<Item, String>(
         get: { $0.name },
-        set: { (name, oldItem) in Item(id: oldItem.id,
-                                       name: name,
-                                       count: oldItem.count,
-                                       uploadedToICloud: oldItem.uploadedToICloud,
-                                       done: oldItem.done,
-                                       shown: oldItem.shown,
-                                       createdAt: oldItem.createdAt,
-                                       lastUsedAt: oldItem.lastUsedAt) }
+        set: { (name, oldItem) in oldItem.copy(name: name) }
     )
 
     static let itemUploadedToICloudLens = Lens<Item, Bool>(
         get: { $0.uploadedToICloud },
-        set: { (uploadedToICloud, oldItem) in Item(id: oldItem.id,
-                                                   name: oldItem.name,
-                                                   count: oldItem.count,
-                                                   uploadedToICloud: uploadedToICloud,
-                                                   done: oldItem.done,
-                                                   shown: oldItem.shown,
-                                                   createdAt: oldItem.createdAt,
-                                                   lastUsedAt: oldItem.lastUsedAt)}
+        set: { (uploadedToICloud, oldItem) in oldItem.copy(uploadedToICloud: uploadedToICloud) }
     )
     static let itemDoneLens = Lens<Item, Bool>(
         get: { $0.done },
-        set: { (done, oldItem) in Item(id: oldItem.id,
-                                       name: oldItem.name,
-                                       count: oldItem.count,
-                                       uploadedToICloud: oldItem.uploadedToICloud,
-                                       done: done,
-                                       shown: oldItem.shown,
-                                       createdAt: oldItem.createdAt,
-                                       lastUsedAt: oldItem.lastUsedAt)}
+        set: { (done, oldItem) in oldItem.copy(done: done) }
     )
     static let itemShownLens = Lens<Item, Bool>(
         get: { $0.shown },
-        set: { (shown, oldItem) in Item(id: oldItem.id,
-                                        name: oldItem.name,
-                                        count: oldItem.count,
-                                        uploadedToICloud: oldItem.uploadedToICloud,
-                                        done: oldItem.done,
-                                        shown: shown,
-                                        createdAt: oldItem.createdAt,
-                                        lastUsedAt: oldItem.lastUsedAt)}
+        set: { (shown, oldItem) in oldItem.copy(shown: shown) }
     )
     static let itemCountLens = Lens<Item, Int>(
         get: { $0.count },
-        set: { (count, oldItem) in Item(id: oldItem.id,
-                                        name: oldItem.name,
-                                        count: count,
-                                        uploadedToICloud: oldItem.uploadedToICloud,
-                                        done: oldItem.done,
-                                        shown: oldItem.shown,
-                                        createdAt: oldItem.createdAt,
-                                        lastUsedAt: oldItem.lastUsedAt)}
+        set: { (count, oldItem) in oldItem.copy(count: count) }
     )
 }
 

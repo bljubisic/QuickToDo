@@ -276,6 +276,32 @@ class DataStructuresTests: XCTestCase {
         XCTAssertEqual(step3.id, originalItem.id)
     }
 
+    func testLensesPreserveScopeAndCloudRecord() {
+        let ref = CloudRecordRef(recordName: "rec-1", zoneName: "QuickToDoZone", zoneOwnerName: "_owner")
+        var originalItem = Item()
+        originalItem.scope = .shared
+        originalItem.cloudRecord = ref
+
+        let updated = [
+            Item.itemNameLens.set("Renamed", originalItem),
+            Item.itemCountLens.set(3, originalItem),
+            Item.itemDoneLens.set(true, originalItem),
+            Item.itemShownLens.set(false, originalItem),
+            Item.itemUploadedToICloudLens.set(true, originalItem)
+        ]
+
+        for item in updated {
+            XCTAssertEqual(item.scope, .shared)
+            XCTAssertEqual(item.cloudRecord, ref)
+        }
+    }
+
+    func testItemDefaultsToPrivateScopeWithoutCloudRecord() {
+        let item = Item()
+        XCTAssertEqual(item.scope, .private)
+        XCTAssertNil(item.cloudRecord)
+    }
+
     // MARK: - Notification.Name Constants Tests
 
     func testCloudKitPrivateDataChangedNotificationName() {

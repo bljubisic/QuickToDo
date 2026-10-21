@@ -19,6 +19,24 @@ class ItemSD {
     var word: String?
     var uploadedToICloud: Bool?
     var uuid: String?
+    // CloudKit record backing this item (nil until uploaded). Optional, so SwiftData migrates existing stores automatically.
+    var recordName: String?
+    var zoneName: String?
+    var zoneOwnerName: String?
+
+    var cloudRecord: CloudRecordRef? {
+        get {
+            guard let recordName, let zoneName, let zoneOwnerName else {
+                return nil
+            }
+            return CloudRecordRef(recordName: recordName, zoneName: zoneName, zoneOwnerName: zoneOwnerName)
+        }
+        set {
+            recordName = newValue?.recordName
+            zoneName = newValue?.zoneName
+            zoneOwnerName = newValue?.zoneOwnerName
+        }
+    }
 
     public init(
         completed: Bool = false,
@@ -63,7 +81,9 @@ class ItemSD {
             done: completed ?? false,
             shown: used ?? false,
             createdAt: lastUsed ?? Date(),
-            lastUsedAt: lastUsed ?? Date()
+            lastUsedAt: lastUsed ?? Date(),
+            scope: .private,
+            cloudRecord: cloudRecord
         )
     }
 
