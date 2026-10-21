@@ -6,6 +6,21 @@
 //  Copyright © 2025 Bratislav Ljubisic. All rights reserved.
 //
 
-// NOTE: SceneDelegate is not used with the SwiftUI @main App lifecycle.
-// Share acceptance is handled by AppDelegate.application(_:userDidAcceptCloudKitShareWith:)
-// and CloudKitShareManager.handleIncomingURL(_:).
+import UIKit
+import CloudKit
+
+/// With the SwiftUI App lifecycle UIKit delivers CloudKit share invitations to the scene delegate,
+/// never to `AppDelegate`. Installed by `AppDelegate.application(_:configurationForConnecting:options:)`.
+final class SceneDelegate: NSObject, UIWindowSceneDelegate {
+
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        // App was launched by tapping a share invitation
+        if let metadata = connectionOptions.cloudKitShareMetadata {
+            CloudKitShareManager.shared.accept(metadata)
+        }
+    }
+
+    func windowScene(_ windowScene: UIWindowScene, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
+        CloudKitShareManager.shared.accept(cloudKitShareMetadata)
+    }
+}

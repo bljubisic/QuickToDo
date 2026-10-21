@@ -104,6 +104,11 @@ struct MainView: View {
                 }
             }
         }
+        .alert("Sharing", isPresented: $shareManager.showingAlert) {
+            Button("OK") { }
+        } message: {
+            Text(shareManager.alertMessage)
+        }
     }
 }
 
@@ -111,6 +116,7 @@ struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         let viewModel = QuickToDoViewModel()
         return MainView(viewModel: viewModel)
+            .environmentObject(CloudKitShareManager.shared)
             .previewInterfaceOrientation(.portrait)
     }
 }

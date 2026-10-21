@@ -72,38 +72,15 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
         // Load saved change tokens
         loadChangeTokens()
 
-        // Setup private database subscription
-        database.fetchAllSubscriptions { (subscriptions, error) in
-            guard let subscriptionsUnwrapped = subscriptions  else {
-                return
-            }
-            if subscriptionsUnwrapped.isEmpty {
-                let subscriptionID = "Items-subscription-\(UUID().uuidString)"
-                let newSubscription = CKQuerySubscription(
-                    recordType: "Items",
-                    predicate: NSPredicate(value: true),
-                    subscriptionID: subscriptionID,
-                    options: [.firesOnRecordCreation, .firesOnRecordDeletion, .firesOnRecordUpdate]
-                )
-                let notification = CKSubscription.NotificationInfo()
-                notification.shouldSendContentAvailable = true
-                notification.alertBody = "ToDo list has been changed"
-                newSubscription.notificationInfo = notification
-                self.database.save(newSubscription) { (subscription, error) in
-                    if let error = error {
-                         print("Error saving private database subscription: \(error)")
-                         return
-                    }
-
-                    if let _ = subscription {
-                         print("Private database subscription created successfully")
-                    }
-                }
-            }
-        }
-        
-        // Setup shared database subscription
-        self.setupSharedDatabaseSubscription()
+        // One database subscription per database: it covers custom zones (QuickToDoZone) and,
+        // for the shared database, every zone shared with us
+        setupDatabaseSubscription(in: database,
+                                  subscriptionID: "private-database-changes",
+                                  alertBody: "ToDo list has been changed")
+        setupDatabaseSubscription(in: sharedDatabase,
+                                  subscriptionID: "shared-database-changes",
+                                  alertBody: "Shared list has been updated")
+        registerForCloudKitNotifications()
 
         self.database.save(zone) { newZone, error in
             if let err = error {
@@ -128,51 +105,43 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
         CKRecord.ID(recordName: CKRecordNameZoneWideShare, zoneID: zone.zoneID)
     }
 
-    private func setupSharedDatabaseSubscription() {
-        // Check if we already have a subscription for the shared database
-        sharedDatabase.fetchAllSubscriptions { (subscriptions, error) in
+    /// Ensures `database` has exactly one database subscription with the fixed `subscriptionID`.
+    /// Older builds created a query subscription (private) or randomly named subscriptions (shared);
+    /// those are deleted so each change produces a single push.
+    private func setupDatabaseSubscription(in database: CKDatabase, subscriptionID: CKSubscription.ID, alertBody: String) {
+        database.fetchAllSubscriptions { subscriptions, error in
             if let error = error {
-                print("Error fetching shared database subscriptions: \(error)")
+                print("Error fetching subscriptions for \(subscriptionID): \(error)")
                 return
             }
-            
-            guard let subscriptionsUnwrapped = subscriptions else {
+
+            let existing = subscriptions ?? []
+            let legacyIDs = existing.map(\.subscriptionID).filter { $0 != subscriptionID }
+            let needsSubscription = !existing.contains { $0.subscriptionID == subscriptionID }
+            guard needsSubscription || !legacyIDs.isEmpty else {
                 return
             }
-            
-            // Check if we already have a database subscription
-            let hasDatabaseSubscription = subscriptionsUnwrapped.contains { subscription in
-                subscription is CKDatabaseSubscription
-            }
-            
-            if !hasDatabaseSubscription {
-                // Create a database subscription for the shared database
-                let subscriptionID = "shared-items-changes-\(UUID().uuidString)"
-                let subscription = CKDatabaseSubscription(subscriptionID: subscriptionID)
-                
-                // Configure notification info
-                let notificationInfo = CKSubscription.NotificationInfo()
-                notificationInfo.shouldSendContentAvailable = true
-                notificationInfo.alertBody = "Shared list has been updated"
-                subscription.notificationInfo = notificationInfo
-                
-                // Save the subscription
-                self.sharedDatabase.save(subscription) { (savedSubscription, error) in
-                    if let error = error {
-                        print("Error creating shared database subscription: \(error)")
-                    } else if let _ = savedSubscription {
-                        print("Shared database subscription created successfully")
-                    }
+
+            let subscription = CKDatabaseSubscription(subscriptionID: subscriptionID)
+            let notificationInfo = CKSubscription.NotificationInfo()
+            notificationInfo.shouldSendContentAvailable = true
+            notificationInfo.alertBody = alertBody
+            subscription.notificationInfo = notificationInfo
+
+            let operation = CKModifySubscriptionsOperation(subscriptionsToSave: needsSubscription ? [subscription] : [],
+                                                           subscriptionIDsToDelete: legacyIDs)
+            operation.modifySubscriptionsResultBlock = { result in
+                switch result {
+                case .success:
+                    print("Subscription \(subscriptionID) ready, removed \(legacyIDs.count) legacy subscription(s)")
+                case .failure(let error):
+                    print("Error saving subscription \(subscriptionID): \(error)")
                 }
-            } else {
-                print("Shared database subscription already exists")
             }
+            database.add(operation)
         }
-        
-        // Also listen for CloudKit notification events
-        self.registerForCloudKitNotifications()
     }
-    
+
     private func registerForCloudKitNotifications() {
         // Listen for private database changes
         NotificationCenter.default.addObserver(
@@ -181,7 +150,7 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
             name: .cloudKitPrivateDataChanged,
             object: nil
         )
-        
+
         // Listen for shared database changes
         NotificationCenter.default.addObserver(
             self,
@@ -189,32 +158,17 @@ final class CloudKitModel: StorageProtocol, @unchecked Sendable {
             name: .cloudKitSharedDataChanged,
             object: nil
         )
-        
-        // Listen for the generic remote change notification
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(handleRemoteChange(_:)),
-            name: .NSPersistentStoreRemoteChange,
-            object: nil
-        )
     }
-    
+
     @objc private func handlePrivateDataChanged(_ notification: Notification) {
         print("Private database changed - using change tokens for efficient sync")
         // Use change tokens for efficient sync instead of fetching all items
         self.fetchDatabaseChanges(for: database, isShared: false)
     }
-    
+
     @objc private func handleSharedDataChanged(_ notification: Notification) {
         print("Shared database changed - using change tokens for efficient sync")
         // Use change tokens for efficient sync
-        self.fetchDatabaseChanges(for: sharedDatabase, isShared: true)
-    }
-    
-    @objc private func handleRemoteChange(_ notification: Notification) {
-        print("Generic remote change detected - checking both databases")
-        // Check both databases for changes
-        self.fetchDatabaseChanges(for: database, isShared: false)
         self.fetchDatabaseChanges(for: sharedDatabase, isShared: true)
     }
 

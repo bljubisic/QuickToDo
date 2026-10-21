@@ -27,38 +27,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
-        guard cloudKitShareMetadata.containerIdentifier == Config.containerIdentifier else {
-            print("Shared container identifier \(cloudKitShareMetadata.containerIdentifier) did not match known identifier.")
-            return
-        }
-
-        let container = CKContainer(identifier: Config.containerIdentifier)
-        let operation = CKAcceptSharesOperation(shareMetadatas: [cloudKitShareMetadata])
-
-        operation.perShareResultBlock = { metadata, result in
-            let shareRecordType = metadata.share.recordType
-            switch result {
-            case .failure(let error):
-                print("Error accepting share: \(error)")
-            case .success:
-                print("Accepted CloudKit share with type: \(shareRecordType)")
-            }
-        }
-
-        operation.acceptSharesResultBlock = { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success:
-                    NotificationCenter.default.post(name: .refreshSharedItems, object: nil)
-                case .failure(let error):
-                    print("Error accepting CloudKit Share: \(error)")
-                }
-            }
-        }
-
-        operation.qualityOfService = .utility
-        container.add(operation)
+    func application(_ application: UIApplication,
+                     configurationForConnecting connectingSceneSession: UISceneSession,
+                     options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        // SceneDelegate receives CloudKit share invitations
+        let configuration = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
+        configuration.delegateClass = SceneDelegate.self
+        return configuration
     }
 
     func application(
@@ -66,30 +41,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didReceiveRemoteNotification userInfo: [AnyHashable: Any],
         fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
     ) {
-        if let notification = CKNotification(fromRemoteNotificationDictionary: userInfo) {
-            print("CloudKit database changed - Notification type: \(notification.notificationType)")
-            
-            // Post notification for different types of CloudKit changes
-            switch notification.notificationType {
-            case .query:
-                // Handle query subscription notifications (private database changes)
-                NotificationCenter.default.post(name: .cloudKitPrivateDataChanged, object: notification)
-            case .database:
-                // Handle database subscription notifications (shared database changes)
-                NotificationCenter.default.post(name: .cloudKitSharedDataChanged, object: notification)
-            case .recordZone:
-                // Handle record zone subscription notifications
-                NotificationCenter.default.post(name: .cloudKitRecordZoneChanged, object: notification)
-            default:
-                break
-            }
-            
-            // Also post the generic notification for backward compatibility
-            NotificationCenter.default.post(name: .NSPersistentStoreRemoteChange, object: nil)
-            completionHandler(.newData)
+        guard let notification = CKNotification(fromRemoteNotificationDictionary: userInfo) else {
+            completionHandler(.noData)
             return
         }
-        completionHandler(.noData)
+        print("CloudKit database changed - Notification type: \(notification.notificationType)")
+
+        switch notification {
+        case let databaseNotification as CKDatabaseNotification:
+            let name: Notification.Name = databaseNotification.databaseScope == .shared
+                ? .cloudKitSharedDataChanged
+                : .cloudKitPrivateDataChanged
+            NotificationCenter.default.post(name: name, object: notification)
+        case is CKQueryNotification:
+            // Legacy private query subscription - deleted on the next launch
+            NotificationCenter.default.post(name: .cloudKitPrivateDataChanged, object: notification)
+        case is CKRecordZoneNotification:
+            NotificationCenter.default.post(name: .cloudKitRecordZoneChanged, object: notification)
+        default:
+            break
+        }
+        completionHandler(.newData)
     }
 }
 
@@ -97,7 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 struct QuickToDoApp: App {
 
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @StateObject private var shareManager = CloudKitShareManager()
+    @StateObject private var shareManager = CloudKitShareManager.shared
     @StateObject private var viewModel = QuickToDoViewModel(
         QuickToDoModel(SwiftDataModel(), CloudKitModel())
     )
@@ -108,9 +80,6 @@ struct QuickToDoApp: App {
                 MainView(viewModel: viewModel)
             }
             .environmentObject(shareManager)
-            .onOpenURL { url in
-                shareManager.handleIncomingURL(url)
-            }
         }
     }
 }
