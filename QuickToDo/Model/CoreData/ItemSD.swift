@@ -11,7 +11,7 @@ import SwiftData
 
 @Model
 class ItemSD {
-    
+
     var completed: Bool?
     var count: Int?
     var lastUsed: Date?
@@ -19,7 +19,25 @@ class ItemSD {
     var word: String?
     var uploadedToICloud: Bool?
     var uuid: String?
-    
+    // CloudKit record backing this item (nil until uploaded). Optional, so SwiftData migrates existing stores automatically.
+    var recordName: String?
+    var zoneName: String?
+    var zoneOwnerName: String?
+
+    var cloudRecord: CloudRecordRef? {
+        get {
+            guard let recordName, let zoneName, let zoneOwnerName else {
+                return nil
+            }
+            return CloudRecordRef(recordName: recordName, zoneName: zoneName, zoneOwnerName: zoneOwnerName)
+        }
+        set {
+            recordName = newValue?.recordName
+            zoneName = newValue?.zoneName
+            zoneOwnerName = newValue?.zoneOwnerName
+        }
+    }
+
     public init(
         completed: Bool = false,
         count: Int = 0,
@@ -37,7 +55,7 @@ class ItemSD {
         self.uploadedToICloud = uploadedToICloud
         self.uuid = uuid
     }
-    
+
     public init() {
         self.completed = false
         self.count = 0
@@ -47,5 +65,26 @@ class ItemSD {
         self.uploadedToICloud = false
         self.uuid = ""
     }
-    
+
+    /// Safely converts this SwiftData model to an Item struct, returning nil if required fields are missing or invalid.
+    func toItem() -> Item? {
+        guard let uuidString = uuid,
+              let id = UUID(uuidString: uuidString),
+              let name = word else {
+            return nil
+        }
+        return Item(
+            id: id,
+            name: name,
+            count: count ?? 0,
+            uploadedToICloud: uploadedToICloud ?? false,
+            done: completed ?? false,
+            shown: used ?? false,
+            createdAt: lastUsed ?? Date(),
+            lastUsedAt: lastUsed ?? Date(),
+            scope: .private,
+            cloudRecord: cloudRecord
+        )
+    }
+
 }

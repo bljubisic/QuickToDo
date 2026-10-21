@@ -67,7 +67,7 @@ extension QuickToDoWidgetAttributes.ContentState {
     fileprivate static var smiley: QuickToDoWidgetAttributes.ContentState {
         QuickToDoWidgetAttributes.ContentState(emoji: "😀")
      }
-     
+
      fileprivate static var starEyes: QuickToDoWidgetAttributes.ContentState {
          QuickToDoWidgetAttributes.ContentState(emoji: "🤩")
      }

@@ -7,163 +7,113 @@
 //
 
 import UIKit
-import CoreData
 import CloudKit
 import SwiftUI
+import UserNotifications
 
-//@UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    
-    var window: UIWindow?
-    
-    
-//    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-//        // Override point for customization after application launch.
-//        window = UIWindow(frame: UIScreen.main.bounds)
-//        let coreData = CoreDataModel()
-//        let cloudKit = CloudKitModel()
-//        let model = QuickToDoModel(coreData, cloudKit)
-//
-//
-//        let viewController: MainViewController = MainViewController()
-//        viewController.insert(withModel: model)
-//        window?.rootViewController = viewController
-//        window?.makeKeyAndVisible()
-//        return true
-//    }
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        UNUserNotificationCenter.current().requestAuthorization(options:
-            [[.alert, .sound, .badge]],
-                completionHandler: { (granted, error) in
-                    // Handle Error
-            })
-        application.registerForRemoteNotifications()
 
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if granted {
+                DispatchQueue.main.async {
+                    application.registerForRemoteNotifications()
+                }
+            }
+            if let error = error {
+                print("Error requesting notification permissions: \(error)")
+            }
+        }
         return true
     }
-    
-    func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
-        
-        guard cloudKitShareMetadata.containerIdentifier == Config.containerIdentifier else {
-            print("Shared container identifier \(cloudKitShareMetadata.containerIdentifier) did not match known identifier.")
+
+    func application(_ application: UIApplication,
+                     configurationForConnecting connectingSceneSession: UISceneSession,
+                     options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        // SceneDelegate receives CloudKit share invitations
+        let configuration = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
+        configuration.delegateClass = SceneDelegate.self
+        return configuration
+    }
+
+    func application(
+        _ application: UIApplication,
+        didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+        fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
+    ) {
+        guard let notification = CKNotification(fromRemoteNotificationDictionary: userInfo) else {
+            completionHandler(.noData)
             return
         }
-        let container = CKContainer(identifier: Config.containerIdentifier)
-        let acceptSharesOperation = CKAcceptSharesOperation(shareMetadatas: [cloudKitShareMetadata])
-        
-        window = UIWindow(frame: UIScreen.main.bounds)
-        let swiftData = SwiftDataModel()
-        let cloudKit = CloudKitModel()
-        let model = QuickToDoModel(swiftData, cloudKit)
+        print("CloudKit database changed - Notification type: \(notification.notificationType)")
 
-        
-        let viewController: MainViewController = MainViewController()
-        viewController.insert(withModel: model)
-        window?.rootViewController = viewController
-        window?.makeKeyAndVisible()
-        
-        acceptSharesOperation.perShareResultBlock = {metadata, result in
-            let shareRecordType = metadata.share.recordType
+        // CloudKitModel finishes this once its sync is done, so iOS keeps the app running until then
+        let completion = RemoteSyncCompletion(completionHandler)
+        let syncInfo = [RemoteSyncCompletion.userInfoKey: completion]
 
-            switch result {
-            case .failure(let error):
-                debugPrint("Error accepting share: \(error)")
+        switch notification {
+        case let databaseNotification as CKDatabaseNotification:
+            let name: Notification.Name = databaseNotification.databaseScope == .shared
+                ? .cloudKitSharedDataChanged
+                : .cloudKitPrivateDataChanged
+            NotificationCenter.default.post(name: name, object: notification, userInfo: syncInfo)
+        case is CKQueryNotification:
+            // Legacy private query subscription - deleted on the next launch
+            NotificationCenter.default.post(name: .cloudKitPrivateDataChanged, object: notification, userInfo: syncInfo)
+        case is CKRecordZoneNotification:
+            NotificationCenter.default.post(name: .cloudKitRecordZoneChanged, object: notification)
+            completion.finish(.noData)
+        default:
+            completion.finish(.noData)
+        }
 
-            case .success:
-                debugPrint("Accepted CloudKit share with type: \(shareRecordType)")
-            }
+        // iOS allows about 30 seconds. Finish before that even if no sync ran (e.g. the model is not loaded yet).
+        DispatchQueue.main.asyncAfter(deadline: .now() + 25) {
+            completion.finish(.noData)
         }
-        
-        acceptSharesOperation.acceptSharesResultBlock = { result in
-            if case .failure(let error) = result {
-                debugPrint("Error accepting CloudKit Share: \(error)")
-            }
+    }
+}
+
+/// Hands the background-fetch completion handler of a CloudKit push to the code that performs the sync.
+/// The handler is called exactly once: when the sync finishes, or by the push handler's fallback timer.
+final class RemoteSyncCompletion {
+    static let userInfoKey = "RemoteSyncCompletion"
+
+    private let queue = DispatchQueue(label: "com.quicktodo.remote-sync-completion")
+    private var handler: ((UIBackgroundFetchResult) -> Void)?
+
+    init(_ handler: @escaping (UIBackgroundFetchResult) -> Void) {
+        self.handler = handler
+    }
+
+    func finish(_ result: UIBackgroundFetchResult) {
+        let pendingHandler: ((UIBackgroundFetchResult) -> Void)? = queue.sync {
+            defer { handler = nil }
+            return handler
         }
-        
-        acceptSharesOperation.qualityOfService = .utility
-        container.add(acceptSharesOperation)
+        pendingHandler?(result)
     }
-    
-    func showAlertInvitationOnMainViewController(record: CKRecord) {
-        
+
+    static func from(_ notification: Notification) -> RemoteSyncCompletion? {
+        return notification.userInfo?[userInfoKey] as? RemoteSyncCompletion
     }
-    
-    
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        if let notification = CKNotification(fromRemoteNotificationDictionary: userInfo) {
-            print("CloudKit database changed")
-            NotificationCenter.default.post(name: .NSPersistentStoreRemoteChange, object: nil)
-            completionHandler(.newData)
-            return
-        }
-        completionHandler(.noData)
-    }
-    
-    func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-        // Saves changes in the application's managed object context before the application terminates.
-//        saveContext()
-    }
-    
-//    var persistentContainer: NSPersistentContainer = {
-//        /*
-//         The persistent container for the application. This implementation
-//         creates and returns a container, having loaded the store for the
-//         application to it. This property is optional since there are legitimate
-//         error conditions that could cause the creation of the store to fail.
-//         */
-//        let container = NSPersistentContainer(name: "QuickToDo")
-//        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-//            if let error = error as NSError? {
-//                // Replace this implementation with code to handle the error appropriately.
-//                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-//
-//                /*
-//                 Typical reasons for an error here include:
-//                 * The parent directory does not exist, cannot be created, or disallows writing.
-//                 * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-//                 * The device is out of space.
-//                 * The store could not be migrated to the current model version.
-//                 Check the error message to determine what the actual problem was.
-//                 */
-//                fatalError("Unresolved error \(error), \(error.userInfo)")
-//            }
-//        })
-//        return container
-//    }()
-    
-    // MARK: - Core Data Saving support
-//    func saveContext () {
-//        let context = persistentContainer.viewContext
-//        if context.hasChanges {
-//            do {
-//                try context.save()
-//            } catch {
-//                // Replace this implementation with code to handle the error appropriately.
-//                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-//                let nserror = error as NSError
-//                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-//            }
-//        }
-//    }
-    
 }
 
 @main
 struct QuickToDoApp: App {
-    
+
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
+    @StateObject private var shareManager = CloudKitShareManager.shared
+    @StateObject private var viewModel = QuickToDoViewModel(
+        QuickToDoModel(SwiftDataModel(), CloudKitModel())
+    )
+
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                let swiftData = SwiftDataModel()
-                let cloudKit = CloudKitModel()
-                let model = QuickToDoModel(swiftData, cloudKit)
-                let viewModel = QuickToDoViewModel(model)
                 MainView(viewModel: viewModel)
             }
+            .environmentObject(shareManager)
         }
     }
 }
-

@@ -1,0 +1,111 @@
+//
+//  Toolbar.swift
+//  QuickToDo
+//
+//  Created by Bratislav Ljubisic on 16.04.25.
+//  Copyright © 2025 Bratislav Ljubisic. All rights reserved.
+//
+import SwiftUI
+import WidgetKit
+import CloudKit
+
+struct Toolbar: View {
+
+    @ObservedObject var viewModel: QuickToDoViewModel
+    @Binding var shown: Bool
+    /// Opens the share sheet (MainView owns the sheet)
+    let onShare: () -> Void
+
+    var body: some View {
+        HStack {
+            VStack {
+                Button(action: {
+                    _ = self.viewModel.inputs.getItems {
+                        print("called getItems")
+                        WidgetCenter.shared.reloadAllTimelines()
+                    }
+                }, label: {
+                    Image(systemName: "arrow.clockwise.circle")
+                        .resizable()
+                        .frame(width: 20.0, height: 20.0)
+                })
+                Text("Refresh")
+                    .fontWeight(.semibold)
+                    .foregroundColor(Color.blue)
+                    .font(.system(size: 12, design: .rounded))
+                    .frame(width: 70.0, height: 20.0)
+            }
+            VStack {
+                Button(action: onShare, label: {
+                    Image(systemName: "square.and.arrow.up")
+                        .resizable()
+                        .frame(width: 20.0, height: 20.0)
+                })
+                Text("Share")
+                    .fontWeight(.semibold)
+                    .foregroundColor(.blue)
+                    .font(.system(size: 12, design: .rounded))
+                    .frame(width: 70.0, height: 20.0)
+            }
+            VStack {
+                Button(action: {
+                    _ = self.viewModel.inputs.clearList()
+                    WidgetCenter.shared.reloadAllTimelines()
+                }, label: {
+                    Image(systemName: "cart.badge.minus")
+                        .resizable()
+                        .frame(width: 30.0, height: 20.0)
+                })
+                Text("Remove all")
+                    .fontWeight(.semibold)
+                    .foregroundColor(Color.blue)
+                    .font(.system(size: 12, design: .rounded))
+                    .frame(width: 70.0, height: 20.0)
+            }
+
+            VStack {
+                Button(action: {
+                    shown.toggle()
+                    _ = self.viewModel.inputs.save(config: shown)
+                }, label: {
+                    ((shown) ? Image(systemName: "bag") : Image(systemName: "bag.fill"))
+                        .resizable()
+                        .frame(width: 20.0, height: 20.0)
+                })
+                ((shown) ? Text("Remove done") : Text("Show done"))
+                    .fontWeight(.semibold)
+                    .foregroundColor(Color.blue)
+                    .font(.system(size: 12, design: .rounded))
+                    .frame(width: 70.0, height: 20.0)
+            }
+
+            VStack {
+                Button(action: {
+                    _ = self.viewModel.inputs.uploadToCloud()
+                }, label: {
+                    Image(systemName: "arrow.clockwise.icloud")
+                        .resizable()
+                        .frame(width: 30.0, height: 20.0)
+                })
+                Text("Update")
+                    .fontWeight(.semibold)
+                    .foregroundColor(Color.blue)
+                    .font(.system(size: 12, design: .rounded))
+                    .frame(width: 60.0, height: 20.0)
+            }
+
+        }
+        .padding(.horizontal, 16)
+    }
+}
+
+#Preview {
+    @Previewable @State var show: Bool = false
+    @Previewable var viewModel: QuickToDoViewModel = QuickToDoViewModel()
+
+    Toolbar(viewModel: viewModel, shown: $show, onShare: {})
+        .padding()
+        .background(Color.white)
+        .environment(\.colorScheme, .light)
+
+}

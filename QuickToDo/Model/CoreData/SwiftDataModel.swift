@@ -11,45 +11,35 @@ import Foundation
 import CloudKit
 
 final class SwiftDataModel: StorageProtocol {
-    
+
     var modelContext: ModelContext
-    
+
     private var itemsPrivate: PublishSubject<Item?>
-    
+
     init() {
         itemsPrivate = PublishSubject()
         modelContext = ModelContext(sharedModelContainer)
     }
-    
+
 }
 
 extension SwiftDataModel: StorageInputs {
-    
+
     func getItems(withCompletion: ((Item) -> Void)?) -> (Bool, Error?) {
         let descriptor = FetchDescriptor<ItemSD>(sortBy: [SortDescriptor(\ItemSD.lastUsed, order: .forward)])
-        let item = Item()
-        
-        if let items = try? self.modelContext.fetch<ItemSD>(descriptor) {
+
+        if let items = try? self.modelContext.fetch(descriptor) {
             for item in items {
-                let tmpItem = Item(id: UUID(uuidString: item.uuid!)!,
-                                   name: item.word!,
-                                   count: item.count!,
-                                   uploadedToICloud: item.uploadedToICloud!,
-                                   done: item.completed!,
-                                   shown: item.used!,
-                                   createdAt: item.lastUsed!,
-                                   lastUsedAt: item.lastUsed!)
+                guard let tmpItem = item.toItem() else { continue }
                 itemsPrivate.onNext(tmpItem)
-                if let withCompletion = withCompletion {
-                    withCompletion(tmpItem)
-                }
+                withCompletion?(tmpItem)
             }
         }
         return (true, nil)
     }
-    
-    func insert() -> itemProcess {
-        return { item, completionHandler  in
+
+    func insert() -> ItemProcess {
+        return { item, _  in
             let itemSD: ItemSD = ItemSD(
                 completed: item.done,
                 count: item.count,
@@ -59,47 +49,35 @@ extension SwiftDataModel: StorageInputs {
                 uploadedToICloud: item.uploadedToICloud,
                 uuid: item.id.uuidString
             )
+            itemSD.cloudRecord = item.cloudRecord
             self.modelContext.insert(itemSD)
             try? self.modelContext.save()
-            return (Item(id: UUID(uuidString: itemSD.uuid!)!,
-                         name: itemSD.word!,
-                        count: itemSD.count!,
-                        uploadedToICloud: itemSD.uploadedToICloud!,
-                        done: itemSD.completed!,
-                        shown: itemSD.used!,
-                        createdAt: itemSD.lastUsed!,
-                        lastUsedAt: itemSD.lastUsed!), true)
+            guard let savedItem = itemSD.toItem() else {
+                return (item, true)
+            }
+            return (savedItem, true)
         }
     }
-    
-    func getItemWith() -> itemProcessFind {
-        return { itemWord in
-            let item = Item()
-            
-            let predicate = #Predicate<ItemSD> {item in item.word == itemWord}
-            var descriptor = FetchDescriptor(predicate: predicate)
 
-            if let fetchedItems =  try? self.modelContext.fetch<ItemSD>(descriptor) {
-                if let itemSD = fetchedItems.first {
-                    return (Item(id: UUID(uuidString: itemSD.uuid!)!,
-                                name: itemSD.word!,
-                                count: itemSD.count!,
-                                uploadedToICloud: itemSD.uploadedToICloud!,
-                                done: itemSD.completed!,
-                                shown: itemSD.used!,
-                                createdAt: itemSD.lastUsed!,
-                                lastUsedAt: itemSD.lastUsed!), true)
-                }
+    func getItemWith() -> ItemProcessFind {
+        return { itemWord in
+            let predicate = #Predicate<ItemSD> {item in item.word == itemWord}
+            let descriptor = FetchDescriptor(predicate: predicate)
+
+            if let fetchedItems = try? self.modelContext.fetch(descriptor),
+               let itemSD = fetchedItems.first,
+               let foundItem = itemSD.toItem() {
+                return (foundItem, true)
             }
 
-            return (item, false)
+            return (Item(), false)
         }
     }
-    
+
     private func updateIntoContext(withItem item: Item, itemID: String) -> (ItemSD?, Bool) {
         let predicate = #Predicate<ItemSD> { itemFound in itemFound.uuid == itemID }
         let descriptor = FetchDescriptor(predicate: predicate)
-        if let oldItems = try? self.modelContext.fetch<ItemSD>(descriptor) {
+        if let oldItems = try? self.modelContext.fetch(descriptor) {
             if let oldItem = oldItems.first {
                 oldItem.completed = item.done
                 oldItem.count = item.count
@@ -108,115 +86,114 @@ extension SwiftDataModel: StorageInputs {
                 oldItem.word = item.name
                 oldItem.uploadedToICloud = item.uploadedToICloud
                 oldItem.uuid = item.id.uuidString
+                // Updates coming from the UI may not carry the record reference - never erase a known one
+                if let cloudRecord = item.cloudRecord {
+                    oldItem.cloudRecord = cloudRecord
+                }
                 try? self.modelContext.save()
                 return (oldItem, true)
             }
         }
         return (nil, false)
     }
-    
-    func update() -> itemProcessUpdate {
-        return { (item, withItem) in
+
+    func update() -> ItemProcessUpdate {
+        return { (_, withItem) in
             let resultValue: (ItemSD?, Bool) = self.updateIntoContext(withItem: withItem, itemID: withItem.id.uuidString)
-            if resultValue.1 == true {
-                guard let itemMO = resultValue.0 else {
-                    return (Item(), false)
-                }
-                return (Item(id: UUID(uuidString: itemMO.uuid!)!,
-                            name: itemMO.word!,
-                            count: itemMO.count!,
-                            uploadedToICloud: itemMO.uploadedToICloud!,
-                            done: itemMO.completed!,
-                            shown: itemMO.used!,
-                            createdAt: itemMO.lastUsed!,
-                            lastUsedAt: itemMO.lastUsed!), true)
+            if resultValue.1,
+               let itemSD = resultValue.0,
+               let updatedItem = itemSD.toItem() {
+                return (updatedItem, true)
             }
             return (Item(), false)
         }
     }
-    
-    func getItemWithId() -> itemProcessFindWithID {
-        return { id in
-            let predicate = #Predicate<ItemSD> {item in item.uuid! == id.uuidString}
-            let descriptor = FetchDescriptor(predicate: predicate)
-            let item = Item()
-            
-            if let items = try? self.modelContext.fetch<ItemSD>(descriptor) {
-                if let item = items.first {
-                    return (Item(id: UUID(uuidString: item.uuid!)!,
-                                 name: item.word!,
-                                 count: item.count!,
-                                 uploadedToICloud: item.uploadedToICloud!,
-                                 done: item.completed!,
-                                 shown: item.used!,
-                                 createdAt: item.lastUsed!,
-                                 lastUsedAt: item.lastUsed!), true)
-                }
-                return (item, false)
-            }
-            return (item, false)
-        }
-        
-    }
-    
-    func getHints(for itemName: String, withCompletion: (Item, Item) -> Void) {
-        var items: [Item] = [Item]()
-        
-        let predicate = #Predicate<ItemSD> {item in item.word!.starts(with: itemName)}
-        let descriptor = FetchDescriptor(predicate: predicate)
-        
 
-        if let fetchedItems = try? self.modelContext.fetch<ItemSD>(descriptor) {
-            for itemMO in fetchedItems.filter({(item) in item === ItemSD.self}) {
-                let tmpItem: Item = Item(id: UUID(uuidString: itemMO.uuid!)!,
-                                         name: itemMO.word!,
-                                         count: itemMO.count!,
-                                         uploadedToICloud: itemMO.uploadedToICloud!,
-                                         done: itemMO.completed!,
-                                         shown: itemMO.used!,
-                                         createdAt: itemMO.lastUsed!,
-                                         lastUsedAt: itemMO.lastUsed!)
+    func getItemWithId() -> ItemProcessFindWithID {
+        return { id in
+            let idString = id.uuidString
+            let predicate = #Predicate<ItemSD> { item in item.uuid == idString }
+            let descriptor = FetchDescriptor(predicate: predicate)
+
+            if let items = try? self.modelContext.fetch(descriptor),
+               let itemSD = items.first,
+               let foundItem = itemSD.toItem() {
+                return (foundItem, true)
+            }
+            return (Item(), false)
+        }
+    }
+
+    func getHints(for itemName: String, withCompletion: @escaping (Item, Item) -> Void) {
+        var items: [Item] = []
+
+        let predicate = #Predicate<ItemSD> { item in item.word?.starts(with: itemName) ?? false }
+        let descriptor = FetchDescriptor(predicate: predicate)
+
+        if let fetchedItems = try? self.modelContext.fetch(descriptor) {
+            for itemSD in fetchedItems {
+                guard let tmpItem = itemSD.toItem() else { continue }
                 items.append(tmpItem)
             }
         }
-        if(items.count > 1) {
+        if items.count > 1 {
             withCompletion(items[0], items[1])
-        } else if(items.count == 1) {
+        } else if items.count == 1 {
             withCompletion(items[0], Item())
         } else {
             withCompletion(Item(), Item())
         }
+    }
 
+    /// This method is unimplemented here. Actual iCloud sharing is provided in CloudKitModel.
+    func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) async throws {
+        let error = NSError(domain: "SwiftDataModel", code: -1, userInfo: [NSLocalizedDescriptionKey: "iCloud sharing not supported in local model."])
+        handler(nil, nil, error)
     }
-    
-    func prepareShare(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
-        
-    }
-    
-    func getRootRecord() -> CKRecord? {
-        return nil
-    }
-    
-    func getSharedItems(for root: CKRecord, with completion: ((Item) -> Void)?) -> (Bool, Error?) {
-        return(true, nil)
-    }
-    
+
     func getZone() -> CKRecordZone? {
         return nil
     }
-    
-    
+
+    func getCurrentShareStatus() -> CKShare? {
+        return nil
+    }
+
+    func isListCurrentlyShared() -> Bool {
+        return false
+    }
+
+    func refreshShareStatus() async throws -> CKShare? {
+        return nil
+    }
+
+    func publishLocalItems(_ items: [Item]) async throws -> Int {
+        // SwiftData is the local source, there is nothing to publish to
+        return 0
+    }
+
+    func fetchAllSharedItems(completion: @escaping ([Item], Error?) -> Void) -> (Bool, Error?) {
+        // SwiftData doesn't handle CloudKit shares directly, so return empty
+        completion([], nil)
+        return (true, nil)
+    }
+
+    func insertToSharedZone(_ item: Item, completion: @escaping (Item, Error?) -> Void) {
+        // SwiftData doesn't handle CloudKit shared zones directly
+        let error = NSError(domain: "SwiftDataModel", code: -1, userInfo: [NSLocalizedDescriptionKey: "Shared zone insert not supported in local model."])
+        completion(item, error)
+    }
+
 }
 
 extension SwiftDataModel: StorageOutputs {
-    
-    
+
     var items: RxSwift.Observable<Item?> {
         return itemsPrivate.subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
     }
-    
+
     var inputs: StorageInputs { return self }
-    
+
     var outputs: StorageOutputs { return self }
-    
+
 }

@@ -7,23 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		50A1BF1B2DAFD8AE000D2647 /* Toolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A1BF1A2DAFD8A8000D2647 /* Toolbar.swift */; };
+		50AB71112DB10D2C008EA327 /* CloudSharingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50AB71102DB10D2C008EA327 /* CloudSharingView.swift */; };
 		E4044A622AD1926700E0FC6A /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */; };
 		E4044A642AD3351E00E0FC6A /* SwiftData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4044A632AD3351E00E0FC6A /* SwiftData.framework */; };
 		E42C85F423E8603600AB6CDD /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42C85F323E8603600AB6CDD /* MainView.swift */; };
-		E435ECE521680E0300E68960 /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE421680E0300E68960 /* CoreDataModel.swift */; };
 		E435ECE72169327000E68960 /* ManagedObjectTypeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE62169327000E68960 /* ManagedObjectTypeProtocol.swift */; };
 		E435ECE9216932FB00E68960 /* ItemMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECE8216932FA00E68960 /* ItemMO.swift */; };
 		E435ECEB21729EB700E68960 /* QuickToDoViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECEA21729EB700E68960 /* QuickToDoViewModelProtocol.swift */; };
 		E435ECEF21890A6A00E68960 /* ItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECEE21890A6A00E68960 /* ItemTableViewCell.swift */; };
 		E435ECF121890A7900E68960 /* AddItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E435ECF021890A7900E68960 /* AddItemTableViewCell.swift */; };
+		E43AE4DC2C1A3235007882C4 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E43AE4DB2C1A3235007882C4 /* SnapKit */; };
+		E43AE4DF2C1A32EF007882C4 /* SwiftyCloudKit in Frameworks */ = {isa = PBXBuildFile; productRef = E43AE4DE2C1A32EF007882C4 /* SwiftyCloudKit */; };
+		E43AE4E22C1A3311007882C4 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = E43AE4E12C1A3311007882C4 /* RxCocoa */; };
+		E43AE4E42C1A3311007882C4 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E43AE4E32C1A3311007882C4 /* RxSwift */; };
 		E44E38C82AB8E723001ED038 /* ItemSD.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44E38C72AB8E723001ED038 /* ItemSD.swift */; };
 		E44E38C92AB8E784001ED038 /* SwiftDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44C26C12A6DAE7400ECD7B6 /* SwiftDataModel.swift */; };
+		E464C87C2EC655B700483BB5 /* CLOUDKIT_SHARING_FIX.md in Resources */ = {isa = PBXBuildFile; fileRef = E464C87B2EC655B700483BB5 /* CLOUDKIT_SHARING_FIX.md */; };
+		E464C87E2EC655E200483BB5 /* CONFIGURATION_CHECKLIST.md in Resources */ = {isa = PBXBuildFile; fileRef = E464C87D2EC655E200483BB5 /* CONFIGURATION_CHECKLIST.md */; };
+		E464EAB62EB76BC8009D7A83 /* SharingStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E464EAB52EB76BC8009D7A83 /* SharingStatusView.swift */; };
 		E46E6E7123F2A80600D26E00 /* QuickToDoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46E6E7023F2A80600D26E00 /* QuickToDoTests.swift */; };
 		E46FD0E3216406220007FBB7 /* QuickToDoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46FD0E2216406220007FBB7 /* QuickToDoModel.swift */; };
 		E4761D952BFB3C980092408C /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4761D942BFB3C980092408C /* AppModelContainer.swift */; };
-		E4761D982BFB41620092408C /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = E4761D972BFB41620092408C /* RxCocoa */; };
-		E4761D9B2BFB417F0092408C /* SwiftyCloudKit in Frameworks */ = {isa = PBXBuildFile; productRef = E4761D9A2BFB417F0092408C /* SwiftyCloudKit */; };
-		E4761D9E2BFB419B0092408C /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E4761D9D2BFB419B0092408C /* SnapKit */; };
 		E4761D9F2BFB52900092408C /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4761D942BFB3C980092408C /* AppModelContainer.swift */; };
 		E477E6932A76B2C5003C7FCB /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E477E6772A76B289003C7FCB /* WidgetKit.framework */; };
 		E477E6942A76B2C5003C7FCB /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E477E6792A76B289003C7FCB /* SwiftUI.framework */; };
@@ -34,20 +39,31 @@
 		E48005622ABA338B00DEA8F2 /* ItemSD.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44E38C72AB8E723001ED038 /* ItemSD.swift */; };
 		E4861BC0215FA0010085CFB8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4861BBF215FA0010085CFB8 /* AppDelegate.swift */; };
 		E4861BC2215FA3FF0085CFB8 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */; };
-		E48B68DA215D5C3C0062B08C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48B68D9215D5C3C0062B08C /* MainViewController.swift */; };
 		E49125AE2AC7642D00DF090C /* QuickToDoIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49125AC2AC7642D00DF090C /* QuickToDoIntent.swift */; };
+		E49125AF2AC7642D00DF090D /* QuickToDoIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49125AC2AC7642D00DF090C /* QuickToDoIntent.swift */; };
 		E49DE916289737EC00B70245 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = E49DE915289737EC00B70245 /* .gitignore */; };
 		E49F65FB22C379E7008D59FA /* CloudKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49F65FA22C379E7008D59FA /* CloudKitModel.swift */; };
+		E4C0FFEE2E9A000100A1B2C3 /* CloudKitZoneMigrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C0FFEE2E9A000200A1B2C3 /* CloudKitZoneMigrator.swift */; };
+		E4A5F7352ECFD1E700823C32 /* SwiftDataModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A5F7342ECFD1E700823C32 /* SwiftDataModelTests.swift */; };
+		E4A5F7362ECFD1E700823C32 /* ItemMOTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A5F7322ECFD1E700823C32 /* ItemMOTests.swift */; };
+		E4A5F7372ECFD1E700823C32 /* IntentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A5F7312ECFD1E700823C32 /* IntentsTests.swift */; };
+		E4A5F7382ECFD1E700823C32 /* CloudKitModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A5F72F2ECFD1E700823C32 /* CloudKitModelTests.swift */; };
+		E4A5F7392ECFD1E700823C32 /* DataStructuresTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A5F7302ECFD1E700823C32 /* DataStructuresTests.swift */; };
+		E4A5F73A2ECFD1E700823C32 /* QuickToDoModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A5F7332ECFD1E700823C32 /* QuickToDoModelTests.swift */; };
+		E4A5F73C2ECFD37800823C32 /* ItemCompletedIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A5F73B2ECFD37800823C32 /* ItemCompletedIntent.swift */; };
+		E4A90C8A2DF6392600FEA0EB /* CloudKitShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A90C892DF6391A00FEA0EB /* CloudKitShareManager.swift */; };
+		E4ACB5B12F64BE0B00560D2E /* QuickToDoViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4ACB5B02F64BE0A00560D2E /* QuickToDoViewModelTests.swift */; };
 		E4BF3E6E21A04AFC00302EB8 /* QuickToDoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4BF3E6D21A04AFC00302EB8 /* QuickToDoViewModel.swift */; };
 		E4C11E572ABF61AA00C788E6 /* DataStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */; };
 		E4C6E01219E7EA63003A89F7 /* QuickToDo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E4C6E01019E7EA63003A89F7 /* QuickToDo.xcdatamodeld */; };
 		E4C6E01919E7EA63003A89F7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01819E7EA63003A89F7 /* Images.xcassets */; };
 		E4C6E01C19E7EA63003A89F7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01A19E7EA63003A89F7 /* LaunchScreen.xib */; };
 		E4C893982838F56D002B860A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01519E7EA63003A89F7 /* Main.storyboard */; };
-		E4F014C81AC8887B00264AD5 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = E4F014C71AC8887B00264AD5 /* Config.plist */; };
+		E4F67FD82DB6468A00901DF9 /* ItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F67FD72DB6467E00901DF9 /* ItemsView.swift */; };
 		E4F9A3791A5C146900CC0573 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4F9A3781A5C146900CC0573 /* CoreData.framework */; };
 		E4FBC6DA215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */; };
 		E4FBC6DC215AD63300F1B6E2 /* DataStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */; };
+		E4FD7D562DD6846700777F1A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FD7D552DD6846700777F1A /* SceneDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,11 +98,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		50A1BF1A2DAFD8A8000D2647 /* Toolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toolbar.swift; sourceTree = "<group>"; };
+		50AB71102DB10D2C008EA327 /* CloudSharingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSharingView.swift; sourceTree = "<group>"; };
 		E4044A632AD3351E00E0FC6A /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = System/Library/Frameworks/SwiftData.framework; sourceTree = SDKROOT; };
 		E404A39F1A8EBA34008D32A5 /* QuickToDo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = QuickToDo.entitlements; sourceTree = "<group>"; };
 		E41B97AC1A8D3E9F00BF8F51 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		E42C85F323E8603600AB6CDD /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
-		E435ECE421680E0300E68960 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
 		E435ECE62169327000E68960 /* ManagedObjectTypeProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedObjectTypeProtocol.swift; sourceTree = "<group>"; };
 		E435ECE8216932FA00E68960 /* ItemMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemMO.swift; sourceTree = "<group>"; };
 		E435ECEA21729EB700E68960 /* QuickToDoViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoViewModelProtocol.swift; sourceTree = "<group>"; };
@@ -94,6 +111,9 @@
 		E435ECF021890A7900E68960 /* AddItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemTableViewCell.swift; sourceTree = "<group>"; };
 		E44C26C12A6DAE7400ECD7B6 /* SwiftDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataModel.swift; sourceTree = "<group>"; };
 		E44E38C72AB8E723001ED038 /* ItemSD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSD.swift; sourceTree = "<group>"; };
+		E464C87B2EC655B700483BB5 /* CLOUDKIT_SHARING_FIX.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLOUDKIT_SHARING_FIX.md; sourceTree = "<group>"; };
+		E464C87D2EC655E200483BB5 /* CONFIGURATION_CHECKLIST.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONFIGURATION_CHECKLIST.md; sourceTree = "<group>"; };
+		E464EAB52EB76BC8009D7A83 /* SharingStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingStatusView.swift; sourceTree = "<group>"; };
 		E46E6E6E23F2A80600D26E00 /* QuickToDoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuickToDoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E46E6E7023F2A80600D26E00 /* QuickToDoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoTests.swift; sourceTree = "<group>"; };
 		E46E6E7223F2A80600D26E00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -112,10 +132,19 @@
 		E47939AA23AB8520002C7AC2 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E4861BBF215FA0010085CFB8 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E4861BC1215FA3FF0085CFB8 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
-		E48B68D9215D5C3C0062B08C /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		E49125AC2AC7642D00DF090C /* QuickToDoIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoIntent.swift; sourceTree = "<group>"; };
 		E49DE915289737EC00B70245 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		E49F65FA22C379E7008D59FA /* CloudKitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitModel.swift; sourceTree = "<group>"; };
+		E4C0FFEE2E9A000200A1B2C3 /* CloudKitZoneMigrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitZoneMigrator.swift; sourceTree = "<group>"; };
+		E4A5F72F2ECFD1E700823C32 /* CloudKitModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitModelTests.swift; sourceTree = "<group>"; };
+		E4A5F7302ECFD1E700823C32 /* DataStructuresTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStructuresTests.swift; sourceTree = "<group>"; };
+		E4A5F7312ECFD1E700823C32 /* IntentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentsTests.swift; sourceTree = "<group>"; };
+		E4A5F7322ECFD1E700823C32 /* ItemMOTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemMOTests.swift; sourceTree = "<group>"; };
+		E4A5F7332ECFD1E700823C32 /* QuickToDoModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoModelTests.swift; sourceTree = "<group>"; };
+		E4A5F7342ECFD1E700823C32 /* SwiftDataModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataModelTests.swift; sourceTree = "<group>"; };
+		E4A5F73B2ECFD37800823C32 /* ItemCompletedIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCompletedIntent.swift; sourceTree = "<group>"; };
+		E4A90C892DF6391A00FEA0EB /* CloudKitShareManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitShareManager.swift; sourceTree = "<group>"; };
+		E4ACB5B02F64BE0A00560D2E /* QuickToDoViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoViewModelTests.swift; sourceTree = "<group>"; };
 		E4BF3E6D21A04AFC00302EB8 /* QuickToDoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoViewModel.swift; sourceTree = "<group>"; };
 		E4C6E00919E7EA62003A89F7 /* QuickToDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuickToDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4C6E00D19E7EA62003A89F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -123,10 +152,11 @@
 		E4C6E01619E7EA63003A89F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E4C6E01819E7EA63003A89F7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E4C6E01B19E7EA63003A89F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		E4F014C71AC8887B00264AD5 /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Config.plist; sourceTree = "<group>"; };
+		E4F67FD72DB6467E00901DF9 /* ItemsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsView.swift; sourceTree = "<group>"; };
 		E4F9A3781A5C146900CC0573 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoModelProtocol.swift; sourceTree = "<group>"; };
 		E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStructures.swift; sourceTree = "<group>"; };
+		E4FD7D552DD6846700777F1A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,11 +182,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E4761D982BFB41620092408C /* RxCocoa in Frameworks */,
+				E43AE4E42C1A3311007882C4 /* RxSwift in Frameworks */,
+				E43AE4DC2C1A3235007882C4 /* SnapKit in Frameworks */,
 				E4F9A3791A5C146900CC0573 /* CoreData.framework in Frameworks */,
+				E43AE4E22C1A3311007882C4 /* RxCocoa in Frameworks */,
 				E4861BC2215FA3FF0085CFB8 /* CloudKit.framework in Frameworks */,
-				E4761D9B2BFB417F0092408C /* SwiftyCloudKit in Frameworks */,
-				E4761D9E2BFB419B0092408C /* SnapKit in Frameworks */,
+				E43AE4DF2C1A32EF007882C4 /* SwiftyCloudKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -182,7 +213,6 @@
 			children = (
 				E44C26C12A6DAE7400ECD7B6 /* SwiftDataModel.swift */,
 				E44E38C72AB8E723001ED038 /* ItemSD.swift */,
-				E435ECE421680E0300E68960 /* CoreDataModel.swift */,
 				E435ECE62169327000E68960 /* ManagedObjectTypeProtocol.swift */,
 				E435ECE8216932FA00E68960 /* ItemMO.swift */,
 				E4761D942BFB3C980092408C /* AppModelContainer.swift */,
@@ -193,8 +223,16 @@
 		E46E6E6F23F2A80600D26E00 /* QuickToDoTests */ = {
 			isa = PBXGroup;
 			children = (
+				E4A5F72F2ECFD1E700823C32 /* CloudKitModelTests.swift */,
+				E4A5F7302ECFD1E700823C32 /* DataStructuresTests.swift */,
+				E4A5F7312ECFD1E700823C32 /* IntentsTests.swift */,
+				E4A5F7322ECFD1E700823C32 /* ItemMOTests.swift */,
+				E4A5F7332ECFD1E700823C32 /* QuickToDoModelTests.swift */,
+				E4A5F7342ECFD1E700823C32 /* SwiftDataModelTests.swift */,
 				E46E6E7023F2A80600D26E00 /* QuickToDoTests.swift */,
 				E46E6E7223F2A80600D26E00 /* Info.plist */,
+				E4A5F73B2ECFD37800823C32 /* ItemCompletedIntent.swift */,
+				E4ACB5B02F64BE0A00560D2E /* QuickToDoViewModelTests.swift */,
 			);
 			path = QuickToDoTests;
 			sourceTree = "<group>";
@@ -222,6 +260,7 @@
 			isa = PBXGroup;
 			children = (
 				E49F65FA22C379E7008D59FA /* CloudKitModel.swift */,
+				E4C0FFEE2E9A000200A1B2C3 /* CloudKitZoneMigrator.swift */,
 			);
 			path = CloudKit;
 			sourceTree = "<group>";
@@ -235,6 +274,8 @@
 				E4FBC6D9215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift */,
 				E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */,
 				E46FD0E2216406220007FBB7 /* QuickToDoModel.swift */,
+				E464C87B2EC655B700483BB5 /* CLOUDKIT_SHARING_FIX.md */,
+				E464C87D2EC655E200483BB5 /* CONFIGURATION_CHECKLIST.md */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -251,10 +292,14 @@
 		E4AFEE3E215AB0620001AEDA /* View */ = {
 			isa = PBXGroup;
 			children = (
-				E48B68D9215D5C3C0062B08C /* MainViewController.swift */,
+				E4A90C892DF6391A00FEA0EB /* CloudKitShareManager.swift */,
+				E4F67FD72DB6467E00901DF9 /* ItemsView.swift */,
+				50AB71102DB10D2C008EA327 /* CloudSharingView.swift */,
+				50A1BF1A2DAFD8A8000D2647 /* Toolbar.swift */,
 				E435ECEE21890A6A00E68960 /* ItemTableViewCell.swift */,
 				E435ECF021890A7900E68960 /* AddItemTableViewCell.swift */,
 				E42C85F323E8603600AB6CDD /* MainView.swift */,
+				E464EAB52EB76BC8009D7A83 /* SharingStatusView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -292,6 +337,7 @@
 				E4AFEE3E215AB0620001AEDA /* View */,
 				E404A39F1A8EBA34008D32A5 /* QuickToDo.entitlements */,
 				E4861BBF215FA0010085CFB8 /* AppDelegate.swift */,
+				E4FD7D552DD6846700777F1A /* SceneDelegate.swift */,
 				E4C6E00C19E7EA62003A89F7 /* Supporting Files */,
 			);
 			path = QuickToDo;
@@ -305,7 +351,6 @@
 				E4C6E01A19E7EA63003A89F7 /* LaunchScreen.xib */,
 				E4C6E01019E7EA63003A89F7 /* QuickToDo.xcdatamodeld */,
 				E4C6E00D19E7EA62003A89F7 /* Info.plist */,
-				E4F014C71AC8887B00264AD5 /* Config.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -366,9 +411,10 @@
 			);
 			name = QuickToDo;
 			packageProductDependencies = (
-				E4761D972BFB41620092408C /* RxCocoa */,
-				E4761D9A2BFB417F0092408C /* SwiftyCloudKit */,
-				E4761D9D2BFB419B0092408C /* SnapKit */,
+				E43AE4DB2C1A3235007882C4 /* SnapKit */,
+				E43AE4DE2C1A32EF007882C4 /* SwiftyCloudKit */,
+				E43AE4E12C1A3311007882C4 /* RxCocoa */,
+				E43AE4E32C1A3311007882C4 /* RxSwift */,
 			);
 			productName = QuickToDo;
 			productReference = E4C6E00919E7EA62003A89F7 /* QuickToDo.app */;
@@ -422,9 +468,9 @@
 			);
 			mainGroup = E4C6E00019E7EA62003A89F7;
 			packageReferences = (
-				E4761D962BFB41620092408C /* XCRemoteSwiftPackageReference "RxSwift" */,
-				E4761D992BFB417F0092408C /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */,
-				E4761D9C2BFB419B0092408C /* XCRemoteSwiftPackageReference "SnapKit" */,
+				E43AE4DA2C1A3235007882C4 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				E43AE4DD2C1A32EF007882C4 /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */,
+				E43AE4E02C1A3311007882C4 /* XCRemoteSwiftPackageReference "RxSwift" */,
 			);
 			productRefGroup = E4C6E00A19E7EA62003A89F7 /* Products */;
 			projectDirPath = "";
@@ -458,9 +504,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				E49DE916289737EC00B70245 /* .gitignore in Resources */,
-				E4F014C81AC8887B00264AD5 /* Config.plist in Resources */,
+				E464C87E2EC655E200483BB5 /* CONFIGURATION_CHECKLIST.md in Resources */,
 				E4C6E01C19E7EA63003A89F7 /* LaunchScreen.xib in Resources */,
 				E4C6E01919E7EA63003A89F7 /* Images.xcassets in Resources */,
+				E464C87C2EC655B700483BB5 /* CLOUDKIT_SHARING_FIX.md in Resources */,
 				E4C893982838F56D002B860A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -472,6 +519,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4A5F7352ECFD1E700823C32 /* SwiftDataModelTests.swift in Sources */,
+				E4A5F7362ECFD1E700823C32 /* ItemMOTests.swift in Sources */,
+				E4A5F73C2ECFD37800823C32 /* ItemCompletedIntent.swift in Sources */,
+				E4ACB5B12F64BE0B00560D2E /* QuickToDoViewModelTests.swift in Sources */,
+				E4A5F7372ECFD1E700823C32 /* IntentsTests.swift in Sources */,
+				E4A5F7382ECFD1E700823C32 /* CloudKitModelTests.swift in Sources */,
+				E4A5F7392ECFD1E700823C32 /* DataStructuresTests.swift in Sources */,
+				E4A5F73A2ECFD1E700823C32 /* QuickToDoModelTests.swift in Sources */,
 				E46E6E7123F2A80600D26E00 /* QuickToDoTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -493,24 +548,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4A90C8A2DF6392600FEA0EB /* CloudKitShareManager.swift in Sources */,
 				E4BF3E6E21A04AFC00302EB8 /* QuickToDoViewModel.swift in Sources */,
 				E435ECE9216932FB00E68960 /* ItemMO.swift in Sources */,
 				E4FBC6DC215AD63300F1B6E2 /* DataStructures.swift in Sources */,
 				E4C6E01219E7EA63003A89F7 /* QuickToDo.xcdatamodeld in Sources */,
 				E435ECEB21729EB700E68960 /* QuickToDoViewModelProtocol.swift in Sources */,
 				E4761D952BFB3C980092408C /* AppModelContainer.swift in Sources */,
+				E464EAB62EB76BC8009D7A83 /* SharingStatusView.swift in Sources */,
 				E435ECEF21890A6A00E68960 /* ItemTableViewCell.swift in Sources */,
+				E4FD7D562DD6846700777F1A /* SceneDelegate.swift in Sources */,
 				E49F65FB22C379E7008D59FA /* CloudKitModel.swift in Sources */,
+				E4C0FFEE2E9A000100A1B2C3 /* CloudKitZoneMigrator.swift in Sources */,
 				E435ECF121890A7900E68960 /* AddItemTableViewCell.swift in Sources */,
-				E435ECE521680E0300E68960 /* CoreDataModel.swift in Sources */,
 				E4FBC6DA215ABEF500F1B6E2 /* QuickToDoModelProtocol.swift in Sources */,
 				E435ECE72169327000E68960 /* ManagedObjectTypeProtocol.swift in Sources */,
 				E44E38C92AB8E784001ED038 /* SwiftDataModel.swift in Sources */,
 				E46FD0E3216406220007FBB7 /* QuickToDoModel.swift in Sources */,
 				E4861BC0215FA0010085CFB8 /* AppDelegate.swift in Sources */,
 				E44E38C82AB8E723001ED038 /* ItemSD.swift in Sources */,
+				E4F67FD82DB6468A00901DF9 /* ItemsView.swift in Sources */,
 				E42C85F423E8603600AB6CDD /* MainView.swift in Sources */,
-				E48B68DA215D5C3C0062B08C /* MainViewController.swift in Sources */,
+				50A1BF1B2DAFD8AE000D2647 /* Toolbar.swift in Sources */,
+				50AB71112DB10D2C008EA327 /* CloudSharingView.swift in Sources */,
+				E49125AF2AC7642D00DF090D /* QuickToDoIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -913,7 +974,7 @@
 				E46E6E7623F2A80600D26E00 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		E477E6A02A76B2C7003C7FCB /* Build configuration list for PBXNativeTarget "QuickToDoWidgetExtension" */ = {
 			isa = XCConfigurationList;
@@ -922,7 +983,7 @@
 				E477E6A22A76B2C7003C7FCB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		E4C6E00419E7EA62003A89F7 /* Build configuration list for PBXProject "QuickToDo" */ = {
 			isa = XCConfigurationList;
@@ -931,7 +992,7 @@
 				E42C85F523E8615200AB6CDD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		E4C6E02B19E7EA63003A89F7 /* Build configuration list for PBXNativeTarget "QuickToDo" */ = {
 			isa = XCConfigurationList;
@@ -940,20 +1001,20 @@
 				E42C85F623E8615200AB6CDD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		E4761D962BFB41620092408C /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+		E43AE4DA2C1A3235007882C4 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
 			requirement = {
 				branch = main;
 				kind = branch;
 			};
 		};
-		E4761D992BFB417F0092408C /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */ = {
+		E43AE4DD2C1A32EF007882C4 /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/simengangstad/SwiftyCloudKit";
 			requirement = {
@@ -961,31 +1022,36 @@
 				kind = branch;
 			};
 		};
-		E4761D9C2BFB419B0092408C /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+		E43AE4E02C1A3311007882C4 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.7.1;
+				branch = main;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E4761D972BFB41620092408C /* RxCocoa */ = {
+		E43AE4DB2C1A3235007882C4 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E4761D962BFB41620092408C /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxCocoa;
+			package = E43AE4DA2C1A3235007882C4 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
 		};
-		E4761D9A2BFB417F0092408C /* SwiftyCloudKit */ = {
+		E43AE4DE2C1A32EF007882C4 /* SwiftyCloudKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E4761D992BFB417F0092408C /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */;
+			package = E43AE4DD2C1A32EF007882C4 /* XCRemoteSwiftPackageReference "SwiftyCloudKit" */;
 			productName = SwiftyCloudKit;
 		};
-		E4761D9D2BFB419B0092408C /* SnapKit */ = {
+		E43AE4E12C1A3311007882C4 /* RxCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E4761D9C2BFB419B0092408C /* XCRemoteSwiftPackageReference "SnapKit" */;
-			productName = SnapKit;
+			package = E43AE4E02C1A3311007882C4 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		E43AE4E32C1A3311007882C4 /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E43AE4E02C1A3311007882C4 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 

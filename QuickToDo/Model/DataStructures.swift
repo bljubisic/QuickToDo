@@ -17,16 +17,19 @@ enum CloudStatus {
 
 enum RecordZones: CustomStringConvertible {
 
-    
+    /// Legacy private zone, created before zone-wide sharing existed; kept read-only as a backup
     case quickToDoZone
+    /// Private zone holding the list; created with `.zoneWideSharing`
+    case quickToDoListZone
     case sharedZone
-    
+
     var description: String {
         switch self {
         case .quickToDoZone: return "QuickToDoZone"
+        case .quickToDoListZone: return "QuickToDoListZone"
         case .sharedZone: return "SharedZone"
         }
-        
+
     }
 }
 
@@ -34,14 +37,21 @@ enum Config {
     static let containerIdentifier = "iCloud.Persukibo.QuickToDo"
 }
 
+extension Notification.Name {
+    static let cloudKitPrivateDataChanged = Notification.Name("CloudKitPrivateDataChanged")
+    static let cloudKitSharedDataChanged = Notification.Name("CloudKitSharedDataChanged")
+    static let cloudKitRecordZoneChanged = Notification.Name("CloudKitRecordZoneChanged")
+    static let refreshSharedItems = Notification.Name("RefreshSharedItems")
+}
+
 enum ItemFields: CustomStringConvertible {
-    
+
     case name
     case count
     case done
     case used
     case id
-    
+
     var description: String {
         switch self {
         case .name: return "Name"
@@ -54,7 +64,7 @@ enum ItemFields: CustomStringConvertible {
 }
 
 public struct QuickToDoError: Error {
-    
+
 }
 
 public struct QuickToDoConfig: Codable {
@@ -68,25 +78,25 @@ extension QuickToDoConfig {
 }
 
 extension QuickToDoConfig {
-    static let showDoneItemsLens = Lens<QuickToDoConfig, Bool> (
+    static let showDoneItemsLens = Lens<QuickToDoConfig, Bool>(
         get: { $0.showDoneItems },
-        set: {(showDoneItems, oldConfig) in QuickToDoConfig(showDoneItems: showDoneItems) }
+        set: {(showDoneItems, _) in QuickToDoConfig(showDoneItems: showDoneItems) }
     )
 }
 
 public class ItemUD: NSObject, NSSecureCoding {
     public static var supportsSecureCoding: Bool = true
-    
+
     let id: String
     let word: String
     var done: Bool
-    
+
     public init(id: String, word: String, done: Bool) {
         self.id = id
         self.word = word
         self.done = done
     }
-    
+
     public override init() {
         self.done = false
         self.word = ""
@@ -104,8 +114,24 @@ public class ItemUD: NSObject, NSSecureCoding {
     }
 }
 
+/// Which CloudKit database an item lives in
+enum ItemScope: String {
+    /// The user's own list (private database, `QuickToDoZone`)
+    case `private`
+    /// A list another user shared with us (shared database, owner's zone)
+    case shared
+}
+
+/// Identifies the CloudKit record backing an item. Kept as plain strings so the
+/// Widget, which compiles this file, does not need CloudKit.
+struct CloudRecordRef: Equatable {
+    let recordName: String
+    let zoneName: String
+    let zoneOwnerName: String
+}
+
 public struct Item {
-    
+
     public let id: UUID
     let name: String
     let count: Int
@@ -114,7 +140,9 @@ public struct Item {
     let shown: Bool
     let createdAt: Date
     let lastUsedAt: Date
-    
+    var scope: ItemScope = .private
+    var cloudRecord: CloudRecordRef?
+
 }
 
 extension Item {
@@ -136,62 +164,45 @@ struct Lens<Whole, Part> {
 }
 
 extension Item {
-    
-    static let itemNameLens = Lens<Item, String> (
+
+    /// Copies the item, replacing only the given fields. Scope and CloudKit record are always preserved.
+    private func copy(name: String? = nil,
+                      count: Int? = nil,
+                      uploadedToICloud: Bool? = nil,
+                      done: Bool? = nil,
+                      shown: Bool? = nil) -> Item {
+        return Item(id: id,
+                    name: name ?? self.name,
+                    count: count ?? self.count,
+                    uploadedToICloud: uploadedToICloud ?? self.uploadedToICloud,
+                    done: done ?? self.done,
+                    shown: shown ?? self.shown,
+                    createdAt: createdAt,
+                    lastUsedAt: lastUsedAt,
+                    scope: scope,
+                    cloudRecord: cloudRecord)
+    }
+
+    static let itemNameLens = Lens<Item, String>(
         get: { $0.name },
-        set: { (name, oldItem) in Item(id: oldItem.id,
-                                       name: name,
-                                       count: oldItem.count,
-                                       uploadedToICloud:oldItem.uploadedToICloud,
-                                       done: oldItem.done,
-                                       shown: oldItem.shown,
-                                       createdAt:oldItem.createdAt,
-                                       lastUsedAt: oldItem.lastUsedAt) }
+        set: { (name, oldItem) in oldItem.copy(name: name) }
     )
-    
-    static let itemUploadedToICloudLens = Lens<Item, Bool> (
+
+    static let itemUploadedToICloudLens = Lens<Item, Bool>(
         get: { $0.uploadedToICloud },
-        set: { (uploadedToICloud, oldItem) in Item(id: oldItem.id,
-                                                   name: oldItem.name,
-                                                   count: oldItem.count,
-                                                   uploadedToICloud: uploadedToICloud,
-                                                   done: oldItem.done,
-                                                   shown: oldItem.shown,
-                                                   createdAt: oldItem.createdAt,
-                                                   lastUsedAt: oldItem.lastUsedAt)}
+        set: { (uploadedToICloud, oldItem) in oldItem.copy(uploadedToICloud: uploadedToICloud) }
     )
-    static let itemDoneLens = Lens<Item, Bool> (
+    static let itemDoneLens = Lens<Item, Bool>(
         get: { $0.done },
-        set: { (done, oldItem) in Item(id: oldItem.id,
-                                       name: oldItem.name,
-                                       count: oldItem.count,
-                                       uploadedToICloud: oldItem.uploadedToICloud,
-                                       done: done,
-                                       shown: oldItem.shown,
-                                       createdAt: oldItem.createdAt,
-                                       lastUsedAt: oldItem.lastUsedAt)}
+        set: { (done, oldItem) in oldItem.copy(done: done) }
     )
-    static let itemShownLens = Lens<Item, Bool> (
+    static let itemShownLens = Lens<Item, Bool>(
         get: { $0.shown },
-        set: { (shown, oldItem) in Item(id: oldItem.id,
-                                        name: oldItem.name,
-                                        count: oldItem.count,
-                                        uploadedToICloud: oldItem.uploadedToICloud,
-                                        done: oldItem.done,
-                                        shown: shown,
-                                        createdAt: oldItem.createdAt,
-                                        lastUsedAt: oldItem.lastUsedAt)}
+        set: { (shown, oldItem) in oldItem.copy(shown: shown) }
     )
-    static let itemCountLens = Lens<Item, Int> (
+    static let itemCountLens = Lens<Item, Int>(
         get: { $0.count },
-        set: { (count, oldItem) in Item(id: oldItem.id,
-                                        name: oldItem.name,
-                                        count: count,
-                                        uploadedToICloud: oldItem.uploadedToICloud,
-                                        done: oldItem.done,
-                                        shown: oldItem.shown,
-                                        createdAt: oldItem.createdAt,
-                                        lastUsedAt: oldItem.lastUsedAt)}
+        set: { (count, oldItem) in oldItem.copy(count: count) }
     )
 }
 

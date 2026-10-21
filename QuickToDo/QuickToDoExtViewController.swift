@@ -11,5 +11,4 @@ import NotificationCenter
 
 class QuickToDoExtViewController: NSObject, NCWidgetProviding {
 
-
 }

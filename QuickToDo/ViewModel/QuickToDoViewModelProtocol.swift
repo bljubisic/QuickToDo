@@ -12,16 +12,20 @@ import CloudKit
 
 protocol QuickToDoViewModelInputs {
     func add(_ newItem: Item) -> (Bool, Error?)
+    func addToSharedZone(_ item: Item, completion: @escaping (Item, Error?) -> Void)
     func update(_ item: Item, withItem: Item, completionBlock: @escaping () -> Void) -> (Bool, Error?)
     func getItems(completionBlock: @escaping () -> Void) -> (Bool, Error?)
     func getItemsArray(withFilter: Bool) -> [Item]
     func getItemsSize() -> Int
-    func getHints(for itemName: String, withCompletion: @escaping (String, String) -> Void) -> Void
+    func getHints(for itemName: String, withCompletion: @escaping (String, String) -> Void)
     func getItemsNumbers() -> Observable<(Int, Int)>
     func showOrHideAllDoneItems(shown: Bool) -> Bool
-    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void) -> Void
-    func getRootRecord() -> CKRecord?
+    func prepareSharing(handler: @escaping (CKShare?, CKContainer?, Error?) -> Void)
     func getZone() -> CKRecordZone?
+    func getCurrentShareStatus() -> CKShare?
+    func isListCurrentlyShared() -> Bool
+    func refreshShareStatus() async throws -> CKShare?
+    func fetchAllSharedItems(completion: @escaping ([Item], Error?) -> Void) -> (Bool, Error?)
     func clearList() -> Bool
     func uploadToCloud() -> (Bool, Error?)
     func getConfig() -> Bool
