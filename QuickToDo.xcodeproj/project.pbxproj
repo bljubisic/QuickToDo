@@ -43,7 +43,6 @@
 		E49125AF2AC7642D00DF090D /* QuickToDoIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49125AC2AC7642D00DF090C /* QuickToDoIntent.swift */; };
 		E49DE916289737EC00B70245 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = E49DE915289737EC00B70245 /* .gitignore */; };
 		E49F65FB22C379E7008D59FA /* CloudKitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49F65FA22C379E7008D59FA /* CloudKitModel.swift */; };
-		E4C0FFEE2E9A000100A1B2C3 /* CloudKitZoneMigrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C0FFEE2E9A000200A1B2C3 /* CloudKitZoneMigrator.swift */; };
 		E4A5F7352ECFD1E700823C32 /* SwiftDataModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A5F7342ECFD1E700823C32 /* SwiftDataModelTests.swift */; };
 		E4A5F7362ECFD1E700823C32 /* ItemMOTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A5F7322ECFD1E700823C32 /* ItemMOTests.swift */; };
 		E4A5F7372ECFD1E700823C32 /* IntentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A5F7312ECFD1E700823C32 /* IntentsTests.swift */; };
@@ -54,6 +53,7 @@
 		E4A90C8A2DF6392600FEA0EB /* CloudKitShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A90C892DF6391A00FEA0EB /* CloudKitShareManager.swift */; };
 		E4ACB5B12F64BE0B00560D2E /* QuickToDoViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4ACB5B02F64BE0A00560D2E /* QuickToDoViewModelTests.swift */; };
 		E4BF3E6E21A04AFC00302EB8 /* QuickToDoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4BF3E6D21A04AFC00302EB8 /* QuickToDoViewModel.swift */; };
+		E4C0FFEE2E9A000100A1B2C3 /* CloudKitZoneMigrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C0FFEE2E9A000200A1B2C3 /* CloudKitZoneMigrator.swift */; };
 		E4C11E572ABF61AA00C788E6 /* DataStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FBC6DB215AD63300F1B6E2 /* DataStructures.swift */; };
 		E4C6E01219E7EA63003A89F7 /* QuickToDo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E4C6E01019E7EA63003A89F7 /* QuickToDo.xcdatamodeld */; };
 		E4C6E01919E7EA63003A89F7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E4C6E01819E7EA63003A89F7 /* Images.xcassets */; };
@@ -135,7 +135,6 @@
 		E49125AC2AC7642D00DF090C /* QuickToDoIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoIntent.swift; sourceTree = "<group>"; };
 		E49DE915289737EC00B70245 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		E49F65FA22C379E7008D59FA /* CloudKitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitModel.swift; sourceTree = "<group>"; };
-		E4C0FFEE2E9A000200A1B2C3 /* CloudKitZoneMigrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitZoneMigrator.swift; sourceTree = "<group>"; };
 		E4A5F72F2ECFD1E700823C32 /* CloudKitModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitModelTests.swift; sourceTree = "<group>"; };
 		E4A5F7302ECFD1E700823C32 /* DataStructuresTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStructuresTests.swift; sourceTree = "<group>"; };
 		E4A5F7312ECFD1E700823C32 /* IntentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentsTests.swift; sourceTree = "<group>"; };
@@ -146,6 +145,7 @@
 		E4A90C892DF6391A00FEA0EB /* CloudKitShareManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitShareManager.swift; sourceTree = "<group>"; };
 		E4ACB5B02F64BE0A00560D2E /* QuickToDoViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoViewModelTests.swift; sourceTree = "<group>"; };
 		E4BF3E6D21A04AFC00302EB8 /* QuickToDoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickToDoViewModel.swift; sourceTree = "<group>"; };
+		E4C0FFEE2E9A000200A1B2C3 /* CloudKitZoneMigrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitZoneMigrator.swift; sourceTree = "<group>"; };
 		E4C6E00919E7EA62003A89F7 /* QuickToDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuickToDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4C6E00D19E7EA62003A89F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E4C6E01119E7EA63003A89F7 /* QuickToDo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = QuickToDo.xcdatamodel; sourceTree = "<group>"; };
@@ -684,7 +684,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.2.2;
+				MARKETING_VERSION = 3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = Persukibo.QuickToDo;
 				PRODUCT_NAME = QuickToDo;
 				PROVISIONING_PROFILE = "";
@@ -773,7 +773,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.2.2;
+				MARKETING_VERSION = 3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = Persukibo.QuickToDo;
 				PRODUCT_NAME = QuickToDo;
 				PROVISIONING_PROFILE = "";
